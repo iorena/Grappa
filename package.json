@@ -8,13 +8,15 @@
   },
   "main": "app.js",
   "dependencies": {
-      "express" : "*",
-      "pg" : "*"
+    "mocha": "1.16.2",
+    "pg": "*",
+    "request": "^2.69.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},
-  "scripts" : {
-      "start" : "nodejs src/app.js"
+  "scripts": {
+    "start": "nodejs src/app.js",
+    "test": "mocha test/test_app.js"
   },
   "engines": {
     "node": "*"
