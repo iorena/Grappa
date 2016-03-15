@@ -6,7 +6,7 @@ var port = process.env.PORT || 6667,
     
 module.exports = (function() {
 
-    var dbclient = new pg.client(dburl);
+    var dbclient = new pg.Client(dburl);
     dbclient.connect();
     dbclient.end();
     
