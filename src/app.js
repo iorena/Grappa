@@ -1,7 +1,7 @@
 var http = require('http'),
     pg = require('pg');
 
-var port = process.env.port || 6667;
+var port = process.env.PORT || 6667;
     
 module.exports = (function() {
 
