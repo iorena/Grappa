@@ -7,7 +7,7 @@ module.exports = (function() {
 
     http.createServer(function(req, res) {
         res.writeHead(200, {'Content-Type' : 'text/plain'});
-        res.end('moi');
+        res.end('porkkana');
     }).listen(port);
 
 
