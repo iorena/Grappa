@@ -1,15 +1,14 @@
-var express = require('express'),
-    pg = require('pg'),
-    app = express();
+var http = require('http'),
+    pg = require('pg');
 
 var port = 6667;
     
 module.exports = (function() {
-    console.log('moi');
 
-        var server = app.listen(port, function() {
-            console.log('listening');
-        });
+        http.createServer(function(req, res) {
+            res.writeHead(200, {'Content-Type' : 'text/plain'});
+            res.end('moi');
+        }).listen(port);
 
 
     }());
