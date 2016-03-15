@@ -1,0 +1,22 @@
+{
+  "author": "Essi Salmenkivi <essi.salmenkivi@helsinki.fi>",
+  "name": "Grappa-backend",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ultra-hyper-storm-ohtuprojekti/Grappa-backend.git"
+  },
+  "main": "app.js",
+  "dependencies": {
+      "express" : "*",
+      "pg" : "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "scripts" : {
+      "start" : "nodejs src/app.js"
+  },
+  "engines": {
+    "node": "*"
+  }
+}
