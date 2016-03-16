@@ -1,6 +1,18 @@
+Coding conventions
+------------------
+
 Use " instead of '
 
-Concerning Commit:
+Code is indented with 2 spaces.
+
+Version control conventions
+---------------------------
+
+All new tasks/features are divided into their own branches which are, once finished, pull requested to the master and then merged into the master after one other team member has reviewed the code.
+
+Please do not use "git push", but the proper version "git push origin <currentbranch>:<remotebranch>". Eg. if you are working on featurebranch and want to push to anotherbranch you would write "git push origin featurebranch:anotherbranch".
+
+###Concerning Commit:###
 
   Use "commit" instead of "commit -m" when the commit needs more explaining, this gives you a text document to fill. 
 
@@ -9,12 +21,6 @@ Concerning Commit:
   Dont end your commit with "."
   
   Wrap the text for commits at 72 characters.
-
-All new tasks/features are divided into their own branches which are, once finished, pull requested to the master and then merged into the master after one other team member has reviewed the code.
-
-Please do not use "git push", but the proper version "git push origin <currentbranch>:<remotebranch>". Eg. if you are working on featurebranch and want to push to anotherbranch you would write "git push origin featurebranch:anotherbranch".
-
-Code is indented with 2 spaces.
 
 
 
