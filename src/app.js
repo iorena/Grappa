@@ -7,11 +7,14 @@ var express = require("express"),
     
 module.exports = (function() {
 
+    var dburl = config.dburl || process.env.DATABASE_URL,
+        port = config.port || process.env.PORT;
+
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     var router = express.Router();
 
-    var dbclient = new pg.Client(config.dburl);
+    var dbclient = new pg.Client(dburl);
     dbclient.connect();
     dbclient.end();
 
@@ -27,6 +30,6 @@ module.exports = (function() {
 
     app.use("/", router);
     
-    app.listen(config.port);
+    app.listen(port);
 
 }());
