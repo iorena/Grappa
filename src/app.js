@@ -1,10 +1,9 @@
 var express = require("express"),
     bodyParser = require("body-parser"),
     pg = require("pg"),
+    config = require("./config.js");
     app = express();
 
-var port = process.env.PORT || 6667,
-    dburl = process.env.DATABASE_URL;
     
 module.exports = (function() {
 
@@ -12,7 +11,7 @@ module.exports = (function() {
     app.use(bodyParser.json());
     var router = express.Router();
 
-    var dbclient = new pg.Client(dburl);
+    var dbclient = new pg.Client(config.dburl);
     dbclient.connect();
     dbclient.end();
 
@@ -28,6 +27,6 @@ module.exports = (function() {
 
     app.use("/", router);
     
-    app.listen(port);
+    app.listen(config.port);
 
 }());
