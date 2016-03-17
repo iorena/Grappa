@@ -1,9 +1,13 @@
 var express = require("express"),
     bodyParser = require("body-parser"),
     pg = require("pg"),
-    config = require("./config.js");
     app = express();
 
+try {
+    var config = require("../config.js");
+} catch (e) {
+    var config = {};
+}
     
 module.exports = (function() {
 
