@@ -10,6 +10,8 @@
   "dependencies": {
     "mocha": "1.16.2",
     "pg": "*",
+    "body-parser": "*",
+    "express": "*",
     "request": "^2.69.0"
   },
   "devDependencies": {},
