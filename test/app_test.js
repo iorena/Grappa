@@ -9,4 +9,15 @@ describe('app', function() {
             expect(response.statusCode).to.equal(200);
         });
     });
+
+    describe('thesis route', function() {
+
+        url += "/theses";
+     
+        it('accepts request parameters', function() {
+            request(url + "?testparam=666", function(error, response, body) {
+                expect(response.body.result.testparam).to.equal(666);
+            });
+        });
+    });
 });
