@@ -1,11 +1,12 @@
-var request = require('request');
+var request = require("request");
+var expect = require("chai").expect;
 
 describe('app', function() {
-    it('should load', function() {
-        var url = 'http://tktl-grappa.herokuapp.com:' + process.env.PORT; 
+    var url = "http://localhost:9876"; 
+
+    it('loads', function() {
         request(url, function(error, response, body) {
             expect(response.statusCode).to.equal(200);
         });
-    };
-
+    });
 });

@@ -1,7 +1,13 @@
 var express = require("express"),
     bodyParser = require("body-parser"),
     pg = require("pg"),
+    setImmediate = require("setimmediate"),
     app = express();
+    
+/* load route handlers */
+
+var getTheses = require("./getTheses.js"),
+    postThesis = require("./postThesis.js");
 
 try {
     var config = require("../config.js");
@@ -12,7 +18,7 @@ try {
 module.exports = (function() {
 
     var dburl = config.dburl || process.env.DATABASE_URL,
-        port = config.port || process.env.PORT;
+        port = 9876 || process.env.PORT;
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -29,11 +35,16 @@ module.exports = (function() {
     });
 
     router.get("/theses", function(request, result) {
-        result.json({ message : "This is where I list all the theses \o/" });
+        result.json({ message : "This is where I list all the theses o/",
+                      words : getTheses.get(request) });
+    });
+
+    router.post("/theses", function(request, result) {
+        result.json({ message : "I want to add a thesis here o/",
+                      data : getTheses.post(request) });
     });
 
     app.use("/", router);
     
     app.listen(port);
-
 }());
