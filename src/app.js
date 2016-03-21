@@ -3,20 +3,11 @@ var express = require("express"),
     setImmediate = require("setimmediate"),
     app = express();
     
-/* load route handlers */
-
 var dbRequest = require("./dbRequest.js");
-
-try {
-    var config = require("../config.js");
-} catch (e) {
-    var config = {};
-}
     
 module.exports = (function() {
 
-    var dburl = config.dburl || process.env.DATABASE_URL,
-        port = 9876 || process.env.PORT;
+    var port = 9876 || process.env.PORT;
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -29,13 +20,22 @@ module.exports = (function() {
     });
 
     router.get("/theses", function(request, result) {
-        result.json({ message : "This is where I list all the theses o/",
-                      result : dbRequest.list(request.query, "theses") });
+        dbRequest.list(request.query, "thesis", function(results) {
+            result.json({ message : "This is where I list all the theses",
+                      result : "" + results });
+        });
     });
 
     router.post("/theses", function(request, result) {
-        result.json({ message : "I want to add a thesis here o/",
-                      data : dbRequest.add(request.query, "theses") });
+        result.json({ message : "This is where you add a thesis",
+                      data : "" + dbRequest.add(request.query, "thesis") });
+    });
+
+    router.get("/dbdump", function(request, result) {
+        dbRequest.dump(function(results) {
+            result.json({ message : "This is where I list everything in the db",
+                          result : results });
+        });
     });
 
     app.use("/", router);
