@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ultra-hyper-storm-ohtuprojekti/grappa-backend.svg?branch=master)](https://travis-ci.org/ultra-hyper-storm-ohtuprojekti/grappa-backend)
+
 # Grappa
 
 Digital secretary for department head of studies. E-mails people remainders of their duties in the process of 
