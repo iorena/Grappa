@@ -7,7 +7,7 @@ var dbRequest = require("./dbRequest.js");
     
 module.exports = (function() {
 
-    var port = 9876 || process.env.PORT;
+    var port = process.env.PORT || 9876;
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
