@@ -4,6 +4,7 @@ var express = require("express"),
     app = express();
     
 var dbRequest = require("./dbRequest.js");
+var seeds = require("../sql/seeds.js");
     
 module.exports = (function() {
 

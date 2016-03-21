@@ -1,5 +1,6 @@
 var dbUrl = process.env.DATABASE_URL;
 var tables = require("../sql/tables.js");
+
 var Sequelize = require("sequelize");
 
 var seq = new Sequelize(dbUrl, { dialectOptions: { ssl: true } });
