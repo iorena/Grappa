@@ -33,22 +33,27 @@ module.exports = {
 
     list : function(params, table, callback) {
         tables[table].findAll({where:params, raw: true}).then(function(results) {
-            console.log(results);
             callback(results);
         });
     },
 
-    /* this doesn't work yet
+    /* 
+     * Returns out all entries in all tables
      *
      * @callback function to be called when database queries are done
      *
      */
 
     dump : function(callback) {
-        async.map(Object.keys(tables), model => tables[model].findAll({raw: true}),
-        function(err, results) {
+        var results = [];
+        async.forEachOf(tables, function(item, key, callback) {
+            item.findAll({raw: true}).then(function(res) {
+                results.push(res);
+                console.log(results);
+                callback();
+            });
+        }, function(err) {
             if (err) console.log(err);
-            console.log(results);
             callback(results);
         });
     }
