@@ -1,14 +1,9 @@
 var dbUrl = process.env.DATABASE_URL;
 var tables = require("../sql/tables.js");
 var Sequelize = require("sequelize");
+var async = require("async");
 
 var seq = new Sequelize(dbUrl, { dialectOptions: { ssl: true } });
-
-function stringify(obj) {
-    return JSON.stringify(obj, function(key, value) {
-        return value;
-    }, 2); 
-}
 
 module.exports = {
 
@@ -18,7 +13,8 @@ module.exports = {
      * @params object containing values to add
      * @table sql table to add into, mapping in tables.js
      *
-     * doesn't @return anything atm, should add
+     * should probably return some kind of "ok"/"error" message
+     *
      */
 
     add : function(params, table) {
@@ -30,26 +26,29 @@ module.exports = {
      *
      * @params filter parameters
      * @table sql table (name of model)
+     * @callback function to be called when database query is done
      *
-     * @return list of db objects
      */
 
     list : function(params, table, callback) {
         tables[table].findAll({where:params, raw: true}).then(function(results) {
-            callback(results.map(x => x.dataValues));
+            console.log(results);
+            callback(results);
         });
     },
 
-    /* this doesn't work yet */ 
+    /* this doesn't work yet
+     *
+     * @callback function to be called when database queries are done
+     *
+     */
+
     dump : function(callback) {
-        var res = [];
-        for (var model in tables)
-        {
-            tables[model].findAll().then(function(results)
-            {
-                res.push(results.map(x => stringify(x.dataValues)));
-            });
-        }
-        callback(res);
+        async.map(Object.keys(tables), model => tables[model].findAll({raw: true}),
+        function(err, results) {
+            if (err) console.log(err);
+            console.log(results);
+            callback(results);
+        });
     }
 };
