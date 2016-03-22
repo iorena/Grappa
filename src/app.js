@@ -1,6 +1,7 @@
 var express = require("express"),
     bodyParser = require("body-parser"),
     setImmediate = require("setimmediate"),
+    cors = require("cors");
     app = express();
     
 var dbRequest = require("./dbRequest.js");
@@ -11,6 +12,7 @@ module.exports = (function() {
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
+    app.use(cors());
     var router = express.Router();
 
     /* set the routes */
