@@ -23,7 +23,7 @@ module.exports = (function() {
     router.get("/theses", function(request, result) {
         dbRequest.list(request.query, "thesis", function(results) {
             result.json({ message : "This is where I list all the theses",
-                      result : "" + results });
+                      result : results });
         });
     });
 
