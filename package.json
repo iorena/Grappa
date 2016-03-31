@@ -5,28 +5,29 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend.git"
-  },
-  "main": "app.js",
-  "dependencies": {
-    "async": "^2.0.0-rc.1",
-    "body-parser": "*",
-    "chai": "^3.5.0",
-    "cors": "^2.7.1",
-    "express": "*",
-    "mocha": "2.4.5",
-    "pg": "*",
-    "pg-hstore": "^2.3.2",
-    "request": "^2.69.0",
-    "sequelize": "^3.19.3",
-    "setimmediate": "^1.0.4"
-  },
-  "devDependencies": {},
-  "optionalDependencies": {},
-  "scripts": {
-    "start": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) nodemon src/app.js",
-    "test": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) mocha test/app_test.js"
-  },
-  "engines": {
-    "node": "5.9.0"
-  }
-}
+    },
+    "main": "app.js",
+    "dependencies": {
+      "async": "^2.0.0-rc.1",
+      "body-parser": "*",
+      "chai": "^3.5.0",
+      "cors": "^2.7.1",
+      "express": "*",
+      "mocha": "2.4.5",
+      "pg": "*",
+      "pg-hstore": "^2.3.2",
+      "request": "^2.69.0",
+      "sequelize": "^3.19.3",
+      "setimmediate": "^1.0.4"
+      },
+      "devDependencies": {},
+      "optionalDependencies": {},
+      "scripts": {
+        "start": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) nodemon src/app.js",
+        "test": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) mocha test/app_test.js",
+        "test:watch": "npm run test -- --watch" 
+        },
+        "engines": {
+          "node": "5.9.0"
+        }
+      }
