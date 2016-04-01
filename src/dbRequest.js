@@ -18,7 +18,7 @@ module.exports = {
      *
      */
 
-    add : function(params, table) {
+     add : function(params, table) {
         tables[table].create(params);
     },
 
@@ -31,7 +31,7 @@ module.exports = {
      *
      */
 
-    list : function(params, table, callback) {
+     list : function(params, table, callback) {
         tables[table].findAll({where:params, raw: true}).then(function(results) {
             callback(results);
         });
@@ -44,6 +44,14 @@ module.exports = {
      *
      */
 
+
+    /* will be used later
+     findOne : function(params, table, callback){
+        tables[table].findOne({where:params, raw:true}).then(function(result){
+            callback(result);
+        });
+    },
+    */
     dump : function(callback) {
         var results = [];
         async.forEachOf(tables, function(item, key, callback) {
