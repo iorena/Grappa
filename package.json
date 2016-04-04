@@ -5,12 +5,10 @@
   "main": "app.js",
   "scripts": {
     "lint": "eslint ./**/*.js || true",
-    "start": "node app.js",
-    "nodemon": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) nodemon src/app.js",
-    "testo": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) mocha test/app_test.js",
+    "start": "nodemon app.js",
+    "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
     "test": "mocha test/**/*.js",
-    "test:watch": "npm run test -- --watch",
-    "createdb": "sqlite3 aFile.db"
+    "test:watch": "npm run test -- --watch"
   },
   "engines": {
     "node": "5.9.0"
@@ -21,11 +19,11 @@
   },
   "dependencies": {
     "async": "^2.0.0-rc.1",
-    "body-parser": "*",
+    "body-parser": "^1.15.0",
     "cors": "^2.7.1",
-    "express": "*",
+    "express": "^4.13.4",
     "nodemon": "^1.9.1",
-    "pg": "*",
+    "pg": "^4.5.2",
     "pg-hstore": "^2.3.2",
     "q": "^1.4.1",
     "request": "^2.69.0",
@@ -34,6 +32,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^2.6.0",
     "eslint-config-airbnb": "^6.2.0",
     "eslint-plugin-react": "^4.2.3",
     "mocha": "2.4.5",

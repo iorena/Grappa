@@ -3,6 +3,15 @@ const tables = require("./tables.js");
 const async = require("async");
 
 module.exports = {
+  drop: (model) => {
+    return tables[model].destroy({where: {}});
+  },
+  findAll: (model) => {
+    return tables[model].findAll();
+  },
+  saveOne: (model, params) => {
+    return tables[model].create(params);
+  },
   /*
    * Makes an INSERT query to the specified @table
    *

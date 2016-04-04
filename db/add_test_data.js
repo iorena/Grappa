@@ -1,47 +1,67 @@
-const tables = require("../models/tables");
-const db = require("../models/shared");
+const Q = require("q");
+
+// const tables = require("../models/tables");
+const Models = require("../models/shared");
 
 module.exports.dropTables = () => {
-  tables.user.destroy({where: {}}).then(function () {});
-  tables.thesis.destroy({where: {}}).then(function () {});
-  tables.grader.destroy({where: {}}).then(function () {});
-  tables.councilmeeting.destroy({where: {}}).then(function () {});
-  tables.studyfield.destroy({where: {}}).then(function () {});
-  tables.review.destroy({where: {}}).then(function () {});
-}
+  return Q.all([
+    Models.drop("User"),
+    Models.drop("Thesis"),
+    Models.drop("Grader"),
+    Models.drop("CouncilMeeting"),
+    Models.drop("StudyField"),
+    Models.drop("Review"),
+    // tables.User.destroy({where: {}}),
+    // tables.Thesis.destroy({where: {}}),
+    // tables.Grader.destroy({where: {}}),
+    // tables.CouncilMeeting.destroy({where: {}}),
+    // tables.StudyField.destroy({where: {}}),
+    // tables.Review.destroy({where: {}}),
+  ]);
+  // tables.map(table => {
+  //   table.drop();
+  // })
+};
 
 module.exports.createTestData = () => {
-  db.add({
-  	name: "testikäyttäja",
-  	email: "email@email.com",
-  	admin: true
-  }, "user");
+  return Q.all([
+    Models.saveOne("User", {
+      name: "testikäyttäja",
+      email: "email@email.com",
+      admin: true,
+    }),
+    Models.saveOne("Thesis", {
+      author: "Pekka Graduttaja",
+      email: "pekka@maili.com",
+      title: "testigradu",
+      urkund: "urkunlinkki.com",
+      ethesis: "ethesislinkki.com",
+      abstract: "Abstract from ethesis blaablaa",
+      grade: "Laudatur",
+    }),
+    Models.saveOne("Grader", {
+      name: "Mr. Grader2",
+      title: "Professor of internet",
+    }),
+    Models.saveOne("CouncilMeeting", {
+      date: Date.now(),
+    }),
+    Models.saveOne("StudyField", {
+      name: "Algoritmit",
+    }),
+  ]);
+};
 
-  db.add({
-  	author: "Pekka Graduttaja",
-  	email: "pekka@maili.com",
-  	title: "testigradu",
-  	urkund: "urkunlinkki.com",
-  	ethesis: "ethesislinkki.com",
-  	abstract: "Abstract from ethesis blaablaa",
-  	grade: "Laudatur"
-  }, "thesis");
-
-  db.add({
-  	name: "Mr. Grader2",
-  	title: "Professor of internet"
-  }, "grader");
-
-  db.add({
-  	author: "Tauno Tarkastaja",
-  	review_text: "Mielestäni Tauno on erittäin pätevä jätkä"
-  }, "grader");
-
-  db.add({
-  	date: Date.now()
-  }, "councilmeeting");
-
-  db.add({
-  	name: "Algoritmit"
-  }, "studyfield");
-}
+module.exports.dropAndCreateTables = () => {
+  return module.exports.dropTables()
+    .spread(() => {
+      return module.exports.createTestData()
+    })
+    .spread(() => {
+      console.log("Dropped and created tables succesfully!");
+    })
+    .catch(err => {
+      console.log("add_test_data dropAndCreateTables produced an error!");
+      console.log(err);
+    });
+};

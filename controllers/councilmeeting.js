@@ -1,21 +1,31 @@
 "use strict";
 
-const models = require("../models/shared");
+const CouncilMeeting = require("../models/councilmeeting");
 
 module.exports.findAll = (req, res) => {
-  models.list(req.query, "Councilmeeting", (cmetings) => {
-    res.json({
-      message: "This is where I list all the theses",
-      result: cmetings,
-    })
+  CouncilMeeting
+  .findAll()
+  .then(cmeetings => {
+    res.status(200).send(cmeetings);
   })
-}
+  .catch(err => {
+    res.status(500).send({
+      message: "CouncilMeeting findAll produced an error",
+      error: err,
+    });
+  });
+};
 
 module.exports.saveOne = (req, res) => {
-  models.add(req.query, "Councilmeeting", (cmeeting) => {
-    res.json({
-      message: "This is where you add a thesis",
-      result: cmeeting,
-    })
+  CouncilMeeting
+  .saveOne(req.body)
+  .then(cmeeting => {
+    res.status(200).send(cmeeting);
   })
-}
+  .catch(err => {
+    res.status(500).send({
+      message: "CouncilMeeting saveOne produced an error",
+      error: err,
+    });
+  });
+};

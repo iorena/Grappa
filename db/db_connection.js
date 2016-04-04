@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
   seq = new Sequelize(dbUrl, {
     dialectOptions: {
       ssl: true,
-    }
+    },
   });
 } else {
   seq = new Sequelize("grappa", "", "", {

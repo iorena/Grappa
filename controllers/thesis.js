@@ -1,21 +1,31 @@
 "use strict";
 
-const models = require("../models/shared");
+const Thesis = require("../models/thesis");
 
 module.exports.findAll = (req, res) => {
-  models.list(req.query, "Thesis", (theses) => {
-    res.json({
-      message: "This is where I list all the theses",
-      result: theses,
-    })
+  Thesis
+  .findAll()
+  .then(theses => {
+    res.status(200).send(theses);
   })
-}
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis findAll produced an error",
+      error: err,
+    });
+  });
+};
 
 module.exports.saveOne = (req, res) => {
-  models.add(req.query, "Thesis", (thesis) => {
-    res.json({
-      message: "This is where you add a thesis",
-      result: thesis,
-    })
+  Thesis
+  .saveOne(req.body)
+  .then(thesis => {
+    res.status(200).send(thesis);
   })
-}
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis saveOne produced an error",
+      error: err,
+    });
+  });
+};

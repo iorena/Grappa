@@ -1,26 +1,32 @@
+"use strict";
+
 const express = require("express");
 const router = express.Router();
 
-// const db_connection = require("../db/db_connection");
-const models = require("../models/shared");
+const Models = require("../models/shared");
 
 const thesis = require("./thesis");
 const councilmeeting = require("./councilmeeting");
 
 const index = (req, res) => {
   res.json({
-    message: "This is the default page. Nothing to see here"
+    message: "This is the default page. Nothing to see here.",
   });
-}
+};
 
 const dump = (req, res) => {
-  models.dump(tables => {
-    res.json({
-      message: "This is where I list everything in the db",
-      result: tables,
+  Models
+  .dump()
+  .then(tables => {
+    res.status(200).send(tables);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Routes dump produced an error",
+      error: err,
     });
   });
-}
+};
 
 router.get("/", index);
 
