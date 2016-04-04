@@ -6,8 +6,8 @@ Digital secretary for University of Helsinki's department of Computer Science's 
 
 [How to install](https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend/blob/master/INSTALLATION.md)
 
-Periodi IV 2016
-Ohjelmistotuotantoprojekti (8 op)
+Periodi IV 2016  
+Ohjelmistotuotantoprojekti (8 op)  
 (7-week software production project from March to May)
 
 [Heroku deploy](https://tktl-grappa.herokuapp.com/)

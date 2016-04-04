@@ -7,6 +7,8 @@
     "lint": "eslint ./**/*.js || true",
     "start": "nodemon app.js",
     "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
+    "db:reset": "node bin/db",
+    "db:reset:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
     "test": "mocha test/**/*.js",
     "test:watch": "npm run test -- --watch"
   },
@@ -18,17 +20,13 @@
     "url": "git://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend.git"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.1",
     "body-parser": "^1.15.0",
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "nodemon": "^1.9.1",
-    "pg": "^4.5.2",
-    "pg-hstore": "^2.3.2",
     "q": "^1.4.1",
     "request": "^2.69.0",
-    "sequelize": "^3.19.3",
-    "setimmediate": "^1.0.4"
+    "sequelize": "^3.19.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
