@@ -2,10 +2,13 @@
 
 # Grappa
 
-Digital secretary for department head of studies. E-mails people remainders of their duties in the process of 
-getting theses accepted.
+Digital secretary for University of Helsinki's department of Computer Science's head of studies. Used to administer the process of approving theses such as emailing, choosing deadlines for council meetings and hosting important links and files.
 
-Intensiivi-ohtuprojekti/7-week software production project 2016
+[How to install](https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend/blob/master/INSTALLATION.md)
+
+Periodi IV 2016  
+Ohjelmistotuotantoprojekti (8 op)  
+(7-week software production project from March to May)
 
 [Heroku deploy](https://tktl-grappa.herokuapp.com/)
 

@@ -1,33 +1,40 @@
 {
   "author": "Essi Salmenkivi <essi.salmenkivi@helsinki.fi>",
   "name": "grappa-backend",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint ./**/*.js || true",
+    "start": "nodemon app.js",
+    "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
+    "db:reset": "node bin/db",
+    "db:reset:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
+    "test": "mocha test/**/*.js",
+    "test:watch": "npm run test -- --watch"
+  },
+  "engines": {
+    "node": "5.9.0"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend.git"
-    },
-    "main": "app.js",
-    "dependencies": {
-      "async": "^2.0.0-rc.1",
-      "body-parser": "*",
-      "chai": "^3.5.0",
-      "cors": "^2.7.1",
-      "express": "*",
-      "mocha": "2.4.5",
-      "pg": "*",
-      "pg-hstore": "^2.3.2",
-      "request": "^2.69.0",
-      "sequelize": "^3.19.3",
-      "setimmediate": "^1.0.4"
-      },
-      "devDependencies": {},
-      "optionalDependencies": {},
-      "scripts": {
-        "start": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) nodemon src/app.js",
-        "test": "DATABASE_URL=$(heroku config:get DATABASE_URL -a tktl-grappa) mocha test/app_test.js",
-        "test:watch": "npm run test -- --watch" 
-        },
-        "engines": {
-          "node": "5.9.0"
-        }
-      }
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cors": "^2.7.1",
+    "express": "^4.13.4",
+    "nodemon": "^1.9.1",
+    "q": "^1.4.1",
+    "request": "^2.69.0",
+    "sequelize": "^3.19.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.6.0",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-react": "^4.2.3",
+    "mocha": "2.4.5",
+    "morgan": "^1.7.0",
+    "sqlite3": "^3.1.3"
+  }
+}

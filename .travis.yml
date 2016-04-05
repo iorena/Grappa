@@ -1,6 +1,9 @@
 language: node_js
 node_js:
-    - '5'
+  - '5'
+script:
+  - npm --silent run lint
+  - npm --silent test
 deploy:
   provider: heroku
   strategy: git
