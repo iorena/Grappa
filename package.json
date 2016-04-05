@@ -7,10 +7,11 @@
     "lint": "eslint ./**/*.js || true",
     "start": "nodemon app.js",
     "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
-    "db:reset": "node bin/db",
-    "db:reset:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
+    "db": "node bin/db",
+    "db:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
     "test": "mocha test/**/*.js",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "check": "eslint ./**/*.js && npm test && npm start"
   },
   "engines": {
     "node": "5.9.0"

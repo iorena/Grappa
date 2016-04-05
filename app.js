@@ -8,17 +8,13 @@ const app = express();
 
 const port = process.env.PORT || 9876;
 
-if (process.env.NODE_ENV = "development") {
+// use npm run db if you want to reset the local database!
+// use npm run db:prod if you want to reset the Heroku database!
+
+if (process.env.NODE_ENV === "development") {
   let logger = require("morgan");
   app.use(logger("dev"));
 }
-
-// use npm run db:reset if you want to reset the database!
-//
-// const test = require("./db/add_test_data");
-// test.dropAndCreateTables();
-// test.dropTables();
-// test.createTestData();
 
 app.use(bodyParser.urlencoded({
   extended: true,
