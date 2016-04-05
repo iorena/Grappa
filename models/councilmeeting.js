@@ -1,14 +1,15 @@
 "use strict";
 
-const Models = require("./shared");
+const BaseModel = require("./base_model");
 
 // id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
 // date: Sequelize.DATE,
 
-module.exports.findAll = () => {
-  return Models.findAll("CouncilMeeting");
-};
+class CouncilMeeting extends BaseModel {
+  constructor() {
+    super("CouncilMeeting");
+  }
+}
 
-module.exports.saveOne = (cmeeting) => {
-  return Models.saveOne("CouncilMeeting", cmeeting);
-};
+module.exports.class = CouncilMeeting;
+module.exports = new CouncilMeeting();

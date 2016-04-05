@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var add_test_data = require("../db/add_test_data");
 
 add_test_data.dropAndCreateTables();

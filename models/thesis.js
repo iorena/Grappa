@@ -1,7 +1,7 @@
 "use strict";
 
-const Models = require("./shared");
-// const Thesis = require("./tables").Thesis;
+const BaseModel = require("./base_model");
+// const Models = require("./shared");
 
 // id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
 // author: Sequelize.STRING,
@@ -12,20 +12,14 @@ const Models = require("./shared");
 // abstract: Sequelize.TEXT,
 // grade: Sequelize.STRING,
 
-// module.exports.validate = (thesis) => {
-//   thesis.map( key => {
-//     switch(key) {
-//       case author:
-//     }
-//   })
-// }
-
-module.exports.findAll = () => {
-  return Models.findAll("Thesis");
-  // return Thesis.findAll();
+class Thesis extends BaseModel {
+  constructor() {
+    super("Thesis");
+  }
+  // validateAuthor() {
+  //
+  // }
 }
 
-module.exports.saveOne = (thesis) => {
-  return Models.saveOne("Thesis", thesis);
-  // return Thesis.create(thesis);
-}
+module.exports.class = Thesis;
+module.exports = new Thesis();

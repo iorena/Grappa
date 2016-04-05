@@ -6,26 +6,9 @@ module.exports = {
   drop: (model) => {
     return tables[model].destroy({where: {}});
   },
-  /*
-   * SELECT * FROM @table
-   *
-   * Returns all the rows from a @table.
-   *
-   * @table {String} name of the table/model
-   * @return Promise
-   */
   findAll: (model) => {
     return tables[model].findAll();
   },
-  /*
-   * INSERT (@params) INTO @table RETURNING ID
-   *
-   * Creates a new instance of @table from validated(!) @params.
-   *
-   * @table {String} name of the table/model
-   * @params {Object} values to add
-   * @return Promise
-   */
   saveOne: (model, params) => {
     return tables[model].create(params);
   },

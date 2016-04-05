@@ -7,6 +7,9 @@ const Models = require("../models/shared");
 
 const thesis = require("./thesis");
 const councilmeeting = require("./councilmeeting");
+const review = require("./review");
+const grader = require("./grader");
+const user = require("./user");
 
 const index = (req, res) => {
   res.json({
@@ -35,6 +38,15 @@ router.post("/thesis", thesis.saveOne);
 
 router.get("/councilmeeting", councilmeeting.findAll);
 router.post("/councilmeeting", councilmeeting.saveOne);
+
+router.get("/review", review.findAll);
+router.post("/review", review.saveOne);
+
+router.get("/grader", grader.findAll);
+router.post("/grader", grader.saveOne);
+
+router.get("/user", user.findAll);
+router.post("/user", user.saveOne);
 
 router.get("/dbdump", dump);
 
