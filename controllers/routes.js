@@ -3,13 +3,13 @@
 const express = require("express");
 const router = express.Router();
 
-const Models = require("../models/shared");
+const db_methods = require("../db/methods");
 
-const thesis = require("./thesis");
-const councilmeeting = require("./councilmeeting");
-const review = require("./review");
-const grader = require("./grader");
-const user = require("./user");
+const thesisCtrl = require("./thesis");
+const councilmeetingCtrl = require("./councilmeeting");
+const reviewCtrl = require("./review");
+const graderCtrl = require("./grader");
+const userCtrl = require("./user");
 
 const index = (req, res) => {
   res.json({
@@ -18,7 +18,7 @@ const index = (req, res) => {
 };
 
 const dump = (req, res) => {
-  Models
+  db_methods
   .dump()
   .then(tables => {
     res.status(200).send(tables);
@@ -33,20 +33,20 @@ const dump = (req, res) => {
 
 router.get("/", index);
 
-router.get("/thesis", thesis.findAll);
-router.post("/thesis", thesis.saveOne);
+router.get("/thesis", thesisCtrl.findAll);
+router.post("/thesis", thesisCtrl.saveOne);
 
-router.get("/councilmeeting", councilmeeting.findAll);
-router.post("/councilmeeting", councilmeeting.saveOne);
+router.get("/councilmeeting", councilmeetingCtrl.findAll);
+router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 
-router.get("/review", review.findAll);
-router.post("/review", review.saveOne);
+router.get("/review", reviewCtrl.findAll);
+router.post("/review", reviewCtrl.saveOne);
 
-router.get("/grader", grader.findAll);
-router.post("/grader", grader.saveOne);
+router.get("/grader", graderCtrl.findAll);
+router.post("/grader", graderCtrl.saveOne);
 
-router.get("/user", user.findAll);
-router.post("/user", user.saveOne);
+router.get("/user", userCtrl.findAll);
+router.post("/user", userCtrl.saveOne);
 
 router.get("/dbdump", dump);
 
