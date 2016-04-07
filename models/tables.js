@@ -17,6 +17,7 @@ const Thesis = seq.define("Thesis", {
   ethesis: Sequelize.STRING,
   abstract: Sequelize.TEXT,
   grade: Sequelize.STRING,
+  deadline: Sequelize.DATE,
 });
 const Grader = seq.define("Grader", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
@@ -35,6 +36,14 @@ const Review = seq.define("Review", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   author: Sequelize.STRING,
   text: Sequelize.TEXT,
+});
+const ThesisProgress = seq.define("ThesisProgress", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  thesisId: Sequelize.INTEGER,
+  ethesisReminder: Sequelize.DATE,
+  professorReminder: Sequelize.DATE,
+  documentsSent: Sequelize.DATE,
+  isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
 Thesis.belongsToMany(User, { through: "UserTheses" });
@@ -59,6 +68,11 @@ User.hasMany(Review);
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
 
+/*
+Use force here if you want to modify tables
+For clearing and adding testdata force is not needed
+*/
+//seq.sync({ force: true });
 seq.sync();
 
 module.exports = {
@@ -68,4 +82,5 @@ module.exports = {
   CouncilMeeting,
   StudyField,
   Review,
+  ThesisProgress
 };
