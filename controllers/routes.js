@@ -10,6 +10,7 @@ const councilmeetingCtrl = require("./councilmeeting");
 const reviewCtrl = require("./review");
 const graderCtrl = require("./grader");
 const userCtrl = require("./user");
+const thesisprogressCtrl = require("./thesisprogress");
 
 const index = (req, res) => {
   res.json({
@@ -44,6 +45,9 @@ router.post("/review", reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
+
+router.get("/thesisprogress", thesisprogressCtrl.findAll);
+router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
 router.post("/user", userCtrl.saveOne);

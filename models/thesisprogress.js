@@ -9,4 +9,4 @@ class Thesisprogress extends BaseModel {
 }
 
 module.exports.class = Thesisprogress;
-module.exports = new Thesisprogresss();
+module.exports = new Thesisprogress();

@@ -39,6 +39,7 @@ const Review = seq.define("Review", {
 });
 const ThesisProgress = seq.define("ThesisProgress", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  gradersStatus: { type: Sequelize.BOOLEAN, defaultValue: false },
   thesisId: Sequelize.INTEGER,
   ethesisReminder: Sequelize.DATE,
   professorReminder: Sequelize.DATE,
