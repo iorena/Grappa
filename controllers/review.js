@@ -1,6 +1,6 @@
 "use strict";
 
-const Review = require("../models/councilmeeting");
+const Review = require("../models/review");
 
 module.exports.findAll = (req, res) => {
   Review
