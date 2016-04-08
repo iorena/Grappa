@@ -19,6 +19,12 @@ module.exports.createTestData = () => {
       email: "email@email.com",
       admin: true,
     }),
+    tables["ThesisProgress"].create({
+      thesisId: "1",
+      ethesisReminder: Date.now(),
+      professorReminder: Date.now(),
+      documentsSent: Date.now(),
+    }),
     tables["Thesis"].create({
       author: "Pekka Graduttaja",
       email: "pekka@maili.com",

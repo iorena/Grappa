@@ -83,5 +83,5 @@ module.exports = {
   CouncilMeeting,
   StudyField,
   Review,
-  ThesisProgress
+  ThesisProgress,
 };

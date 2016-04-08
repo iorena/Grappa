@@ -16,6 +16,20 @@ class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
   }
+
+// module.exports.saveOne = (req, res) => {
+//   Thesis
+//   .saveOne(req.body)
+//   .then(thesis => {
+//     res.status(200).send(thesis);
+//   })
+//   .catch(err => {
+//     res.status(500).send({
+//       message: "Thesis saveOne produced an error",
+//       error: err,
+//     });
+//   });
+// };
   saveOne(thesis) {
     let thesisId;
     return tables["Thesis"].create(params).
