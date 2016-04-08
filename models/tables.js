@@ -42,6 +42,7 @@ const ThesisProgress = seq.define("ThesisProgress", {
   thesisId: Sequelize.INTEGER,
   ethesisReminder: Sequelize.DATE,
   professorReminder: Sequelize.DATE,
+  gradersStatus: { type: Sequelize.BOOLEAN, defaultValue: false },
   documentsSent: Sequelize.DATE,
   isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
@@ -82,5 +83,5 @@ module.exports = {
   CouncilMeeting,
   StudyField,
   Review,
-  ThesisProgress
+  ThesisProgress,
 };

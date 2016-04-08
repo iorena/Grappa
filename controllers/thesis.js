@@ -1,6 +1,7 @@
 "use strict";
 
 const Thesis = require("../models/thesis");
+const Thesisprogress = require("../controllers/thesisprogress");
 
 module.exports.findAll = (req, res) => {
   Thesis
@@ -20,6 +21,7 @@ module.exports.saveOne = (req, res) => {
   Thesis
   .saveOne(req.body)
   .then(thesis => {
+    Thesisprogress.saveThesisProgressFromNewThesis(thesis);
     res.status(200).send(thesis);
   })
   .catch(err => {

@@ -16,9 +16,6 @@ class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
   }
-  // validateAuthor() {
-  //
-  // }
 }
 
 module.exports.class = Thesis;
