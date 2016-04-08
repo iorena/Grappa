@@ -2,6 +2,7 @@
 
 const ThesisProgress = require("../models/thesisprogress");
 
+
 module.exports.findAll = (req, res) => {
   ThesisProgress
   .findAll()
@@ -28,4 +29,9 @@ module.exports.saveOne = (req, res) => {
       error: err,
     });
   });
+};
+module.exports.saveThesisProgressFromNewThesis = (thesis) => {
+  ThesisProgress.saveOne({thesisId : thesis.id, ethesisReminder: null, professorReminder: null, 
+    documentsSent: null, isDone: false , gradersStatus: false});
+  console.log("Thesisprogress saved!")
 };
