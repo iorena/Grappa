@@ -10,6 +10,8 @@ const councilmeetingCtrl = require("./councilmeeting");
 const reviewCtrl = require("./review");
 const graderCtrl = require("./grader");
 const userCtrl = require("./user");
+const emailCtrl = require("./email");
+const imapCtrl = require("./imap");
 
 const index = (req, res) => {
   res.json({
@@ -47,6 +49,9 @@ router.post("/grader", graderCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
 router.post("/user", userCtrl.saveOne);
+
+router.get("/mail", emailCtrl.sendEmail);
+router.get("/imap", imapCtrl.checkEmail);
 
 router.get("/dbdump", dump);
 
