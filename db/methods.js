@@ -44,7 +44,15 @@ module.exports.createTestData = () => {
     tables["StudyField"].create({
       name: "Algoritmit",
     }),
-  ]);
+    tables["ThesisProgress"].create({
+      thesisId: 1,
+      ethesisReminder: Date.now(),
+      professorReminder: Date.now(),
+      gradersStatus: false,
+      documentsSent: Date.now(),
+      isDone: false,
+    })
+    ]);
 };
 
 module.exports.dump = () => {
@@ -57,14 +65,14 @@ module.exports.dump = () => {
 
 module.exports.destroyAndCreateTables = () => {
   return module.exports.destroyTables()
-    .then(() => {
-      return module.exports.createTestData()
-    })
-    .then(() => {
-      console.log("Destroyed and created tables succesfully!");
-    })
-    .catch(err => {
-      console.log("add_test_data destroyAndCreateTables produced an error!");
-      console.log(err);
-    });
+  .then(() => {
+    return module.exports.createTestData()
+  })
+  .then(() => {
+    console.log("Destroyed and created tables succesfully!");
+  })
+  .catch(err => {
+    console.log("add_test_data destroyAndCreateTables produced an error!");
+    console.log(err);
+  });
 };
