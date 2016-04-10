@@ -1,6 +1,6 @@
 "use strict";
 
-const Grader = require("../models/councilmeeting");
+const Grader = require("../models/grader");
 
 module.exports.findAll = (req, res) => {
   Grader

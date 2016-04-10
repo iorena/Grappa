@@ -7,10 +7,11 @@
     "lint": "eslint ./**/*.js || true",
     "start": "nodemon app.js",
     "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
-    "db:reset": "node bin/db",
-    "db:reset:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
+    "db": "node bin/db",
+    "db:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
     "test": "mocha test/**/*.js",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "check": "eslint ./**/*.js && npm test && npm start"
   },
   "engines": {
     "node": "5.9.0"
@@ -24,18 +25,20 @@
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "node-schedule": "^1.1.0",
+    "morgan": "^1.7.0",
     "nodemon": "^1.9.1",
+    "pg": "^4.5.2",
+    "pg-hstore": "^2.3.2",
     "q": "^1.4.1",
     "request": "^2.69.0",
-    "sequelize": "^3.19.3"
+    "sequelize": "^3.19.3",
+    "sqlite3": "^3.1.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.6.0",
     "eslint-config-airbnb": "^6.2.0",
     "eslint-plugin-react": "^4.2.3",
-    "mocha": "2.4.5",
-    "morgan": "^1.7.0",
-    "sqlite3": "^3.1.3"
+    "mocha": "2.4.5"
   }
 }

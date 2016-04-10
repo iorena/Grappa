@@ -41,7 +41,7 @@ class BaseModel {
     return tables[this.tablename].create(params);
   }
   drop() {
-    return tables[this.tablename].destroy({where: {}});
+    return tables[this.tablename].destroy({ where: {} });
   }
 }
 

@@ -1,5 +1,30 @@
 #!/usr/bin/env node
 
-var add_test_data = require("../db/add_test_data");
+"use strict";
 
-add_test_data.dropAndCreateTables();
+const db_methods = require("../db/methods");
+
+const commands = JSON.parse(process.env.npm_config_argv).original;
+// console.log(commands);
+if (commands.length > 2) {
+  if (commands.length > 3 && commands[3] === "prod") {
+    console.log("prod mode");
+    process.env.NODE_ENV = "production";
+  }
+  const command = commands[2];
+  // console.log(command);
+  switch(command) {
+    case "destroy":
+      db_methods.destroyTables();
+      break;
+    case "create":
+      db_methods.createTestData();
+      break;
+    case "reset":
+      db_methods.destroyAndCreateTables();
+      break;
+    default:
+      console.log(`Unknown command ${command}`);
+      break;
+  }
+}
