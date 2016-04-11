@@ -2,6 +2,7 @@
 
 const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
+const Grader = require("../controllers/grader");
 
 module.exports.findAll = (req, res) => {
   Thesis
@@ -22,6 +23,8 @@ module.exports.saveOne = (req, res) => {
   .saveOne(req.body)
   .then(thesis => {
     Thesisprogress.saveThesisProgressFromNewThesis(thesis);
+    Grader.saveGraderFromNewThesis(req.body);
+    Thesisprogress.evalGraders(thesis);
     res.status(200).send(thesis);
   })
   .catch(err => {
