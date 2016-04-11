@@ -60,7 +60,7 @@ CouncilMeeting.belongsToMany(Thesis, { through: "CouncilMeetingTheses" });
 User.belongsTo(StudyField);
 
 Thesis.hasMany(Review);
-Thesis.hasMany(Grader);
+//Thesis.hasMany(Grader);
 Thesis.hasOne(CouncilMeeting);
 
 User.hasMany(Thesis);
