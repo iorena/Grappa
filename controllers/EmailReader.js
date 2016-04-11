@@ -1,14 +1,15 @@
 "use strict";
 
-var Imap = require('imap'),
-    inspect = require('util').inspect;
+const config = require("../config/email");
+const Imap = require("imap");
+const inspect = require("util").inspect;
 
 class EmailReader {
-  constructor() {
+  constructor(options) {
     this.imap = new Imap({
-      user: 'ohtugrappa@gmail.com',
-      password: 'grappa123',
-      host: 'imap.gmail.com',
+      user: options.user,
+      password: options.password,
+      host: options.imap,
       port: 993,
       tls: true
     });
@@ -16,19 +17,19 @@ class EmailReader {
 
   readInbox(box) {
     var imap = this.imap;
-    var f = imap.seq.fetch(box.messages.total + ':*', { bodies: ['HEADER.FIELDS (FROM)','TEXT'] });
-    f.on('message', function(msg, seqno) {
-      console.log('Message #%d', seqno);
-      var prefix = '(#' + seqno + ') ';
-      msg.on('body', function(stream, info) {
-        if (info.which === 'TEXT')
-          console.log(prefix + 'Body [%s] found, %d total bytes', inspect(info.which), info.size);
-        var buffer = '', count = 0;
-        stream.on('data', function(chunk) {
+    var f = imap.seq.fetch(box.messages.total + ":*", { bodies: ["HEADER.FIELDS (FROM)","TEXT"] });
+    f.on("message", function(msg, seqno) {
+      console.log("Message #%d", seqno);
+      var prefix = "(#" + seqno + ") ";
+      msg.on("body", function(stream, info) {
+        if (info.which === "TEXT")
+          console.log(prefix + "Body [%s] found, %d total bytes", inspect(info.which), info.size);
+        var buffer = "", count = 0;
+        stream.on("data", function(chunk) {
           count += chunk.length;
-          buffer += chunk.toString('utf8');
-          if (info.which === 'TEXT')
-            console.log(prefix + 'Body [%s] (%d/%d)', inspect(info.which), count, info.size);
+          buffer += chunk.toString("utf8");
+          if (info.which === "TEXT")
+            console.log(prefix + "Body [%s] (%d/%d)", inspect(info.which), count, info.size);
             // console.log("indexOf failed permanently" + buffer.indexOf("failed permanently"));
             // console.log("indexOf @ " + buffer.indexOf("@"));
             if (buffer.indexOf("<") !== -1) {
@@ -37,25 +38,25 @@ class EmailReader {
               console.log("user " + user);
             }
         });
-        stream.once('end', function() {
-          if (info.which !== 'TEXT')
-            console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
+        stream.once("end", function() {
+          if (info.which !== "TEXT")
+            console.log(prefix + "Parsed header: %s", inspect(Imap.parseHeader(buffer)));
           else
-            console.log(prefix + 'Body [%s] Finished', inspect(info.which));
+            console.log(prefix + "Body [%s] Finished", inspect(info.which));
         });
       });
-      msg.once('attributes', function(attrs) {
-        console.log(prefix + 'Attributes: %s', inspect(attrs, false, 8));
+      msg.once("attributes", function(attrs) {
+        console.log(prefix + "Attributes: %s", inspect(attrs, false, 8));
       });
-      msg.once('end', function() {
-        console.log(prefix + 'Finished');
+      msg.once("end", function() {
+        console.log(prefix + "Finished");
       });
     })
-    f.once('error', function(err) {
-      console.log('Fetch error: ' + err);
+    f.once("error", function(err) {
+      console.log("Fetch error: " + err);
     });
-    f.once('end', function() {
-      console.log('Done fetching all messages!');
+    f.once("end", function() {
+      console.log("Done fetching all messages!");
       imap.end();
     });
   }
@@ -63,12 +64,12 @@ class EmailReader {
   openImap() {
     console.log("opening imap");
 
-    this.imap.once('error', function(err) {
+    this.imap.once("error", function(err) {
       console.log(err);
     });
 
-    this.imap.once('end', function() {
-      console.log('Connection ended');
+    this.imap.once("end", function() {
+      console.log("Connection ended");
     });
 
     this.imap.connect();
@@ -78,7 +79,7 @@ class EmailReader {
         console.log("imap on ready!");
         resolve();
       })
-      this.imap.once('error', (err) => {
+      this.imap.once("error", (err) => {
         reject(err);
       });
     })
@@ -87,7 +88,7 @@ class EmailReader {
   openInbox() {
     var imap = this.imap;
     return new Promise((resolve, reject) => {
-      this.imap.openBox('INBOX', true, (err, box) => {
+      this.imap.openBox("INBOX", true, (err, box) => {
         console.log("inbox on avattu " + box);
         if (err) {
           reject(err);
@@ -100,4 +101,4 @@ class EmailReader {
 }
 
 module.exports.class = EmailReader;
-module.exports = new EmailReader();
+module.exports = new EmailReader(config);
