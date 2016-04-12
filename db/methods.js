@@ -45,6 +45,14 @@ module.exports.createTestData = () => Q.all([
   tables.StudyField.create({
     name: "Algoritmit",
   }),
+  tables.ThesisProgress.create({
+    thesisId: 1,
+    ethesisReminder: Date.now(),
+    professorReminder: Date.now(),
+    gradersStatus: false,
+    documentsSent: Date.now(),
+    isDone: false,
+  }),
 ]);
 
 module.exports.dump = () => {
@@ -58,12 +66,12 @@ module.exports.dump = () => {
 };
 
 module.exports.destroyAndCreateTables = () => module.exports.destroyTables()
-  .then(() => module.exports.createTestData()
-  )
-  .then(() => {
-    console.log("Destroyed and created tables succesfully!");
-  })
-  .catch(err => {
-    console.log("add_test_data destroyAndCreateTables produced an error!");
-    console.log(err);
-  });
+.then(() => module.exports.createTestData()
+)
+.then(() => {
+  console.log("Destroyed and created tables successfully!");
+})
+.catch(err => {
+  console.log("add_test_data destroyAndCreateTables produced an error!");
+  console.log(err);
+});
