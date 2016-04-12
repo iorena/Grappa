@@ -5,11 +5,18 @@ const Q = require("q");
 const tables = require("../models/tables");
 
 module.exports.destroyTables = () => {
-  const queries = [];
-  for (const key in tables) {
-    if ({}.hasOwnProperty.call(tables.key)) {
-      queries.push(tables[key].destroy({ where: {} }));
-    }
+  let queries = [];
+  for(let key in tables) {
+    queries.push(tables[key].destroy({where: {}}));
+  }
+  return Promise.all(queries);
+};
+
+
+module.exports.dropTables = () => {
+  let queries = [];
+  for(let key in tables) {
+    queries.push(tables[key].drop({cascade: true}));
   }
   return Promise.all(queries);
 };
@@ -20,12 +27,6 @@ module.exports.createTestData = () => Q.all([
     email: "email@email.com",
     admin: true,
   }),
-  tables.ThesisProgress.create({
-    thesisId: "1",
-    ethesisReminder: Date.now(),
-    professorReminder: Date.now(),
-    documentsSent: Date.now(),
-  }),
   tables.Thesis.create({
     author: "Pekka Graduttaja",
     email: "pekka@maili.com",
@@ -34,6 +35,12 @@ module.exports.createTestData = () => Q.all([
     ethesis: "ethesislinkki.com",
     abstract: "Abstract from ethesis blaablaa",
     grade: "Laudatur",
+  }),
+  tables.ThesisProgress.create({
+    thesisId: "1",
+    ethesisReminder: Date.now(),
+    professorReminder: Date.now(),
+    documentsSent: Date.now(),
   }),
   tables.Grader.create({
     name: "Mr. Grader2",
