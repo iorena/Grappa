@@ -14,17 +14,20 @@ if (commands.length > 2) {
   const command = commands[2];
   // console.log(command);
   switch(command) {
+    case "drop": 
+    db_methods.dropTables();
+    break;
     case "destroy":
-      db_methods.destroyTables();
-      break;
+    db_methods.destroyTables();
+    break;
     case "create":
-      db_methods.createTestData();
-      break;
+    db_methods.createTestData();
+    break;
     case "reset":
-      db_methods.destroyAndCreateTables();
-      break;
+    db_methods.destroyAndCreateTables();
+    break;
     default:
-      console.log(`Unknown command ${command}`);
-      break;
+    console.log(`Unknown command ${command}`);
+    break;
   }
 }

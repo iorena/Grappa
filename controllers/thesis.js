@@ -2,9 +2,8 @@
 
 const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
-//const { CouncilMeeting } = require("../models/tables");
-const tables = require("../models/tables.js");
 const CouncilMeeting = require("../models/councilmeeting");
+const Grader = require("../models/grader");
 
 
 module.exports.findAll = (req, res) => {
@@ -27,11 +26,16 @@ module.exports.saveOne = (req, res) => {
   if (req.body.deadline != null){
     thesisValues = addCorrectDeadline(req.body);
   }
+  Grader.saveIfDoesntExist(req.body);
   Thesis
   .saveOne(thesisValues)
   .then(thesis => {
+
    Thesisprogress.saveThesisProgressFromNewThesis(thesis);
    addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
+   Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
+   Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
+   
    res.status(200).send(thesis);
  })
   .catch(err => {
