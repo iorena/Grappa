@@ -28,22 +28,23 @@ module.exports.saveOne = (req, res) => {
     thesisValues = addCorrectDeadline(req.body);
   }
   Grader.saveIfDoesntExist(req.body);
+  
   Thesis
   .saveOne(thesisValues)
   .then(thesis => {
-//   console.log("l�htee emaileja " + thesis.author);
-//   Reminder.sendStudentReminder(thesis);
-//   Reminder.sendProfessorReminder(thesis);
-//   Reminder.sendPrinterReminder(thesis);
-   Thesisprogress.saveThesisProgressFromNewThesis(thesis);
-   addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
-   Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
-   Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
+    console.log("l�htee emaileja " + thesis.author);
+    Reminder.sendStudentReminder(thesis);
+    Reminder.sendProfessorReminder(thesis);
+    Reminder.sendPrinterReminder(thesis);
 
-   res.status(200).send(thesis);
+    Thesisprogress.saveThesisProgressFromNewThesis(thesis);
+    addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
+    Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
+    Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
+
+    res.status(200).send(thesis);
   })
   .catch(err => {
-    console.log("virhe!" + err);
     res.status(500).send({
       message: "Thesis saveOne produced an error",
       error: err,
