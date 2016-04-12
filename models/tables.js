@@ -1,5 +1,4 @@
 const Sequelize = require("sequelize");
-// const db = require("../db/db_connection");
 const seq = require("../db/db_connection").sequalize;
 
 const User = seq.define("User", {
@@ -26,7 +25,7 @@ const Grader = seq.define("Grader", {
 });
 const CouncilMeeting = seq.define("CouncilMeeting", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  date: Sequelize.DATE,
+  date: Sequelize.DATE, 
 });
 const StudyField = seq.define("StudyField", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },

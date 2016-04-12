@@ -35,7 +35,7 @@ module.exports.saveThesisProgressFromNewThesis = (thesis) => {
   ThesisProgress.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
     documentsSent: null, isDone: false, gradersStatus: false });
   console.log("Thesisprogress saved!");
-
+}
 module.exports.evalGraders = (thesis) => {
   let thesisId = thesis.id;
   let progressId = 0;
