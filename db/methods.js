@@ -33,6 +33,7 @@ module.exports.createTestData = () => {
       ethesis: "ethesislinkki.com",
       abstract: "Abstract from ethesis blaablaa",
       grade: "Laudatur",
+      deadline: "2016-04-19T21:00:00.000Z",
     }),
     tables["Grader"].create({
       name: "Mr. Grader2",
