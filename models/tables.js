@@ -5,6 +5,7 @@ const seq = require("../db/db_connection").sequalize;
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   name: Sequelize.STRING,
+  title: Sequelize.STRING,
   email: Sequelize.STRING,
   admin: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
