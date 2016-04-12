@@ -1,10 +1,10 @@
 const Sequelize = require("sequelize");
-// const db = require("../db/db_connection");
 const seq = require("../db/db_connection").sequalize;
 
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   name: Sequelize.STRING,
+  title: Sequelize.STRING,
   email: Sequelize.STRING,
   admin: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
@@ -54,22 +54,11 @@ Thesis.belongsTo(StudyField);
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
-Grader.belongsToMany(Thesis, { through: "GraderThesis" });
-Thesis.belongsToMany(Grader, {through: "GraderThesis"});
-
-CouncilMeeting.hasMany(Thesis, { as: "Theses" });
-
-
-User.belongsTo(StudyField);
-
-Thesis.hasMany(Review);
-
-User.hasMany(Thesis);
-User.hasMany(Review);
-
-StudyField.hasMany(Thesis);
-StudyField.hasMany(User);
-
+/*
+Use force here if you want to modify tables
+For clearing and adding testdata force is not needed
+*/
+//seq.sync({ force: true });
 seq.sync();
 
 module.exports.sync = () => {

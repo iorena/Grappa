@@ -17,6 +17,9 @@ class BaseModel {
     //   this.args[key]. = args[key];
     // }
   }
+  findOne(params) {
+    return tables[this.tablename].findOne({ where: params });
+  }
   /*
    * Returns all the rows from a table.
    *

@@ -1,10 +1,12 @@
 "use strict";
 
+const Reminder = require("../services/EmailReminder");
+
 const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
-const tables = require("../models/tables");
+
 
 module.exports.findAll = (req, res) => {
   Thesis
@@ -34,18 +36,24 @@ module.exports.saveOne = (req, res) => {
   .then(thesis => {
     savedthesis = thesis;
     return Promise.all([
+      console.log("l�htee emaileja " + thesis.author);
+      Reminder.sendStudentReminder(thesis),
+      Reminder.sendProfessorReminder(thesis),
+      Reminder.sendPrinterReminder(thesis),
+
       Thesisprogress.saveThesisProgressFromNewThesis(thesis),
       addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate),
       Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis),
       Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis),
-    ])
- })
- .then((stuff) => {
+      ])
+  })
+  .then((stuff) => {
    return Thesisprogress.evalGraders(savedthesis);
  })
- .then(() => {
+  .then(() => {
    res.status(200).send(savedthesis);
  })
+  
   .catch(err => {
     res.status(500).send({
       message: "Thesis saveOne produced an error",
