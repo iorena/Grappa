@@ -15,7 +15,6 @@ class EmailReader {
     });
     // Parses only error messages received from this address
     this.daemonName = "mailer-daemon@googlemail.com";
-    this.thing = "";
   }
 
   checkIfErrorMessage(textbody) {
@@ -24,63 +23,46 @@ class EmailReader {
   /*
    * Method for reading single message stream
    */
-  readMessage(msg, seqno) {
-    const prefix = "(#" + seqno + ") ";
+  readMessage(msg) {
     // reads two streams from msg body, content and header
-    let chunks = [], messagebody = "";
-    msg.on("body", (stream, info) => {
-      if (info.which === "TEXT") {
-        console.log(prefix + "Body [%s] found, %d total bytes", inspect(info.which), info.size);
-      }
-      let buffer = "", count = 0;
-      stream.on("data", (chunk) => {
-        buffer += chunk.toString("utf8");
-        messagebody += buffer;
-        chunks.push(chunk.toString("utf8"));
-        console.log("chunks " + chunks.length);
-        // console.log("buffer: " + buffer);
-      });
-      console.log("buffer: " + buffer);
-      stream.once("end", () => {
-        if (info.which !== "TEXT") {
-          // const header = inspect(Imap.parseHeader(buffer));
-          // console.log(prefix + "Parsed header: " + header);
-          console.log("buffer: " + buffer);
-          console.log("buffer size " + buffer.length);
-          console.log("chunks " + chunks.length);
-          console.log("body -----");
-          console.log(messagebody);
-          console.log("-----------");
-
-          // if (buffer.indexOf("<") !== -1) {
-          //   var user = buffer.substring(buffer.indexOf("<"), buffer.indexOf(">"));
-          //   console.log("user " + user);
-          // }
-        } else {
-          console.log(prefix + "Body [%s] Finished", inspect(info.which));
+    let chunks = [];
+    return new Promise((resolve, reject) => {
+      msg.on("body", (stream, info) => {
+        if (info.which === "TEXT") {
+          console.log("Body [%s] found, %d total bytes", inspect(info.which), info.size);
         }
+        stream.on("data", (chunk) => {
+          chunks.push(chunk.toString("utf8"));
+        });
       });
-    });
-    msg.once("attributes", function(attrs) {
-      console.log(prefix + "Attributes: %s", inspect(attrs, false, 8));
-    });
-    msg.once("end", function() {
-      console.log(prefix + "Finished");
-    });
+      msg.once("attributes", function(attrs) {
+        console.log("Attributes: %s", inspect(attrs, false, 8));
+      });
+      msg.once("end", function() {
+        resolve(chunks.join("\n"));
+      });
+    })
   }
 
   /*
    * Fetches the messages from inbox and reads them as streams
    */
   readInbox(box) {
-    let result = { yo: "asdf" };
+    let messages = [];
     const imap = this.imap;
     console.log("Messages total: " + box.messages.total);
-    const f = imap.seq.fetch(box.messages.total-1 + ":*", { bodies: ["HEADER.FIELDS (FROM)","TEXT"] });
+    const f = imap.seq.fetch("2:3", {
+      bodies: ["TEXT", "HEADER.FIELDS (ANSWERED)"],
+    });
 
     return new Promise((resolve, reject) => {
       f.on("message", (msg, seqno) => {
-        const msgresult = this.readMessage(msg, seqno);
+        this.readMessage(msg).then(msg => {
+          messages.push(msg);
+          console.log("täällä viesti! " + msg.length);
+          // console.log(msg);
+          // console.log("\n\n\n");
+        })
       })
       f.once("error", (err) => {
         console.log("Fetch error: " + err);
@@ -90,7 +72,8 @@ class EmailReader {
       f.once("end", () => {
         console.log("Done fetching all messages!");
         imap.end();
-        resolve(result);
+        console.log("messages: " + messages.length);
+        resolve(messages);
       });
     })
   }
@@ -132,6 +115,14 @@ class EmailReader {
     })
   }
 
+  checkMessagesForErrors(messages) {
+    messages.map(msg => {
+      console.log("message");
+      // console.log(msg);
+      // if (msg.indexOf())
+    })
+  }
+
   checkEmail() {
     return this.openImap()
       .then(() => {
@@ -139,6 +130,10 @@ class EmailReader {
       })
       .then(box => {
         return this.readInbox(box);
+      })
+      .then(messages => {
+        console.log("messages yo " + messages.length);
+        this.checkMessagesForErrors(messages);
       })
   }
 }
