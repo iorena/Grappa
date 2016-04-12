@@ -44,7 +44,9 @@ router.get("/review", reviewCtrl.findAll);
 router.post("/review", reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
-router.post("/grader", graderCtrl.saveOne);
+// router.post("/grader", graderCtrl.saveOne);
+router.post("/grader", graderCtrl.saveIfDoesntExist);
+
 
 router.get("/thesisprogress", thesisprogressCtrl.findAll);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);

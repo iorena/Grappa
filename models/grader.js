@@ -8,17 +8,26 @@ class Grader extends BaseModel {
     super("Grader");
   }
 
+  findOrCreate(grader, gradertitle){
+    tables.Grader
+    .findOne({where: {name: grader, title: gradertitle}})
+    .then((graders) => {
+      if(graders === null){
+        return tables.Grader.create({name: grader, title: gradertitle})
+      } else {
+        return graders;
+      }
+    })
+  }
+
   saveIfDoesntExist(thesis) {
-    tables.Grader.findOrCreate({
-      where: {name: thesis.grader, title: thesis.gradertitle},
-      default: {name: thesis.grader, title: thesis.gradertitle},
-    });
-    tables.Grader.findOrCreate({
-      where: {name: thesis.grader2, title: thesis.grader2title},
-      default: {name: thesis.grader2, title: thesis.grader2title},
-    });
+    let queries = [];
+    queries.push(this.findOrCreate(thesis.grader, thesis.gradertitle));
+    queries.push(this.findOrCreate(thesis.grader2, thesis.grader2title));
+    return Promise.all(queries);
   }
 }
+
 
 
 module.exports.class = Grader;

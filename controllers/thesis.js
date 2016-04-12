@@ -2,7 +2,7 @@
 
 const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
-const Grader = require("../controllers/grader");
+const Grader = require("../models/grader");
 
 module.exports.findAll = (req, res) => {
   Thesis
@@ -19,15 +19,16 @@ module.exports.findAll = (req, res) => {
 };
 
 module.exports.saveOne = (req, res) => {
+  Grader.saveIfDoesntExist(req.body);
   Thesis
   .saveOne(req.body)
   .then(thesis => {
     Thesisprogress.saveThesisProgressFromNewThesis(thesis);
-    Grader.saveGraderFromNewThesis(req.body);
-    Thesisprogress.evalGraders(thesis);
+    // Thesisprogress.evalGraders(thesis);
     res.status(200).send(thesis);
   })
   .catch(err => {
+    console.log("error" + err);
     res.status(500).send({
       message: "Thesis saveOne produced an error",
       error: err,
