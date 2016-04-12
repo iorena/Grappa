@@ -54,7 +54,8 @@ Thesis.belongsTo(StudyField);
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
-Grader.belongsToMany(Thesis, { through: "GraderTheses" });
+Grader.belongsToMany(Thesis, { through: "GraderThesis" });
+Thesis.belongsToMany(Grader, {through: "GraderThesis"});
 
 CouncilMeeting.hasMany(Thesis, { as: "Theses" });
 
@@ -62,13 +63,21 @@ CouncilMeeting.hasMany(Thesis, { as: "Theses" });
 User.belongsTo(StudyField);
 
 Thesis.hasMany(Review);
-// Thesis.hasMany(Grader);
 
 User.hasMany(Thesis);
 User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
+
+seq.sync();
+
+module.exports.sync = () => {
+  seq.sync();
+};
+module.exports.sync.force= () => {
+  seq.sync({ force: true });
+};
 
 module.exports = {
   User,
@@ -78,10 +87,4 @@ module.exports = {
   StudyField,
   Review,
   ThesisProgress,
-};
-module.exports.sync = {
-  seq.sync();
-};
-module.exports.sync.force={
-  seq.sync({ force: true });∫
 };

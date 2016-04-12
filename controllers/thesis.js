@@ -2,8 +2,6 @@
 
 const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
-//const { CouncilMeeting } = require("../models/tables");
-const tables = require("../models/tables.js");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
 
@@ -32,11 +30,14 @@ module.exports.saveOne = (req, res) => {
   Thesis
   .saveOne(thesisValues)
   .then(thesis => {
+
    Thesisprogress.saveThesisProgressFromNewThesis(thesis);
    addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
-    // Thesisprogress.evalGraders(thesis);
-    res.status(200).send(thesis);
-  })
+   Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
+   Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
+   
+   res.status(200).send(thesis);
+ })
   .catch(err => {
     res.status(500).send({
       message: "Thesis saveOne produced an error",

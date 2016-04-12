@@ -47,7 +47,7 @@ module.exports.createTestData = () => Q.all([
     title: "Professor of internet",
   }),
   tables.CouncilMeeting.create({
-    date: Date.now(),
+    date: "2016-04-12T00:00:00.000Z",
   }),
   tables.StudyField.create({
     name: "Algoritmit",
@@ -60,6 +60,7 @@ module.exports.createTestData = () => Q.all([
     documentsSent: Date.now(),
     isDone: false,
   }),
+  tables.sync();
 ]);
 
 module.exports.dump = () => {
