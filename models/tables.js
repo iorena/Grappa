@@ -50,24 +50,26 @@ const ThesisProgress = seq.define("ThesisProgress", {
 Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
 
+
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
 Grader.belongsToMany(Thesis, { through: "GraderTheses" });
 
-CouncilMeeting.belongsToMany(Thesis, { through: "CouncilMeetingTheses" });
+CouncilMeeting.hasMany(Thesis, { as: "Theses" });
+
 
 User.belongsTo(StudyField);
 
 Thesis.hasMany(Review);
-Thesis.hasMany(Grader);
-Thesis.hasOne(CouncilMeeting);
+//Thesis.hasMany(Grader);
 
 User.hasMany(Thesis);
 User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
+
 
 /*
 Use force here if you want to modify tables

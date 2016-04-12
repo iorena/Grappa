@@ -46,3 +46,4 @@ class BaseModel {
 }
 
 module.exports = BaseModel;
+module.exports.tables = tables;
