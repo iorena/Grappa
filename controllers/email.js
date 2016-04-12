@@ -1,16 +1,13 @@
 "use strict";
 
-const Imap = require('imap');
-const inspect = require('util').inspect;
-
-const sender = require("./EmailSender");
-const reader = require("./EmailReader");
+const Sender = require("../services/EmailSender");
+const Reader = require("../services/EmailReader");
 
 module.exports.sendEmail = (req, res) => {
-  sender
+  Sender
   .sendEmail("teemu.koivisto@helsinki.fi", "Viestin Otsikko", "asdf\nasdf\n\n\tasdfasdf\ntext")
   .then(info => {
-    res.send({
+    res.status(200).send({
       info,
     })
   })
@@ -23,14 +20,8 @@ module.exports.sendEmail = (req, res) => {
 }
 
 module.exports.checkEmail = (req, res) => {
-  reader
-  .openImap()
-  .then(() => {
-    return reader.openInbox();
-  })
-  .then(box => {
-    return reader.readInbox(box);
-  })
+  Reader
+  .checkEmail()
   .then(() => {
     res.status(200).send({
       message: "Emails checked succesfully"

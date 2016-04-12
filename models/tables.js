@@ -45,6 +45,23 @@ const ThesisProgress = seq.define("ThesisProgress", {
   documentsSent: Sequelize.DATE,
   isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
+const ReminderEmail = seq.define("ReminderEmail", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  name: Sequelize.STRING,
+  title: Sequelize.STRING,
+  body: Sequelize.STRING,
+  grappaLink: Sequelize.STRING,
+  thesisLink: Sequelize.STRING,
+  thesisAbstract: Sequelize.STRING,
+});
+const EmailStatus = seq.define("EmailStatus", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  to: Sequelize.STRING,
+  lastSent: Sequelize.DATE,
+  deadline: Sequelize.DATE,
+  whoAddedEmail: Sequelize.STRING,
+  producedError: { type: Sequelize.BOOLEAN, defaultValue: false },
+});
 
 Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
@@ -68,6 +85,7 @@ User.hasMany(Review);
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
 
+EmailStatus.hasOne(ReminderEmail);
 /*
 Use force here if you want to modify tables
 For clearing and adding testdata force is not needed
