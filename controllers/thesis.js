@@ -4,7 +4,7 @@ const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
-
+const tables = require("../models/tables");
 
 module.exports.findAll = (req, res) => {
   Thesis
@@ -21,22 +21,30 @@ module.exports.findAll = (req, res) => {
 };
 
 module.exports.saveOne = (req, res) => {
+  let savedthesis;
   let originalDate = new Date(req.body.deadline);
   let thesisValues;
   if (req.body.deadline != null){
     thesisValues = addCorrectDeadline(req.body);
   }
   Grader.saveIfDoesntExist(req.body);
+
   Thesis
   .saveOne(thesisValues)
   .then(thesis => {
-
-   Thesisprogress.saveThesisProgressFromNewThesis(thesis);
-   addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
-   Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
-   Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
-   
-   res.status(200).send(thesis);
+    savedthesis = thesis;
+    return Promise.all([
+      Thesisprogress.saveThesisProgressFromNewThesis(thesis),
+      addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate),
+      Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis),
+      Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis),
+    ])
+ })
+ .then((stuff) => {
+   return Thesisprogress.evalGraders(savedthesis);
+ })
+ .then(() => {
+   res.status(200).send(savedthesis);
  })
   .catch(err => {
     res.status(500).send({
@@ -47,7 +55,7 @@ module.exports.saveOne = (req, res) => {
 };
 
 function addCorrectDeadline(thesisValues){
-  var date = new Date(thesisValues.deadline); 
+  var date = new Date(thesisValues.deadline);
   date.setDate(date.getDate()-10);
   thesisValues.deadline = date.toISOString();
   return thesisValues;

@@ -60,7 +60,6 @@ module.exports.createTestData = () => Q.all([
     documentsSent: Date.now(),
     isDone: false,
   }),
-  tables.sync();
 ]);
 
 module.exports.dump = () => {
