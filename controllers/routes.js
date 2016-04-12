@@ -1,9 +1,9 @@
 "use strict";
 
 const express = require("express");
-const router = express.Router();
+const router = new express.Router();
 
-const db_methods = require("../db/methods");
+const dbMethods = require("../db/methods");
 
 const thesisCtrl = require("./thesis");
 const councilmeetingCtrl = require("./councilmeeting");
@@ -19,7 +19,7 @@ const index = (req, res) => {
 };
 
 const dump = (req, res) => {
-  db_methods
+  dbMethods
   .dump()
   .then(tables => {
     res.status(200).send(tables);

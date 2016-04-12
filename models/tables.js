@@ -73,7 +73,7 @@ StudyField.hasMany(User);
 Use force here if you want to modify tables
 For clearing and adding testdata force is not needed
 */
-//seq.sync({ force: true });
+// seq.sync({ force: true });
 seq.sync();
 
 module.exports = {
