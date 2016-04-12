@@ -36,7 +36,7 @@ module.exports.saveOne = (req, res) => {
   .then(thesis => {
     savedthesis = thesis;
     return Promise.all([
-      console.log("l�htee emaileja " + thesis.author);
+      console.log("lähtee emaileja " + thesis.author),
       Reminder.sendStudentReminder(thesis),
       Reminder.sendProfessorReminder(thesis),
       Reminder.sendPrinterReminder(thesis),
