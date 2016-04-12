@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const scheduler = require("./controllers/scheduler");
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors());
+
+scheduler.start();
 
 const routes = require("./controllers/routes");
 

@@ -46,6 +46,14 @@ class BaseModel {
   drop() {
     return tables[this.tablename].destroy({ where: {} });
   }
+  /*
+   * Updates a field
+   *
+   */
+  update(values, params) {
+    tables[this.tablename].update(values, { where: params });
+  }
 }
 
 module.exports = BaseModel;
+module.exports.tables = tables;

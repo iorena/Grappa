@@ -16,10 +16,10 @@ class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
   }
-  // validateAuthor() {
-  //
-  // }
 }
 
 module.exports.class = Thesis;
 module.exports = new Thesis();
+module.exports.getModel = () =>{
+  return BaseModel.tables.Thesis;
+};

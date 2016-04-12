@@ -1,12 +1,21 @@
 "use strict";
 
 const BaseModel = require("./base_model");
+const tables = require("./tables.js");
 
-class Thesisprogress extends BaseModel {
+class ThesisProgress extends BaseModel {
   constructor() {
-    super("Thesisprogress");
+    super("ThesisProgress");
+  }
+
+  changeGraderStatus(thesisId){
+    tables["ThesisProgress"].update({gradersStatus: true}, {where: {thesisId: thesisId}});
   }
 }
 
-module.exports.class = Thesisprogress;
-module.exports = new Thesisprogresss();
+
+module.exports.class = ThesisProgress;
+module.exports = new ThesisProgress();
+module.exports.getModel = () =>{
+  return BaseModel.tables.ThesisProgress;
+};
