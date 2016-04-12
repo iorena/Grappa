@@ -1,10 +1,11 @@
 "use strict";
 
+const Reminder = require("../services/EmailReminder");
+
 const Thesis = require("../models/thesis");
 const Thesisprogress = require("../controllers/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
-
 
 module.exports.findAll = (req, res) => {
   Thesis
@@ -27,17 +28,22 @@ module.exports.saveOne = (req, res) => {
     thesisValues = addCorrectDeadline(req.body);
   }
   Grader.saveIfDoesntExist(req.body);
+  
   Thesis
   .saveOne(thesisValues)
   .then(thesis => {
+    console.log("l�htee emaileja " + thesis.author);
+    Reminder.sendStudentReminder(thesis);
+    Reminder.sendProfessorReminder(thesis);
+    Reminder.sendPrinterReminder(thesis);
 
-   Thesisprogress.saveThesisProgressFromNewThesis(thesis);
-   addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
-   Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
-   Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
-   
-   res.status(200).send(thesis);
- })
+    Thesisprogress.saveThesisProgressFromNewThesis(thesis);
+    addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate);
+    Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis);
+    Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis);
+
+    res.status(200).send(thesis);
+  })
   .catch(err => {
     res.status(500).send({
       message: "Thesis saveOne produced an error",
@@ -47,7 +53,7 @@ module.exports.saveOne = (req, res) => {
 };
 
 function addCorrectDeadline(thesisValues){
-  var date = new Date(thesisValues.deadline); 
+  var date = new Date(thesisValues.deadline);
   date.setDate(date.getDate()-10);
   thesisValues.deadline = date.toISOString();
   return thesisValues;

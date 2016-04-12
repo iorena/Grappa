@@ -22,15 +22,22 @@ module.exports.dropTables = () => {
 };
 
 module.exports.createTestData = () => Q.all([
-  tables.User.create({
-    name: "testikäyttäja",
-    email: "email@email.com",
+  tables["User"].create({
+    name: "B Virtanen",
+    title: "print-person",
+    email: "ohtugrappa@gmail.com",
     admin: true,
   }),
-  tables.Thesis.create({
+  tables["User"].create({
+    name: "Kjell Lemström",
+    title: "head of studies",
+    email: "ohtugrappa@gmail.com",
+    admin: true,
+  }),
+  tables["Thesis"].create({
     author: "Pekka Graduttaja",
-    email: "pekka@maili.com",
-    title: "testigradu",
+    email: "ohtugrappa@gmail.com",
+    title: "Oliko Jeesus olemassa",
     urkund: "urkunlinkki.com",
     ethesis: "ethesislinkki.com",
     abstract: "Abstract from ethesis blaablaa",

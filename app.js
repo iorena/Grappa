@@ -12,7 +12,7 @@ const port = process.env.PORT || 9876;
 // use npm run db if you want to reset the local database!
 // use npm run db:prod if you want to reset the Heroku database!
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV !== "production") {
   let logger = require("morgan");
   app.use(logger("dev"));
 }
