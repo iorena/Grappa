@@ -32,3 +32,6 @@ class Grader extends BaseModel {
 
 module.exports.class = Grader;
 module.exports = new Grader();
+module.exports.getModel = () =>{
+  return BaseModel.tables.Grader;
+};
