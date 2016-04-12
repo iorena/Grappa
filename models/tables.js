@@ -70,14 +70,6 @@ User.hasMany(Review);
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
 
-
-/*
-Use force here if you want to modify tables
-For clearing and adding testdata force is not needed
-*/
-// seq.sync({ force: true });
-seq.sync();
-
 module.exports = {
   User,
   Thesis,
@@ -86,4 +78,10 @@ module.exports = {
   StudyField,
   Review,
   ThesisProgress,
+};
+module.exports.sync = {
+  seq.sync();
+};
+module.exports.sync.force={
+  seq.sync({ force: true });∫
 };
