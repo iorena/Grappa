@@ -3,7 +3,7 @@ const ThesisProgress = require("../models/thesisprogress");
 
 module.exports = {
   processThesisStatus: (thesis) => {
-    console.log(thesis);
+    // console.log(thesis);
     // check mailbox for boomerangs
     // check if ethesis link has been added, in which case fetch abstract
     // send reminder emails if needed
