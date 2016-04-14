@@ -28,7 +28,7 @@ class Grader extends BaseModel {
   }
 
   linkGraderAndThesis(graderName, title, thesis)  {
-    this
+    return this
     .getModel()
     .findOne({where: {name: graderName, title: title}})
     .then(function(grader){
