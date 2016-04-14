@@ -1,7 +1,6 @@
 "use strict";
 
 const Sender = require("./EmailSender");
-
 const User = require("../models/user");
 const Thesis = require("../models/thesis");
 
