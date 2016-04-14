@@ -24,9 +24,9 @@
     "body-parser": "^1.15.0",
     "cors": "^2.7.1",
     "express": "^4.13.4",
-    "node-schedule": "^1.1.0",
     "imap": "^0.8.16",
     "morgan": "^1.7.0",
+    "node-schedule": "^1.1.0",
     "nodemailer": "^2.3.1",
     "nodemon": "^1.9.1",
     "pg": "^4.5.2",
@@ -41,6 +41,7 @@
     "eslint": "^2.6.0",
     "eslint-config-airbnb": "^6.2.0",
     "eslint-plugin-react": "^4.2.3",
+    "nock": "^8.0.0",
     "mocha": "2.4.5"
   }
 }

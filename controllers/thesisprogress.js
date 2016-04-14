@@ -52,7 +52,6 @@ module.exports.evalGraders = (thesis) => {
       let doctor = false;
       graders.map((grader) => {
          const title = grader.title;
-         console.log(title);
          if (title === "Prof") {
            if (professor) {
              doctor = true;
@@ -66,8 +65,6 @@ module.exports.evalGraders = (thesis) => {
       if (professor && doctor) {
         ThesisProgress.changeGraderStatus(thesisId);
       }
-      console.log(professor);
-      console.log(doctor);
     });
   });
 };

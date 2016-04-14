@@ -62,6 +62,21 @@ Thesis.belongsTo(StudyField);
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
+Grader.belongsToMany(Thesis, { through: "GraderThesis" });
+Thesis.belongsToMany(Grader, {through: "GraderThesis"});
+
+CouncilMeeting.hasMany(Thesis, { as: "Theses" });
+
+User.belongsTo(StudyField);
+
+Thesis.hasMany(Review);
+
+User.hasMany(Thesis);
+User.hasMany(Review);
+
+StudyField.hasMany(Thesis);
+StudyField.hasMany(User);
+
 /*
 Use force here if you want to modify tables
 For clearing and adding testdata force is not needed

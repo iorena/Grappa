@@ -16,8 +16,9 @@ module.exports = {
       Thesis
       .findAll()
       .then(theses => {
-        theses.forEach(thesis => {
-          ThesisProgress.findAll({ where: { id: thesis.dataValues.id } })
+        theses.map(thesis => {
+          ThesisProgress
+          .findAll({ where: { id: thesis.dataValues.id } })
           .then(progress => {
             const values = thesis.dataValues;
             for (const attr in progress[0].dataValues) {
@@ -25,7 +26,7 @@ module.exports = {
                 values[attr] = progress[0].dataValues[attr];
               }
             }
-              processor.processThesisStatus(values);
+            processor.processThesisStatus(values);
           });
         });
       })
