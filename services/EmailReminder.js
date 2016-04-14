@@ -34,24 +34,52 @@ class EmailReminder {
   }
 
   sendStudentReminder(thesis) {
-    const email= this.composeEmail("toStudent", thesis.email, thesis, "http://grappa-app.herokuapp.com/thesis/" + thesis.id);
-    Sender.sendEmail(email.to, email.subject, email.body);
+    const email = this.composeEmail("toStudent", thesis.email, thesis, "http://grappa-app.herokuapp.com/thesis/" + thesis.id);
+    return Sender.sendEmail(email.to, email.subject, email.body)
+      .then(info => {
+        return EmailStatus.saveOne({
+          lastSent: Date.now(),
+          type: "StudentReminder",
+          to: email.to,
+          whoAddedEmail: "ohtugrappa@gmail.com", // vai User
+          deadline: new Date("1 1 2017"),
+        });
+      })
   }
 
   sendPrinterReminder(thesis){
-    User.findOne({ title: "print-person" })
-    .then(printPerson => {
-      const email= this.composeEmail("toPrinter", printPerson.email, thesis, "");
-      Sender.sendEmail(email.to, email.subject, email.body);
-    })
+    let email;
+    return User.findOne({ title: "print-person" })
+      .then(printPerson => {
+        email = this.composeEmail("toPrinter", printPerson.email, thesis, "");
+        return Sender.sendEmail(email.to, email.subject, email.body);
+      })
+      .then(info => {
+        return EmailStatus.saveOne({
+          lastSent: Date.now(),
+          type: "PrinterReminder",
+          to: email.to,
+          whoAddedEmail: "ohtugrappa@gmail.com", // vai User
+          deadline: new Date("1 1 2017"),
+        });
+      })
   }
 
   sendProfessorReminder(thesis){
     // etsi proffa ja sen email
     // testi kovakoodaus >>
     const professorEmail = "ohtugrappa@gmail.com";
-    const email= this.composeEmail("toProfessor", professorEmail, thesis, "http://grappa-app.herokuapp.com/thesis/" + thesis.id);
-    Sender.sendEmail(email.to, email.subject, email.body);
+    const email = this.composeEmail("toProfessor", professorEmail, thesis, "http://grappa-app.herokuapp.com/thesis/" + thesis.id);
+    return Sender.sendEmail(email.to, email.subject, email.body)
+      .then(info => {
+        return EmailStatus.saveOne({
+          lastSent: Date.now(),
+          type: "ProfessorReminder",
+          to: professorEmail,
+          whoAddedEmail: "ohtugrappa@gmail.com", // vai User
+          deadline: new Date("1 1 2017"),
+        });
+      })
   }
 }
 

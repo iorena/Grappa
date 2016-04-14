@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 
-scheduler.start();
+// scheduler.start();
 
 const routes = require("./controllers/routes");
 

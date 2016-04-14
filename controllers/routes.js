@@ -12,6 +12,7 @@ const graderCtrl = require("./grader");
 const userCtrl = require("./user");
 const thesisprogressCtrl = require("./thesisprogress");
 const emailCtrl = require("./email");
+const emailstatusCtrl = require("./email_status");
 
 const index = (req, res) => {
   res.json({
@@ -55,8 +56,12 @@ router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 router.get("/user", userCtrl.findAll);
 router.post("/user", userCtrl.saveOne);
 
+router.get("/emailstatus", emailstatusCtrl.findAll);
+router.post("/emailstatus", emailstatusCtrl.saveOne);
+
 router.get("/email/send", emailCtrl.sendEmail);
 router.get("/email/check", emailCtrl.checkEmail);
+router.get("/email/remind", emailCtrl.sendReminder);
 
 router.get("/dbdump", dump);
 
