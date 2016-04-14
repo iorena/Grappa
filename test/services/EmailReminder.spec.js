@@ -33,7 +33,10 @@ describe("When call sendStudentReminder", () => {
 describe("When call sendPrinterReminder", () => {
 	it("should call sendEmail with correct values", (done) => {
 		Sinon.stub(User, "findOne", (params) => {
+
 			if (params === { title: "print-person"}) {
+
+				//console.log("yo here Iam");
 				return Promise.resolve({
 					id: 2,
 				    name: "B Virtanen",
@@ -44,7 +47,9 @@ describe("When call sendPrinterReminder", () => {
 			} else {
 				return Promise.resolve(null);
 			}
+
 		})
+
   		Reminder.sendPrinterReminder(thesis)
   		.then(status => {
   			expect(spy.calledWith("ohtugrappa@gmail.com")).to.equal(true);
@@ -53,9 +58,6 @@ describe("When call sendPrinterReminder", () => {
   		//console.log(spy.args);
   		//let printer = User.findOne({ title: "print-person" });
 
-  		
-
-        
 
 	});
 });
@@ -66,3 +68,4 @@ describe("When call sendProfessorReminder", () => {
   		expect(spy.calledWith("ohtugrappa@gmail.com", "REMINDER: Submit your evaluation")).to.equal(true);
 	});
 });
+

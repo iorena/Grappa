@@ -7,6 +7,9 @@ const Thesis = require("../models/thesis");
 class EmailReminder {
   constructor() {}
 
+  /*
+   *Method for compose the specific email 
+   */
   composeEmail(type, to, thesis, grappaLink) {
     let email = {
       to,
@@ -32,6 +35,9 @@ class EmailReminder {
     return email;
   }
 
+  /*
+   *Method for handling the process of composing and sending an email to the student
+   */
   sendStudentReminder(thesis) {
     const email = this.composeEmail("toStudent", thesis.email, thesis, "http://grappa-app.herokuapp.com/thesis/" + thesis.id);
     return Sender.sendEmail(email.to, email.subject, email.body)
@@ -46,6 +52,9 @@ class EmailReminder {
       })
   }
 
+  /*
+   *Method for handling the process of composing and sending an email to the print-person
+   */
   sendPrinterReminder(thesis){
     let email;
     return User.findOne({ title: "print-person" })
@@ -64,6 +73,9 @@ class EmailReminder {
       })
   }
 
+  /*
+   *Method for handling the process of composing and sending an email to the professor
+   */
   sendProfessorReminder(thesis){
     // etsi proffa ja sen email
     // testi kovakoodaus >>
