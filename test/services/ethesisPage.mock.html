@@ -1,395 +1,449 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!-- saved from url=(0045)https://helda.helsinki.fi/handle/10138/161191 -->
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<meta content="width=device-width, initial-scale=1" name="viewport">
-<meta name="Generator" content="DSpace 1.8.3">
-<link type="text/css" rel="stylesheet" media="screen" href="./ethesisPage.mock_files/bootstrap-3.1.1.min.css">
-<link type="text/css" rel="stylesheet" media="screen" href="./ethesisPage.mock_files/helda.css">
-<link type="text/css" rel="stylesheet" media="screen" href="./ethesisPage.mock_files/dspace-styles.css">
-<link type="text/css" rel="stylesheet" media="screen" href="./ethesisPage.mock_files/authority-control.css">
-<link type="text/css" rel="stylesheet" media="screen" href="./ethesisPage.mock_files/jquery-ui-1.8.15.custom.css">
-<link type="application/opensearchdescription+xml" rel="search" href="https://helda.helsinki.fi/open-search/description.xml" title="Helda">
-<script type="text/javascript" async="" src="./ethesisPage.mock_files/loader-min.js"></script><script async="" src="./ethesisPage.mock_files/analytics.js"></script><script type="text/javascript">
-                                //Clear default text of emty text areas on focus
-                                function tFocus(element)
-                                {
-                                        if (element.value == ' '){element.value='';}
-                                }
-                                //Clear default text of emty text areas on submit
-                                function tSubmit(form)
-                                {
-                                        var defaultedElements = document.getElementsByTagName("textarea");
-                                        for (var i=0; i != defaultedElements.length; i++){
-                                                if (defaultedElements[i].value == ' '){
-                                                        defaultedElements[i].value='';}}
-                                }
-                                //Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
-                                function disableEnterKey(e)
-                                {
-                                     var key;
-									var target = event.target || event.srcElement;
-									if(target.type == 'textarea')
-									        return true;
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta name="Generator" content="DSpace 1.8.3">
+  <link type="application/opensearchdescription+xml" rel="search" href="https://helda.helsinki.fi/open-search/description.xml" title="Helda">
+  <script type="text/javascript">
+    //Clear default text of emty text areas on focus
+    function tFocus(element) {
+      if (element.value == ' ') {
+        element.value = '';
+      }
+    }
+    //Clear default text of emty text areas on submit
+    function tSubmit(form) {
+      var defaultedElements = document.getElementsByTagName("textarea");
+      for (var i = 0; i != defaultedElements.length; i++) {
+        if (defaultedElements[i].value == ' ') {
+          defaultedElements[i].value = '';
+        }
+      }
+    }
+    //Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
+    function disableEnterKey(e) {
+      var key;
+      var target = event.target || event.srcElement;
+      if (target.type == 'textarea')
+        return true;
 
-                                     if(window.event)
-                                          key = window.event.keyCode;     //Internet Explorer
-                                     else
-                                          key = e.which;     //Firefox and Netscape
+      if (window.event)
+        key = window.event.keyCode; //Internet Explorer
+      else
+        key = e.which; //Firefox and Netscape
 
-                                     if(key == 13)  //if "Enter" pressed, then disable!
-                                          return false;
-                                     else
-                                          return true;
-                                }
-            </script>
-<script type="text/javascript" src="./ethesisPage.mock_files/jquery-1.8.2.min.js"> </script>
-<script type="text/javascript" src="./ethesisPage.mock_files/jquery-ui-1.8.15.custom.min.js"> </script>
-<script type="text/javascript" src="./ethesisPage.mock_files/bootstrap-3.1.1.min.js"> </script>
-<script type="text/javascript" src="./ethesisPage.mock_files/helda.js"> </script>
-<script type="text/javascript">
-                          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                          })(window,document,'script','//www.google-analytics.com/analytics.js','ga')
+      if (key == 13) //if "Enter" pressed, then disable!
+        return false;
+      else
+        return true;
+    }
+  </script>
+  <script type="text/javascript">
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga')
 
-                          ga('create', 'UA-36892843-2', 'auto');
-                          ga('create', 'UA-6314483-1', 'auto', {'name': 'libraryTracker'});
-                          ga('send', 'pageview');
-                          ga('libraryTracker.send', 'pageview');
-
-
-                        </script>
-<title>Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta</title>
-<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/">
-<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.contributor" content="Helsingin yliopisto, Oikeustieteellinen tiedekunta" xml:lang="fi">
-<meta name="DC.contributor" content="University of Helsinki, Faculty of Law" xml:lang="en">
-<meta name="DC.contributor" content="Helsingfors universitet, Juridiska fakulteten" xml:lang="sv">
-<meta name="DC.creator" content="Kantokorpi, Saara">
-<meta name="DCTERMS.dateAccepted" content="2016-04-11T13:04:34Z" scheme="DCTERMS.W3CDTF">
-<meta name="DCTERMS.available" content="2016-04-11T13:04:34Z" scheme="DCTERMS.W3CDTF">
-<meta name="DCTERMS.issued" content="2016" scheme="DCTERMS.W3CDTF">
-<meta name="DC.identifier" content="URN:NBN:fi:hulib-201604071367" scheme="DCTERMS.URI">
-<meta name="DC.identifier" content="http://hdl.handle.net/10138/161191" scheme="DCTERMS.URI">
-<meta name="DCTERMS.abstract" content="Tutkimuksessa käsitellään laittomasti hankittujen todisteiden hyödyntämiskieltoa perus- ja ihmisoikeusnäkökulmasta, erityisesti liittyen oikeudenkäymiskaaren 17 luvun uuteen säännökseen koskien hyödyntämiskieltoa. Tutkimus lähtee liikkeelle rikosprosessista ja sen tarkoituksesta selvittää aineellinen totuus asiassa. Tämän jälkeen siirrytään esittelemään todisteiden hyödyntämiskieltoa tätä tavoitetta rajoittavana tekijänä.
+    ga('create', 'UA-36892843-2', 'auto');
+    ga('create', 'UA-6314483-1', 'auto', {
+      'name': 'libraryTracker'
+    });
+    ga('send', 'pageview');
+    ga('libraryTracker.send', 'pageview');
+  </script>
+  <title>Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta</title>
+  <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/">
+  <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+  <meta name="DC.contributor" content="Helsingin yliopisto, Oikeustieteellinen tiedekunta" xml:lang="fi">
+  <meta name="DC.contributor" content="University of Helsinki, Faculty of Law" xml:lang="en">
+  <meta name="DC.contributor" content="Helsingfors universitet, Juridiska fakulteten" xml:lang="sv">
+  <meta name="DC.creator" content="Kantokorpi, Saara">
+  <meta name="DCTERMS.dateAccepted" content="2016-04-11T13:04:34Z" scheme="DCTERMS.W3CDTF">
+  <meta name="DCTERMS.available" content="2016-04-11T13:04:34Z" scheme="DCTERMS.W3CDTF">
+  <meta name="DCTERMS.issued" content="2016" scheme="DCTERMS.W3CDTF">
+  <meta name="DC.identifier" content="URN:NBN:fi:hulib-201604071367" scheme="DCTERMS.URI">
+  <meta name="DC.identifier" content="http://hdl.handle.net/10138/161191" scheme="DCTERMS.URI">
+  <meta name="DCTERMS.abstract" content="Tutkimuksessa käsitellään laittomasti hankittujen todisteiden hyödyntämiskieltoa perus- ja ihmisoikeusnäkökulmasta, erityisesti liittyen oikeudenkäymiskaaren 17 luvun uuteen säännökseen koskien hyödyntämiskieltoa. Tutkimus lähtee liikkeelle rikosprosessista ja sen tarkoituksesta selvittää aineellinen totuus asiassa. Tämän jälkeen siirrytään esittelemään todisteiden hyödyntämiskieltoa tätä tavoitetta rajoittavana tekijänä.
 Hyödyntämiskielto on osa oikeudenmukaista oikeudenkäyntiä, joten tutkimuksessa on esitelty oikeudenmukaisen oikeudenkäynnin sisältöä, sen taustoja ja oikeuslähteitä.  Kaikkein merkityksellisin oikeudenmukaisen oikeudenkäynnin sisällön määrittelijä on Euroopan ihmisoikeustuomioistuin. Tutkimuksessa on tämän vuoksi esitelty ihmisoikeustuomioistuimen oikeuskäytäntöä liittyen todisteiden hyödyntämiskieltoon. Tämän lisäksi on määritelty oikeudenmukaisen oikeudenkäynnin alaisia käsitteitä, jotka liittyvät vahvasti hyödyntämiskieltoon, kuten itsekriminointisuojaa ja kontradiktatorisuuden periaatetta.
-Koska tarkoituksena on ollut kotimaisen oikeuden sisällön selvittäminen, on tutkimuksessa käsitelty myös melko laajasti kotimaista oikeuskäytäntöä. Suomessa ei ole aikaisemmin ollut laintasoista säännöstä hyödyntämiskiellosta, joten oikeuskäytännössä viitataan ihmisoikeussopimuksiin ja Euroopan ihmisoikeustuomioistuimen oikeuskäytäntöön. Tämän jälkeen tutkimuksessa siirrytään uuden hyödyntämiskieltopykälän valmisteluun ja esitellään valmistelun lopputulos, eli voimaan tullut uusi säännös. Lopuksi on pohdittu, että muuttaako säännös kansallista oikeutta, vai voiko sen nähdä enimmäkseen oikeuskäytännön kirjaamisena lakiin." xml:lang="fi">
-<meta name="DC.publisher" content="Helsingin yliopisto" xml:lang="fi">
-<meta name="DC.publisher" content="University of Helsinki" xml:lang="en">
-<meta name="DC.publisher" content="Helsingfors universitet" xml:lang="sv">
-<meta name="DC.title" content="Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta" xml:lang="fi">
-<meta name="DC.type" content="pro gradu -tutkielmat" xml:lang="fi">
-<meta name="DC.type" content="master&#39;s thesis" xml:lang="en">
-<meta name="DC.type" content="pro gradu-avhandlingar" xml:lang="sv">
-<meta name="DC.subject" content="Valtiosääntöoikeus" xml:lang="fi">
-<meta name="DC.subject" content="Constitutional law" xml:lang="en">
-<meta name="DC.subject" content="Statsförfattningsrätt" xml:lang="sv">
+Koska tarkoituksena on ollut kotimaisen oikeuden sisällön selvittäminen, on tutkimuksessa käsitelty myös melko laajasti kotimaista oikeuskäytäntöä. Suomessa ei ole aikaisemmin ollut laintasoista säännöstä hyödyntämiskiellosta, joten oikeuskäytännössä viitataan ihmisoikeussopimuksiin ja Euroopan ihmisoikeustuomioistuimen oikeuskäytäntöön. Tämän jälkeen tutkimuksessa siirrytään uuden hyödyntämiskieltopykälän valmisteluun ja esitellään valmistelun lopputulos, eli voimaan tullut uusi säännös. Lopuksi on pohdittu, että muuttaako säännös kansallista oikeutta, vai voiko sen nähdä enimmäkseen oikeuskäytännön kirjaamisena lakiin."
+    xml:lang="fi">
+  <meta name="DC.publisher" content="Helsingin yliopisto" xml:lang="fi">
+  <meta name="DC.publisher" content="University of Helsinki" xml:lang="en">
+  <meta name="DC.publisher" content="Helsingfors universitet" xml:lang="sv">
+  <meta name="DC.title" content="Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta" xml:lang="fi">
+  <meta name="DC.type" content="pro gradu -tutkielmat" xml:lang="fi">
+  <meta name="DC.type" content="master&#39;s thesis" xml:lang="en">
+  <meta name="DC.type" content="pro gradu-avhandlingar" xml:lang="sv">
+  <meta name="DC.subject" content="Valtiosääntöoikeus" xml:lang="fi">
+  <meta name="DC.subject" content="Constitutional law" xml:lang="en">
+  <meta name="DC.subject" content="Statsförfattningsrätt" xml:lang="sv">
 
-<meta content="https://helda.helsinki.fi/handle/10138/161191" name="citation_abstract_html_url">
-<meta content="Kantokorpi, Saara" name="citation_authors">
-<meta content="2016" name="citation_date">
-<meta content="Helsingin yliopisto" name="citation_publisher">
-<meta content="Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta" name="citation_title">
+  <meta content="https://helda.helsinki.fi/handle/10138/161191" name="citation_abstract_html_url">
+  <meta content="Kantokorpi, Saara" name="citation_authors">
+  <meta content="2016" name="citation_date">
+  <meta content="Helsingin yliopisto" name="citation_publisher">
+  <meta content="Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta" name="citation_title">
 </head>
+
 <body>
-<div id="ds-main">
-<div class="helda-header">
-<div class="container">
-<div class="row">
-<div class="col-md-6">
-<p>
-<a href="https://helda.helsinki.fi/">
-<img src="./ethesisPage.mock_files/logo.png">
-</a>
-</p>
-<a href="https://helda.helsinki.fi/">
-<div class="sitename">
-<h1>Helda</h1>
-<h2>Helsingin yliopisto</h2>
-<h2>Helsingfors universitet</h2>
-<h2>University of Helsinki</h2>
-</div>
-</a>
-</div>
-<div class="col-md-6">
-<div class="row">
-<div class="col-md-12">
-<ul class="inline-list language-selector pull-right">
-<li>
-<a href="https://helda.helsinki.fi/handle/10138/161191?locale-attribute=fi">
+  <div id="ds-main">
+    <div class="helda-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p>
+              <a href="https://helda.helsinki.fi/">
+              </a>
+            </p>
+            <a href="https://helda.helsinki.fi/">
+              <div class="sitename">
+                <h1>Helda</h1>
+                <h2>Helsingin yliopisto</h2>
+                <h2>Helsingfors universitet</h2>
+                <h2>University of Helsinki</h2>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-12">
+                <ul class="inline-list language-selector pull-right">
+                  <li>
+                    <a href="https://helda.helsinki.fi/handle/10138/161191?locale-attribute=fi">
 											Suomeksi
 										</a>
-</li>
-<li>
-<a href="https://helda.helsinki.fi/handle/10138/161191?locale-attribute=sv">						
+                  </li>
+                  <li>
+                    <a href="https://helda.helsinki.fi/handle/10138/161191?locale-attribute=sv">
 											På svenska
 										</a>
-</li>
-<li>
-<a href="https://helda.helsinki.fi/handle/10138/161191?locale-attribute=en">						
+                  </li>
+                  <li>
+                    <a href="https://helda.helsinki.fi/handle/10138/161191?locale-attribute=en">
 											In English
 										</a>
-</li>
-</ul>
-</div>
-</div>
-<div class="row">
-<div class="col-md-12">
-<ul class="inline-list language-selector pull-right">
-<li>
-<a href="https://helda.helsinki.fi/login">Login</a>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="helda-mainmenu-container">
-<div class="container">
-<div class="row">
-<div class="col-md-12">
-<ul class="pull-right">
-<li>
-<div class="search-tab">
-<span class="glyphicon glyphicon-search search-tab-icon">
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <ul class="inline-list language-selector pull-right">
+                  <li>
+                    <a href="https://helda.helsinki.fi/login">Login</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="helda-mainmenu-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <ul class="pull-right">
+              <li>
+                <div class="search-tab">
+                  <span class="glyphicon glyphicon-search search-tab-icon">
 </span></div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="helda-search-container">
-<div class="container">
-<div class="row">
-<form onsubmit="javascript:tSubmit(this);" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" method="get" action="https://helda.helsinki.fi/search">
-<input value="20" name="rpp" type="hidden">
-<input value="0" name="sort_by" type="hidden">
-<input value="DESC" name="order" type="hidden">
-<div class="col-md-6">
-<input class="search-field" value="" placeholder="Keywords" id="query" name="query" type="text">
-</div>
-<div class="col-md-2">
-<select name="scope" class="search-context">
-<option>Entire archive</option>
-<option selected="selected" value="10138/18096">Current collection</option>
-</select>
-</div>
-<div class="col-md-2">
-<button class="search-btn" id="submit_search" type="submit">Search</button>
-</div>
-<div class="col-md-2">
-<a class="pull-right" style="color: #ffffff;" href="https://helda.helsinki.fi/advanced-search">Advanced Search</a>
-</div>
-</form>
-</div>
-</div>
-</div>
-<div class="container">
-<div class="row">
-<div style="margin-top: 15px;" class="col-md-12">
-<ul class="breadcrumb">
-<li class="ds-trail-link first-link ">
-<a href="https://helda.helsinki.fi/">
-<span class="glyphicon glyphicon-home">
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="helda-search-container">
+      <div class="container">
+        <div class="row">
+          <form onsubmit="javascript:tSubmit(this);" accept-charset="UTF-8" enctype="application/x-www-form-urlencoded" method="get" action="https://helda.helsinki.fi/search">
+            <input value="20" name="rpp" type="hidden">
+            <input value="0" name="sort_by" type="hidden">
+            <input value="DESC" name="order" type="hidden">
+            <div class="col-md-6">
+              <input class="search-field" value="" placeholder="Keywords" id="query" name="query" type="text">
+            </div>
+            <div class="col-md-2">
+              <select name="scope" class="search-context">
+                <option>Entire archive</option>
+                <option selected="selected" value="10138/18096">Current collection</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="search-btn" id="submit_search" type="submit">Search</button>
+            </div>
+            <div class="col-md-2">
+              <a class="pull-right" style="color: #ffffff;" href="https://helda.helsinki.fi/advanced-search">Advanced Search</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div style="margin-top: 15px;" class="col-md-12">
+          <ul class="breadcrumb">
+            <li class="ds-trail-link first-link ">
+              <a href="https://helda.helsinki.fi/">
+                <span class="glyphicon glyphicon-home">
 </span></a>
-</li>
-<span class="divider">/</span>
-<li class="ds-trail-link ">
-<a href="https://helda.helsinki.fi/handle/10138/17738">E-thesis</a>
-</li>
-<span class="divider">/</span>
-<li class="ds-trail-link ">
-<a href="https://helda.helsinki.fi/handle/10138/18086">Pro gradut ja vastaavat opinnäytteet</a>
-</li>
-<span class="divider">/</span>
-<li class="ds-trail-link ">
-<a href="https://helda.helsinki.fi/handle/10138/18096">Oikeustieteellinen tiedekunta</a>
-</li>
-<span class="divider">/</span>
-<li class="ds-trail-link active">View Item</li>
-</ul> </div>
-</div>
-<div class="row">
-<div class="col-md-12">
-<div id="ds-body">
-<h1 class="ds-div-head">Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta</h1>
-<div id="aspect_artifactbrowser_ItemViewer_div_item-view" class="ds-static-div primary">
-<p class="ds-paragraph item-view-toggle item-view-toggle-top">
-<a href="https://helda.helsinki.fi/handle/10138/161191?show=full">Show full item record</a>
-</p>
-<div xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="item-links">
-<a href="http://www.refworks.com/express/ExpressImport.asp?filter=RefWorks%20Tagged%20Format&amp;url=http://dspace2.lib.helsinki.fi/tds-www/refworks2.php?source=Laittomasti+hankittujen+todisteiden+hy%C3%B6dynt%C3%A4miskielto+rikosprosessissa+perus-+ja+ihmisoikeusn%C3%A4k%C3%B6kulmasta%20|||%20/%20%20|||URN:NBN:fi:hulib-201604071367;%20http://hdl.handle.net/10138/161191%20|||%20|||Kantokorpi%2C+Saara%20|||Helsingin+yliopisto%20|||2016%20|||%20|||Tutkimuksessa+k%C3%A4sitell%C3%A4%C3%A4n+laittomasti+hankittujen+todisteiden+hy%C3%B6dynt%C3%A4miskieltoa+perus-+ja+ihmisoikeusn%C3%A4k%C3%B6kulmasta%2C+erityisesti+liittyen+oikeudenk%C3%A4ymiskaaren+17+luvun+uuteen+s%C3%A4%C3%A4nn%C3%B6kseen+koskien+hy%C3%B6dynt%C3%A4miskieltoa.+Tutkimus+l%C3%A4htee+liikkeelle+rikosprosessista+ja+sen+tarkoituksesta+selvitt%C3%A4%C3%A4+aineellinen+totuus+asiassa.+T%C3%A4m%C3%A4n+j%C3%A4lkeen+siirryt%C3%A4%C3%A4n+esittelem%C3%A4%C3%A4n+todisteiden+hy%C3%B6dynt%C3%A4miskieltoa+t%C3%A4t%C3%A4+tavoitetta+rajoittavana+tekij%C3%A4n%C3%A4.%0D%0AHy%C3%B6dynt%C3%A4miskielto+on+osa+oikeudenmukaista+oikeudenk%C3%A4ynti%C3%A4%2C+joten+tutkimuk...%20|||%20|||%20|||%20|||%20|||Valtios%C3%A4%C3%A4nt%C3%B6oikeus;%20Constitutional+law;%20Statsf%C3%B6rfattningsr%C3%A4tt%20|||%20%20|||%20|||&amp;vendor=University%20of%20Helsinki&amp;encoding=65001" target="_blank">
-<img src="./ethesisPage.mock_files/rf.gif" alt="Export to RefWorks" title="Export to RefWorks" style="height: 15px; margin-bottom: 7px;">
-</a>
-</div>
-<h4 xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom">Permalink</h4>
-<a xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" href="http://urn.fi/URN:NBN:fi:hulib-201604071367">http://urn.fi/URN:NBN:fi:hulib-201604071367</a>
-<div xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" style="margin-bottom: 20px;"> </div>
-<table xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="ds-includeSet-table table table-bordered">
-<tbody><tr class="ds-table-row even">
-<td>
-<span class="bold">Title: </span>
-</td>
-<td>Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta</td>
-</tr>
-<tr class="ds-table-row odd">
-<td>
-<span class="bold">Author:</span>
-</td>
-<td>
-<span>Kantokorpi, Saara</span>
-</td>
-</tr>
-<tr class="ds-table-row even">
-<td>
-<span class="bold">Contributor:</span>
-</td>
-<td>University of Helsinki, Faculty of Law</td>
-</tr>
-<tr class="ds-table-row even">
-<td>
-<span class="bold">Thesis level:</span>
-</td>
-<td>master's thesis</td>
-</tr>
-<tr class="ds-table-row even">
-<td>
-<span class="bold">Abstract:</span>
-</td>
-<td class="abstract-field">Tutkimuksessa käsitellään laittomasti hankittujen todisteiden hyödyntämiskieltoa perus- ja ihmisoikeusnäkökulmasta, erityisesti liittyen oikeudenkäymiskaaren 17 luvun uuteen säännökseen koskien hyödyntämiskieltoa. Tutkimus lähtee liikkeelle rikosprosessista ja sen tarkoituksesta selvittää aineellinen totuus asiassa. Tämän jälkeen siirrytään esittelemään todisteiden hyödyntämiskieltoa tätä tavoitetta rajoittavana tekijänä.
-Hyödyntämiskielto on osa oikeudenmukaista oikeudenkäyntiä, joten tutkimuksessa on esitelty oikeudenmukaisen oikeudenkäynnin sisältöä, sen taustoja ja oikeuslähteitä.  Kaikkein merkityksellisin oikeudenmukaisen oikeudenkäynnin sisällön määrittelijä on Euroopan ihmisoikeustuomioistuin. Tutkimuksessa on tämän vuoksi esitelty ihmisoikeustuomioistuimen oikeuskäytäntöä liittyen todisteiden hyödyntämiskieltoon. Tämän lisäksi on määritelty oikeudenmukaisen oikeudenkäynnin alaisia käsitteitä, jotka liittyvät vahvasti hyödyntämiskieltoon, kuten itsekriminointisuojaa ja kontradiktatorisuuden periaatetta.
-Koska tarkoituksena on ollut kotimaisen oikeuden sisällön selvittäminen, on tutkimuksessa käsitelty myös melko laajasti kotimaista oikeuskäytäntöä. Suomessa ei ole aikaisemmin ollut laintasoista säännöstä hyödyntämiskiellosta, joten oikeuskäytännössä viitataan ihmisoikeussopimuksiin ja Euroopan ihmisoikeustuomioistuimen oikeuskäytäntöön. Tämän jälkeen tutkimuksessa siirrytään uuden hyödyntämiskieltopykälän valmisteluun ja esitellään valmistelun lopputulos, eli voimaan tullut uusi säännös. Lopuksi on pohdittu, että muuttaako säännös kansallista oikeutta, vai voiko sen nähdä enimmäkseen oikeuskäytännön kirjaamisena lakiin.</td>
-</tr>
-<tr class="ds-table-row odd">
-<td>
-<span class="bold">URI:</span>
-</td>
-<td>
-<a href="http://urn.fi/URN:NBN:fi:hulib-201604071367">URN:NBN:fi:hulib-201604071367</a>
-<br>
-<a href="http://hdl.handle.net/10138/161191">http://hdl.handle.net/10138/161191</a>
-</td>
-</tr>
-<tr class="ds-table-row even">
-<td>
-<span class="bold">Date:</span>
-</td>
-<td>2016</td>
-</tr>
-<tr class="ds-table-row odd">
-<td>
-<span class="bold">Discipline:</span>
-</td>
-<td>
-<a href="https://helda.helsinki.fi/browse?value=Valtios%C3%A4%C3%A4nt%C3%B6oikeus&amp;type=subject">Valtiosääntöoikeus</a>
-<br>
-<a href="https://helda.helsinki.fi/browse?value=Constitutional%20law&amp;type=subject">Constitutional law</a>
-<br>
-<a href="https://helda.helsinki.fi/browse?value=Statsf%C3%B6rfattningsr%C3%A4tt&amp;type=subject">Statsförfattningsrätt</a>
-</td>
-</tr>
-</tbody></table>
-<span xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adc&amp;rft_id=URN%3ANBN%3Afi%3Ahulib-201604071367&amp;rft_id=http%3A%2F%2Fhdl.handle.net%2F10138%2F161191&amp;rft_id=URN%3ANBN%3Afi%3Ahulib-201604071367&amp;rfr_id=info%3Asid%2Fdspace.org%3Arepository&amp;rft.identifier=URN%3ANBN%3Afi%3Ahulib-201604071367">
-            ﻿ 
+            </li>
+            <span class="divider">/</span>
+            <li class="ds-trail-link ">
+              <a href="https://helda.helsinki.fi/handle/10138/17738">E-thesis</a>
+            </li>
+            <span class="divider">/</span>
+            <li class="ds-trail-link ">
+              <a href="https://helda.helsinki.fi/handle/10138/18086">Pro gradut ja vastaavat opinnäytteet</a>
+            </li>
+            <span class="divider">/</span>
+            <li class="ds-trail-link ">
+              <a href="https://helda.helsinki.fi/handle/10138/18096">Oikeustieteellinen tiedekunta</a>
+            </li>
+            <span class="divider">/</span>
+            <li class="ds-trail-link active">View Item</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="ds-body">
+            <h1 class="ds-div-head">Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta</h1>
+            <div id="aspect_artifactbrowser_ItemViewer_div_item-view" class="ds-static-div primary">
+              <p class="ds-paragraph item-view-toggle item-view-toggle-top">
+                <a href="https://helda.helsinki.fi/handle/10138/161191?show=full">Show full item record</a>
+              </p>
+              <div xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="item-links">
+                <a href="http://www.refworks.com/express/ExpressImport.asp?filter=RefWorks%20Tagged%20Format&amp;url=http://dspace2.lib.helsinki.fi/tds-www/refworks2.php?source=Laittomasti+hankittujen+todisteiden+hy%C3%B6dynt%C3%A4miskielto+rikosprosessissa+perus-+ja+ihmisoikeusn%C3%A4k%C3%B6kulmasta%20|||%20/%20%20|||URN:NBN:fi:hulib-201604071367;%20http://hdl.handle.net/10138/161191%20|||%20|||Kantokorpi%2C+Saara%20|||Helsingin+yliopisto%20|||2016%20|||%20|||Tutkimuksessa+k%C3%A4sitell%C3%A4%C3%A4n+laittomasti+hankittujen+todisteiden+hy%C3%B6dynt%C3%A4miskieltoa+perus-+ja+ihmisoikeusn%C3%A4k%C3%B6kulmasta%2C+erityisesti+liittyen+oikeudenk%C3%A4ymiskaaren+17+luvun+uuteen+s%C3%A4%C3%A4nn%C3%B6kseen+koskien+hy%C3%B6dynt%C3%A4miskieltoa.+Tutkimus+l%C3%A4htee+liikkeelle+rikosprosessista+ja+sen+tarkoituksesta+selvitt%C3%A4%C3%A4+aineellinen+totuus+asiassa.+T%C3%A4m%C3%A4n+j%C3%A4lkeen+siirryt%C3%A4%C3%A4n+esittelem%C3%A4%C3%A4n+todisteiden+hy%C3%B6dynt%C3%A4miskieltoa+t%C3%A4t%C3%A4+tavoitetta+rajoittavana+tekij%C3%A4n%C3%A4.%0D%0AHy%C3%B6dynt%C3%A4miskielto+on+osa+oikeudenmukaista+oikeudenk%C3%A4ynti%C3%A4%2C+joten+tutkimuk...%20|||%20|||%20|||%20|||%20|||Valtios%C3%A4%C3%A4nt%C3%B6oikeus;%20Constitutional+law;%20Statsf%C3%B6rfattningsr%C3%A4tt%20|||%20%20|||%20|||&amp;vendor=University%20of%20Helsinki&amp;encoding=65001"
+                  target="_blank">
+                </a>
+              </div>
+              <h4 xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom">Permalink</h4>
+              <a xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" href="http://urn.fi/URN:NBN:fi:hulib-201604071367">http://urn.fi/URN:NBN:fi:hulib-201604071367</a>
+              <div xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" style="margin-bottom: 20px;"> </div>
+              <table xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="ds-includeSet-table table table-bordered">
+                <tbody>
+                  <tr class="ds-table-row even">
+                    <td>
+                      <span class="bold">Title: </span>
+                    </td>
+                    <td>Laittomasti hankittujen todisteiden hyödyntämiskielto rikosprosessissa perus- ja ihmisoikeusnäkökulmasta</td>
+                  </tr>
+                  <tr class="ds-table-row odd">
+                    <td>
+                      <span class="bold">Author:</span>
+                    </td>
+                    <td>
+                      <span>Kantokorpi, Saara</span>
+                    </td>
+                  </tr>
+                  <tr class="ds-table-row even">
+                    <td>
+                      <span class="bold">Contributor:</span>
+                    </td>
+                    <td>University of Helsinki, Faculty of Law</td>
+                  </tr>
+                  <tr class="ds-table-row even">
+                    <td>
+                      <span class="bold">Thesis level:</span>
+                    </td>
+                    <td>master's thesis</td>
+                  </tr>
+                  <tr class="ds-table-row even">
+                    <td>
+                      <span class="bold">Abstract:</span>
+                    </td>
+                    <td class="abstract-field">Tutkimuksessa käsitellään laittomasti hankittujen todisteiden hyödyntämiskieltoa perus- ja ihmisoikeusnäkökulmasta, erityisesti liittyen oikeudenkäymiskaaren 17 luvun uuteen säännökseen koskien hyödyntämiskieltoa. Tutkimus lähtee liikkeelle
+                      rikosprosessista ja sen tarkoituksesta selvittää aineellinen totuus asiassa. Tämän jälkeen siirrytään esittelemään todisteiden hyödyntämiskieltoa tätä tavoitetta rajoittavana tekijänä. Hyödyntämiskielto on osa oikeudenmukaista oikeudenkäyntiä,
+                      joten tutkimuksessa on esitelty oikeudenmukaisen oikeudenkäynnin sisältöä, sen taustoja ja oikeuslähteitä. Kaikkein merkityksellisin oikeudenmukaisen oikeudenkäynnin sisällön määrittelijä on Euroopan ihmisoikeustuomioistuin. Tutkimuksessa
+                      on tämän vuoksi esitelty ihmisoikeustuomioistuimen oikeuskäytäntöä liittyen todisteiden hyödyntämiskieltoon. Tämän lisäksi on määritelty oikeudenmukaisen oikeudenkäynnin alaisia käsitteitä, jotka liittyvät vahvasti hyödyntämiskieltoon,
+                      kuten itsekriminointisuojaa ja kontradiktatorisuuden periaatetta. Koska tarkoituksena on ollut kotimaisen oikeuden sisällön selvittäminen, on tutkimuksessa käsitelty myös melko laajasti kotimaista oikeuskäytäntöä. Suomessa ei ole
+                      aikaisemmin ollut laintasoista säännöstä hyödyntämiskiellosta, joten oikeuskäytännössä viitataan ihmisoikeussopimuksiin ja Euroopan ihmisoikeustuomioistuimen oikeuskäytäntöön. Tämän jälkeen tutkimuksessa siirrytään uuden hyödyntämiskieltopykälän
+                      valmisteluun ja esitellään valmistelun lopputulos, eli voimaan tullut uusi säännös. Lopuksi on pohdittu, että muuttaako säännös kansallista oikeutta, vai voiko sen nähdä enimmäkseen oikeuskäytännön kirjaamisena lakiin.</td>
+                  </tr>
+                  <tr class="ds-table-row odd">
+                    <td>
+                      <span class="bold">URI:</span>
+                    </td>
+                    <td>
+                      <a href="http://urn.fi/URN:NBN:fi:hulib-201604071367">URN:NBN:fi:hulib-201604071367</a>
+                      <br>
+                      <a href="http://hdl.handle.net/10138/161191">http://hdl.handle.net/10138/161191</a>
+                    </td>
+                  </tr>
+                  <tr class="ds-table-row even">
+                    <td>
+                      <span class="bold">Date:</span>
+                    </td>
+                    <td>2016</td>
+                  </tr>
+                  <tr class="ds-table-row odd">
+                    <td>
+                      <span class="bold">Discipline:</span>
+                    </td>
+                    <td>
+                      <a href="https://helda.helsinki.fi/browse?value=Valtios%C3%A4%C3%A4nt%C3%B6oikeus&amp;type=subject">Valtiosääntöoikeus</a>
+                      <br>
+                      <a href="https://helda.helsinki.fi/browse?value=Constitutional%20law&amp;type=subject">Constitutional law</a>
+                      <br>
+                      <a href="https://helda.helsinki.fi/browse?value=Statsf%C3%B6rfattningsr%C3%A4tt&amp;type=subject">Statsförfattningsrätt</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <span xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adc&amp;rft_id=URN%3ANBN%3Afi%3Ahulib-201604071367&amp;rft_id=http%3A%2F%2Fhdl.handle.net%2F10138%2F161191&amp;rft_id=URN%3ANBN%3Afi%3Ahulib-201604071367&amp;rfr_id=info%3Asid%2Fdspace.org%3Arepository&amp;rft.identifier=URN%3ANBN%3Afi%3Ahulib-201604071367">
+            ﻿
         </span>
-<h2 xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom">Files in this item</h2>
-<table xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="ds-table file-list table table-bordered">
-<tbody><tr class="ds-table-header-row">
-<th>Files</th>
-<th>Size</th>
-<th>Format</th>
-<th>View</th>
-</tr>
-<tr>
-<td colspan="4">
-<p>There are no files associated with this item.</p>
-</td>
-</tr>
-</tbody></table>
-<div xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" id="leiki_helda1"><div class="leikiwidget" id="helda1"><div id="helda1_tabs" class="tabs"><div id="tabs-0" class="tab "><h4 style="margin:0;">Samankaltaisia artikkeleita</h4><div class="items"><div class="item"><a href="https://helda.helsinki.fi/handle/10138/135379" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Hyödyntämisrajoituksen vaikutus näyttöharkinnassa</a> <span class="time">12.06.2014</span></div><div class="item"><a href="https://helda.helsinki.fi/handle/10138/135337" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Hyödyntämiskielto lapsen seksuaalista hyväksikäyttöä koskevassa todistelussa</a> <span class="time">12.06.2014</span></div><div class="item"><a href="https://helda.helsinki.fi/handle/10138/135315" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Ylimääräisen tiedon käyttämisen kontekstuaalisuus - erityisesti todistelun sekä perus- ja ihmisoikeuksien valossa</a> <span class="time">12.06.2014</span></div><div class="item"><a href="https://helda.helsinki.fi/handle/10138/21558" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Rikosasioiden kohtuullinen käsittelyaika ja rikosoikeudenkäyntien viivästymistä vastaan olevat tehokkaat oikeuskeinot : erityisesti Euroopan ihmisoikeussopimuksen ja ihmisoikeustuomioistuimen oikeuskäytännön valossa</a> <span class="time">25.11.2010</span></div><div class="item last"><a href="https://helda.helsinki.fi/handle/10138/156723" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Välittömyyden merkitys ja hinta – kirjallisten todistajankertomusten käyttö siviiliprosessissa</a> <span class="time">01.10.2014</span></div></div></div><div id="tabs-1" class="tab "><h4 style="margin:0;">Aiheisiin liittyviÃ¤ kursseja</h4><div class="items"><div class="item"><a href="http://courses.helsinki.fi/fi/35009" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Evidence Based Medicine</a></div><div class="item"><a href="http://courses.helsinki.fi/fi/20831" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Comparative Crime and Criminal Justice</a></div><div class="item"><a href="http://courses.helsinki.fi/fi/21708" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Käytännön taidot: Rikosoikeuden oikeudenkäyntikurssi</a></div><div class="item"><a href="http://courses.helsinki.fi/fi/732263" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Riski, kontrolli ja nuoret rikoksentekijät</a></div><div class="item last"><a href="http://courses.helsinki.fi/fi/20420" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}" oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Rikosoikeuden valinnaiset opinnot</a></div></div></div></div></div></div>
-<script xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom">
-var _leikiw = _leikiw || [];
-_leikiw.push({
-  elementId: 'leiki_helda1',
-  name: 'helda1',
-  server: '//suositukset.student.helsinki.fi/focus'
-});
-(function() {
-  var t = new Date().getTime(); t -= t % (1000*60*60*24*2);
-  var l = document.createElement('script'); l.type = 'text/javascript'; l.async = true;
-  l.src = '//suositukset.student.helsinki.fi/focus/widgets/loader/loader-min.js?t='+t;
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(l, s);
-})();
-</script>
-<h2 class="ds-list-head">This item appears in the following Collection(s)</h2>
-<ul xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="ds-referenceSet-list">
-<li>
-<a href="https://helda.helsinki.fi/handle/10138/18096">Oikeustieteellinen tiedekunta</a> [947]<br>
-</li>
-</ul>
-<p class="ds-paragraph item-view-toggle item-view-toggle-bottom">
-<a href="https://helda.helsinki.fi/handle/10138/161191?show=full">Show full item record</a>
-</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div id="footer">
-<div class="container">
-<footer class="row">
-<div class="col-md-12">
-<div class="row">
-<div class="col-md-4">
-<div class="clearfix">
-<img src="./ethesisPage.mock_files/HY_logo_small.png" class="logo">
-<ul class="no-bullet address">
-<li>
-<strong>Helsingin yliopiston kirjasto</strong>
-</li>
-<li>PL 53 (Fabianinkatu 30)</li>
-<li>00014 Helsingin yliopisto</li>
-<li>&nbsp;</li>
-<li>puh: 02941 23920</li>
-</ul>
-</div>
-</div>
-<div class="col-md-4">
-<ul class="no-bullet help-links">
-<li class="list-divider">
-<a href="https://helda.helsinki.fi/contact">Contact Us</a>
-<span class="pull-right">→</span>
-</li>
-<li class="list-divider">
-<a href="https://helda.helsinki.fi/feedback">Send Feedback</a>
-<span class="pull-right">→</span>
-</li>
-</ul>
-</div>
-<div class="col-md-4">
-<ul class="no-bullet">
-<li>
-<div class="hide-for-small-only">
-<a class="some" href="https://www.facebook.com/hulib">Facebook</a>
-<a class="some twitter" href="https://twitter.com/HULib">Twitter</a>
-<a class="some youtube" href="https://www.youtube.com/user/Hulibvideot">Youtube</a>
-<a class="some instagram" href="http://instagram.com/helunilib">Instagram</a>
-</div>
-</li>
-<li class="divider">
-</li><li class="copy">© Helsingin yliopiston kirjasto 2014</li>
-</ul>
-</div>
-</div>
-</div>
-</footer>
-</div>
-</div>
-</div>
-
-
-</body></html>
+              <h2 xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom">Files in this item</h2>
+              <table xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="ds-table file-list table table-bordered">
+                <tbody>
+                  <tr class="ds-table-header-row">
+                    <th>Files</th>
+                    <th>Size</th>
+                    <th>Format</th>
+                    <th>View</th>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <p>There are no files associated with this item.</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" id="leiki_helda1">
+                <div class="leikiwidget" id="helda1">
+                  <div id="helda1_tabs" class="tabs">
+                    <div id="tabs-0" class="tab ">
+                      <h4 style="margin:0;">Samankaltaisia artikkeleita</h4>
+                      <div class="items">
+                        <div class="item"><a href="https://helda.helsinki.fi/handle/10138/135379" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135379&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Hyödyntämisrajoituksen vaikutus näyttöharkinnassa</a>                          <span class="time">12.06.2014</span></div>
+                        <div class="item"><a href="https://helda.helsinki.fi/handle/10138/135337" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135337&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Hyödyntämiskielto lapsen seksuaalista hyväksikäyttöä koskevassa todistelussa</a>                          <span class="time">12.06.2014</span></div>
+                        <div class="item"><a href="https://helda.helsinki.fi/handle/10138/135315" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F135315&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Ylimääräisen tiedon käyttämisen kontekstuaalisuus - erityisesti todistelun sekä perus- ja ihmisoikeuksien valossa</a>                          <span class="time">12.06.2014</span></div>
+                        <div class="item"><a href="https://helda.helsinki.fi/handle/10138/21558" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F21558&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Rikosasioiden kohtuullinen käsittelyaika ja rikosoikeudenkäyntien viivästymistä vastaan olevat tehokkaat oikeuskeinot : erityisesti Euroopan ihmisoikeussopimuksen ja ihmisoikeustuomioistuimen oikeuskäytännön valossa</a>                          <span class="time">25.11.2010</span></div>
+                        <div class="item last"><a href="https://helda.helsinki.fi/handle/10138/156723" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=helda.helsinki.fi%2Fhandle%2F10138%2F156723&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=0&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Välittömyyden merkitys ja hinta – kirjallisten todistajankertomusten käyttö siviiliprosessissa</a>                          <span class="time">01.10.2014</span></div>
+                      </div>
+                    </div>
+                    <div id="tabs-1" class="tab ">
+                      <h4 style="margin:0;">Aiheisiin liittyviÃ¤ kursseja</h4>
+                      <div class="items">
+                        <div class="item"><a href="http://courses.helsinki.fi/fi/35009" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F35009&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Evidence Based Medicine</a></div>
+                        <div
+                          class="item"><a href="http://courses.helsinki.fi/fi/20831" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                            oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20831&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Comparative Crime and Criminal Justice</a></div>
+                      <div
+                        class="item"><a href="http://courses.helsinki.fi/fi/21708" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                          oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F21708&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Käytännön taidot: Rikosoikeuden oikeudenkäyntikurssi</a></div>
+                    <div
+                      class="item"><a href="http://courses.helsinki.fi/fi/732263" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                        oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F732263&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Riski, kontrolli ja nuoret rikoksentekijät</a></div>
+                  <div
+                    class="item last"><a href="http://courses.helsinki.fi/fi/20420" target="_top" class="link-headline" onclick="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}"
+                      oncontextmenu="try { window.leikiComLoader.Widget.onClick(this, &#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;); } catch(e) { this.href=&#39;https://suositukset.student.helsinki.fi//focus/mwidget?lpage&amp;rid=courses.helsinki.fi%2Ffi%2F20420&amp;cid=helda.helsinki.fi%2Fhandle%2F10138%2F161191&amp;tabindex=1&amp;section=helda&amp;wname=helda1&amp;referer=https%3A%2F%2Fhelda.helsinki.fi%2Fhandle%2F10138%2F161191&#39;;}">Rikosoikeuden valinnaiset opinnot</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom">
+        var _leikiw = _leikiw || [];
+        _leikiw.push({
+          elementId: 'leiki_helda1',
+          name: 'helda1',
+          server: '//suositukset.student.helsinki.fi/focus'
+        });
+        (function() {
+          var t = new Date().getTime();
+          t -= t % (1000 * 60 * 60 * 24 * 2);
+          var l = document.createElement('script');
+          l.type = 'text/javascript';
+          l.async = true;
+          l.src = '//suositukset.student.helsinki.fi/focus/widgets/loader/loader-min.js?t=' + t;
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(l, s);
+        })();
+      </script>
+      <h2 class="ds-list-head">This item appears in the following Collection(s)</h2>
+      <ul xmlns:oreatom="http://www.openarchives.org/ore/atom/" xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:atom="http://www.w3.org/2005/Atom" class="ds-referenceSet-list">
+        <li>
+          <a href="https://helda.helsinki.fi/handle/10138/18096">Oikeustieteellinen tiedekunta</a> [947]
+          <br>
+        </li>
+      </ul>
+      <p class="ds-paragraph item-view-toggle item-view-toggle-bottom">
+        <a href="https://helda.helsinki.fi/handle/10138/161191?show=full">Show full item record</a>
+      </p>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div id="footer">
+    <div class="container">
+      <footer class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="clearfix">
+                <ul class="no-bullet address">
+                  <li>
+                    <strong>Helsingin yliopiston kirjasto</strong>
+                  </li>
+                  <li>PL 53 (Fabianinkatu 30)</li>
+                  <li>00014 Helsingin yliopisto</li>
+                  <li>&nbsp;</li>
+                  <li>puh: 02941 23920</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <ul class="no-bullet help-links">
+                <li class="list-divider">
+                  <a href="https://helda.helsinki.fi/contact">Contact Us</a>
+                  <span class="pull-right">→</span>
+                </li>
+                <li class="list-divider">
+                  <a href="https://helda.helsinki.fi/feedback">Send Feedback</a>
+                  <span class="pull-right">→</span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <ul class="no-bullet">
+                <li>
+                  <div class="hide-for-small-only">
+                    <a class="some" href="https://www.facebook.com/hulib">Facebook</a>
+                    <a class="some twitter" href="https://twitter.com/HULib">Twitter</a>
+                    <a class="some youtube" href="https://www.youtube.com/user/Hulibvideot">Youtube</a>
+                    <a class="some instagram" href="http://instagram.com/helunilib">Instagram</a>
+                  </div>
+                </li>
+                <li class="divider">
+                </li>
+                <li class="copy">© Helsingin yliopiston kirjasto 2014</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  </div>
+</body>
+</html>
