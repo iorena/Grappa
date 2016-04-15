@@ -6,7 +6,7 @@ const Sender = require("../../services/EmailSender");
 const Reminder = require("../../services/EmailReminder");
 const Sinon = require("sinon");
 const User = require("../../models/user");
-
+const EmailStatus = require("../../models/email_status");
 
 const thesis = {
   id: 999999,
@@ -19,53 +19,65 @@ const thesis = {
   deadline: Date.now(),
 };
 
-let spy = Sinon.spy(Sender, "sendEmail");
+let calledParams = {};
+Sinon.stub(Sender, "sendEmail", (to, subject, body) => {
+	calledParams = {
+		to,
+		subject,
+		body,
+	};
+	return Promise.resolve(calledParams);
+})
+Sinon.stub(EmailStatus, "saveOne", function(params) {
+	return Promise.resolve(params);
+})
+
 
 describe("When call sendStudentReminder", () => {
-  it("should call sendEmail with correct values", () => {
-  	Reminder.sendStudentReminder(thesis);
-
-  	expect(spy.calledWith(thesis.email, "REMINDER: Submit your thesis to eThesis")).to.equal(true);
-  	expect(spy.called).to.equal(true);
+  it("should call sendEmail with correct values", (done) => {
+  	Reminder.sendStudentReminder(thesis)
+  	.then(status => {
+  		expect(calledParams.to).to.equal(thesis.email);
+  		expect(calledParams.subject).to.equal("REMINDER: Submit your thesis to eThesis");
+  		done();
+  	})
   });
 });
 
 describe("When call sendPrinterReminder", () => {
 	it("should call sendEmail with correct values", (done) => {
 		Sinon.stub(User, "findOne", (params) => {
-
-			if (params === { title: "print-person"}) {
-
-				//console.log("yo here Iam");
+			if (typeof params.title !== "undefined" && params.title === "print-person") {
 				return Promise.resolve({
 					id: 2,
 				    name: "B Virtanen",
 				    title: "print-person",
-				    email: "ohtugrappa@gmail.com",
+				    email: "printperson@gmail.com",
 				    admin: true,
 				})
 			} else {
 				return Promise.resolve(null);
 			}
-
 		})
 
   		Reminder.sendPrinterReminder(thesis)
   		.then(status => {
-  			expect(spy.calledWith("ohtugrappa@gmail.com")).to.equal(true);
-  			done();
+	  		expect(calledParams.to).to.equal("printperson@gmail.com");
+	  		expect(calledParams.subject).to.equal("NOTE: Upcoming councilmeeting");
+	  		done();
   		})
-  		//console.log(spy.args);
-  		//let printer = User.findOne({ title: "print-person" });
-
-
 	});
 });
 
+
 describe("When call sendProfessorReminder", () => {
-	it("should call sendEmail with correct values", () => {
-  		Reminder.sendProfessorReminder(thesis);
-  		expect(spy.calledWith("ohtugrappa@gmail.com", "REMINDER: Submit your evaluation")).to.equal(true);
+	it("should call sendEmail with correct values", (done) => {
+  		Reminder.sendProfessorReminder(thesis)
+  		.then(status => {
+	  		expect(calledParams.to).to.equal("ohtugrappa@gmail.com");
+	  		expect(calledParams.subject).to.equal("REMINDER: Submit your evaluation");
+	  		done();
+  		})
 	});
 });
 
