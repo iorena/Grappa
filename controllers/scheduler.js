@@ -25,7 +25,7 @@ module.exports = {
                 values[attr] = progress[0].dataValues[attr];
               }
             }
-              processor.processThesisStatus(values);
+            processor.processThesisStatus(values);
           });
         });
       })

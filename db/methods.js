@@ -5,36 +5,40 @@ const Q = require("q");
 const tables = require("../models/tables");
 
 module.exports.destroyTables = () => {
-  let queries = [];
-  for(let key in tables) {
-    queries.push(tables[key].destroy({where: {}}));
+  const queries = [];
+  for (const key in tables) {
+    if ({}.hasOwnProperty.call(tables, key)) {
+      queries.push(tables[key].destroy({ where: {} }));
+    }
   }
   return Promise.all(queries);
 };
 
 
 module.exports.dropTables = () => {
-  let queries = [];
-  for(let key in tables) {
-    queries.push(tables[key].drop({cascade: true}));
+  const queries = [];
+  for (const key in tables) {
+    if ({}.hasOwnProperty.call(tables, key)) {
+      queries.push(tables[key].drop({ cascade: true }));
+    }
   }
   return Promise.all(queries);
 };
 
 module.exports.createTestData = () => Q.all([
-  tables["User"].create({
+  tables.User.create({
     name: "B Virtanen",
     title: "print-person",
     email: "ohtugrappa@gmail.com",
     admin: true,
   }),
-  tables["User"].create({
+  tables.User.create({
     name: "Kjell Lemström",
     title: "head of studies",
     email: "ohtugrappa@gmail.com",
     admin: true,
   }),
-  tables["Thesis"].create({
+  tables.Thesis.create({
     author: "Pekka Graduttaja",
     email: "ohtugrappa@gmail.com",
     title: "Oliko Jeesus olemassa",

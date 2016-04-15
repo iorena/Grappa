@@ -7,7 +7,6 @@ const Thesisprogress = require("../controllers/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
 
-
 module.exports.findAll = (req, res) => {
   Thesis
   .findAll()
@@ -17,6 +16,21 @@ module.exports.findAll = (req, res) => {
   .catch(err => {
     res.status(500).send({
       message: "Thesis findAll produced an error",
+      error: err,
+    });
+  });
+};
+
+module.exports.updateOne = (req, res) => {
+  console.log(req.body);
+  Thesis
+  .update(req.body, { id: req.body.id })
+  .then(theses => {
+    res.status(200).send(theses);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis update produced an error",
       error: err,
     });
   });

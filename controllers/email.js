@@ -9,28 +9,28 @@ module.exports.sendEmail = (req, res) => {
   .then(info => {
     res.status(200).send({
       info,
-    })
+    });
   })
   .catch(err => {
     res.status(500).send({
       message: "sendEmail hajos",
       error: err,
-    })
-  })
-}
+    });
+  });
+};
 
 module.exports.checkEmail = (req, res) => {
   Reader
   .checkEmail()
   .then(() => {
     res.status(200).send({
-      message: "Emails checked succesfully"
+      message: "Emails checked succesfully",
     });
   })
   .catch(err => {
     res.status(500).send({
       message: "checkEmail hajos",
       error: err,
-    })
-  })
-}
+    });
+  });
+};

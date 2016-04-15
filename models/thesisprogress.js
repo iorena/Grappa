@@ -8,14 +8,12 @@ class ThesisProgress extends BaseModel {
     super("ThesisProgress");
   }
 
-  changeGraderStatus(thesisId){
-    tables["ThesisProgress"].update({gradersStatus: true}, {where: {thesisId: thesisId}});
+  changeGraderStatus(thesisId) {
+    tables.ThesisProgress.update({ gradersStatus: true }, { where: { thesisId } });
   }
 }
 
 
 module.exports.class = ThesisProgress;
 module.exports = new ThesisProgress();
-module.exports.getModel = () =>{
-  return BaseModel.tables.ThesisProgress;
-};
+module.exports.getModel = () => BaseModel.tables.ThesisProgress;

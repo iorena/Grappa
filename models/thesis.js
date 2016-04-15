@@ -20,6 +20,4 @@ class Thesis extends BaseModel {
 
 module.exports.class = Thesis;
 module.exports = new Thesis();
-module.exports.getModel = () =>{
-  return BaseModel.tables.Thesis;
-};
+module.exports.getModel = () => BaseModel.tables.Thesis;

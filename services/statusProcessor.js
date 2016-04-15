@@ -1,6 +1,6 @@
 const ThesisProgress = require("../models/thesisprogress");
 const Thesis = require("../models/thesis");
-const EmailReader = require("./EmailReader");
+// const EmailReader = require("./EmailReader");
 const request = require("request");
 
 module.exports.fetchAbstract = (ethesisUrl) => new Promise((resolve, reject) => {

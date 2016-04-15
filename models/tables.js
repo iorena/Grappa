@@ -54,7 +54,7 @@ Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
 Grader.belongsToMany(Thesis, { through: "GraderThesis" });
-Thesis.belongsToMany(Grader, {through: "GraderThesis"});
+Thesis.belongsToMany(Grader, { through: "GraderThesis" });
 
 CouncilMeeting.hasMany(Thesis, { as: "Theses" });
 
@@ -74,13 +74,13 @@ StudyField.hasMany(User);
 Use force here if you want to modify tables
 For clearing and adding testdata force is not needed
 */
-//seq.sync({ force: true });
+// seq.sync({ force: true });
 seq.sync();
 
 module.exports.sync = () => {
   seq.sync();
 };
-module.exports.sync.force= () => {
+module.exports.sync.force = () => {
   seq.sync({ force: true });
 };
 
