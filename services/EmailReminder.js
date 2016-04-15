@@ -3,6 +3,7 @@
 const Sender = require("./EmailSender");
 const User = require("../models/user");
 const Thesis = require("../models/thesis");
+const EmailStatus = require("../models/email_status");
 
 class EmailReminder {
   constructor() {}
@@ -36,6 +37,7 @@ class EmailReminder {
     const email = this.composeEmail("toStudent", thesis.email, thesis, "http://grappa-app.herokuapp.com/thesis/" + thesis.id);
     return Sender.sendEmail(email.to, email.subject, email.body)
       .then(info => {
+        console.log("saving status");
         return EmailStatus.saveOne({
           lastSent: Date.now(),
           type: "StudentReminder",
