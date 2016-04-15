@@ -2,10 +2,33 @@
 
 const Sender = require("../services/EmailSender");
 const Reader = require("../services/EmailReader");
+const Reminder = require("../services/EmailReminder");
+
+const Thesis = require("../models/thesis");
+
+module.exports.sendReminder = (req, res) => {
+  Thesis
+  .findOne({author: "Pekka Graduttaja"})
+  .then(thesis => {
+    // console.log(thesis);
+    return Reminder.sendStudentReminder(thesis);
+  })
+  .then(result => {
+    res.status(200).send({
+      result,
+    })
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "sendEmail hajos",
+      error: err,
+    })
+  })
+}
 
 module.exports.sendEmail = (req, res) => {
   Sender
-  .sendEmail("teemu.koivisto@helsinki.fi", "Viestin Otsikko", "asdf\nasdf\n\n\tasdfasdf\ntext")
+  .sendEmail("ohtugrappa@gmail.com", "Viestin Otsikko", "asdf\nasdf\n\n\tasdfasdf\ntext")
   .then(info => {
     res.status(200).send({
       info,

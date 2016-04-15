@@ -46,9 +46,18 @@ const ThesisProgress = seq.define("ThesisProgress", {
   documentsSent: Sequelize.DATE,
   isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
+const EmailStatus = seq.define("EmailStatus", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  lastSent: Sequelize.DATE,
+  type: Sequelize.STRING,
+  to: Sequelize.STRING,
+  whoAddedEmail: Sequelize.STRING, // vai User
+  deadline: Sequelize.DATE,
+  wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
+});
+
 Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
-
 
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
@@ -57,7 +66,6 @@ Grader.belongsToMany(Thesis, { through: "GraderThesis" });
 Thesis.belongsToMany(Grader, { through: "GraderThesis" });
 
 CouncilMeeting.hasMany(Thesis, { as: "Theses" });
-
 
 User.belongsTo(StudyField);
 
@@ -68,7 +76,6 @@ User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
-
 
 /*
 Use force here if you want to modify tables
@@ -92,4 +99,5 @@ module.exports = {
   StudyField,
   Review,
   ThesisProgress,
+  EmailStatus,
 };

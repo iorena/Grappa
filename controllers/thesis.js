@@ -50,11 +50,7 @@ module.exports.saveOne = (req, res) => {
   .then(thesis => {
     savedthesis = thesis;
     return Promise.all([
-      console.log("lähtee emaileja " + thesis.author),
       Reminder.sendStudentReminder(thesis),
-      Reminder.sendProfessorReminder(thesis),
-      Reminder.sendPrinterReminder(thesis),
-
       Thesisprogress.saveThesisProgressFromNewThesis(thesis),
       addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate),
       Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis),
@@ -67,7 +63,7 @@ module.exports.saveOne = (req, res) => {
   .then(() => {
    res.status(200).send(savedthesis);
  })
-  
+
   .catch(err => {
     res.status(500).send({
       message: "Thesis saveOne produced an error",

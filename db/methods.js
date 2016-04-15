@@ -71,25 +71,34 @@ module.exports.createTestData = () => Q.all([
     documentsSent: Date.now(),
     isDone: false,
   }),
+  tables.EmailStatus.create({
+    lastSent: Date.now(),
+    type: "StudentReminder",
+    to: "asdf@asdfasdf.com",
+    whoAddedEmail: "ohtugrappa@gmail.com", // vai User
+    deadline: new Date("1 1 2017"),
+    wasError: true,
+  })
 ]);
 
 module.exports.dump = () => {
   const queries = [];
   for (const key in tables) {
-    if ({}.hasOwnProperty.call(tables.key)) {
+    // if ({}.hasOwnProperty.call(tables.key)) {
       queries.push(tables[key].findAll());
-    }
+    // }
   }
   return Promise.all(queries);
 };
 
-module.exports.destroyAndCreateTables = () => module.exports.destroyTables()
-.then(() => module.exports.createTestData()
-)
-.then(() => {
-  console.log("Destroyed and created tables successfully!");
-})
-.catch(err => {
-  console.log("add_test_data destroyAndCreateTables produced an error!");
-  console.log(err);
-});
+module.exports.destroyAndCreateTables = () => {
+  module.exports.destroyTables()
+  .then(() => module.exports.createTestData() )
+  .then(() => {
+    console.log("Destroyed and created tables successfully!");
+  })
+  .catch(err => {
+    console.log("destroyAndCreateTables produced an error!");
+    console.log(err);
+  });
+}
