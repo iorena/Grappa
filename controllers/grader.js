@@ -1,7 +1,7 @@
 "use strict";
 
 const Grader = require("../models/grader");
-const Thesis = require("../models/thesis");
+// const Thesis = require("../models/thesis");
 
 module.exports.findAll = (req, res) => {
   Grader
@@ -32,8 +32,8 @@ module.exports.saveOne = (req, res) => {
 };
 
 module.exports.saveIfDoesntExist = (req, res) => {
-   Grader
-   .saveIfDoesntExist(req.body)
+  Grader
+  .saveIfDoesntExist(req.body)
   .then(grader => {
     res.status(200).send(grader);
   })

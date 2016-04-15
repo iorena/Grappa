@@ -37,6 +37,7 @@ const dump = (req, res) => {
 router.get("/", index);
 
 router.get("/thesis", thesisCtrl.findAll);
+router.put("/thesis", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);

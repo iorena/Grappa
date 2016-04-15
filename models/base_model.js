@@ -48,10 +48,9 @@ class BaseModel {
   }
   /*
    * Updates a field
-   *
    */
   update(values, params) {
-    tables[this.tablename].update(values, { where: params });
+    return tables[this.tablename].update(values, { where: params });
   }
 }
 

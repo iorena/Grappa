@@ -5,18 +5,22 @@ const Q = require("q");
 const tables = require("../models/tables");
 
 module.exports.destroyTables = () => {
-  let queries = [];
-  for(let key in tables) {
-    queries.push(tables[key].destroy({where: {}}));
+  const queries = [];
+  for (const key in tables) {
+    if ({}.hasOwnProperty.call(tables, key)) {
+      queries.push(tables[key].destroy({ where: {} }));
+    }
   }
   return Promise.all(queries);
 };
 
 
 module.exports.dropTables = () => {
-  let queries = [];
-  for(let key in tables) {
-    queries.push(tables[key].drop({cascade: true}));
+  const queries = [];
+  for (const key in tables) {
+    if ({}.hasOwnProperty.call(tables, key)) {
+      queries.push(tables[key].drop({ cascade: true }));
+    }
   }
   return Promise.all(queries);
 };

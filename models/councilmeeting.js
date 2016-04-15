@@ -14,6 +14,4 @@ class CouncilMeeting extends BaseModel {
 module.exports.class = CouncilMeeting;
 module.exports = new CouncilMeeting();
 
-module.exports.getModel = () =>{
-  return BaseModel.tables.CouncilMeeting;
-};
+module.exports.getModel = () => BaseModel.tables.CouncilMeeting;
