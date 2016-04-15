@@ -36,31 +36,31 @@ module.exports.saveThesisProgressFromNewThesis = (thesis) => {
   ThesisProgress.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
     documentsSent: null, isDone: false, gradersStatus: false });
   console.log("Thesisprogress saved!");
-}
+};
 
 module.exports.evalGraders = (thesis) => {
-  let thesisId = thesis.id;
+  const thesisId = thesis.id;
 
   return Thesis
   .getModel()
-  .findOne({where: {id: thesis.id}})
-  .then(function(thesis) {
+  .findOne({ where: { id: thesis.id } })
+  .then((thesis) => {
     return thesis
     .getGraders()
-    .then(function(graders) {
+    .then((graders) => {
       let professor = false;
       let doctor = false;
       graders.map((grader) => {
-         const title = grader.title;
-         if (title === "Prof") {
-           if (professor) {
-             doctor = true;
-           } else {
-               professor = true;
-           }
-         } else if ( title === "AssProf" || title === "Doc" || title === "AdjProf") {
-           doctor = true;
-         }
+        const title = grader.title;
+        if (title === "Prof") {
+          if (professor) {
+            doctor = true;
+          } else {
+            professor = true;
+          }
+        } else if (title === "AssProf" || title === "Doc" || title === "AdjProf") {
+          doctor = true;
+        }
       });
       if (professor && doctor) {
         ThesisProgress.changeGraderStatus(thesisId);

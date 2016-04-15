@@ -38,9 +38,9 @@ module.exports.updateOne = (req, res) => {
 
 module.exports.saveOne = (req, res) => {
   let savedthesis;
-  let originalDate = new Date(req.body.deadline);
+  const originalDate = new Date(req.body.deadline);
   let thesisValues;
-  if (req.body.deadline != null){
+  if (req.body.deadline !== null) {
     thesisValues = addCorrectDeadline(req.body);
   }
   Grader.saveIfDoesntExist(req.body);
@@ -55,14 +55,12 @@ module.exports.saveOne = (req, res) => {
       addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate),
       Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis),
       Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis),
-      ])
+    ]);
   })
-  .then((stuff) => {
-   return Thesisprogress.evalGraders(savedthesis);
- })
+  .then((stuff) => Thesisprogress.evalGraders(savedthesis))
   .then(() => {
-   res.status(200).send(savedthesis);
- })
+    res.status(200).send(savedthesis);
+  })
 
   .catch(err => {
     res.status(500).send({
@@ -72,21 +70,21 @@ module.exports.saveOne = (req, res) => {
   });
 };
 
-function addCorrectDeadline(thesisValues){
-  var date = new Date(thesisValues.deadline);
-  date.setDate(date.getDate()-10);
+function addCorrectDeadline(thesisValues) {
+  const date = new Date(thesisValues.deadline);
+  date.setDate(date.getDate() - 10);
   thesisValues.deadline = date.toISOString();
   return thesisValues;
 };
 
-function addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, date){
+function addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, date) {
   CouncilMeeting
   .getModel()
-  .findOne({ where: {date: new Date(date)} })
+  .findOne({ where: { date: new Date(date) } })
   .then(function(cm){
     cm
     .addTheses(thesis)
-    .then(function(){
+    .then(() => {
       console.log("Thesis linked to councilmeeting")
     });
   });
