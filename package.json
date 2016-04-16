@@ -9,7 +9,7 @@
     "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
     "db": "node bin/db",
     "db:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
-    "test": "mocha test/**/*.js",
+    "test": "istanbul cover node_modules/mocha/bin/_mocha test/**/*.js",
     "test:watch": "npm run test -- --watch",
     "check": "eslint ./**/*.js && npm test && npm start"
   },
@@ -38,9 +38,11 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
     "eslint": "^2.6.0",
     "eslint-config-airbnb": "^6.2.0",
     "eslint-plugin-react": "^4.2.3",
+    "istanbul": "^0.4.3",
     "mocha": "2.4.5",
     "nock": "^8.0.0",
     "sinon": "^1.17.3",
