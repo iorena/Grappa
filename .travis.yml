@@ -4,6 +4,7 @@ node_js:
 script:
   - npm --silent run lint
   - npm --silent test
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 deploy:
   provider: heroku
   strategy: git
