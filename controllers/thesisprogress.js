@@ -4,6 +4,7 @@ const ThesisProgress = require("../models/thesisprogress");
 const Thesis = require("../models/thesis");
 const Grader = require("../models/grader");
 const tables = require("../models/tables.js");
+
 module.exports.findAll = (req, res) => {
   ThesisProgress
   .findAll()

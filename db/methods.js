@@ -1,7 +1,5 @@
 "use strict";
 
-const Q = require("q");
-
 const tables = require("../models/tables");
 
 module.exports.destroyTables = () => {
@@ -14,7 +12,6 @@ module.exports.destroyTables = () => {
   return Promise.all(queries);
 };
 
-
 module.exports.dropTables = () => {
   const queries = [];
   for (const key in tables) {
@@ -25,7 +22,7 @@ module.exports.dropTables = () => {
   return Promise.all(queries);
 };
 
-module.exports.createTestData = () => Q.all([
+module.exports.createTestData = () => Promise.all([
   tables.User.create({
     name: "B Virtanen",
     title: "print-person",

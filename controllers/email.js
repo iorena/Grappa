@@ -11,7 +11,9 @@ module.exports.sendReminder = (req, res) => {
   .findOne({ author: "Pekka Graduttaja" })
   .then(thesis => {
     // console.log(thesis);
-    return Reminder.sendStudentReminder(thesis);
+    // return Reminder.sendStudentReminder(thesis);
+    // return Reminder.sendProfessorReminder(thesis);
+    return Reminder.sendPrintPersonReminder(thesis);
   })
   .then(result => {
     res.status(200).send({

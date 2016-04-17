@@ -11,19 +11,19 @@ const ThesisController = require("../../controllers/thesis");
 const Thesis = require("../../models/thesis");
 const ThesisProgress = require("../../models/thesisprogress");
 
-const mockData = require("../mockdata");
+const mockDB = require("../mockdata/database");
 
 describe("ThesisController", () => {
   describe("GET /thesis (findAll)", () => {
     it("should call Thesis-model correctly and return theses", (done) => {
       sinon.stub(Thesis, "findAll", () => {
-        return Promise.resolve(mockData.theses);
+        return Promise.resolve(mockDB.theses);
       });
       request(app)
       .get("/thesis")
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(200, mockData.theses, done);
+      .expect(200, mockDB.theses, done);
     })
   })
   describe("POST /thesis (saveOne)", () => {
