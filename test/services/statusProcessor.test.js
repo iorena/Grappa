@@ -3,12 +3,11 @@ const fs = require("fs");
 const nock = require("nock");
 const statusProcessor = require("../../services/statusProcessor");
 
-mockHTML = (url) => {
+const mockHTML = (url) => {
   return new Promise((resolve, reject) => {
-    fs.readFile("./test/services/ethesisPage.mock.html", "utf-8", (err, data) => {
+    fs.readFile("./test/mockdata/ethesisPage.html", "utf-8", (err, data) => {
       if (err) {
         reject(err);
-
       }
       nock(url)
       .get("")
