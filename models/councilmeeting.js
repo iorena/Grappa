@@ -9,9 +9,17 @@ class CouncilMeeting extends BaseModel {
   constructor() {
     super("CouncilMeeting");
   }
+  addThesisToCouncilMeeting(thesis, date) {
+    this.getModel()
+    .findOne({ where: { date: new Date(date) } })
+    .then((CM) => {
+      return CM.addTheses(thesis);
+    })
+    .then(() => {
+      console.log("Thesis linked to councilmeeting")
+    });
+  }
 }
 
 module.exports.class = CouncilMeeting;
 module.exports = new CouncilMeeting();
-
-module.exports.getModel = () => BaseModel.tables.CouncilMeeting;

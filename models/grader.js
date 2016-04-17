@@ -9,11 +9,11 @@ class Grader extends BaseModel {
   }
 
   findOrCreate(gradername, gradertitle) {
-    tables.Grader
+    this.getModel()
     .findOne({ where: { name: gradername, title: gradertitle } })
     .then((grader) => {
       if (grader === null) {
-        return tables.Grader.create({ name: gradername, title: gradertitle });
+        return this.getModel().create({ name: gradername, title: gradertitle });
       }
       return grader;
     });
@@ -27,19 +27,16 @@ class Grader extends BaseModel {
   }
 
   linkGraderAndThesis(graderName, title, thesis) {
-    return this
-    .getModel()
-    .findOne({ where: { name: graderName, title } })
-    .then((grader) => {
-      grader
-      .addThesis(thesis)
+    return this.getModel()
+      .findOne({ where: { name: graderName, title } })
+      .then((grader) => {
+        return grader.addThesis(thesis);
+      })
       .then(() => {
         console.log("Thesis and Grader added to GraderTheses");
       });
-    });
   }
 }
 
 module.exports.class = Grader;
 module.exports = new Grader();
-module.exports.getModel = () => BaseModel.tables.Grader;
