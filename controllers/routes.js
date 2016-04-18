@@ -56,6 +56,7 @@ router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
 router.post("/user", userCtrl.saveOne);
+router.post("/login", userCtrl.loginUser);
 
 router.get("/emailstatus", emailstatusCtrl.findAll);
 router.post("/emailstatus", emailstatusCtrl.saveOne);
