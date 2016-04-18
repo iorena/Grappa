@@ -19,19 +19,19 @@ class Thesis extends BaseModel {
    * Or remove, I don't really know what it does..
    */
   add10DaysToDeadline(deadline) {
-    let date = new Date(deadline);
+    const date = new Date(deadline);
     date.setDate(date.getDate() - 10);
     return date.toISOString();
   }
   saveOne(params) {
     // console.log("params are: " + JSON.stringify(params));
-    let values = Object.assign({}, params);
+    const values = Object.assign({}, params);
     // the crazy validation loop. wee!
     Object.keys(params).map(key => {
       if (values[key] !== null && !this.Validator.validate(values[key], key)) {
         throw("ValidationError: " + key + " isn't the wanted type!");
       }
-    })
+    });
     if (values.deadline !== null) {
       values.deadline = this.add10DaysToDeadline(params.deadline);
     }

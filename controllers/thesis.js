@@ -1,8 +1,10 @@
 "use strict";
 
 const Reminder = require("../services/EmailReminder");
+const tokenGen = require("../services/TokenGenerator");
 
 const Thesis = require("../models/thesis");
+const EthesisToken = require("../models/ethesisToken");
 const ThesisProgress = require("../models/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
@@ -43,7 +45,8 @@ module.exports.updateOne = (req, res) => {
  * author, email, deadline, graders?, and stuff?
  */
 module.exports.saveOne = (req, res) => {
-  let savedthesis, foundCouncilMeeting;
+  let savedthesis;
+  let foundCouncilMeeting;
   const originalDate = new Date(req.body.deadline);
 
   CouncilMeeting
@@ -57,18 +60,20 @@ module.exports.saveOne = (req, res) => {
       foundCouncilMeeting = cm;
       if (typeof req.body.graders === "undefined") {
         return Promise.resolve();
-      } else {
-        return Promise.all(req.body.graders.map(grader => {
-          return Grader.saveIfDoesntExist(grader);
-        }))
       }
+      return Promise.all(req.body.graders.map(grader => Grader.saveIfDoesntExist(grader)));
     }
   })
   .then(() => Thesis.saveOne(req.body))
   .then(thesis => {
     savedthesis = thesis;
+    const token = tokenGen.generateEthesisToken(thesis.author);
     return Promise.all([
-      Reminder.sendStudentReminder(thesis),
+      EthesisToken.saveOne({ thesisId: thesis.id,
+                             author: thesis.author,
+                             token,
+                           }),
+      Reminder.sendStudentReminder(thesis, token),
       ThesisProgress.saveOne(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
