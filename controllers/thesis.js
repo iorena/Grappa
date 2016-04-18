@@ -69,7 +69,7 @@ module.exports.saveOne = (req, res) => {
     savedthesis = thesis;
     return Promise.all([
       Reminder.sendStudentReminder(thesis),
-      ThesisProgress.saveOne(thesis),
+      ThesisProgress.saveFromNewThesis(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
     ]);
