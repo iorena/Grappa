@@ -27,9 +27,10 @@ Sinon.stub(EmailStatus, "saveOne", function(params) {
 describe("EmailReminder", () => {
   describe("sendStudentReminder(thesis)", () => {
     it("should call sendEmail with correct values", (done) => {
-    	Reminder.sendStudentReminder(thesis)
+        const email = "pertti@perttinen.fi";
+    	Reminder.sendStudentReminder(email, "ASDF123")
     	.then(status => {
-    		expect(calledParams.to).to.equal(thesis.email);
+    		expect(calledParams.to).to.equal(email);
     		expect(calledParams.subject).to.equal("REMINDER: Submit your thesis to eThesis");
     		done();
     	})

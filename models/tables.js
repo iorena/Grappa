@@ -20,6 +20,11 @@ const Thesis = seq.define("Thesis", {
   grade: Sequelize.STRING,
   deadline: Sequelize.DATE,
 });
+const EthesisToken = seq.define("EthesisToken", {
+  thesisId: Sequelize.INTEGER,
+  author: Sequelize.STRING,
+  token: Sequelize.STRING,
+});
 const Grader = seq.define("Grader", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   name: Sequelize.STRING,
@@ -59,6 +64,8 @@ const EmailStatus = seq.define("EmailStatus", {
 
 Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
+
+EthesisToken.belongsTo(Thesis);
 
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
@@ -100,4 +107,5 @@ module.exports.Models = {
   Review,
   ThesisProgress,
   EmailStatus,
+  EthesisToken,
 };
