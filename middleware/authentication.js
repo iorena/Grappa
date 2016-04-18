@@ -37,6 +37,7 @@ module.exports.authenticate = (req, res, next) => {
     });
   } else {
     console.log("autentikoitu!");
+    req.body.User = decoded.user;
     next();
   }
 }

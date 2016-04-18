@@ -24,19 +24,40 @@ module.exports.dropTables = () => {
 };
 
 module.exports.addTestData = () => Promise.all([
-  models.User.create({
-    name: "B Virtanen",
-    password: "asdf",
-    title: "print-person",
-    email: "ohtugrappa2@gmail.com",
-    admin: true,
+  models.StudyField.create({
+    name: "Algoritmit",
   }),
   models.User.create({
+    id: 1,
     name: "Kjell Lemström",
     password: "asdf",
-    title: "head of studies",
     email: "ohtugrappa@gmail.com",
-    admin: true,
+    role: "admin",
+    StudyFieldId: null,
+  }),
+  models.User.create({
+    id: 2,
+    name: "B Virtanen",
+    password: "asdf",
+    email: "ohtugrappa2@gmail.com",
+    role: "print-person",
+    StudyFieldId: null,
+  }),
+  models.User.create({
+    id: 3,
+    name: "Tohtori Sykerö",
+    password: "asdfasdf",
+    email: "ohtugrappa3@gmail.com",
+    role: "professor",
+    StudyFieldId: 1,
+  }),
+  models.User.create({
+    id: 4,
+    name: "Alikersantti Rokka",
+    password: "asdfasdfasdf",
+    email: "ohtugrappa4@gmail.com",
+    role: "instructor",
+    StudyFieldId: 1,
   }),
   models.Thesis.create({
     author: "Pekka Graduttaja",
@@ -46,6 +67,7 @@ module.exports.addTestData = () => Promise.all([
     ethesis: "ethesislinkki.com",
     abstract: "Abstract from ethesis blaablaa",
     grade: "Laudatur",
+    UserId: 4,
   }),
   models.ThesisProgress.create({
     thesisId: "1",
@@ -53,6 +75,16 @@ module.exports.addTestData = () => Promise.all([
     professorReminder: Date.now(),
     documentsSent: Date.now(),
   }),
+  models.Review.create({
+    author: "Kumpulan Kuningas",
+    text: "Sup dawg.",
+    UserId: 3,
+  }),
+  models.Review.create({
+    author: "Mr. Isokiho Proffa",
+    text: "Aika heikko suoritus. Arvioijat täysin ala-arvoisia.",
+    UserId: 3,
+  }, { include: [models.User]}),
   models.Grader.create({
     name: "Mr. Grader2",
     title: "Professor of internet",
@@ -62,9 +94,6 @@ module.exports.addTestData = () => Promise.all([
   }),
   models.CouncilMeeting.create({
     date: Date.now(),
-  }),
-  models.StudyField.create({
-    name: "Algoritmit",
   }),
   models.ThesisProgress.create({
     thesisId: 1,

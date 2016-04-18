@@ -5,6 +5,10 @@ const Review = require("../models/review");
 module.exports.findAll = (req, res) => {
   Review
   .findAll()
+  // .findAll({ UserId: 2 })
+  // .then(reviews => {
+  //   return Review.filterById(reviews);
+  // })
   .then(reviews => {
     res.status(200).send(reviews);
   })

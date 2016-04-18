@@ -10,7 +10,10 @@ class TokenGenerator {
   generateToken(user) {
     const date = new Date();
     const payload = {
-      userId: user.id,
+      user: {
+        id: user.id,
+        role: user.role,
+      },
       created: date,
       expires: date.setDate(date.getDate() + 14),
     };

@@ -108,7 +108,7 @@ class EmailReminder {
    */
   sendPrintPersonReminder(thesis) {
     let email;
-    return User.findOne({ title: "print-person" })
+    return User.findOne({ role: "print-person" })
       .then(printPerson => {
         email = this.composeEmail("toPrintPerson", printPerson.email, thesis, "");
         return Sender.sendEmail(email.to, email.subject, email.body);

@@ -12,6 +12,9 @@ const Grader = require("../models/grader");
 module.exports.findAll = (req, res) => {
   Thesis
   .findAll()
+  // .then(theses => {
+  //   return Thesis.filterByUserRole();
+  // })
   .then(theses => {
     res.status(200).send(theses);
   })

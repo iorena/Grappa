@@ -23,8 +23,12 @@ class BaseModel {
    * @table {String} name of the table/model
    * @return Promise
    */
-  findAll() {
-    return this.Models[this.modelname].findAll();
+  findAll(params) {
+    if (typeof params !== "undefined") {
+      return this.Models[this.modelname].findAll({ where: params });
+    } else {
+      return this.Models[this.modelname].findAll();
+    }
   }
   /*
    * Creates new instance of table with validated(!) @params.

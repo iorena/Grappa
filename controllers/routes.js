@@ -45,7 +45,8 @@ router.post("/thesis", thesisCtrl.saveOne);
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 
-router.get("/review", auth.authenticate, reviewCtrl.findAll);
+// router.get("/review", auth.authenticate, reviewCtrl.findAll);
+router.get("/review", reviewCtrl.findAll);
 router.post("/review", auth.authenticate, reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
