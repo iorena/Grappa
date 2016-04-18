@@ -15,6 +15,8 @@ const port = process.env.PORT || 9876;
 if (process.env.NODE_ENV !== "production") {
   let logger = require("morgan");
   app.use(logger("dev"));
+  let dbMethods = require("./db/methods");
+  // dbMethods.dropAndCreateTables();
 }
 
 app.use(bodyParser.urlencoded({

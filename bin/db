@@ -19,20 +19,32 @@ if (commands.length > 2) {
   const command = commands[2];
   // console.log(command);
   switch(command) {
-    case "drop": 
-    db_methods.dropTables();
-    break;
-    case "destroy":
-    db_methods.destroyTables();
-    break;
     case "create":
-    db_methods.createTestData();
-    break;
+      db_methods.createTables();
+      break;
+    case "drop":
+      db_methods.dropTables();
+      break;
+    case "add":
+      db_methods.addTestData();
+      break;
+    case "destroy":
+      db_methods.destroyTables();
+      break;
     case "reset":
-    db_methods.destroyAndCreateTables();
-    break;
+      db_methods.resetTestData();
+      break;
+    case "init":
+      db_methods.dropAndCreateTables();
+      break;
+    case "dump":
+      db_methods.dump()
+      .then(data => {
+        console.log(data);
+      })
+      break;
     default:
-    console.log(`Unknown command ${command}`);
-    break;
+      console.log(`Unknown command ${command}`);
+      break;
   }
 }
