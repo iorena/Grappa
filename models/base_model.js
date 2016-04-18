@@ -38,9 +38,6 @@ class BaseModel {
   saveOne(params) {
     return this.Models[this.modelname].create(params);
   }
-  drop() {
-    return this.Models[this.modelname].destroy({ where: {} });
-  }
   /*
    * Updates a field
    */

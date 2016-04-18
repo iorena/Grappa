@@ -15,6 +15,9 @@ class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
   }
+  /*
+   * Or remove, I don't really know what it does..
+   */
   add10DaysToDeadline(deadline) {
     let date = new Date(deadline);
     date.setDate(date.getDate() - 10);
@@ -33,6 +36,10 @@ class Thesis extends BaseModel {
       values.deadline = this.add10DaysToDeadline(params.deadline);
     }
     return this.getModel().create(values);
+  }
+  findAll() {
+    // calls the parent classes method. nice!
+    return BaseModel.prototype.findAll.call(this);
   }
 }
 

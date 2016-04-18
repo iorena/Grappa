@@ -126,8 +126,7 @@ class EmailReader {
    * and returns them as a list.
    */
   checkMessagesForErrors(messages) {
-    let failedAddresses = [];
-    messages.map(msg => {
+    return messages.map(msg => {
       if (msg.indexOf("Delivery to the following recipient failed permanently") !== -1 && msg.indexOf(this.daemonName) !== -1) {
         console.log("> failed permanently");
         console.log("> contains daemon name");
@@ -141,11 +140,10 @@ class EmailReader {
           next = msg.charAt(index);
           counter++;
         }
-        failedAddresses.push(address);
         console.log("address on:" + address);
+        return address;
       }
     })
-    return failedAddresses;
   }
 
   checkEmail() {

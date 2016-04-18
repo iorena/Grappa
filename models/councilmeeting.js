@@ -9,15 +9,17 @@ class CouncilMeeting extends BaseModel {
   constructor() {
     super("CouncilMeeting");
   }
-  addThesisToCouncilMeeting(thesis, date) {
-    this.getModel()
-    .findOne({ where: { date: new Date(date) } })
-    .then((CM) => {
-      return CM.addTheses(thesis);
-    })
-    .then(() => {
-      console.log("Thesis linked to councilmeeting")
-    });
+  linkThesisToCouncilMeeting(thesis, date) {
+    return this.getModel()
+      .findOne({ where: { date: new Date(date) } })
+      .then((CM) => {
+        // console.log("HEI CM");
+        // console.log(CM);
+        return CM.addTheses(thesis);
+      })
+      .then(() => {
+        console.log("Thesis linked to councilmeeting")
+      });
   }
 }
 

@@ -56,6 +56,9 @@ module.exports.addTestData = () => Promise.all([
     title: "Professor of internet",
   }),
   models.CouncilMeeting.create({
+    date: new Date("1.1.2016"),
+  }),
+  models.CouncilMeeting.create({
     date: Date.now(),
   }),
   models.StudyField.create({
