@@ -3,9 +3,10 @@ const seq = require("../db/db_connection").sequalize;
 
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  email: { type: Sequelize.STRING, unique: true },
+  password: Sequelize.STRING, // removed once we get Shittboleth
   name: Sequelize.STRING,
   title: Sequelize.STRING,
-  email: Sequelize.STRING,
   admin: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 const Thesis = seq.define("Thesis", {
@@ -18,6 +19,11 @@ const Thesis = seq.define("Thesis", {
   abstract: Sequelize.TEXT,
   grade: Sequelize.STRING,
   deadline: Sequelize.DATE,
+});
+const EthesisToken = seq.define("EthesisToken", {
+  thesisId: Sequelize.INTEGER,
+  author: Sequelize.STRING,
+  token: Sequelize.STRING,
 });
 const Grader = seq.define("Grader", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
@@ -59,6 +65,8 @@ const EmailStatus = seq.define("EmailStatus", {
 Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
 
+EthesisToken.belongsTo(Thesis);
+
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
@@ -99,4 +107,5 @@ module.exports.Models = {
   Review,
   ThesisProgress,
   EmailStatus,
+  EthesisToken,
 };

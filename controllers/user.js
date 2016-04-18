@@ -1,5 +1,6 @@
 "use strict";
 
+const TokenGenerator = require("../services/TokenGenerator");
 const User = require("../models/user");
 
 module.exports.findAll = (req, res) => {
@@ -29,3 +30,30 @@ module.exports.saveOne = (req, res) => {
     });
   });
 };
+
+module.exports.loginUser = (req, res) => {
+  User
+  .findOne({ email: req.body.email, password: req.body.password})
+  .then(user => {
+    if (user === null) {
+      res.status(400).send({
+        message: "Logging in failed authentication",
+        error: "Dawg",
+      });
+    } else {
+      // generate token
+      const token = TokenGenerator.generateToken(user);
+      console.log(token);
+      TokenGenerator.decodeToken(token);
+      res.status(200).send({
+        token: token,
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "User loginOne produced an error",
+      error: err.message,
+    });
+  });
+}

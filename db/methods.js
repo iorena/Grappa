@@ -26,12 +26,14 @@ module.exports.dropTables = () => {
 module.exports.addTestData = () => Promise.all([
   models.User.create({
     name: "B Virtanen",
+    password: "asdf",
     title: "print-person",
-    email: "ohtugrappa@gmail.com",
+    email: "ohtugrappa2@gmail.com",
     admin: true,
   }),
   models.User.create({
     name: "Kjell Lemström",
+    password: "asdf",
     title: "head of studies",
     email: "ohtugrappa@gmail.com",
     admin: true,

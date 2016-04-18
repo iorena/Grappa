@@ -1,8 +1,10 @@
 "use strict";
 
 const Reminder = require("../services/EmailReminder");
+const tokenGen = require("../services/TokenGenerator");
 
 const Thesis = require("../models/thesis");
+const EthesisToken = require("../models/ethesisToken");
 const ThesisProgress = require("../models/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
@@ -43,7 +45,8 @@ module.exports.updateOne = (req, res) => {
  * author, email, deadline, graders?, and stuff?
  */
 module.exports.saveOne = (req, res) => {
-  let savedthesis, foundCouncilMeeting;
+  let savedthesis;
+  let foundCouncilMeeting;
   const originalDate = new Date(req.body.deadline);
 
   CouncilMeeting
@@ -56,19 +59,22 @@ module.exports.saveOne = (req, res) => {
     } else {
       foundCouncilMeeting = cm;
       if (typeof req.body.graders === "undefined") {
-        return Promise.resolve();
-      } else {
-        return Promise.all(req.body.graders.map(grader => {
-          return Grader.saveIfDoesntExist(grader);
-        }))
+        return;
       }
+      return Promise.all(req.body.graders.map(grader => Grader.saveIfDoesntExist(grader)));
     }
   })
   .then(() => Thesis.saveOne(req.body))
   .then(thesis => {
     savedthesis = thesis;
+    const token = tokenGen.generateEthesisToken(thesis.author);
     return Promise.all([
-      Reminder.sendStudentReminder(thesis),
+      EthesisToken.saveOne({
+        thesisId: thesis.id,
+        author: thesis.author,
+        token,
+      }),
+      Reminder.sendStudentReminder(thesis.email, token),
       ThesisProgress.saveOne(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
@@ -78,17 +84,17 @@ module.exports.saveOne = (req, res) => {
   .then(() => {
     res.status(200).send(savedthesis);
   })
-  // .catch(err => {
-  //   if (err.message.indexOf("ValidationError") !== -1) {
-  //     res.status(400).send({
-  //       message: "Thesis saveOne failed validation",
-  //       error: err.message,
-  //     });
-  //   } else {
-  //     res.status(500).send({
-  //       message: "Thesis saveOne produced an error",
-  //       error: err.message,
-  //     });
-  //   }
-  // });
+  .catch(err => {
+    if (err.message.indexOf("ValidationError") !== -1) {
+      res.status(400).send({
+        message: "Thesis saveOne failed validation",
+        error: err.message,
+      });
+    } else {
+      res.status(500).send({
+        message: "Thesis saveOne produced an error",
+        error: err.message,
+      });
+    }
+  });
 };
