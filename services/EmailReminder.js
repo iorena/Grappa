@@ -16,7 +16,7 @@ class EmailReminder {
     this.readDrafts(this.drafts)
     .then(drafts => {
       this.drafts = drafts;
-    })
+    });
   }
   /*
    * Reads the drafts defined as keys inside @keys-object
@@ -25,16 +25,14 @@ class EmailReminder {
    * @return {Promise<Object>} New drafts-object with values read from the files
    */
   readDrafts(drafts) {
-    let newDrafts = Object.assign({}, drafts);
+    const newDrafts = Object.assign({}, drafts);
     return Promise.all(Object.keys(drafts).map(key => {
       return this.readDraft(key)
         .then(draft => {
           newDrafts[key] = draft;
-        })
+        });
     }))
-    .then(() => {
-      return newDrafts;
-    })
+    .then(() => newDrafts);
   }
   /*
    * Reads a single draft from email_drafts folder and returns its content
@@ -51,7 +49,7 @@ class EmailReminder {
           resolve(data);
         }
       });
-    })
+    });
   }
   /*
    * Method for composing an automatic email-response
@@ -90,8 +88,8 @@ class EmailReminder {
   /*
    *Method for handling the process of composing and sending an email to the student
    */
-  sendStudentReminder(thesis) {
-    const email = this.composeEmail("toStudent", thesis.email, thesis, `http://grappa-app.herokuapp.com/thesis/${thesis.id}`);
+  sendStudentReminder(studentEmail, token) {
+    const email = this.composeEmail("toStudent", studentEmail, null, `http://grappa-app.herokuapp.com/ethesis/${token}`);
     return Sender.sendEmail(email.to, email.subject, email.body)
       .then(() => {
         console.log("saving status");

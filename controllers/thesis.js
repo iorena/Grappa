@@ -73,7 +73,7 @@ module.exports.saveOne = (req, res) => {
                              author: thesis.author,
                              token,
                            }),
-      Reminder.sendStudentReminder(thesis, token),
+      Reminder.sendStudentReminder(thesis.email, token),
       ThesisProgress.saveOne(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),

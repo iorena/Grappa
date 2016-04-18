@@ -107,4 +107,5 @@ module.exports.Models = {
   Review,
   ThesisProgress,
   EmailStatus,
+  EthesisToken,
 };
