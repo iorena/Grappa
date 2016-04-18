@@ -1,10 +1,11 @@
 "use strict";
 
 const jwt =  require("jwt-simple");
+const config = require("../config/authentication");
 
 class TokenGenerator {
-  constructor() {
-    this.secret = "grappa maistuu pahalta";
+  constructor(config) {
+    this.secret = config.secret;
   }
   generateToken(user) {
     let date = new Date();
@@ -22,4 +23,4 @@ class TokenGenerator {
   }
 }
 
-module.exports = new TokenGenerator();
+module.exports = new TokenGenerator(config);
