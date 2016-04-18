@@ -1,8 +1,5 @@
 "use strict";
 
-const jwt =  require("jwt-simple");
-"use strict";
-
 const jwt = require("jwt-simple");
 const config = require("../config/authentication");
 

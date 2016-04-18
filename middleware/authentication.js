@@ -14,7 +14,7 @@ module.exports.authenticate = (req, res, next) => {
   }
   if (!req.headers["x-key"]) {
     res.status(401).send({
-      message: "Please make sure your request has X-Keyheader",
+      message: "Please make sure your request has X-Key header",
     });
   }
   const token = req.headers["x-access-token"];

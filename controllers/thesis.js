@@ -69,10 +69,11 @@ module.exports.saveOne = (req, res) => {
     savedthesis = thesis;
     const token = tokenGen.generateEthesisToken(thesis.author);
     return Promise.all([
-      EthesisToken.saveOne({ thesisId: thesis.id,
-                             author: thesis.author,
-                             token,
-                           }),
+      EthesisToken.saveOne({
+        thesisId: thesis.id,
+        author: thesis.author,
+        token,
+      }),
       Reminder.sendStudentReminder(thesis.email, token),
       ThesisProgress.saveOne(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
