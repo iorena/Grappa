@@ -41,4 +41,3 @@ class ThesisProgress extends BaseModel {
 
 module.exports.class = ThesisProgress;
 module.exports = new ThesisProgress();
-// module.exports.getModel = () => BaseModel.tables.ThesisProgress;

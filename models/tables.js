@@ -3,9 +3,10 @@ const seq = require("../db/db_connection").sequalize;
 
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  email: { type: Sequelize.STRING, unique: true },
+  password: Sequelize.STRING, // removed once we get Shittboleth
   name: Sequelize.STRING,
   title: Sequelize.STRING,
-  email: Sequelize.STRING,
   admin: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 const Thesis = seq.define("Thesis", {
