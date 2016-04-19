@@ -4,14 +4,14 @@ const Review = require("../models/review");
 
 module.exports.findAll = (req, res) => {
   Review
-  .findAll()
+  .findAllByRole(req.body.user)
   .then(reviews => {
     res.status(200).send(reviews);
   })
   .catch(err => {
     res.status(500).send({
-      message: "Review findAll produced an error",
-      error: err,
+      message: "Review findAllByRole produced an error",
+      error: err.message,
     });
   });
 };

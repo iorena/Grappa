@@ -5,6 +5,23 @@ const jwt = require("jwt-simple");
 const secret = require("../config/authentication").secret;
 
 module.exports.authenticate = (req, res, next) => {
+  req.body.user = {
+    id: 1,
+    role: "admin",
+    StudyFieldId: null,
+  };
+  // req.body.user = {
+  //   id: 3,
+  //   role: "professor",
+  //   StudyFieldId: 1,
+  // };
+  // req.body.user = {
+  //   id: 6,
+  //   role: "instructor",
+  //   StudyFieldId: 2,
+  // }
+  next();
+  return;
   // console.log(req.headers);
   // console.log(req.body);
   if (!req.headers["x-access-token"]) {
@@ -37,6 +54,7 @@ module.exports.authenticate = (req, res, next) => {
     });
   } else {
     console.log("autentikoitu!");
+    req.body.User = decoded.user;
     next();
   }
 }

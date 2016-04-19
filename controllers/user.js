@@ -52,7 +52,7 @@ module.exports.loginUser = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "User loginOne produced an error",
+      message: "User loginUser produced an error",
       error: err.message,
     });
   });
