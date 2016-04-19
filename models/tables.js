@@ -6,8 +6,7 @@ const User = seq.define("User", {
   email: { type: Sequelize.STRING, unique: true },
   password: Sequelize.STRING, // removed once we get Shittboleth
   name: Sequelize.STRING,
-  title: Sequelize.STRING,
-  admin: { type: Sequelize.BOOLEAN, defaultValue: false },
+  role: Sequelize.STRING,
 });
 const Thesis = seq.define("Thesis", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
@@ -40,7 +39,7 @@ const StudyField = seq.define("StudyField", {
 });
 const Review = seq.define("Review", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  author: Sequelize.STRING,
+  authoredByProf: Sequelize.STRING,
   text: Sequelize.TEXT,
 });
 const ThesisProgress = seq.define("ThesisProgress", {
@@ -62,7 +61,6 @@ const EmailStatus = seq.define("EmailStatus", {
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
-Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
 
 EthesisToken.belongsTo(Thesis);

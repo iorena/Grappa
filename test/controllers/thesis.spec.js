@@ -63,11 +63,13 @@ describe("ThesisController", () => {
 
   describe("GET /thesis (findAll)", () => {
     it("should call Thesis-model correctly and return theses", (done) => {
-
+      sinon.stub(Thesis, "findAllByUserRole", () => {
+        return Promise.resolve(mockDB.theses);
+      });
       request(app)
       .get("/thesis")
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
       .expect(200, mockDB.theses, done);
     })
   })
