@@ -37,10 +37,11 @@ module.exports.createTestData = () => Q.all([
   tables["Thesis"].create({
     author: "Pekka Graduttaja",
     email: "ohtugrappa@gmail.com",
-    title: "Oliko Jeesus olemassa",
+    title: "Oliko Jeesus olemassa? No todellaki 0_0",
     urkund: "urkunlinkki.com",
     ethesis: "ethesislinkki.com",
     abstract: "Abstract from ethesis blaablaa",
+    deadline: Date.now(),
     grade: "Laudatur",
   }),
   tables.ThesisProgress.create({
@@ -57,7 +58,16 @@ module.exports.createTestData = () => Q.all([
     date: Date.now(),
   }),
   tables.StudyField.create({
-    name: "Algoritmit",
+    name: "Alg",
+  }),
+  tables.StudyField.create({
+    name: "Bio",
+  }),
+  tables.StudyField.create({
+    name: "Net",
+  }),
+  tables.StudyField.create({
+    name: "Soft",
   }),
   tables.ThesisProgress.create({
     thesisId: 1,

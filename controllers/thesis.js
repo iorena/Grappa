@@ -7,7 +7,6 @@ const Thesisprogress = require("../controllers/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
 
-
 module.exports.findAll = (req, res) => {
   Thesis
   .findAll()
@@ -48,12 +47,14 @@ module.exports.saveOne = (req, res) => {
       ])
   })
   .then((stuff) => {
+    console.log("tarkastus")
    return Thesisprogress.evalGraders(savedthesis);
  })
   .then(() => {
+    console.log("ja viel viimeinen");
    res.status(200).send(savedthesis);
  })
-  
+
   .catch(err => {
     res.status(500).send({
       message: "Thesis saveOne produced an error",

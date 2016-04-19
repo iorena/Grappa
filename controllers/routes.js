@@ -49,7 +49,7 @@ router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveIfDoesntExist);
 
 
-router.get("/thesisprogress", thesisprogressCtrl.findAll);
+router.get("/thesisprogress", thesisprogressCtrl.findOne);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
