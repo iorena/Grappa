@@ -82,6 +82,7 @@ module.exports.saveOne = (req, res) => {
       ThesisProgress.saveFromNewThesis(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
+      Thesis.linkStudyField(thesis, req.body.field),
     ]);
   })
   .then(() => ThesisProgress.evaluateGraders(savedthesis))

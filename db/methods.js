@@ -16,7 +16,6 @@ module.exports.createTables = () => {
   // return tables.sync();
 };
 
-
 module.exports.dropTables = () => {
   return Promise.all(Object.keys(models).map(key => {
     return models[key].drop({ cascade: true });
@@ -124,6 +123,18 @@ module.exports.addTestData = () => Promise.all([
   models.CouncilMeeting.create({
     date: Date.now(),
   }),
+  models.StudyField.create({
+    name: "Algorithmic Bioinformatics",
+  }),
+  models.StudyField.create({
+    name: "Algorithms, Data Analytics and Machine Learning",
+  }),
+  models.StudyField.create({
+    name: "Networking and Services",
+  }),
+  models.StudyField.create({
+    name: "Software Systems",
+  }),
   models.ThesisProgress.create({
     thesisId: 1,
     ethesisReminder: Date.now(),
@@ -140,7 +151,7 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-]);
+  ]);
 
 module.exports.dump = () => {
   return Promise.all(Object.keys(models).map(key => {
@@ -152,14 +163,14 @@ module.exports.dump = () => {
 
 module.exports.dropAndCreateTables = () => {
   return module.exports.createTables()
-    .then(() => module.exports.addTestData() )
-    .then(() => {
-      console.log("Dropped and created models with test data succesfully!");
-    })
-    .catch((err) => {
-      console.log("dropAndCreateTables produced an error!");
-      console.log(err);
-    })
+  .then(() => module.exports.addTestData() )
+  .then(() => {
+    console.log("Dropped and created models with test data succesfully!");
+  })
+  .catch((err) => {
+    console.log("dropAndCreateTables produced an error!");
+    console.log(err);
+  })
 }
 
 module.exports.resetTestData = () => {
