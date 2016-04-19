@@ -21,11 +21,49 @@ const tokenGen = require("../../services/TokenGenerator");
 const mockDB = require("../mockdata/database");
 
 describe("ThesisController", () => {
+  sinon.stub(Thesis, "saveOne", (reqbody) => {
+    return Promise.resolve(mockDB.thesis);
+  });
+  sinon.stub(Thesis, "findAll", () => {
+    return Promise.resolve(mockDB.theses);
+  });
+  sinon.stub(ThesisProgress, "saveOne", (reqbody) => {
+    return Promise.resolve(mockDB.thesisprogresses[0])
+  });
+  sinon.stub(ThesisProgress, "evaluateGraders", () => {
+    return Promise.resolve()
+  });
+  sinon.stub(CouncilMeeting, "findOne", (reqbody) => {
+    return Promise.resolve(mockDB.councilmeeting);
+  });
+  sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
+    return Promise.resolve(mockDB.councilmeeting)
+  });
+  sinon.stub(CouncilMeeting, "findAll", (reqbody) => {
+    return Promise.resolve(mockDB.councilmeetings)
+  });
+  sinon.stub(CouncilMeeting, "linkThesisToCouncilMeeting", () => {
+    return Promise.resolve()
+  });
+  var findOrCreateGrader = sinon.stub(Grader, "findOrCreate", () => {
+    return Promise.resolve()
+  })
+  sinon.stub(Grader, "linkThesisToGraders", () => {
+    return Promise.resolve()
+  });
+  sinon.stub(Grader, "saveOne", (reqbody) => {
+    return Promise.resolve()
+  });
+  sinon.stub(EthesisToken, "saveOne", (reqbody) => {
+    return Promise.resolve()
+  });
+  var sendStudentReminder = sinon.stub(EmailReminder, "sendStudentReminder", (reqbody) => {
+    return Promise.resolve()
+  });
+
   describe("GET /thesis (findAll)", () => {
     it("should call Thesis-model correctly and return theses", (done) => {
-      sinon.stub(Thesis, "findAll", () => {
-        return Promise.resolve(mockDB.theses);
-      });
+
       request(app)
       .get("/thesis")
       .set('Accept', 'application/json')
@@ -36,40 +74,8 @@ describe("ThesisController", () => {
   describe("POST /thesis (saveOne)", () => {
     it("should save thesis and return thesis", (done) => {
 
-      sinon.stub(Thesis, "saveOne", (reqbody) => {
-        return Promise.resolve(mockDB.thesis);
-      });
-      sinon.stub(ThesisProgress, "saveOne", (reqbody) => {
-        return Promise.resolve(mockDB.thesisprogresses[0])
-      });
-      sinon.stub(ThesisProgress, "evaluateGraders", () => {
-        return Promise.resolve()
-      });
-      sinon.stub(CouncilMeeting, "findOne", (reqbody) => {
-        return Promise.resolve(mockDB.councilmeeting);
-      });
-      sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
-        return Promise.resolve(mockDB.councilmeeting)
-      });
-      sinon.stub(CouncilMeeting, "findAll", (reqbody) => {
-        return Promise.resolve(mockDB.councilmeetings)
-      });
-      sinon.stub(CouncilMeeting, "linkThesisToCouncilMeeting", () => {
-        return Promise.resolve()
-      });
-      sinon.stub(Grader, "findOrCreate", () => {
-        return Promise.resolve()
-      })
-      sinon.stub(Grader, "linkThesisToGraders", () => {
-        return Promise.resolve()
-      });
-      sinon.stub(Grader, "saveOne", (reqbody) => {
-        return Promise.resolve()
-      });
-      sinon.stub(EthesisToken, "saveOne", (reqbody) => {
-        return Promise.resolve()
-      });
-      
+
+
       request(app)
       .post("/thesis")
       .send({ name: "thesis to be saved"})
@@ -113,16 +119,20 @@ describe("ThesisController", () => {
      .set("Accept", "application/json")
      .expect("Content-Type", /json/)
      .expect(res => {
-      expect(true).to.equal(true);
+      
+      /* First value in first call of findOrCreate() */ 
+      expect(findOrCreateGrader.args[0][0])
+      .to.deep.equal(mockDB.thesis.graders[0]);
+
+      /* First value in second call of findOrCreate() */ 
+      expect(findOrCreateGrader.args[1][0])
+      .to.deep.equal(mockDB.thesis.graders[1]);
     })
      .expect(200, mockDB.thesis, done);
    });
 
     it('should send reminder to student with correct token', (done) => {
       const token = tokenGen.generateEthesisToken(mockDB.thesis.author, mockDB.thesis.id);
-      var sendStudentReminder = sinon.stub(EmailReminder, "sendStudentReminder", (reqbody) => {
-        return Promise.resolve()
-      });
 
       request(app)
       .post("/thesis")
@@ -133,12 +143,12 @@ describe("ThesisController", () => {
       })
       .expect("Content-Type", /json/)
       .expect(res => {
-
         expect(sendStudentReminder.calledWith(mockDB.thesis.email, token)).to.equal(true);
       })
       .expect(200, mockDB.thesis, done);
     });
-    it('should add graders', (done) => {
+
+    it('should test everything', (done) => {
 
      request(app)
      .post("/thesis")
