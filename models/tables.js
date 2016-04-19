@@ -21,7 +21,6 @@ const Thesis = seq.define("Thesis", {
   deadline: Sequelize.DATE,
 });
 const EthesisToken = seq.define("EthesisToken", {
-  thesisId: Sequelize.INTEGER,
   author: Sequelize.STRING,
   token: Sequelize.STRING,
 });

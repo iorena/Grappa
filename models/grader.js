@@ -8,22 +8,15 @@ class Grader extends BaseModel {
     super("Grader");
   }
 
-  findOrCreate(gradername, gradertitle) {
+  findOrCreate(grader) {
     return this.getModel()
-    .findOne({ where: { name: gradername, title: gradertitle } })
-    .then((grader) => {
-      if (grader === null) {
-        return this.getModel().create({ name: gradername, title: gradertitle });
+    .findOne({ where: { name: grader.name, title: grader.title } })
+    .then((newgrader) => {
+      if (newgrader === null) {
+        return this.getModel().create({ name: grader.name, title: grader.title });
       }
-      return grader;
+      return newgrader;
     });
-  }
-
-  saveIfDoesntExist(thesis) {
-    const queries = [];
-    queries.push(this.findOrCreate(thesis.grader, thesis.gradertitle));
-    queries.push(this.findOrCreate(thesis.grader2, thesis.grader2title));
-    return Promise.all(queries);
   }
 
   linkThesisToGraders(thesis, graders) {
