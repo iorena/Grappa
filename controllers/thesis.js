@@ -11,7 +11,7 @@ const Grader = require("../models/grader");
 
 module.exports.findAll = (req, res) => {
   Thesis
-  .findAll()
+  .findAllByUserRole(req.body.user)
   .then(theses => {
     res.status(200).send(theses);
   })
@@ -82,6 +82,7 @@ module.exports.saveOne = (req, res) => {
       ThesisProgress.saveFromNewThesis(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
+      Thesis.linkStudyField(thesis, req.body.field),
     ]);
   })
   .then(() => ThesisProgress.evaluateGraders(savedthesis))

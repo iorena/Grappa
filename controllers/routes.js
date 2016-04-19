@@ -38,7 +38,7 @@ const dump = (req, res) => {
 
 router.get("/", index);
 
-router.get("/thesis", thesisCtrl.findAll);
+router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
 router.put("/thesis", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
 
@@ -51,8 +51,6 @@ router.post("/review", auth.authenticate, reviewCtrl.saveOne);
 router.get("/grader", graderCtrl.findAll);
 // router.post("/grader", graderCtrl.saveOne);
 router.post("/grader", graderCtrl.saveOne);
-
-
 router.get("/thesisprogress", thesisprogressCtrl.findAll);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 

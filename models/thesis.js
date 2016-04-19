@@ -1,6 +1,7 @@
 "use strict";
 
 const BaseModel = require("./base_model");
+const StudyField = require("./studyfield");
 
 // id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
 // author: Sequelize.STRING,
@@ -23,6 +24,16 @@ class Thesis extends BaseModel {
     date.setDate(date.getDate() - 10);
     return date.toISOString();
   }
+  linkStudyField(thesis, field) {
+    return StudyField.getModel()
+      .findOne({ where: { name: field } })
+      .then((studyfield) => {
+        return thesis.setStudyField(studyfield);
+      })
+      .then(() => {
+        console.log("Thesis linked to StudyField")
+      });
+  }
   saveOne(params) {
     // console.log("params are: " + JSON.stringify(params));
     const values = Object.assign({}, params);
@@ -37,9 +48,16 @@ class Thesis extends BaseModel {
     }
     return this.getModel().create(values);
   }
-  findAll() {
+  findAllByUserRole(user) {
+    if (user.role === "admin" || user.role === "print-person") {
+      return this.Models.Thesis.findAll();
+    } else if (user.role === "professor") {
+      return this.Models.Thesis.findAll({ where: { StudyFieldId: user.StudyFieldId }});
+    } else if (user.role === "instructor") {
+      return this.Models.Thesis.findOne({ where: { UserId: user.id }});
+    }
     // calls the parent classes method. nice!
-    return BaseModel.prototype.findAll.call(this);
+    // return BaseModel.prototype.findAll.call(this);
   }
 }
 
