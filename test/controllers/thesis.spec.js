@@ -13,6 +13,7 @@ const ThesisProgress = require("../../models/thesisprogress");
 const CouncilMeeting = require ("../../models/councilmeeting");
 const Grader = require("../../models/grader");
 const EthesisToken = require("../../models/ethesisToken");
+const StudyField = require("../../models/studyfield");
 
 const EmailReminder = require("../../services/EmailReminder");
 const EmailSender = require("../../services/EmailSender");
@@ -26,6 +27,9 @@ describe("ThesisController", () => {
   });
   sinon.stub(Thesis, "findAll", () => {
     return Promise.resolve(mockDB.theses);
+  });
+  var linkStudyField = sinon.stub(Thesis, "linkStudyField", (reqbody) => {
+    return Promise.resolve()
   });
   sinon.stub(ThesisProgress, "saveOne", (reqbody) => {
     return Promise.resolve(mockDB.thesisprogresses[0])
@@ -73,9 +77,6 @@ describe("ThesisController", () => {
   })
   describe("POST /thesis (saveOne)", () => {
     it("should save thesis and return thesis", (done) => {
-
-
-
       request(app)
       .post("/thesis")
       .send({ name: "thesis to be saved"})
@@ -119,7 +120,7 @@ describe("ThesisController", () => {
      .set("Accept", "application/json")
      .expect("Content-Type", /json/)
      .expect(res => {
-      
+
       /* First value in first call of findOrCreate() */ 
       expect(findOrCreateGrader.args[0][0])
       .to.deep.equal(mockDB.thesis.graders[0]);
@@ -148,15 +149,16 @@ describe("ThesisController", () => {
       .expect(200, mockDB.thesis, done);
     });
 
-    it('should test everything', (done) => {
+    it('should link studyfield correctly', (done) => {
 
      request(app)
      .post("/thesis")
-     .send(mockDB.thesis)
+     .send({ name: "thesis to be saved"})
      .set("Accept", "application/json")
      .expect("Content-Type", /json/)
      .expect(res => {
-      expect(true).to.equal(true);
+
+      expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.field)).to.equal(true);
     })
      .expect(200, mockDB.thesis, done);
    });

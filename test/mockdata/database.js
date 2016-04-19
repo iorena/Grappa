@@ -8,6 +8,7 @@ module.exports.thesis = {
   abstract: "Abstract from ethesis blaablaa",
   grade: "Laudatur",
   deadline: "2016-04-15T08:51:01.894Z",
+  field: "Software Systems",
   graders:
   [ { name: 'PENTTI', title: 'AdjProf' },
   { name: 'VERTTI', title: 'Prof' } ],
