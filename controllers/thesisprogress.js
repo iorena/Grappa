@@ -17,10 +17,8 @@ module.exports.findAll = (req, res) => {
 };
 
 module.exports.findOne = (req, res) => {
-  console.log("really?");
-  console.log(req.body);
   ThesisProgress
-  .findOne(req.body)
+  .findOne(req.body.thesisID)
   .then(thesisprogresses => {
     res.status(200).send(thesisprogresses);
   })

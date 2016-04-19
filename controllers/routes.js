@@ -53,7 +53,7 @@ router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
 
 
-router.get("/thesisprogress", thesisprogressCtrl.findOne);
+router.get("/thesisprogress", thesisprogressCtrl.findAll);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
