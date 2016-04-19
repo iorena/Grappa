@@ -1,6 +1,7 @@
 "use strict";
 
 const BaseModel = require("./base_model");
+const StudyField = require("./studyfield");
 
 // id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
 // author: Sequelize.STRING,
@@ -22,6 +23,16 @@ class Thesis extends BaseModel {
     const date = new Date(deadline);
     date.setDate(date.getDate() - 10);
     return date.toISOString();
+  }
+  linkStudyField(thesis, field) {
+    return StudyField.getModel()
+      .findOne({ where: { name: field } })
+      .then((studyfield) => {
+        return thesis.setStudyField(studyfield);
+      })
+      .then(() => {
+        console.log("Thesis linked to StudyField")
+      });
   }
   saveOne(params) {
     // console.log("params are: " + JSON.stringify(params));
