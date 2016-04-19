@@ -38,21 +38,19 @@ const dump = (req, res) => {
 
 router.get("/", index);
 
-router.get("/thesis", thesisCtrl.findAll);
+router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
 router.put("/thesis", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 
-// router.get("/review", auth.authenticate, reviewCtrl.findAll);
-router.get("/review", reviewCtrl.findAll);
+router.get("/review", auth.authenticate, reviewCtrl.findAll);
 router.post("/review", auth.authenticate, reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
 // router.post("/grader", graderCtrl.saveOne);
 router.post("/grader", graderCtrl.saveIfDoesntExist);
-
 
 router.get("/thesisprogress", thesisprogressCtrl.findAll);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);

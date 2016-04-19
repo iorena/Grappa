@@ -38,7 +38,7 @@ const StudyField = seq.define("StudyField", {
 });
 const Review = seq.define("Review", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  author: Sequelize.STRING,
+  authoredByProf: Sequelize.STRING,
   text: Sequelize.TEXT,
 });
 const ThesisProgress = seq.define("ThesisProgress", {

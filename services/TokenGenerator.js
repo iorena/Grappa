@@ -13,6 +13,7 @@ class TokenGenerator {
       user: {
         id: user.id,
         role: user.role,
+        StudyFieldId: user.StudyFieldId,
       },
       created: date,
       expires: date.setDate(date.getDate() + 14),
