@@ -13,23 +13,24 @@ const mockDB = require("../mockdata/database");
 
 describe("CouncilMeetingController", () => {
   describe("GET /councilmeeting (findAll)", () => {
+    sinon.stub(CouncilMeeting, "findAll", () => {
+      return Promise.resolve(mockDB.councilmeetings);
+    });
     it("should call CouncilMeeting-model correctly and return councilmeetings", (done) => {
-      sinon.stub(CouncilMeeting, "findAll", () => {
-        return Promise.resolve(mockDB.councilmeetings);
-      });
       request(app)
       .get("/councilmeeting")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200, mockDB.councilmeetings, done);
     })
+    CouncilMeeting.findAll.restore();
+
   })
   describe("POST /councilmeeting (saveOne)", () => {
+    sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
+      return Promise.resolve(mockDB.councilmeeting);
+    });
     it("should save cmeeting and return it", (done) => {
-      sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
-        // console.log("yo body on " + JSON.stringify(reqbody));
-        return Promise.resolve(mockDB.councilmeeting);
-      });
       request(app)
       .post("/councilmeeting")
       .send({ name: "councilmeeting to be saved"})
@@ -37,5 +38,7 @@ describe("CouncilMeetingController", () => {
       .expect("Content-Type", /json/)
       .expect(200, mockDB.councilmeeting, done);
     });
+    CouncilMeeting.saveOne.restore();
+
   })
 })

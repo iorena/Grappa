@@ -30,17 +30,3 @@ module.exports.saveOne = (req, res) => {
     });
   });
 };
-
-module.exports.saveIfDoesntExist = (req, res) => {
-  Grader
-  .saveIfDoesntExist(req.body)
-  .then(grader => {
-    res.status(200).send(grader);
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Grader lol produced an error",
-      error: err,
-    });
-  });
-};

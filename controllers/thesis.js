@@ -23,10 +23,14 @@ module.exports.findAll = (req, res) => {
   });
 };
 
+/*
+ * Recieves hashed id and updates thesis
+ *
+ * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
+ */
 module.exports.updateOne = (req, res) => {
-  console.log(req.body);
   Thesis
-  .update(req.body, { id: req.body.id })
+  .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
   .then(thesis => {
     res.status(200).send(thesis);
   })
@@ -61,13 +65,13 @@ module.exports.saveOne = (req, res) => {
       if (typeof req.body.graders === "undefined") {
         return;
       }
-      return Promise.all(req.body.graders.map(grader => Grader.saveIfDoesntExist(grader)));
+      return Promise.all(req.body.graders.map(grader => Grader.findOrCreate(grader)));
     }
   })
   .then(() => Thesis.saveOne(req.body))
   .then(thesis => {
     savedthesis = thesis;
-    const token = tokenGen.generateEthesisToken(thesis.author);
+    const token = tokenGen.generateEthesisToken(thesis.author, thesis.id);
     return Promise.all([
       EthesisToken.saveOne({
         thesisId: thesis.id,
@@ -75,7 +79,7 @@ module.exports.saveOne = (req, res) => {
         token,
       }),
       Reminder.sendStudentReminder(thesis.email, token),
-      ThesisProgress.saveOne(thesis),
+      ThesisProgress.saveFromNewThesis(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
     ]);

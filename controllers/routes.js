@@ -50,9 +50,9 @@ router.post("/review", auth.authenticate, reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
 // router.post("/grader", graderCtrl.saveOne);
-router.post("/grader", graderCtrl.saveIfDoesntExist);
+router.post("/grader", graderCtrl.saveOne);
 
-router.get("/thesisprogress", thesisprogressCtrl.findAll);
+router.get("/thesisprogress", thesisprogressCtrl.findOne);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);

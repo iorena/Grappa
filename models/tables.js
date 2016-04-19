@@ -20,6 +20,7 @@ const Thesis = seq.define("Thesis", {
   deadline: Sequelize.DATE,
 });
 const EthesisToken = seq.define("EthesisToken", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   author: Sequelize.STRING,
   token: Sequelize.STRING,
 });

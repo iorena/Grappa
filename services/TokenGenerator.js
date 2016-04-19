@@ -34,6 +34,7 @@ class TokenGenerator {
   }
   decodeEthesisToken(token) {
     const ethesisToken = jwt.decode(token, this.secret);
+    console.log(ethesisToken);
     return ethesisToken;
   }
 }
