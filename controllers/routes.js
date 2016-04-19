@@ -5,6 +5,8 @@ const router = new express.Router();
 
 const dbMethods = require("../db/methods");
 
+const auth = require("../middleware/authentication");
+
 const thesisCtrl = require("./thesis");
 const councilmeetingCtrl = require("./councilmeeting");
 const reviewCtrl = require("./review");
@@ -43,8 +45,8 @@ router.post("/thesis", thesisCtrl.saveOne);
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 
-router.get("/review", reviewCtrl.findAll);
-router.post("/review", reviewCtrl.saveOne);
+router.get("/review", auth.authenticate, reviewCtrl.findAll);
+router.post("/review", auth.authenticate, reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
 // router.post("/grader", graderCtrl.saveOne);
@@ -56,6 +58,7 @@ router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
 router.post("/user", userCtrl.saveOne);
+router.post("/login", userCtrl.loginUser);
 
 router.get("/emailstatus", emailstatusCtrl.findAll);
 router.post("/emailstatus", emailstatusCtrl.saveOne);

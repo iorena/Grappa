@@ -9,7 +9,7 @@
     "start:prod": "export NODE_ENV=production|| set NODE_ENV=production&& npm start",
     "db": "node bin/db",
     "db:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node bin/db",
-    "test": "istanbul cover node_modules/mocha/bin/_mocha test/**/*.js",
+    "test": "export PORT=6789 || set PORT=6789 && istanbul cover node_modules/mocha/bin/_mocha test/**/*.js",
     "test:watch": "npm run test -- --watch",
     "check": "eslint ./**/*.js && npm test && npm start"
   },
@@ -25,6 +25,7 @@
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "imap": "^0.8.16",
+    "jwt-simple": "^0.5.0",
     "morgan": "^1.7.0",
     "node-schedule": "^1.1.0",
     "nodemailer": "^2.3.1",
