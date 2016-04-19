@@ -23,8 +23,8 @@ module.exports.findAll = (req, res) => {
   });
 };
 
-/*  
- * Recieves hashed id and updates thesis  
+/*
+ * Recieves hashed id and updates thesis
  *
  * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
  */
@@ -65,7 +65,7 @@ module.exports.saveOne = (req, res) => {
       if (typeof req.body.graders === "undefined") {
         return;
       }
-      return Promise.all(req.body.graders.map(grader => Grader.saveIfDoesntExist(grader)));
+      return Promise.all(req.body.graders.map(grader => Grader.findOrCreate(grader)));
     }
   })
   .then(() => Thesis.saveOne(req.body))
