@@ -20,22 +20,36 @@ describe("CouncilMeetingController", () => {
       request(app)
       .get("/councilmeeting")
       .set("Accept", "application/json")
+      .expect(res => {
+        CouncilMeeting.findAll.restore();
+      })
       .expect("Content-Type", /json/)
       .expect(200, mockDB.councilmeetings, done);
+
+
     })
   })
   describe("POST /councilmeeting (saveOne)", () => {
-    it("should save cmeeting and return it", (done) => {
-      sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
+    sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
         // console.log("yo body on " + JSON.stringify(reqbody));
         return Promise.resolve(mockDB.councilmeeting);
       });
+    it("should save cmeeting and return it", (done) => {
+
       request(app)
       .post("/councilmeeting")
       .send({ name: "councilmeeting to be saved"})
       .set("Accept", "application/json")
+      .expect(res => {
+        CouncilMeeting.saveOne.restore();
+
+      })
       .expect("Content-Type", /json/)
       .expect(200, mockDB.councilmeeting, done);
+
+
+
     });
+
   })
 })

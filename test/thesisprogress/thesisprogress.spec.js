@@ -16,7 +16,7 @@ const thesis = {
   grade: "Approbatur",
   deadline: Date.now(),
 };
-
+/*
 describe("When adding a new thesis", () => {
 
   let url = "http://localhost:9876/thesis";
@@ -31,3 +31,4 @@ describe("When adding a new thesis", () => {
     });
   });
 });
+*/

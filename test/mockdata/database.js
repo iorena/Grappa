@@ -1,4 +1,5 @@
 module.exports.thesis = {
+  id: 2000,
   author: "Pekka Graduttaja",
   email: "ohtugrappa@gmail.com",
   title: "Oliko Jeesus olemassa",
@@ -6,6 +7,8 @@ module.exports.thesis = {
   ethesis: "ethesislinkki.com",
   abstract: "Abstract from ethesis blaablaa",
   grade: "Laudatur",
+  deadline: "2016-04-15T08:51:01.894Z",
+  graders: [ 'Pena', 'AdjProf', 'Pera', 'AssProf' ]
 };
 
 module.exports.theses = [{
@@ -63,10 +66,42 @@ module.exports.councilmeeting = {
 };
 
 module.exports.councilmeetings = [
-  {
-    id: 1,
-    date: "2016-04-15T08:51:01.894Z",
-    createdAt: "2016-04-15T08:51:01.895Z",
-    updatedAt: "2016-04-15T08:51:01.895Z",
-  },
+{
+  id: 1,
+  date: "2016-04-15T08:51:01.894Z",
+  createdAt: "2016-04-15T08:51:01.895Z",
+  updatedAt: "2016-04-15T08:51:01.895Z",
+},
 ];
+module.exports.thesisprogresses = [{
+  "id":30,
+  "thesisId":2000,
+  "ethesisReminder":null,
+  "professorReminder":null,
+  "gradersStatus":false,
+  "documentsSent":null,
+  "isDone":false,
+  "createdAt":"2016-04-18T11:12:51.865Z",
+  "updatedAt":"2016-04-18T11:12:51.865Z",
+}
+, {
+  "id":31,
+  "thesisId":2000,
+  "ethesisReminder":null,
+  "professorReminder":null,
+  "gradersStatus":false,
+  "documentsSent":null,
+  "isDone":false,
+  "createdAt":"2016-04-18T11:14:28.003Z",
+  "updatedAt":"2016-04-18T11:14:28.003Z",
+}, {
+  "id":31,
+  "thesisId":2000,
+  "ethesisReminder":null,
+  "professorReminder":null,
+  "gradersStatus":false,
+  "documentsSent":null,
+  "isDone":false,
+  "createdAt":"2016-04-18T11:14:28.003Z",
+  "updatedAt":"2016-04-18T11:14:28.003Z",
+}];
