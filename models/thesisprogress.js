@@ -9,6 +9,12 @@ class ThesisProgress extends BaseModel {
   changeGraderStatus(thesisId) {
     this.getModel().update({ gradersStatus: true }, { where: { thesisId } });
   }
+  saveFromNewThesis(thesis){
+    console.log("Thesisprogress saved!");
+    return this.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
+      documentsSent: null, isDone: false, gradersStatus: false });
+  }
+
   evaluateGraders(thesis) {
     const thesisId = thesis.id;
     return this.Models.Thesis
