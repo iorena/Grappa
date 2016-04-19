@@ -25,11 +25,19 @@ module.exports.dropTables = () => {
 module.exports.addTestData = () => Promise.all([
   models.StudyField.create({
     id: 1,
-    name: "Algoritmit",
+    name: "Algorithmic Bioinformatics",
   }),
   models.StudyField.create({
     id: 2,
-    name: "Tietokoneet",
+    name: "Algorithms, Data Analytics and Machine Learning",
+  }),
+  models.StudyField.create({
+    id: 3,
+    name: "Networking and Services",
+  }),
+  models.StudyField.create({
+    id: 4,
+    name: "Software Systems",
   }),
   models.User.create({
     id: 1,
@@ -80,6 +88,7 @@ module.exports.addTestData = () => Promise.all([
     StudyFieldId: 2,
   }),
   models.Thesis.create({
+    id: 1,
     author: "Pekka Graduttaja",
     email: "ohtugrappa@gmail.com",
     title: "Oliko Jeesus olemassa",
@@ -91,6 +100,7 @@ module.exports.addTestData = () => Promise.all([
     StudyFieldId: 1,
   }),
   models.Thesis.create({
+    id: 2,
     author: "Matti Vanhanen",
     email: "ohtugrappa@gmail.com",
     title: "Paljon lautakasa maksaa",
@@ -102,12 +112,14 @@ module.exports.addTestData = () => Promise.all([
     StudyFieldId: 2,
   }),
   models.Review.create({
+    id: 1,
     author: "Kumpulan Kuningas",
     text: "Sup dawg.",
     UserId: 3,
     ThesisId: 1,
   }),
   models.Review.create({
+    id: 2,
     author: "Mr. Isokiho Proffa",
     text: "Aika heikko suoritus. Arvioijat täysin ala-arvoisia.",
     UserId: 4,
@@ -122,18 +134,6 @@ module.exports.addTestData = () => Promise.all([
   }),
   models.CouncilMeeting.create({
     date: Date.now(),
-  }),
-  models.StudyField.create({
-    name: "Algorithmic Bioinformatics",
-  }),
-  models.StudyField.create({
-    name: "Algorithms, Data Analytics and Machine Learning",
-  }),
-  models.StudyField.create({
-    name: "Networking and Services",
-  }),
-  models.StudyField.create({
-    name: "Software Systems",
   }),
   models.ThesisProgress.create({
     thesisId: 1,
@@ -151,7 +151,7 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-  ]);
+]);
 
 module.exports.dump = () => {
   return Promise.all(Object.keys(models).map(key => {
