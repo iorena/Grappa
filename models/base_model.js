@@ -1,59 +1,49 @@
 "use strict";
 
-const tables = require("./tables.js");
+const Models = require("./tables.js").Models;
+const Validator = require("./base_validator");
 
 class BaseModel {
-  constructor(tablename) {
-    this.tablename = tablename;
-    // Object.keys(argsObj).forEach((key,index) => {
-    //   console.log("" + key + argsObj[key]);
-    //   this.key = argsObj[key];
-    // })
-    // for(let key in argsObj) {
-    //   this.key = argsObj[key];
-    //   console.log(this.key + " "+ argsObj[key]);
-    // }
-    // for(const key in args) {
-    //   this.args[key]. = args[key];
-    // }
+  constructor(modelname) {
+    this.modelname = modelname;
+    this.Models = Models;
+    this.Validator = Validator;
+  }
+  getModel() {
+    return this.Models[this.modelname];
   }
   findOne(params) {
-    return tables[this.tablename].findOne({ where: params });
+    return this.Models[this.modelname].findOne({ where: params });
   }
   /*
    * Returns all the rows from a table.
    *
-   * Basically SELECT * FROM @this.tablename
+   * Basically SELECT * FROM @this.modelname
    *
    * @table {String} name of the table/model
    * @return Promise
    */
   findAll() {
-    return tables[this.tablename].findAll();
+    return this.Models[this.modelname].findAll();
   }
   /*
    * Creates new instance of table with validated(!) @params.
    *
-   * Kinda like INSERT (@params) INTO @tablename RETURNING ID
+   * Kinda like INSERT (@params) INTO @modelname RETURNING ID
    *
-   * @tablename {String} name of the table/model
+   * @modelname {String} name of the table/model
    * @params {Object} values to add
    * @return Promise
    */
   saveOne(params) {
-    return tables[this.tablename].create(params);
-  }
-  drop() {
-    return tables[this.tablename].destroy({ where: {} });
+    return this.Models[this.modelname].create(params);
   }
   /*
    * Updates a field
-   *
    */
   update(values, params) {
-    tables[this.tablename].update(values, { where: params });
+    return this.Models[this.modelname].update(values, { where: params });
   }
 }
 
 module.exports = BaseModel;
-module.exports.tables = tables;

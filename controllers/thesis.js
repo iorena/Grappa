@@ -1,9 +1,11 @@
 "use strict";
 
 const Reminder = require("../services/EmailReminder");
+const tokenGen = require("../services/TokenGenerator");
 
 const Thesis = require("../models/thesis");
-const Thesisprogress = require("../controllers/thesisprogress");
+const EthesisToken = require("../models/ethesisToken");
+const ThesisProgress = require("../models/thesisprogress");
 const CouncilMeeting = require("../models/councilmeeting");
 const Grader = require("../models/grader");
 
@@ -21,64 +23,78 @@ module.exports.findAll = (req, res) => {
   });
 };
 
-module.exports.saveOne = (req, res) => {
-  let savedthesis;
-  let originalDate = new Date(req.body.deadline);
-  let thesisValues;
-  if (req.body.deadline != null){
-    thesisValues = addCorrectDeadline(req.body);
-  }
-  Grader.saveIfDoesntExist(req.body);
-
+module.exports.updateOne = (req, res) => {
+  console.log(req.body);
   Thesis
-  .saveOne(thesisValues)
+  .update(req.body, { id: req.body.id })
   .then(thesis => {
-    savedthesis = thesis;
-    return Promise.all([
-      console.log("lähtee emaileja " + thesis.author),
-      Reminder.sendStudentReminder(thesis),
-      Reminder.sendProfessorReminder(thesis),
-      Reminder.sendPrinterReminder(thesis),
-
-      Thesisprogress.saveThesisProgressFromNewThesis(thesis),
-      addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, originalDate),
-      Grader.linkGraderAndThesis(req.body.grader, req.body.gradertitle, thesis),
-      Grader.linkGraderAndThesis(req.body.grader2, req.body.grader2title, thesis),
-      ])
+    res.status(200).send(thesis);
   })
-  .then((stuff) => {
-    console.log("tarkastus")
-   return Thesisprogress.evalGraders(savedthesis);
- })
-  .then(() => {
-    console.log("ja viel viimeinen");
-   res.status(200).send(savedthesis);
- })
-
   .catch(err => {
     res.status(500).send({
-      message: "Thesis saveOne produced an error",
+      message: "Thesis update produced an error",
       error: err,
     });
   });
 };
 
-function addCorrectDeadline(thesisValues){
-  var date = new Date(thesisValues.deadline);
-  date.setDate(date.getDate()-10);
-  thesisValues.deadline = date.toISOString();
-  return thesisValues;
-};
+/*
+ * Saves a single thesis, links it to a bunch of stuff and sends an email
+ *
+ * Required fields for a thesis:
+ * author, email, deadline, graders?, and stuff?
+ */
+module.exports.saveOne = (req, res) => {
+  let savedthesis;
+  let foundCouncilMeeting;
+  const originalDate = new Date(req.body.deadline);
 
-function addMeetingdateidAndThesisIdToCouncilMeetingTheses(thesis, date){
   CouncilMeeting
-  .getModel()
-  .findOne({ where: {date: new Date(date)} })
-  .then(function(cm){
-    cm
-    .addTheses(thesis)
-    .then(function(){
-      console.log("Thesis linked to councilmeeting")
-    });
+  .findOne({ date: originalDate })
+  .then(cm => {
+    // console.log("cm : ");
+    // console.log(cm);
+    if (cm === null) {
+      throw new TypeError("ValidationError: unvalid deadline, no such CouncilMeeting found");
+    } else {
+      foundCouncilMeeting = cm;
+      if (typeof req.body.graders === "undefined") {
+        return;
+      }
+      return Promise.all(req.body.graders.map(grader => Grader.saveIfDoesntExist(grader)));
+    }
+  })
+  .then(() => Thesis.saveOne(req.body))
+  .then(thesis => {
+    savedthesis = thesis;
+    const token = tokenGen.generateEthesisToken(thesis.author);
+    return Promise.all([
+      EthesisToken.saveOne({
+        thesisId: thesis.id,
+        author: thesis.author,
+        token,
+      }),
+      Reminder.sendStudentReminder(thesis.email, token),
+      ThesisProgress.saveOne(thesis),
+      CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
+      Grader.linkThesisToGraders(thesis, req.body.graders),
+    ]);
+  })
+  .then(() => ThesisProgress.evaluateGraders(savedthesis))
+  .then(() => {
+    res.status(200).send(savedthesis);
+  })
+  .catch(err => {
+    if (err.message.indexOf("ValidationError") !== -1) {
+      res.status(400).send({
+        message: "Thesis saveOne failed validation",
+        error: err.message,
+      });
+    } else {
+      res.status(500).send({
+        message: "Thesis saveOne produced an error",
+        error: err.message,
+      });
+    }
   });
-}
+};

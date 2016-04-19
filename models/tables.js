@@ -3,9 +3,10 @@ const seq = require("../db/db_connection").sequalize;
 
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  email: { type: Sequelize.STRING, unique: true },
+  password: Sequelize.STRING, // removed once we get Shittboleth
   name: Sequelize.STRING,
   title: Sequelize.STRING,
-  email: Sequelize.STRING,
   admin: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 const Thesis = seq.define("Thesis", {
@@ -18,6 +19,11 @@ const Thesis = seq.define("Thesis", {
   abstract: Sequelize.TEXT,
   grade: Sequelize.STRING,
   deadline: Sequelize.DATE,
+});
+const EthesisToken = seq.define("EthesisToken", {
+  thesisId: Sequelize.INTEGER,
+  author: Sequelize.STRING,
+  token: Sequelize.STRING,
 });
 const Grader = seq.define("Grader", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
@@ -46,18 +52,28 @@ const ThesisProgress = seq.define("ThesisProgress", {
   documentsSent: Sequelize.DATE,
   isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
+const EmailStatus = seq.define("EmailStatus", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  lastSent: Sequelize.DATE,
+  type: Sequelize.STRING,
+  to: Sequelize.STRING,
+  whoAddedEmail: Sequelize.STRING, // vai User
+  deadline: Sequelize.DATE,
+  wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
+});
+
 Thesis.belongsToMany(User, { through: "UserTheses" });
 Thesis.belongsTo(StudyField);
 
+EthesisToken.belongsTo(Thesis);
 
 Review.belongsTo(Thesis);
 Review.belongsTo(User);
 
 Grader.belongsToMany(Thesis, { through: "GraderThesis" });
-Thesis.belongsToMany(Grader, {through: "GraderThesis"});
+Thesis.belongsToMany(Grader, { through: "GraderThesis" });
 
 CouncilMeeting.hasMany(Thesis, { as: "Theses" });
-
 
 User.belongsTo(StudyField);
 
@@ -69,22 +85,20 @@ User.hasMany(Review);
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
 
-
 /*
 Use force here if you want to modify tables
 For clearing and adding testdata force is not needed
 */
-//seq.sync({ force: true });
-seq.sync();
+// seq.sync({ force: true });
 
 module.exports.sync = () => {
-  seq.sync();
+  return seq.sync();
 };
-module.exports.sync.force= () => {
-  seq.sync({ force: true });
+module.exports.syncForce = () => {
+  return seq.sync({ force: true });
 };
 
-module.exports = {
+module.exports.Models = {
   User,
   Thesis,
   Grader,
@@ -92,4 +106,6 @@ module.exports = {
   StudyField,
   Review,
   ThesisProgress,
+  EmailStatus,
+  EthesisToken,
 };

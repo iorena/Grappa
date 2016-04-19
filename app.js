@@ -15,6 +15,8 @@ const port = process.env.PORT || 9876;
 if (process.env.NODE_ENV !== "production") {
   let logger = require("morgan");
   app.use(logger("dev"));
+  let dbMethods = require("./db/methods");
+  // dbMethods.dropAndCreateTables();
 }
 
 app.use(bodyParser.urlencoded({
@@ -23,7 +25,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 
-scheduler.start();
+// scheduler.start();
 
 const routes = require("./controllers/routes");
 
@@ -36,3 +38,5 @@ app.listen(port, (err) => {
     console.log(`App is listening on port ${port}`);
   }
 });
+
+module.exports = app;

@@ -10,6 +10,3 @@ class User extends BaseModel {
 
 module.exports.class = User;
 module.exports = new User();
-module.exports.getModel = () =>{
-  return BaseModel.tables.User;
-};

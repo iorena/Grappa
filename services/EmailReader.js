@@ -4,6 +4,8 @@ const config = require("../config/email");
 const Imap = require("imap");
 const inspect = require("util").inspect;
 
+const EmailStatus = require("../models/email_status");
+
 class EmailReader {
   constructor(options) {
     this.imap = new Imap({
@@ -52,7 +54,7 @@ class EmailReader {
     const imap = this.imap;
     console.log("Messages total: " + box.messages.total);
     const f = imap.seq.fetch("2:3", {
-      bodies: ["TEXT", "HEADER.FIELDS (ANSWERED)"],
+      bodies: ["TEXT", "HEADER.FIELDS (FROM)"],
     });
 
     return new Promise((resolve, reject) => {
@@ -115,15 +117,37 @@ class EmailReader {
     })
   }
 
+  /*
+   * Method for checking emails for erronous content
+   *
+   * Checks if email's content contains any strings
+   * that incline that it is error message caused by non-existent
+   * receiver email-address. Parses then the receiver email
+   * and returns them as a list.
+   */
   checkMessagesForErrors(messages) {
-    messages.map(msg => {
-      console.log("message");
-      // console.log(msg);
-      // if (msg.indexOf())
+    return messages.map(msg => {
+      if (msg.indexOf("Delivery to the following recipient failed permanently") !== -1 && msg.indexOf(this.daemonName) !== -1) {
+        console.log("> failed permanently");
+        console.log("> contains daemon name");
+        let index = msg.indexOf("To: ") + 4;
+        let counter = 0;
+        let address = "";
+        let next = msg.charAt(index);
+        while(next !== "\n" && counter !== 300) {
+          address += next;
+          index++;
+          next = msg.charAt(index);
+          counter++;
+        }
+        console.log("address on:" + address);
+        return address;
+      }
     })
   }
 
   checkEmail() {
+    let addresses = [];
     return this.openImap()
       .then(() => {
         return this.openInbox();
@@ -133,7 +157,14 @@ class EmailReader {
       })
       .then(messages => {
         console.log("messages yo " + messages.length);
-        this.checkMessagesForErrors(messages);
+        addresses = this.checkMessagesForErrors(messages);
+        console.log(addresses);
+        return Promise.all(addresses.map(address => {
+          EmailStatus.update({ wasError: true}, { to: address });
+        }))
+      })
+      .then(updatedEmails => {
+        console.log("lol " + updatedEmails);
       })
   }
 }

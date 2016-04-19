@@ -1,75 +1,72 @@
 "use strict";
 
-const Q = require("q");
-
 const tables = require("../models/tables");
+const models = tables.Models;
 
 module.exports.destroyTables = () => {
-  let queries = [];
-  for(let key in tables) {
-    queries.push(tables[key].destroy({where: {}}));
-  }
-  return Promise.all(queries);
+  return Promise.all(Object.keys(models).map(key => {
+    if ({}.hasOwnProperty.call(models, key)) {
+      return models[key].destroy({ where: {} });
+    }
+  }));
+};
+
+module.exports.createTables = () => {
+  return tables.syncForce();
+  // return tables.sync();
 };
 
 
 module.exports.dropTables = () => {
-  let queries = [];
-  for(let key in tables) {
-    queries.push(tables[key].drop({cascade: true}));
-  }
-  return Promise.all(queries);
+  return Promise.all(Object.keys(models).map(key => {
+    return models[key].drop({ cascade: true });
+  }));
 };
 
-module.exports.createTestData = () => Q.all([
-  tables["User"].create({
+module.exports.addTestData = () => Promise.all([
+  models.User.create({
     name: "B Virtanen",
+    password: "asdf",
     title: "print-person",
-    email: "ohtugrappa@gmail.com",
+    email: "ohtugrappa2@gmail.com",
     admin: true,
   }),
-  tables["User"].create({
+  models.User.create({
     name: "Kjell Lemström",
+    password: "asdf",
     title: "head of studies",
     email: "ohtugrappa@gmail.com",
     admin: true,
   }),
-  tables["Thesis"].create({
+  models.Thesis.create({
     author: "Pekka Graduttaja",
     email: "ohtugrappa@gmail.com",
-    title: "Oliko Jeesus olemassa? No todellaki 0_0",
+    title: "Oliko Jeesus olemassa",
     urkund: "urkunlinkki.com",
     ethesis: "ethesislinkki.com",
     abstract: "Abstract from ethesis blaablaa",
-    deadline: Date.now(),
     grade: "Laudatur",
   }),
-  tables.ThesisProgress.create({
+  models.ThesisProgress.create({
     thesisId: "1",
     ethesisReminder: Date.now(),
     professorReminder: Date.now(),
     documentsSent: Date.now(),
   }),
-  tables.Grader.create({
+  models.Grader.create({
     name: "Mr. Grader2",
     title: "Professor of internet",
   }),
-  tables.CouncilMeeting.create({
+  models.CouncilMeeting.create({
+    date: new Date("1.1.2016"),
+  }),
+  models.CouncilMeeting.create({
     date: Date.now(),
   }),
-  tables.StudyField.create({
-    name: "Alg",
+  models.StudyField.create({
+    name: "Algoritmit",
   }),
-  tables.StudyField.create({
-    name: "Bio",
-  }),
-  tables.StudyField.create({
-    name: "Net",
-  }),
-  tables.StudyField.create({
-    name: "Soft",
-  }),
-  tables.ThesisProgress.create({
+  models.ThesisProgress.create({
     thesisId: 1,
     ethesisReminder: Date.now(),
     professorReminder: Date.now(),
@@ -77,25 +74,44 @@ module.exports.createTestData = () => Q.all([
     documentsSent: Date.now(),
     isDone: false,
   }),
+  models.EmailStatus.create({
+    lastSent: Date.now(),
+    type: "StudentReminder",
+    to: "asdf@asdfasdf.com",
+    whoAddedEmail: "ohtugrappa@gmail.com", // vai User
+    deadline: new Date("1 1 2017"),
+    wasError: true,
+  })
 ]);
 
 module.exports.dump = () => {
-  const queries = [];
-  for (const key in tables) {
-    if ({}.hasOwnProperty.call(tables.key)) {
-      queries.push(tables[key].findAll());
+  return Promise.all(Object.keys(models).map(key => {
+    if ({}.hasOwnProperty.call(models, key)) {
+      return models[key].findAll();
     }
-  }
-  return Promise.all(queries);
+  }));
 };
 
-module.exports.destroyAndCreateTables = () => module.exports.destroyTables()
-.then(() => module.exports.createTestData()
-)
-.then(() => {
-  console.log("Destroyed and created tables successfully!");
-})
-.catch(err => {
-  console.log("add_test_data destroyAndCreateTables produced an error!");
-  console.log(err);
-});
+module.exports.dropAndCreateTables = () => {
+  return module.exports.createTables()
+    .then(() => module.exports.addTestData() )
+    .then(() => {
+      console.log("Dropped and created models with test data succesfully!");
+    })
+    .catch((err) => {
+      console.log("dropAndCreateTables produced an error!");
+      console.log(err);
+    })
+}
+
+module.exports.resetTestData = () => {
+  module.exports.destroyTables()
+  .then(() => module.exports.addTestData() )
+  .then(() => {
+    console.log("Resetted the database with test data successfully!");
+  })
+  .catch(err => {
+    console.log("resetTestData produced an error!");
+    console.log(err);
+  });
+}

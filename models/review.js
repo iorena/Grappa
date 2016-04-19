@@ -10,6 +10,3 @@ class Review extends BaseModel {
 
 module.exports.class = Review;
 module.exports = new Review();
-module.exports.getModel = () =>{
-  return BaseModel.tables.Review;
-};

@@ -3,6 +3,8 @@
 const config = require("../config/email");
 const nodemailer = require("nodemailer");
 
+// const EmailStatus = require("../models/email_status");
+
 class EmailSender {
   constructor(options) {
     this.mailOptions = {
@@ -12,9 +14,9 @@ class EmailSender {
   }
 
   sendEmail(to, subject, body) {
-    let options = Object.assign({
-      to: to,
-      subject: subject,
+    const options = Object.assign({
+      to,
+      subject,
       text: body,
     }, this.mailOptions);
 
@@ -27,8 +29,8 @@ class EmailSender {
         } else {
           resolve(info);
         }
-      })
-    })
+      });
+    });
   }
 }
 

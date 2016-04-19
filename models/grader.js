@@ -8,41 +8,38 @@ class Grader extends BaseModel {
     super("Grader");
   }
 
-  findOrCreate(gradername, gradertitle){
-    tables.Grader
-    .findOne({where: {name: gradername, title: gradertitle}})
+  findOrCreate(gradername, gradertitle) {
+    return this.getModel()
+    .findOne({ where: { name: gradername, title: gradertitle } })
     .then((grader) => {
-      if(grader === null){
-        return tables.Grader.create({name: gradername, title: gradertitle})
-      } else {
-        return grader;
+      if (grader === null) {
+        return this.getModel().create({ name: gradername, title: gradertitle });
       }
-    })
+      return grader;
+    });
   }
 
   saveIfDoesntExist(thesis) {
-    let queries = [];
+    const queries = [];
     queries.push(this.findOrCreate(thesis.grader, thesis.gradertitle));
     queries.push(this.findOrCreate(thesis.grader2, thesis.grader2title));
     return Promise.all(queries);
   }
 
-  linkGraderAndThesis(graderName, title, thesis)  {
-    return this
-    .getModel()
-    .findOne({where: {name: graderName, title: title}})
-    .then(function(grader){
-      grader
-      .addThesis(thesis)
-      .then(function(){
-        console.log("Thesis and Grader added to GraderTheses");
+  linkThesisToGraders(thesis, graders) {
+    if (typeof graders === "undefined") {
+      return Promise.resolve();
+    }
+    return Promise.all(graders.map(grader => {
+      return this.getModel()
+        .findOne({ where: { name: grader.name, title: grader.title } })
+        .then(grader => grader.addThesis(thesis))
+      }))
+      .then(() => {
+        console.log("Thesis and Graders all linked!");
       })
-    })
   }
 }
 
 module.exports.class = Grader;
 module.exports = new Grader();
-module.exports.getModel = () =>{
-  return BaseModel.tables.Grader;
-};
