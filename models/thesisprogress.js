@@ -9,7 +9,7 @@ class ThesisProgress extends BaseModel {
   changeGraderStatus(thesisId) {
     this.getModel().update({ gradersStatus: true }, { where: { thesisId } });
   }
-  saveFromNewThesis(thesis){
+  saveFromNewThesis(thesis) {
     console.log("Thesisprogress saved!");
     return this.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
       documentsSent: null, isDone: false, gradersStatus: false });

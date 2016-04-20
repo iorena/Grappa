@@ -2,7 +2,7 @@
 
 class BaseValidator {
   validate(value, name) {
-    switch(name) {
+    switch (name) {
       case "author":
         return this.validateToBeStringWithLength(value, 50);
       case "deadline":
