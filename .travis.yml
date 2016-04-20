@@ -4,6 +4,8 @@ node_js:
 script:
   - npm --silent run lint
   - npm --silent test
+  - npm run db:prod drop
+  - npm run db:prod init
   - cat ./coverage/lcov.info | coveralls
 deploy:
   provider: heroku
