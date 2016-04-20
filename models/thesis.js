@@ -27,11 +27,9 @@ class Thesis extends BaseModel {
   linkStudyField(thesis, field) {
     return StudyField.getModel()
       .findOne({ where: { name: field } })
-      .then((studyfield) => {
-        return thesis.setStudyField(studyfield);
-      })
+      .then((studyfield) => thesis.setStudyField(studyfield))
       .then(() => {
-        console.log("Thesis linked to StudyField")
+        console.log("Thesis linked to StudyField");
       });
   }
   saveOne(params) {
@@ -40,7 +38,7 @@ class Thesis extends BaseModel {
     // the crazy validation loop. wee!
     Object.keys(params).map(key => {
       if (values[key] !== null && !this.Validator.validate(values[key], key)) {
-        throw("ValidationError: " + key + " isn't the wanted type!");
+        throw new Error(key + " isn't the wanted type!");
       }
     });
     if (values.deadline !== null) {
@@ -52,9 +50,9 @@ class Thesis extends BaseModel {
     if (user.role === "admin" || user.role === "print-person") {
       return this.Models.Thesis.findAll();
     } else if (user.role === "professor") {
-      return this.Models.Thesis.findAll({ where: { StudyFieldId: user.StudyFieldId }});
+      return this.Models.Thesis.findAll({ where: { StudyFieldId: user.StudyFieldId } });
     } else if (user.role === "instructor") {
-      return this.Models.Thesis.findOne({ where: { UserId: user.id }});
+      return this.Models.Thesis.findOne({ where: { UserId: user.id } });
     }
     // calls the parent classes method. nice!
     // return BaseModel.prototype.findAll.call(this);
