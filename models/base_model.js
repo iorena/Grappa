@@ -26,9 +26,8 @@ class BaseModel {
   findAll(params) {
     if (typeof params !== "undefined") {
       return this.Models[this.modelname].findAll({ where: params });
-    } else {
-      return this.Models[this.modelname].findAll();
     }
+    return this.Models[this.modelname].findAll();
   }
   /*
    * Creates new instance of table with validated(!) @params.

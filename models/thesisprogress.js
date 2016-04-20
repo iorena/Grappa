@@ -9,7 +9,7 @@ class ThesisProgress extends BaseModel {
   changeGraderStatus(thesisId) {
     this.getModel().update({ gradersStatus: true }, { where: { thesisId } });
   }
-  saveFromNewThesis(thesis){
+  saveFromNewThesis(thesis) {
     console.log("Thesisprogress saved!");
     return this.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
       documentsSent: null, isDone: false, gradersStatus: false });
@@ -19,9 +19,7 @@ class ThesisProgress extends BaseModel {
     const thesisId = thesis.id;
     return this.Models.Thesis
       .findOne({ where: { id: thesis.id } })
-      .then((thesis) => {
-        return thesis.getGraders();
-      })
+      .then((foundThesis) => foundThesis.getGraders())
       .then((graders) => {
         let professor = false;
         let doctor = false;
@@ -40,7 +38,7 @@ class ThesisProgress extends BaseModel {
         if (professor && doctor) {
           this.changeGraderStatus(thesisId);
         }
-      })
+      });
   }
 }
 
