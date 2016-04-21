@@ -15,6 +15,7 @@ const userCtrl = require("./user");
 const thesisprogressCtrl = require("./thesisprogress");
 const emailCtrl = require("./email");
 const emailstatusCtrl = require("./email_status");
+const studyfieldCtrl = require("./studyfield");
 
 const index = (req, res) => {
   res.json({
@@ -41,6 +42,9 @@ router.get("/", index);
 router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
 router.put("/thesis", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
+router.get("/thesis/:id", function(req,res){
+  thesisCtrl.findOne(req.params.id, res);
+});
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
@@ -49,9 +53,12 @@ router.get("/review", auth.authenticate, reviewCtrl.findAll);
 router.post("/review", auth.authenticate, reviewCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
-// router.post("/grader", graderCtrl.saveOne);
 router.post("/grader", graderCtrl.saveOne);
+
 router.get("/thesisprogress", thesisprogressCtrl.findAll);
+router.get("/thesisprogress/:id", function(req,res){
+  thesisprogressCtrl.findOne(req.params.id, res);
+});
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
@@ -64,6 +71,8 @@ router.post("/emailstatus", emailstatusCtrl.saveOne);
 router.get("/email/send", emailCtrl.sendEmail);
 router.get("/email/check", emailCtrl.checkEmail);
 router.get("/email/remind", emailCtrl.sendReminder);
+
+router.get("/studyfield", studyfieldCtrl.findAll);
 
 router.get("/dbdump", dump);
 

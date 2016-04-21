@@ -108,3 +108,25 @@ module.exports.thesisprogresses = [{
   "createdAt":"2016-04-18T11:14:28.003Z",
   "updatedAt":"2016-04-18T11:14:28.003Z",
 }];
+module.exports.competentGraders= [ { 
+  name: "PENTTI", title: "AdjProf",
+}, { 
+  name: "VERTTI", title: "Prof",
+}, {
+  name: "LERTTI", title: "AssProf",
+}, {
+  name: "PERTTI", title: "Other",
+}, {
+  name: "KERTTU", title: "AdjProf",
+}];
+module.exports.incompetentGraders = [{
+  name: "PENTTI", title: "AdjProf",
+}, { 
+  name: "VERTTI", title: "AssProf",
+}, {
+  name: "LERTTI", title: "AssProf",
+}, {
+  name: "PERTTI", title: "Other",
+}, {
+  name: "KERTTU", title: "Doc",
+}];

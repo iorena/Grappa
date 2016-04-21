@@ -23,6 +23,20 @@ module.exports.findAll = (req, res) => {
   });
 };
 
+module.exports.findOne = (req, res) => {
+  Thesis
+  .findOne({id: req})
+  .then(thesis => {
+    res.status(200).send(thesis);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis findOne produced an error",
+      error: err,
+    });
+  });
+};
+
 /*
  * Recieves hashed id and updates thesis
  *
@@ -85,7 +99,7 @@ module.exports.saveOne = (req, res) => {
       Thesis.linkStudyField(thesis, req.body.field),
     ]);
   })
-  .then(() => ThesisProgress.evaluateGraders(savedthesis))
+  .then(() => ThesisProgress.evaluateGraders(req.body.id, req.body.graders))
   .then(() => {
     res.status(200).send(savedthesis);
   })

@@ -21,55 +21,84 @@ const tokenGen = require("../../services/TokenGenerator");
 
 const mockDB = require("../mockdata/database");
 
+var linkStudyField;
+var findOrCreateGrader;
+var sendStudentReminder;
+var sandbox;
+
 describe("ThesisController", () => {
-  sinon.stub(Thesis, "saveOne", (reqbody) => {
-    return Promise.resolve(mockDB.thesis);
+
+  before( function () {
+    sandbox = sinon.sandbox.create();
+
+    sandbox.stub(Thesis, "saveOne", (reqbody) => {
+      return Promise.resolve(mockDB.thesis);
+    });
+    sandbox.stub(Thesis, "findAll", () => {
+      return Promise.resolve(mockDB.theses);
+    });
+    sandbox.stub(Thesis, "findAllByUserRole", () => {
+      return Promise.resolve(mockDB.theses);
+    });
+    linkStudyField = sandbox.stub(Thesis, "linkStudyField", (reqbody) => {
+      return Promise.resolve();
+    });
+    sandbox.stub(ThesisProgress, "saveOne", (reqbody) => {
+      return Promise.resolve(mockDB.thesisprogresses[0])
+    });
+    sandbox.stub(ThesisProgress, "evaluateGraders", () => {
+      return Promise.resolve()
+    });
+    sandbox.stub(CouncilMeeting, "findOne", (reqbody) => {
+      return Promise.resolve(mockDB.councilmeeting);
+    });
+    sandbox.stub(CouncilMeeting, "saveOne", (reqbody) => {
+      return Promise.resolve(mockDB.councilmeeting)
+    });
+    sandbox.stub(CouncilMeeting, "findAll", (reqbody) => {
+      return Promise.resolve(mockDB.councilmeetings)
+    });
+    sandbox.stub(CouncilMeeting, "linkThesisToCouncilMeeting", () => {
+      return Promise.resolve()
+    });
+    findOrCreateGrader = sandbox.stub(Grader, "findOrCreate", () => {
+      return Promise.resolve()
+    })
+    sandbox.stub(Grader, "linkThesisToGraders", () => {
+      return Promise.resolve()
+    });
+    sandbox.stub(Grader, "saveOne", (reqbody) => {
+      return Promise.resolve()
+    });
+    sandbox.stub(EthesisToken, "saveOne", (reqbody) => {
+      return Promise.resolve()
+    });
+    sendStudentReminder = sandbox.stub(EmailReminder, "sendStudentReminder", (reqbody) => {
+      return Promise.resolve()
+    });
   });
-  sinon.stub(Thesis, "findAll", () => {
-    return Promise.resolve(mockDB.theses);
-  });
-  var linkStudyField = sinon.stub(Thesis, "linkStudyField", (reqbody) => {
-    return Promise.resolve()
-  });
-  sinon.stub(ThesisProgress, "saveOne", (reqbody) => {
-    return Promise.resolve(mockDB.thesisprogresses[0])
-  });
-  sinon.stub(ThesisProgress, "evaluateGraders", () => {
-    return Promise.resolve()
-  });
-  sinon.stub(CouncilMeeting, "findOne", (reqbody) => {
-    return Promise.resolve(mockDB.councilmeeting);
-  });
-  sinon.stub(CouncilMeeting, "saveOne", (reqbody) => {
-    return Promise.resolve(mockDB.councilmeeting)
-  });
-  sinon.stub(CouncilMeeting, "findAll", (reqbody) => {
-    return Promise.resolve(mockDB.councilmeetings)
-  });
-  sinon.stub(CouncilMeeting, "linkThesisToCouncilMeeting", () => {
-    return Promise.resolve()
-  });
-  var findOrCreateGrader = sinon.stub(Grader, "findOrCreate", () => {
-    return Promise.resolve()
+
+  after(function() {
+    /*Thesis.saveOne.restore();
+    Thesis.findAll.restore();
+    Thesis.linkStudyField.restore();
+    Thesis.findAllByUserRole.restore();
+    ThesisProgress.saveOne.restore();
+    ThesisProgress.evaluateGraders.restore();
+    CouncilMeeting.findOne.restore();
+    CouncilMeeting.findAll.restore();
+    CouncilMeeting.saveOne.restore();
+    CouncilMeeting.linkThesisToCouncilMeeting.restore();
+    Grader.findOrCreate.restore();
+    Grader.linkThesisToGraders.restore();
+    Grader.saveOne.restore();
+    EthesisToken.saveOne.restore();
+    EmailReminder.sendStudentReminder.restore();*/
+    sandbox.restore();
   })
-  sinon.stub(Grader, "linkThesisToGraders", () => {
-    return Promise.resolve()
-  });
-  sinon.stub(Grader, "saveOne", (reqbody) => {
-    return Promise.resolve()
-  });
-  sinon.stub(EthesisToken, "saveOne", (reqbody) => {
-    return Promise.resolve()
-  });
-  var sendStudentReminder = sinon.stub(EmailReminder, "sendStudentReminder", (reqbody) => {
-    return Promise.resolve()
-  });
 
   describe("GET /thesis (findAll)", () => {
     it("should call Thesis-model correctly and return theses", (done) => {
-      sinon.stub(Thesis, "findAllByUserRole", () => {
-        return Promise.resolve(mockDB.theses);
-      });
       request(app)
       .get("/thesis")
       .set("Accept", "application/json")
@@ -87,7 +116,7 @@ describe("ThesisController", () => {
       .expect(200, mockDB.thesis, done);
     });
 
-    it('should add correct new thesisprogress', (done) => {
+    it('should add a new thesisprogress correctly', (done) => {
      let saveFromNewThesis = sinon.spy(ThesisProgress, "saveFromNewThesis");
 
      request(app)
@@ -141,9 +170,6 @@ describe("ThesisController", () => {
       .post("/thesis")
       .send(mockDB.thesis)
       .set("Accept", "application/json")
-      .expect(res => {
-        EmailReminder.sendStudentReminder.restore();
-      })
       .expect("Content-Type", /json/)
       .expect(res => {
         expect(sendStudentReminder.calledWith(mockDB.thesis.email, token)).to.equal(true);
@@ -155,11 +181,10 @@ describe("ThesisController", () => {
 
      request(app)
      .post("/thesis")
-     .send({ name: "thesis to be saved"})
+     .send(mockDB.thesis)
      .set("Accept", "application/json")
      .expect("Content-Type", /json/)
      .expect(res => {
-
       expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.field)).to.equal(true);
     })
      .expect(200, mockDB.thesis, done);

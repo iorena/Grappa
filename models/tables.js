@@ -7,6 +7,7 @@ const User = seq.define("User", {
   password: Sequelize.STRING, // removed once we get Shittboleth
   name: Sequelize.STRING,
   role: Sequelize.STRING,
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 const Thesis = seq.define("Thesis", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },

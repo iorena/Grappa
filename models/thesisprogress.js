@@ -15,30 +15,24 @@ class ThesisProgress extends BaseModel {
       documentsSent: null, isDone: false, gradersStatus: false });
   }
 
-  evaluateGraders(thesis) {
-    const thesisId = thesis.id;
-    return this.Models.Thesis
-      .findOne({ where: { id: thesis.id } })
-      .then((foundThesis) => foundThesis.getGraders())
-      .then((graders) => {
-        let professor = false;
-        let doctor = false;
-        graders.map((grader) => {
-          const title = grader.title;
-          if (title === "Prof") {
-            if (professor) {
-              doctor = true;
-            } else {
-              professor = true;
-            }
-          } else if (title === "AssProf" || title === "Doc" || title === "AdjProf") {
-            doctor = true;
-          }
-        });
-        if (professor && doctor) {
-          this.changeGraderStatus(thesisId);
+  evaluateGraders(thesisId, graders) {
+    let professor = false;
+    let doctor = false;
+    graders.map((grader) => {
+      var title = grader.title;
+      if (title === "Prof") {
+        if (professor) {
+          doctor = true;
+        } else {
+          professor = true;
         }
-      });
+      } else if (title === "AssProf" || title === "Doc" || title === "AdjProf") {
+        doctor = true;
+      }
+    });
+    if (professor && doctor) {
+      this.changeGraderStatus(thesisId);
+    }
   }
 }
 

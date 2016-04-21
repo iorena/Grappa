@@ -18,13 +18,13 @@ module.exports.findAll = (req, res) => {
 
 module.exports.findOne = (req, res) => {
   ThesisProgress
-  .findOne(req.body.thesisID)
-  .then(thesisprogresses => {
-    res.status(200).send(thesisprogresses);
+  .findOne({id: req})
+  .then(thesisprogress => {
+    res.status(200).send(thesisprogress);
   })
   .catch(err => {
     res.status(500).send({
-      message: "ThesisProgress findAll produced an error",
+      message: "ThesisProgress findOne produced an error",
       error: err,
     });
   });
