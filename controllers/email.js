@@ -30,7 +30,7 @@ module.exports.sendReminder = (req, res) => {
 
 module.exports.sendEmail = (req, res) => {
   Sender
-  .sendEmail("ohtugrappa@gmail.com", "Viestin Otsikko", "asdf\nasdf\n\n\tasdfasdf\ntext")
+  .sendEmail("ohtugrappa@gmail.com", "Viestin Otsikko", "Heippa!")
   .then(info => {
     res.status(200).send({
       info,
@@ -53,6 +53,7 @@ module.exports.checkEmail = (req, res) => {
     });
   })
   .catch(err => {
+    console.log(err)
     res.status(500).send({
       message: "checkEmail hajos",
       error: err,

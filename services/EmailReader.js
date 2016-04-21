@@ -8,20 +8,11 @@ const EmailStatus = require("../models/email_status");
 
 class EmailReader {
   constructor(options) {
-    this.imap = new Imap({
-      user: options.user,
-      password: options.password,
-      host: options.imap,
-      port: 993,
-      tls: true,
-    });
+    this.imap = new Imap(options);
     // Parses only error messages received from this address
     this.daemonName = "mailer-daemon@googlemail.com";
   }
 
-  checkIfErrorMessage(textbody) {
-
-  }
   /*
    * Method for reading single message stream
    */
@@ -127,6 +118,7 @@ class EmailReader {
    */
   checkMessagesForErrors(messages) {
     return messages.map(msg => {
+      console.log(msg)
       if (msg.indexOf("Delivery to the following recipient failed permanently") !== -1
           && msg.indexOf(this.daemonName) !== -1) {
         console.log("> failed permanently");
@@ -171,4 +163,4 @@ class EmailReader {
 }
 
 module.exports.class = EmailReader;
-module.exports = new EmailReader(config);
+module.exports = new EmailReader(config.imap);
