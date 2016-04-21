@@ -15,6 +15,7 @@ class EmailReminder {
     };
     this.readDrafts(this.drafts)
     .then(drafts => {
+      // console.log(drafts)
       this.drafts = drafts;
     });
   }
