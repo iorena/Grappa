@@ -23,6 +23,20 @@ module.exports.findAll = (req, res) => {
   });
 };
 
+module.exports.findOne = (req, res) => {
+  Thesis
+  .findOne({id: req})
+  .then(thesis => {
+    res.status(200).send(thesis);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis findOne produced an error",
+      error: err,
+    });
+  });
+};
+
 /*
  * Recieves hashed id and updates thesis
  *
