@@ -10,7 +10,7 @@ class Scheduler {
    */
   start() {
     // "00 00 00 * * 1-7" for daily checks at 00:00
-    scheduler.scheduleJob("55 * * * * 1-7", () => {
+    scheduler.scheduleJob("55 13 * * * 1-7", () => {
       console.log("scheduler event ran");
       Thesis
       .findAll()
