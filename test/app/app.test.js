@@ -11,7 +11,7 @@ describe("app", () => {
     });
   });
 
-  describe("thesis route", () => {
+  xdescribe("thesis route", () => {
     url += "/theses";
     it("accepts request parameters", () => {
       request(url + "?testparam=666", (error, response) => {
@@ -20,7 +20,7 @@ describe("app", () => {
     });
   });
 
-  describe("councilmeeting route", () => {
+  xdescribe("councilmeeting route", () => {
     url += "/councilmeetings";
     it("accepts request parameters", () => {
       request(url + "?testparam=666", (error, response) => {
