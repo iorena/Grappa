@@ -8,6 +8,7 @@
  const app = require("../testhelper").app;
 
  const User = require("../../models/user");
+ const TokenGenerator = require("../../services/TokenGenerator");
 
 
  describe("UserController", () => {
@@ -21,12 +22,16 @@
     sinon.stub(User, "findOne", () => {
       return Promise.resolve(mockDB.users[0]);
     });
+    sinon.stub(User, "update", () => {
+      return Promise.resolve([1]);
+    })
   })
 
   after(() => {
     User.findAll.restore();
     User.saveOne.restore();
     User.findOne.restore();
+    User.update.restore();
   })
 
   describe("POST /user (saveOne)", () => {
@@ -87,9 +92,71 @@
       .set("Accept", "application/json")
       .expect(500, {message: "User findAll produced an error"}, done);
     })
-
-
   })
+
+  describe("PUT /user/:id", () => {
+    it("should call User-model and update one User correctly", (done) => {
+      request(app)
+      .put("/user/1")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200, done);
+    });
+    it("should fail miserably with 500 if update throws error", (done) => {
+      User.update.restore();
+      sinon.stub(User, "update", () => {
+        return Promise.reject();
+      })
+
+      request(app)
+      .put("/user/1")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(500, done);
+    });
+  });
+
+  describe("POST /login", () => {
+    it("should find correct user and create a token", (done) =>  {
+      User.findOne.restore();
+      sinon.stub(User, "findOne", () => {
+        return Promise.resolve(mockDB.users[0]);
+      });
+      var generateTokenSpy = sinon.spy(TokenGenerator, "generateToken");
+
+      request(app)
+      .post("/login")
+      .send({ name: "user to be login"})
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(res => {
+        expect(generateTokenSpy.calledWith(mockDB.users[0])).to.equal(true);
+      })
+      .expect(200, done);
+    });
+    it("should fail with 401 if user is not found", (done) => {
+      User.findOne.restore();
+      sinon.stub(User, "findOne", () => {
+        return Promise.resolve(null);
+      });
+      request(app)  
+      .post("/login")
+      .set("Accept", "application/json")
+      .expect(401, {message: "Logging in failed authentication", error: "Dawg"}, done);
+    });
+    it("should fail with 500 if findOne throws error", (done) => {
+      User.findOne.restore();
+      sinon.stub(User, "findOne", () => {
+        return Promise.reject();
+      })
+
+      request(app)  
+      .post("/login")
+      .set("Accept", "application/json")
+      .expect(500, {message: "User loginUser produced an error"}, done);
+    });
+  })
+
 })
 
 

@@ -19,7 +19,6 @@ module.exports.findAll = (req, res) => {
 
 
 module.exports.updateOne = (req, res) => {
-  console.log(req.params);
   User
   .update(req.body, req.params)
   .then(user => {
@@ -86,7 +85,7 @@ module.exports.loginUser = (req, res) => {
   .catch(err => {
     res.status(500).send({
       message: "User loginUser produced an error",
-      error: err.message,
+      error: err,
     });
   });
 }
