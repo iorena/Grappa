@@ -69,6 +69,26 @@
       .set("Accept", "application/json")
       .expect(500, {message: "ThesisProgress findOne produced an error"}, done);
     })
+    it("findAll should call ThesisProgress-model correctly and return all TP", (done) => {
+      request(app)
+      .get("/thesisprogress")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200, mockDB.thesisprogresses, done);
+    });
+
+    it("should fail with 500 if findAll throws error", (done) => {
+      ThesisProgress.findAll.restore();
+      sinon.stub(ThesisProgress, "findAll", () => {
+        return Promise.reject();
+      });
+      request(app)  
+      .get("/thesisprogress")
+      .set("Accept", "application/json")
+      .expect(500, {message: "ThesisProgress findAll produced an error"}, done);
+    })
+
+
   })
 })
 
