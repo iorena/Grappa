@@ -17,6 +17,36 @@ module.exports.findAll = (req, res) => {
   });
 };
 
+
+module.exports.updateOne = (req, res) => {
+  console.log(req.params);
+  User
+  .update(req.body, req.params)
+  .then(user => {
+    res.status(200).send(user);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "User updateOne produced an error",
+      error: err,
+    });
+  });
+};
+
+module.exports.findOne = (req, res) => {
+  User
+  .findOne({id: req})
+  .then(user => {
+    res.status(200).send(user);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "User findOne produced an error",
+      error: err,
+    });
+  });
+};
+
 module.exports.saveOne = (req, res) => {
   User
   .saveOne(req.body)

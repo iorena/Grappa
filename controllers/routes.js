@@ -42,7 +42,7 @@ router.get("/", index);
 router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
 router.put("/thesis", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
-router.get("/thesis/:id", function(req,res){
+router.get("/thesis/:id", (req,res) => {
   thesisCtrl.findOne(req.params.id, res);
 });
 
@@ -56,13 +56,19 @@ router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
 
 router.get("/thesisprogress", thesisprogressCtrl.findAll);
-router.get("/thesisprogress/:id", function(req,res){
+router.get("/thesisprogress/:id", (req,res) => {
   thesisprogressCtrl.findOne(req.params.id, res);
 });
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
 router.post("/user", userCtrl.saveOne);
+router.get("/user/:id", (req,res) => {
+  userCtrl.findOne(req.params.id, res);
+});
+router.put("/user/:id", (req, res) => {
+  userCtrl.updateOne(req, res);
+});
 router.post("/login", userCtrl.loginUser);
 
 router.get("/emailstatus", emailstatusCtrl.findAll);
