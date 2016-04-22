@@ -1,4 +1,4 @@
-"use strict";
+  "use strict";
 
 const request = require("supertest");
 const expect = require("chai").expect;
@@ -40,6 +40,9 @@ describe("ThesisController", () => {
     sandbox.stub(Thesis, "findAllByUserRole", () => {
       return Promise.resolve(mockDB.theses);
     });
+    sandbox.stub(Thesis, "findOne", () => {
+      return Promise.resolve(mockDB.thesis);
+    })
     linkStudyField = sandbox.stub(Thesis, "linkStudyField", (reqbody) => {
       return Promise.resolve();
     });
@@ -97,14 +100,22 @@ describe("ThesisController", () => {
     sandbox.restore();
   })
 
-  describe("GET /thesis (findAll)", () => {
-    it("should call Thesis-model correctly and return theses", (done) => {
+  describe("GET /thesis", () => {
+    it("findAll should call Thesis-model correctly and return theses", (done) => {
       request(app)
       .get("/thesis")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200, mockDB.theses, done);
     })
+    it("findOne should call Thesis-model correctly and return the correct thesis", (done) => {
+      request(app)
+      .get("/thesis/2000")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200, mockDB.thesis, done);
+    })
+
   })
   describe("POST /thesis (saveOne)", () => {
     it("should save thesis and return thesis", (done) => {
