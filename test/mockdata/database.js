@@ -98,7 +98,7 @@ module.exports.thesisprogresses = [{
   "createdAt":"2016-04-18T11:14:28.003Z",
   "updatedAt":"2016-04-18T11:14:28.003Z",
 }, {
-  "id":31,
+  "id":32,
   "thesisId":2000,
   "ethesisReminder":null,
   "professorReminder":null,
@@ -152,3 +152,20 @@ module.exports.studyfields = [{
   "createdAt":"2016-04-21T08:38:47.443Z",
   "updatedAt":"2016-04-21T08:38:47.443Z"
 }]
+module.exports.reviews = [{
+  "id":1,
+  "authoredByProf":null,
+  "text":"Sup dawg.",
+  "createdAt":"2016-04-21T08:38:47.451Z",
+  "updatedAt":"2016-04-21T08:38:47.451Z",
+  "ThesisId":1,
+  "UserId":3
+},{
+  "id":2,
+  "authoredByProf":null,
+  "text":"Aika heikko suoritus. Arvioijat täysin ala-arvoisia.",
+  "createdAt":"2016-04-21T08:38:47.452Z",
+  "updatedAt":"2016-04-21T08:38:47.452Z",
+  "ThesisId":2,
+  "UserId":4
+}];

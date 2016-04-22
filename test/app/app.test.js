@@ -10,22 +10,4 @@ describe("app", () => {
       expect(response.statusCode).to.equal(200);
     });
   });
-
-  xdescribe("thesis route", () => {
-    url += "/theses";
-    it("accepts request parameters", () => {
-      request(url + "?testparam=666", (error, response) => {
-        expect(response.body.result.testparam).to.equal(666);
-      });
-    });
-  });
-
-  xdescribe("councilmeeting route", () => {
-    url += "/councilmeetings";
-    it("accepts request parameters", () => {
-      request(url + "?testparam=666", (error, response) => {
-        expect(response.body.result.testparam).to.equal(666);
-      });
-    });
-  });
 });

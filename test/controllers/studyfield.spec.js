@@ -7,7 +7,6 @@ const mockDB = require("../mockdata/database");
 
 const app = require("../testhelper").app;
 
-//const StudyFieldController = require("../../controllers/studyfield");
 const StudyField = require("../../models/studyfield");
 
 
