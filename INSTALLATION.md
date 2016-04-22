@@ -27,3 +27,5 @@ Same for both OSes:
 1. Go to the root folder of this repository and enter ```npm install```
 
 2. Then enter ```npm start``` to run the server
+
+3. Since the database is created only after running the server for the first time you must hit ```ctrl+c``` to cancel the process and then create the database tables with ```npm run db init```

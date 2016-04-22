@@ -36,16 +36,19 @@ module.exports.loginUser = (req, res) => {
   .findOne({ email: req.body.email, password: req.body.password})
   .then(user => {
     if (user === null) {
-      res.status(400).send({
+      res.status(401).send({
         message: "Logging in failed authentication",
         error: "Dawg",
       });
     } else {
       // generate token
       const token = TokenGenerator.generateToken(user);
-      console.log(token);
-      TokenGenerator.decodeToken(token);
       res.status(200).send({
+        user: {
+          id: user.id,
+          name: user.name,
+          role: user.role,
+        },
         token: token,
       });
     }

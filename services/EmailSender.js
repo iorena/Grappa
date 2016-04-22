@@ -10,7 +10,7 @@ class EmailSender {
     this.mailOptions = {
       from: options.from,
     };
-    this.transporter = nodemailer.createTransport(options.smpt);
+    this.transporter = nodemailer.createTransport(options);
   }
 
   sendEmail(to, subject, body) {
@@ -35,4 +35,4 @@ class EmailSender {
 }
 
 module.exports.class = EmailSender;
-module.exports = new EmailSender(config);
+module.exports = new EmailSender(config.smtp);
