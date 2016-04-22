@@ -48,11 +48,11 @@ class Thesis extends BaseModel {
   }
   findAllByUserRole(user) {
     if (user.role === "admin" || user.role === "print-person") {
-      return this.Models.Thesis.findAll();
+      return this.findAll();
     } else if (user.role === "professor") {
-      return this.Models.Thesis.findAll({ where: { StudyFieldId: user.StudyFieldId } });
+      return this.findAll({ StudyFieldId: user.StudyFieldId });
     } else if (user.role === "instructor") {
-      return this.Models.Thesis.findOne({ where: { UserId: user.id } });
+      return this.findOne({ UserId: user.id });
     }
     // calls the parent classes method. nice!
     // return BaseModel.prototype.findAll.call(this);
