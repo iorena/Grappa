@@ -169,3 +169,34 @@ module.exports.reviews = [{
   "ThesisId":2,
   "UserId":4
 }];
+module.exports.users = [{
+  "id":1,
+  "email":"ohtugrappa@gmail.com",
+  "password":"asdf",
+  "name":"Kjell Lemström",
+  "role":"admin",
+  "isActive":false,
+  "createdAt":"2016-04-22T08:31:07.010Z",
+  "updatedAt":"2016-04-22T08:31:07.010Z",
+  "StudyFieldId":null
+},{
+  "id":2,
+  "email":"ohtugrappa2@gmail.com",
+  "password":"asdf",
+  "name":"B Virtanen",
+  "role":"print-person",
+  "isActive":false,
+  "createdAt":"2016-04-22T08:31:07.011Z",
+  "updatedAt":"2016-04-22T08:31:07.011Z",
+  "StudyFieldId":null
+},{
+  "id":3,
+  "email":"ohtugrappa3@gmail.com",
+  "password":"asdfasdf",
+  "name":"Tohtori Sykerö",
+  "role":"professor",
+  "isActive":false,
+  "createdAt":"2016-04-22T08:31:07.012Z",
+  "updatedAt":"2016-04-22T08:31:07.012Z",
+  "StudyFieldId":1
+}];

@@ -82,21 +82,6 @@ describe("ThesisController", () => {
   });
 
   after(function() {
-    /*Thesis.saveOne.restore();
-    Thesis.findAll.restore();
-    Thesis.linkStudyField.restore();
-    Thesis.findAllByUserRole.restore();
-    ThesisProgress.saveOne.restore();
-    ThesisProgress.evaluateGraders.restore();
-    CouncilMeeting.findOne.restore();
-    CouncilMeeting.findAll.restore();
-    CouncilMeeting.saveOne.restore();
-    CouncilMeeting.linkThesisToCouncilMeeting.restore();
-    Grader.findOrCreate.restore();
-    Grader.linkThesisToGraders.restore();
-    Grader.saveOne.restore();
-    EthesisToken.saveOne.restore();
-    EmailReminder.sendStudentReminder.restore();*/
     sandbox.restore();
   })
 
