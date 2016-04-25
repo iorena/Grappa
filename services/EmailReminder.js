@@ -15,6 +15,7 @@ class EmailReminder {
     };
     this.readDrafts(this.drafts)
     .then(drafts => {
+      // console.log(drafts)
       this.drafts = drafts;
     });
   }
@@ -26,12 +27,10 @@ class EmailReminder {
    */
   readDrafts(drafts) {
     const newDrafts = Object.assign({}, drafts);
-    return Promise.all(Object.keys(drafts).map(key => {
-      return this.readDraft(key)
+    return Promise.all(Object.keys(drafts).map(key => this.readDraft(key)
         .then(draft => {
           newDrafts[key] = draft;
-        });
-    }))
+        })))
     .then(() => newDrafts);
   }
   /*
@@ -75,7 +74,7 @@ class EmailReminder {
       case "toPrintPerson":
         email.subject = "NOTE: Upcoming councilmeeting";
         email.body += this.drafts[type];
-        // Dynamically added content?
+        email.body.replace("THESIS_AUTHOR", thesis.author);
         break;
       case "toProfessor":
         email.subject = "REMINDER: Submit your evaluation";

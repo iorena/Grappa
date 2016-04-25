@@ -1,8 +1,11 @@
 "use strict";
 
-const request = require("request");
+const request = require("supertest");
 const expect = require("chai").expect;
 const sinon = require("sinon");
+
+const app = require("../testhelper").app;
+
 const mockDB = require("../mockdata/database");
 
 const Thesis = require("../../models/thesis");
@@ -12,7 +15,7 @@ const ThesisProgressSeqModel = ThesisProgress.getModel();
 var graderEval;
 var changeGraderStatus;
 
-describe("ThesisProgressController", () => {
+describe("ThesisProgress", () => {
   before (() => {
     changeGraderStatus = sinon.spy(ThesisProgress, "changeGraderStatus");
     graderEval = sinon.spy(ThesisProgress, "evaluateGraders");
@@ -23,18 +26,20 @@ describe("ThesisProgressController", () => {
     sinon.stub(ThesisProgressSeqModel, "update", () => {
       return Promise.resolve();
     });
+    sinon.stub(ThesisProgress, "findOne", () => {
+      return Promise.resolve(mockDB.thesisprogresses[0]);
+    });
   })
-
-
   after (() => {
     ThesisProgress.evaluateGraders.restore();
     Thesis.findOne.restore();
     ThesisProgressSeqModel.update.restore();
+    ThesisProgress.findOne.restore();
   }) 
 
   describe("When adding a new thesisprogress", () => {
-    
-    
+
+
     it("graders should update if they are competent", () => {
 
       ThesisProgress.evaluateGraders(mockDB.thesis.id, mockDB.competentGraders);      

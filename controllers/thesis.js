@@ -99,7 +99,7 @@ module.exports.saveOne = (req, res) => {
       Thesis.linkStudyField(thesis, req.body.field),
     ]);
   })
-  .then(() => ThesisProgress.evaluateGraders(req.body.id, req.body.graders))
+  .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
   .then(() => {
     res.status(200).send(savedthesis);
   })
