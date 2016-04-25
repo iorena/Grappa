@@ -15,6 +15,9 @@ class BaseModel {
   findOne(params) {
     return this.Models[this.modelname].findOne({ where: params });
   }
+  delete(params) {
+    return this.Models[this.modelname].destroy({where: params});
+  }
   /*
    * Returns all the rows from a table.
    *
