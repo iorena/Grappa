@@ -42,8 +42,9 @@ router.get("/", index);
 /* Thesis routes */
 router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
 router.put("/thesis/:id", (req, res) => {
-  userCtrl.updateOne(req, res);
-});router.post("/thesis", thesisCtrl.saveOne);
+  thesisCtrl.updateOne(req, res);
+});
+router.post("/thesis", thesisCtrl.saveOne);
 router.get("/thesis/:id", (req,res) => {
   thesisCtrl.findOne(req, res);
 });
@@ -55,7 +56,7 @@ router.delete("/thesis/:id", (req, res) => {
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 router.put("/councilmeeting/:id", (req, res) => {
-  councilmeeting.updateOne(req, res);
+  councilmeetingCtrl.updateOne(req, res);
 });
 router.delete("/councilmeeting/:id", (req, res) => {
   councilmeetingCtrl.deleteOne(req, res);
