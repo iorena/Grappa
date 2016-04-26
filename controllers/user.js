@@ -34,7 +34,7 @@ module.exports.updateOne = (req, res) => {
 
 module.exports.findOne = (req, res) => {
   User
-  .findOne({id: req})
+  .findOne({id: req.params.id})
   .then(user => {
     res.status(200).send(user);
   })
@@ -55,6 +55,25 @@ module.exports.saveOne = (req, res) => {
   .catch(err => {
     res.status(500).send({
       message: "User saveOne produced an error",
+      error: err,
+    });
+  });
+};
+
+module.exports.deleteOne = (req, res) => {
+  User
+  .delete({id: req.params.id})
+  .then(deletedRows => {
+    if (deletedRows !== 0) {
+      res.status(200).send({message: "User with id: " + req.params.id+ " successfully deleted"});
+    }
+    else {
+      res.status(404).send({message: "User to delete with id: " + req.params.id +  " was not found"})
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "User deleteOne produced an error",
       error: err,
     });
   });

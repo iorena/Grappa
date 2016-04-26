@@ -25,7 +25,7 @@ module.exports.findAll = (req, res) => {
 
 module.exports.findOne = (req, res) => {
   Thesis
-  .findOne({id: req})
+  .findOne({id: req.params.id})
   .then(thesis => {
     res.status(200).send(thesis);
   })
@@ -56,6 +56,25 @@ module.exports.updateOne = (req, res) => {
   });
 };
 
+module.exports.deleteOne = (req, res) => {
+  Thesis
+  .delete({id: req.params.id})
+  .then(deletedRows => {
+    if (deletedRows !== 0) {
+      res.status(200).send({message: "Thesis with id: " + req.params.id+ " successfully deleted"});
+    }
+    else {
+      res.status(404).send({message: "Thesis to delete with id: " + req.params.id +  " was not found"})
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis deleteOne produced an error",
+      error: err,
+    });
+  });
+};
+
 /*
  * Saves a single thesis, links it to a bunch of stuff and sends an email
  *
@@ -70,8 +89,6 @@ module.exports.saveOne = (req, res) => {
   CouncilMeeting
   .findOne({ date: originalDate })
   .then(cm => {
-    // console.log("cm : ");
-    // console.log(cm);
     if (cm === null) {
       throw new TypeError("ValidationError: unvalid deadline, no such CouncilMeeting found");
     } else {

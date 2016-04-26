@@ -45,7 +45,6 @@ const Review = seq.define("Review", {
 });
 const ThesisProgress = seq.define("ThesisProgress", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  thesisId: Sequelize.INTEGER,
   ethesisReminder: Sequelize.DATE,
   professorReminder: Sequelize.DATE,
   gradersStatus: { type: Sequelize.BOOLEAN, defaultValue: false },
@@ -57,7 +56,7 @@ const EmailStatus = seq.define("EmailStatus", {
   lastSent: Sequelize.DATE,
   type: Sequelize.STRING,
   to: Sequelize.STRING,
-  whoAddedEmail: Sequelize.STRING, // vai User
+  whoAddedEmail: Sequelize.STRING, 
   deadline: Sequelize.DATE,
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
@@ -83,12 +82,8 @@ User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
-
-/*
-Use force here if you want to modify tables
-For clearing and adding testdata force is not needed
-*/
-// seq.sync({ force: true });
+ThesisProgress.belongsTo(Thesis, {foreignKey: "thesisId"});
+Thesis.hasOne(ThesisProgress, {foreignKey: "thesisId"});
 
 module.exports.sync = () => {
   return seq.sync();
