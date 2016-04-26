@@ -54,21 +54,25 @@ class Thesis extends BaseModel {
     if (typeof params !== "undefined") {
       return this.getModel().findAll({ 
         where: params, 
-        include : [
-        { 
+        include : 
+        [{ 
           model: this.Models.Grader,
         }, { 
           model: this.Models.ThesisProgress,
-        }]});
+        }, {
+          model: this.Models.StudyField
+        }]
+      });
     }
     return this.Models[this.modelname]
     .findAll({
-
-     include : [
-     { 
+     include : 
+     [{ 
       model: this.Models.Grader,
     }, { 
       model: this.Models.ThesisProgress,
+    }, {
+      model: this.Models.StudyField
     }]
   });
     
