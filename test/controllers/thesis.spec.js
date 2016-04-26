@@ -6,6 +6,9 @@ const sinon = require("sinon");
 
 const app = require("../testhelper").app;
 
+const authorizedAdmin = require("../mockdata/token").admin;
+// const authorizedAdmin = require("../mockdata/token").generatedAdmin();
+
 const ThesisController = require("../../controllers/thesis");
 
 const Thesis = require("../../models/thesis");
@@ -105,6 +108,8 @@ describe("ThesisController", () => {
       request(app)
       .get("/thesis")
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(200, mockDB.theses, done);
     })
@@ -115,7 +120,6 @@ describe("ThesisController", () => {
       .expect("Content-Type", /json/)
       .expect(200, mockDB.thesis, done);
     })
-
   })
   describe("POST /thesis (saveOne)", () => {
     it("should save thesis and return thesis", (done) => {
@@ -146,7 +150,7 @@ describe("ThesisController", () => {
       earlierDate = earlierDate.toISOString();
 
       let add10DaysToDl = sinon.spy(Thesis, "add10DaysToDeadline");
-      
+
 
       Thesis.add10DaysToDeadline(mockDB.thesis.deadline);
 
@@ -163,11 +167,11 @@ describe("ThesisController", () => {
      .expect("Content-Type", /json/)
      .expect(res => {
 
-      /* First value in first call of findOrCreate() */ 
+      /* First value in first call of findOrCreate() */
       expect(findOrCreateGrader.args[0][0])
       .to.deep.equal(mockDB.thesis.graders[0]);
 
-      /* First value in second call of findOrCreate() */ 
+      /* First value in second call of findOrCreate() */
       expect(findOrCreateGrader.args[1][0])
       .to.deep.equal(mockDB.thesis.graders[1]);
     })

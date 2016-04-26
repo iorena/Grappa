@@ -41,12 +41,12 @@ module.exports.loginUser = (req, res) => {
         error: "Dawg",
       });
     } else {
-      // generate token
       const token = TokenGenerator.generateToken(user);
       res.status(200).send({
         user: {
           id: user.id,
           name: user.name,
+          email: user.email,
           role: user.role,
         },
         token: token,

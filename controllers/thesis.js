@@ -25,7 +25,7 @@ module.exports.findAll = (req, res) => {
 
 module.exports.findOne = (req, res) => {
   Thesis
-  .findOne({id: req})
+  .findOne({id: req.body.id})
   .then(thesis => {
     res.status(200).send(thesis);
   })
