@@ -2,15 +2,8 @@
 
 const BaseModel = require("./base_model");
 const StudyField = require("./studyfield");
+const Grader = require("./grader");
 
-// id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
-// author: Sequelize.STRING,
-// email: Sequelize.STRING,
-// title: Sequelize.STRING,
-// urkund: Sequelize.STRING,
-// ethesis: Sequelize.STRING,
-// abstract: Sequelize.TEXT,
-// grade: Sequelize.STRING,
 
 class Thesis extends BaseModel {
   constructor() {
@@ -19,18 +12,18 @@ class Thesis extends BaseModel {
   /*
    * Or remove, I don't really know what it does..
    */
-  add10DaysToDeadline(deadline) {
+   add10DaysToDeadline(deadline) {
     const date = new Date(deadline);
     date.setDate(date.getDate() - 10);
     return date.toISOString();
   }
   linkStudyField(thesis, field) {
     return StudyField.getModel()
-      .findOne({ where: { name: field } })
-      .then((studyfield) => thesis.setStudyField(studyfield))
-      .then(() => {
-        console.log("Thesis linked to StudyField");
-      });
+    .findOne({ where: { name: field } })
+    .then((studyfield) => thesis.setStudyField(studyfield))
+    .then(() => {
+      console.log("Thesis linked to StudyField");
+    });
   }
   saveOne(params) {
     // console.log("params are: " + JSON.stringify(params));
@@ -54,8 +47,36 @@ class Thesis extends BaseModel {
     } else if (user.role === "instructor") {
       return this.findOne({ UserId: user.id });
     }
-    // calls the parent classes method. nice!
-    // return BaseModel.prototype.findAll.call(this);
+  }
+
+  findAll(params) {
+    var thesesList;
+    if (typeof params !== "undefined") {
+      return this.getModel().findAll({ 
+        where: params, 
+        include : 
+        [{ 
+          model: this.Models.Grader,
+        }, { 
+          model: this.Models.ThesisProgress,
+        }, {
+          model: this.Models.StudyField
+        }]
+      });
+    }
+    return this.Models[this.modelname]
+    .findAll({
+     include : 
+     [{ 
+      model: this.Models.Grader,
+    }, { 
+      model: this.Models.ThesisProgress,
+    }, {
+      model: this.Models.StudyField
+    }]
+  });
+    
+
   }
 }
 
