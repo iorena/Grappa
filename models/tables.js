@@ -77,7 +77,9 @@ User.belongsTo(StudyField);
 
 Thesis.hasMany(Review);
 
-User.hasMany(Thesis);
+User.hasMany(Thesis, {as: "Theses"});
+Thesis.belongsTo(User);
+
 User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
