@@ -35,7 +35,17 @@ describe("CouncilMeetingController", () => {
       .expect("Content-Type", /json/)
       .expect(200, mockDB.councilmeetings, done);
     })
-
+    it("should fail with 500 if findAll throws error", (done) => {
+      CouncilMeeting.findAll.restore();
+      sinon.stub(CouncilMeeting, "findAll", () => {
+        return Promise.reject();
+      });
+      request(app)
+      .get("/councilmeeting")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(500, {message: "CouncilMeeting findAll produced an error"}, done);
+    })
   })
   describe("POST /councilmeeting (saveOne)", () => {
     it("should save cmeeting and return it", (done) => {
@@ -46,6 +56,16 @@ describe("CouncilMeetingController", () => {
       .expect("Content-Type", /json/)
       .expect(200, mockDB.councilmeeting, done);
     });
-
+    it("should fail with 500 if saveOne throws error", (done) => {
+      CouncilMeeting.saveOne.restore();
+      sinon.stub(CouncilMeeting, "saveOne", () => {
+        return Promise.reject();
+      });
+      request(app)
+      .post("/councilmeeting")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(500, {message: "CouncilMeeting saveOne produced an error"}, done);
+    })
   })
 })

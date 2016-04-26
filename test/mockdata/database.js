@@ -26,9 +26,9 @@ module.exports.theses = [{
   deadline: null,
   createdAt: "2016-04-15T08:51:01.890Z",
   updatedAt: "2016-04-15T08:51:01.890Z",
-  StudyFieldId: null,
+  StudyFieldId: 1,
   CouncilMeetingId: null,
-  UserId: null,
+  UserId: 2,
 }, {
   id: 2,
   author: null,
@@ -41,9 +41,9 @@ module.exports.theses = [{
   deadline: null,
   createdAt: "2016-04-15T11:07:20.524Z",
   updatedAt: "2016-04-15T11:07:20.524Z",
-  StudyFieldId: null,
+  StudyFieldId: 2,
   CouncilMeetingId: null,
-  UserId: null,
+  UserId: 4,
 }, {
   id: 3,
   author: null,
@@ -52,13 +52,13 @@ module.exports.theses = [{
   urkund: null,
   ethesis: null,
   abstract: null,
-  grade: null,
+  grade: "Laudatur",
   deadline: null,
   createdAt: "2016-04-15T11:22:29.507Z",
   updatedAt: "2016-04-15T11:22:29.507Z",
-  StudyFieldId: null,
+  StudyFieldId: 3,
   CouncilMeetingId: null,
-  UserId: null,
+  UserId: 4,
 }];
 
 module.exports.councilmeeting = {
@@ -221,6 +221,6 @@ module.exports.users = [
   },
 ]
 
-module.exports.users.admin = module.exports.users[0];
+module.exports.users_admin = module.exports.users[0];
 
-module.exports.users.printperson =  module.exports.users[1];
+module.exports.users_printperson =  module.exports.users[1];

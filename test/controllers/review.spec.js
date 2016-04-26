@@ -28,14 +28,14 @@ describe("ReviewController", () => {
     Review.saveOne.restore();
   })
 
-  xdescribe("GET /review (findAllByRole)", () => {
+  it("GET /review (findAllByRole)", () => {
     it("should call Review-model correctly and return reviews", (done) => {
       request(app)
       .get("/review")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200, mockDB.reviews, done);
-    })
+    });
     it("should fail with 500 if findAll throws error", (done) => {
       Review.findAllByRole.restore();
       sinon.stub(Review, "findAllByRole", () => {
