@@ -89,8 +89,6 @@ module.exports.saveOne = (req, res) => {
   CouncilMeeting
   .findOne({ date: originalDate })
   .then(cm => {
-    // console.log("cm : ");
-    // console.log(cm);
     if (cm === null) {
       throw new TypeError("ValidationError: unvalid deadline, no such CouncilMeeting found");
     } else {
