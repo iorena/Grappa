@@ -7,12 +7,15 @@ class User extends BaseModel {
     super("User");
   }
 
-  findAll() {
+  findAllNotActive() {
     return this.Models[this.modelname]
     .findAll({
+      where: {
+        isActive: false,
+      },
       include: [{
         model: this.Models.Thesis,
-        as: "Theses"
+        as: "Theses",
       }]
     });
   }
