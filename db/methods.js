@@ -81,7 +81,7 @@ module.exports.addTestData = () => Promise.all([
   }),
   models.User.create({
     id: 6,
-    name: "Korpraali Koskela",
+    name: "Vänrikki Koskela",
     password: "asdfasdfasdf",
     email: "ohtugrappa6@gmail.com",
     role: "instructor",

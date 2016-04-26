@@ -3,25 +3,25 @@
 const TokenGenerator = require("../services/TokenGenerator");
 const User = require("../models/user");
 
-module.exports.findAll = (req, res) => {
+module.exports.findAllNotActive = (req, res) => {
   User
-  .findAll()
+  .findAllNotActive()
   .then(users => {
     res.status(200).send(users);
   })
   .catch(err => {
     res.status(500).send({
-      message: "User findAll produced an error",
+      message: "User findAllNotActive produced an error",
       error: err,
     });
   });
 };
 
-
 module.exports.updateOne = (req, res) => {
   User
-  .update(req.body, req.params)
+  .update(req.body, { id: req.params.id })
   .then(user => {
+    console.log(user);
     res.status(200).send(user);
   })
   .catch(err => {
@@ -89,12 +89,12 @@ module.exports.loginUser = (req, res) => {
         error: "Dawg",
       });
     } else {
-      // generate token
       const token = TokenGenerator.generateToken(user);
       res.status(200).send({
         user: {
           id: user.id,
           name: user.name,
+          email: user.email,
           role: user.role,
         },
         token: token,

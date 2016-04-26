@@ -108,9 +108,9 @@ module.exports.thesisprogresses = [{
   "createdAt":"2016-04-18T11:14:28.003Z",
   "updatedAt":"2016-04-18T11:14:28.003Z",
 }];
-module.exports.competentGraders= [ { 
+module.exports.competentGraders= [ {
   name: "PENTTI", title: "AdjProf",
-}, { 
+}, {
   name: "VERTTI", title: "Prof",
 }, {
   name: "LERTTI", title: "AssProf",
@@ -121,7 +121,7 @@ module.exports.competentGraders= [ {
 }];
 module.exports.incompetentGraders = [{
   name: "PENTTI", title: "AdjProf",
-}, { 
+}, {
   name: "VERTTI", title: "AssProf",
 }, {
   name: "LERTTI", title: "AssProf",
@@ -169,34 +169,58 @@ module.exports.reviews = [{
   "ThesisId":2,
   "UserId":4
 }];
-module.exports.users = [{
-  "id":1,
-  "email":"ohtugrappa@gmail.com",
-  "password":"asdf",
-  "name":"Kjell Lemström",
-  "role":"admin",
-  "isActive":false,
-  "createdAt":"2016-04-22T08:31:07.010Z",
-  "updatedAt":"2016-04-22T08:31:07.010Z",
-  "StudyFieldId":null
-},{
-  "id":2,
-  "email":"ohtugrappa2@gmail.com",
-  "password":"asdf",
-  "name":"B Virtanen",
-  "role":"print-person",
-  "isActive":false,
-  "createdAt":"2016-04-22T08:31:07.011Z",
-  "updatedAt":"2016-04-22T08:31:07.011Z",
-  "StudyFieldId":null
-},{
-  "id":3,
-  "email":"ohtugrappa3@gmail.com",
-  "password":"asdfasdf",
-  "name":"Tohtori Sykerö",
-  "role":"professor",
-  "isActive":false,
-  "createdAt":"2016-04-22T08:31:07.012Z",
-  "updatedAt":"2016-04-22T08:31:07.012Z",
-  "StudyFieldId":1
-}];
+
+module.exports.users = [
+  {
+    id: 1,
+    name: "Kjell Lemström",
+    password: "asdf",
+    email: "ohtugrappa@gmail.com",
+    role: "admin",
+    StudyFieldId: null,
+  },
+  {
+    id: 2,
+    name: "B Virtanen",
+    password: "asdf",
+    email: "ohtugrappa2@gmail.com",
+    role: "print-person",
+    StudyFieldId: null,
+  },
+  {
+    id: 3,
+    name: "Tohtori Sykerö",
+    password: "asdfasdf",
+    email: "ohtugrappa3@gmail.com",
+    role: "professor",
+    StudyFieldId: 1,
+  },
+  {
+    id: 4,
+    name: "Tohtori Outolempi",
+    password: "asdfasdf",
+    email: "ohtugrappa4@gmail.com",
+    role: "professor",
+    StudyFieldId: 2,
+  },
+  {
+    id: 5,
+    name: "Alikersantti Rokka",
+    password: "asdfasdfasdf",
+    email: "ohtugrappa5@gmail.com",
+    role: "instructor",
+    StudyFieldId: 1,
+  },
+  {
+    id: 6,
+    name: "Vänrikki Koskela",
+    password: "asdfasdfasdf",
+    email: "ohtugrappa6@gmail.com",
+    role: "instructor",
+    StudyFieldId: 2,
+  },
+]
+
+module.exports.users_admin = module.exports.users[0];
+
+module.exports.users_printperson =  module.exports.users[1];
