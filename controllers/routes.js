@@ -45,6 +45,7 @@ router.put("/thesis/:id", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
 router.get("/thesis/:id", thesisCtrl.findOne);
 router.delete("/thesis/:id", thesisCtrl.deleteOne);
+router.post("/thesis/ethesis", thesisCtrl.updateOneWithEthesis);
 
 /* Councilmeeting routes */
 router.get("/councilmeeting", councilmeetingCtrl.findAll);

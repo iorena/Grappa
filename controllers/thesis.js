@@ -42,9 +42,23 @@ module.exports.findOne = (req, res) => {
  *
  * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
  */
-module.exports.updateOne = (req, res) => {
+module.exports.updateOneWithEthesis = (req, res) => {
   Thesis
   .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
+  .then(thesis => {
+    res.status(200).send(thesis);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis update produced an error",
+      error: err,
+    });
+  });
+};
+
+module.exports.updateOne = (req, res) => {
+  Thesis
+  .update(req.body, { id: req.params.id })
   .then(thesis => {
     res.status(200).send(thesis);
   })
