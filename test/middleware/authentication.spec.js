@@ -14,18 +14,19 @@ const User = require("../../models/user");
 const TokenGenerator = require("../../services/TokenGenerator");
 
 describe("Authentication", () => {
-  before(() => {
-    sinon.stub(ThesisController, "findAll", (req, res) => {
-      res.status(500).send({e: "asdf"})
-      // if (req.user === authorizedAdmin.decoded) {
-      //   return Promise.resolve();
-      // }
-      // return Promise.reject();
-    });
-  });
-  after(() => {
-    ThesisController.findAll.restore();
-  });
+  // before(() => {
+  //   sinon.stub(ThesisController, "findAll", (req, res) => {
+  //     throw("asdf");
+  //     res.status(500).send({e: "asdf"})
+  //     // if (req.user === authorizedAdmin.decoded) {
+  //     //   return Promise.resolve();
+  //     // }
+  //     // return Promise.reject();
+  //   });
+  // });
+  // after(() => {
+  //   ThesisController.findAll.restore();
+  // });
   describe("authenticate()", () => {
     it("should accept request with valid token and userId as headers", (done) => {
       request(app)
@@ -36,14 +37,24 @@ describe("Authentication", () => {
       .expect("Content-Type", /json/)
       .expect(200, done);
     });
-    it("should add the decoded user to the request (req.user = decodedUser)", (done) => {
+    xit("should add the decoded user to the request (req.user = decodedUser)", (done) => {
+      const stubi = sinon.stub(ThesisController, "findAll", (req, res) => {
+        if (req.user === authorizedAdmin.decoded) {
+          res.status(304).send();
+        } else {
+          res.status(500).send();
+        }
+      });
       request(app)
       .get("/thesis")
       .set("Accept", "application/json")
       .set("X-Access-Token", authorizedAdmin.token)
       .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
-      .expect(200, done);
+      // .expect(res => {
+      //   expect(stubi.calledWith("adf")).to.equal(true);
+      // })
+      .expect(304, done);
     });
     it("should decline with 401 when there's no valid headers in request", (done) => {
       request(app)
