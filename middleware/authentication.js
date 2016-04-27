@@ -15,23 +15,23 @@ const secret = require("../config/authentication").secret;
  */
 module.exports.authenticate = (req, res, next) => {
   // console.log(req.headers);
-  // req.body.user = {
-  //   id: 1,
-  //   role: "admin",
-  //   StudyFieldId: null,
-  // };
-  // req.body.user = {
+  req.user = {
+    id: 1,
+    role: "admin",
+    StudyFieldId: null,
+  };
+  // req.user = {
   //   id: 3,
   //   role: "professor",
   //   StudyFieldId: 1,
   // };
-  // req.body.user = {
+  // req.user = {
   //   id: 6,
   //   role: "instructor",
   //   StudyFieldId: 2,
   // }
-  // next();
-  // return;
+  next();
+  return;
   // console.log(req.headers);
   if (typeof req.headers["x-access-token"] === "undefined" || req.headers["x-access-token"] === null) {
     return res.status(401).json({
@@ -63,7 +63,7 @@ module.exports.authenticate = (req, res, next) => {
     });
   } else {
     console.log("autentikoitu!");
-    req.body.user = decoded.user;
+    req.user = decoded.user;
     next();
   }
 }

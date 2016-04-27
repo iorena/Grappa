@@ -4,7 +4,7 @@ const Review = require("../models/review");
 
 module.exports.findAll = (req, res) => {
   Review
-  .findAllByRole(req.body.user)
+  .findAllByRole(req.user)
   .then(reviews => {
     res.status(200).send(reviews);
   })
