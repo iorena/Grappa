@@ -11,7 +11,7 @@ const Grader = require("../models/grader");
 
 module.exports.findAll = (req, res) => {
   Thesis
-  .findAllByUserRole(req.body.user)
+  .findAllByUserRole(req.user)
   .then(theses => {
     res.status(200).send(theses);
   })
