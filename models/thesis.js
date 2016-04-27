@@ -52,12 +52,12 @@ class Thesis extends BaseModel {
   findAll(params) {
     var thesesList;
     if (typeof params !== "undefined") {
-      return this.getModel().findAll({ 
-        where: params, 
-        include : 
-        [{ 
+      return this.getModel().findAll({
+        where: params,
+        include :
+        [{
           model: this.Models.Grader,
-        }, { 
+        }, {
           model: this.Models.ThesisProgress,
         }, {
           model: this.Models.StudyField
@@ -68,10 +68,10 @@ class Thesis extends BaseModel {
     }
     return this.Models[this.modelname]
     .findAll({
-     include : 
-     [{ 
+     include :
+     [{
       model: this.Models.Grader,
-    }, { 
+    }, {
       model: this.Models.ThesisProgress,
     }, {
       model: this.Models.StudyField,
@@ -79,7 +79,7 @@ class Thesis extends BaseModel {
       model: this.Models.User
     }]
   });
-    
+
 
   }
 }

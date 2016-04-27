@@ -15,11 +15,11 @@ const secret = require("../config/authentication").secret;
  */
 module.exports.authenticate = (req, res, next) => {
   // console.log(req.headers);
-  req.user = {
-    id: 1,
-    role: "admin",
-    StudyFieldId: null,
-  };
+  // req.user = {
+  //   id: 1,
+  //   role: "admin",
+  //   StudyFieldId: null,
+  // };
   // req.user = {
   //   id: 3,
   //   role: "professor",
@@ -30,8 +30,8 @@ module.exports.authenticate = (req, res, next) => {
   //   role: "instructor",
   //   StudyFieldId: 2,
   // }
-  next();
-  return;
+  // next();
+  // return;
   // console.log(req.headers);
   if (typeof req.headers["x-access-token"] === "undefined" || req.headers["x-access-token"] === null) {
     return res.status(401).json({
@@ -58,7 +58,7 @@ module.exports.authenticate = (req, res, next) => {
   // checks if userId is the same that the one who was created
   // TODO should also check if token expired..
   if (decoded.user.id !== userid) {
-    return res.status(403).send({
+    return res.status(401).send({
       message: "User authentication failed",
     });
   } else {

@@ -86,7 +86,7 @@ module.exports.loginUser = (req, res) => {
     if (user === null) {
       res.status(401).send({
         message: "Logging in failed authentication",
-        error: "Dawg",
+        error: "",
       });
     } else {
       const token = TokenGenerator.generateToken(user);
@@ -96,6 +96,7 @@ module.exports.loginUser = (req, res) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          StudyFieldId: user.StudyFieldId,
         },
         token: token,
       });
