@@ -10,10 +10,9 @@
  const User = require("../../models/user");
  const TokenGenerator = require("../../services/TokenGenerator");
 
-
  describe("UserController", () => {
   before(() => {
-    sinon.stub(User, "findAll", () => {
+    sinon.stub(User, "findAllNotActive", () => {
       return Promise.resolve(mockDB.users);
     });
     sinon.stub(User, "saveOne", (reqbody) => {
@@ -28,7 +27,7 @@
   })
 
   after(() => {
-    User.findAll.restore();
+    User.findAllNotActive.restore();
     User.saveOne.restore();
     User.findOne.restore();
     User.update.restore();
@@ -48,7 +47,7 @@
       sinon.stub(User, "saveOne", () => {
         return Promise.reject();
       });
-      request(app)  
+      request(app)
       .post("/user")
       .set("Accept", "application/json")
       .expect(500, {message: "User saveOne produced an error"}, done);
@@ -64,17 +63,17 @@
       .expect(200, mockDB.users[0], done);
     });
 
-    it("should fail with 500 if findAll throws error", (done) => {
+    it("should fail with 500 if findAllNotActive throws error", (done) => {
       User.findOne.restore();
       sinon.stub(User, "findOne", () => {
         return Promise.reject();
       });
-      request(app)  
+      request(app)
       .get("/user/1")
       .set("Accept", "application/json")
       .expect(500, {message: "User findOne produced an error"}, done);
     })
-    it("findAll should call User-model correctly and return all users", (done) => {
+    it("findAllNotActive should call User-model correctly and return all users", (done) => {
       request(app)
       .get("/user")
       .set("Accept", "application/json")
@@ -82,15 +81,15 @@
       .expect(200, mockDB.users, done);
     });
 
-    it("should fail with 500 if findAll throws error", (done) => {
-      User.findAll.restore();
-      sinon.stub(User, "findAll", () => {
+    it("should fail with 500 if findAllNotActive throws error", (done) => {
+      User.findAllNotActive.restore();
+      sinon.stub(User, "findAllNotActive", () => {
         return Promise.reject();
       });
-      request(app)  
+      request(app)
       .get("/user")
       .set("Accept", "application/json")
-      .expect(500, {message: "User findAll produced an error"}, done);
+      .expect(500, {message: "User findAllNotActive produced an error"}, done);
     })
   })
 
@@ -139,7 +138,7 @@
       sinon.stub(User, "findOne", () => {
         return Promise.resolve(null);
       });
-      request(app)  
+      request(app)
       .post("/login")
       .set("Accept", "application/json")
       .expect(401, {message: "Logging in failed authentication", error: "Dawg"}, done);
@@ -150,7 +149,7 @@
         return Promise.reject();
       })
 
-      request(app)  
+      request(app)
       .post("/login")
       .set("Accept", "application/json")
       .expect(500, {message: "User loginUser produced an error"}, done);
@@ -158,7 +157,3 @@
   })
 
 })
-
-
-
-

@@ -15,11 +15,11 @@ const secret = require("../config/authentication").secret;
  */
 module.exports.authenticate = (req, res, next) => {
   // console.log(req.headers);
-  req.body.user = {
-    id: 1,
-    role: "admin",
-    StudyFieldId: null,
-  };
+  // req.body.user = {
+  //   id: 1,
+  //   role: "admin",
+  //   StudyFieldId: null,
+  // };
   // req.body.user = {
   //   id: 3,
   //   role: "professor",
@@ -30,8 +30,8 @@ module.exports.authenticate = (req, res, next) => {
   //   role: "instructor",
   //   StudyFieldId: 2,
   // }
-  next();
-  return;
+  // next();
+  // return;
   // console.log(req.headers);
   if (typeof req.headers["x-access-token"] === "undefined" || req.headers["x-access-token"] === null) {
     return res.status(401).json({

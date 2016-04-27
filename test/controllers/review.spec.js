@@ -1,4 +1,4 @@
-  
+
 "use strict";
 
 const request = require("supertest");
@@ -7,6 +7,8 @@ const sinon = require("sinon");
 const mockDB = require("../mockdata/database");
 
 const app = require("../testhelper").app;
+
+const authorizedAdmin = require("../mockdata/token").admin;
 
 const Review = require("../../models/review");
 
@@ -39,7 +41,7 @@ describe("ReviewController", () => {
       sinon.stub(Review, "findAllByRole", () => {
         return Promise.reject();
       });
-      request(app)  
+      request(app)
       .get("/review")
       .set("Accept", "application/json")
       .expect(500, {message: "Review findAllByRole produced an error"}, done);
@@ -49,8 +51,10 @@ describe("ReviewController", () => {
     it("should save review and return it", (done) => {
       request(app)
       .post("/review")
-      .send({ name: "review to be saved"})
+      .send({ name: "review to be saved" })
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(200, mockDB.reviews[0], done);
     });
@@ -59,9 +63,11 @@ describe("ReviewController", () => {
       sinon.stub(Review, "saveOne", () => {
         return Promise.reject();
       });
-      request(app)  
+      request(app)
       .post("/review")
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect(500, {message: "Review saveOne produced an error"}, done);
     })
   })
