@@ -141,7 +141,7 @@
       request(app)
       .post("/login")
       .set("Accept", "application/json")
-      .expect(401, {message: "Logging in failed authentication", error: "Dawg"}, done);
+      .expect(401, {message: "Logging in failed authentication", error: ""}, done);
     });
     it("should fail with 500 if findOne throws error", (done) => {
       User.findOne.restore();
