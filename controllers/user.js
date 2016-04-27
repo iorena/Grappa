@@ -48,7 +48,9 @@ module.exports.findOne = (req, res) => {
 };
 
 module.exports.saveOne = (req, res) => {
-  req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
+  if (req.body.password !== undefined) {
+    req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
+  };
   User
   .saveOne(req.body)
   .then(user => {
