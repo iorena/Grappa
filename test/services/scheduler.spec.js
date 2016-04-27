@@ -8,10 +8,10 @@ describe("scheduler", () => {
     const thesis = {
       id: 1,
       author: "meitsi",
-    }
+    };
     const thesisProgress = {
-      gradersStatus: false, 
-    }
+      gradersStatus: false,
+    };
     const newObj = scheduler.combineProps(thesis, thesisProgress);
     expect(newObj).to.deep.equal({ id: 1,
                                    author: "meitsi",

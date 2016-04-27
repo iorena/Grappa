@@ -118,7 +118,7 @@ class EmailReader {
    */
   checkMessagesForErrors(messages) {
     return messages.map(msg => {
-      console.log(msg)
+      console.log(msg);
       if (msg.indexOf("Delivery to the following recipient failed permanently") !== -1
           && msg.indexOf(this.daemonName) !== -1) {
         console.log("> failed permanently");

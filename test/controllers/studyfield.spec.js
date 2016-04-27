@@ -15,11 +15,11 @@ describe("StudyFieldController", () => {
     sinon.stub(StudyField, "findAll", () => {
       return Promise.resolve(mockDB.studyfields);
     });
-  })
+  });
 
   after(() => {
     StudyField.findAll.restore();
-  })
+  });
 
   describe("GET /studyfield (findAll)", () => {
     it("should call StudyField-model correctly and return studyfields", (done) => {
@@ -28,7 +28,7 @@ describe("StudyFieldController", () => {
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200, mockDB.studyfields, done);
-    })
+    });
     it("should fail with 500 if findAll throws error", (done) => {
       StudyField.findAll.restore();
       sinon.stub(StudyField, "findAll", () => {
@@ -37,7 +37,7 @@ describe("StudyFieldController", () => {
       request(app)
       .get("/studyfield")
       .set("Accept", "application/json")
-      .expect(500, {message: "StudyField findAll produced an error"}, done);
-    })
-  })
-})
+      .expect(500, { message: "StudyField findAll produced an error" }, done);
+    });
+  });
+});
