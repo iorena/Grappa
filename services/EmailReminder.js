@@ -3,7 +3,7 @@
 const fs = require("fs");
 const Sender = require("./EmailSender");
 const User = require("../models/user");
-// const Thesis = require("../models/thesis");
+const Thesis = require("../models/thesis");
 const EmailStatus = require("../models/email_status");
 
 class EmailReminder {
@@ -90,7 +90,8 @@ class EmailReminder {
    *Method for handling the process of composing and sending an email to the student
    */
   sendStudentReminder(studentEmail, token) {
-    const email = this.composeEmail("toStudent", studentEmail, null, `https://grappa-app.herokuapp.com/ethesis/${token}`);
+    const foundThesis = Thesis.findOne({ id: token.thesisId });
+    const email = this.composeEmail("toStudent", studentEmail, null, `http://grappa-app.herokuapp.com/ethesis/${token}`);
     return Sender.sendEmail(email.to, email.subject, email.body)
       .then(() => {
         console.log("saving status");
@@ -98,7 +99,7 @@ class EmailReminder {
           lastSent: Date.now(),
           type: "StudentReminder",
           to: email.to,
-          deadline: new Date("1 1 2017"),
+          deadline: foundThesis.deadline,
         });
       });
   }
@@ -117,7 +118,7 @@ class EmailReminder {
         lastSent: Date.now(),
         type: "PrinterReminder",
         to: email.to,
-        deadline: new Date("1 1 2017"),
+        deadline: thesis.deadline,
       }));
   }
 
@@ -125,16 +126,17 @@ class EmailReminder {
    *Method for handling the process of composing and sending an email to the professor
    */
   sendProfessorReminder(thesis) {
-    // etsi proffa ja sen email
-    // testi kovakoodaus >>
-    const professorEmail = "ohtugrappa@gmail.com";
-    const email = this.composeEmail("toProfessor", professorEmail, thesis, `http://grappa-app.herokuapp.com/thesis/${thesis.id}`);
-    return Sender.sendEmail(email.to, email.subject, email.body)
+    let email;
+    return User.findOne({ role: "professor" , StudyFieldId: thesis.StudyFieldId })
+      .then(professor => {
+        email = this.composeEmail("toProfessor", professor.email, thesis, `http://grappa-app.herokuapp.com/thesis/${thesis.id}`);
+        return Sender.sendEmail(email.to, email.subject, email.body)
+      })
       .then(() => EmailStatus.saveOne({
         lastSent: Date.now(),
         type: "ProfessorReminder",
-        to: professorEmail,
-        deadline: new Date("1 1 2017"),
+        to: email.to,
+        deadline: thesis.deadline,
       }));
   }
 }

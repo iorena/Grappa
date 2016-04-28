@@ -1,6 +1,8 @@
 "use strict";
 
 const BaseModel = require("./base_model");
+const Reminder = require("../services/EmailReminder");
+const Thesis = require("./thesis");
 
 class ThesisProgress extends BaseModel {
   constructor() {
@@ -32,6 +34,16 @@ class ThesisProgress extends BaseModel {
     });
     if (professor && doctor) {
       this.changeGraderStatus(thesisId);
+    } else {
+        Thesis
+        .findOne({ id: thesisId })
+        .then(fT => {
+          if (fT === null) {
+            throw new TypeError("Professor not found");
+          } else {
+            Reminder.sendProfessorReminder(fT)
+          }
+        })
     }
   }
 }
