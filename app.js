@@ -3,7 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const scheduler = require("./services/scheduler");
+const scheduler = require("./services/Scheduler");
 
 const app = express();
 
