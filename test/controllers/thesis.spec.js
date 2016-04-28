@@ -16,6 +16,7 @@
   const Grader = require("../../models/grader");
   const EthesisToken = require("../../models/ethesisToken");
   const StudyField = require("../../models/studyfield");
+  const User = require("../../models/user");
 
   const EmailReminder = require("../../services/EmailReminder");
   const EmailSender = require("../../services/EmailSender");
@@ -81,6 +82,9 @@
       sendStudentReminder = sandbox.stub(EmailReminder, "sendStudentReminder", (reqbody) => {
         return Promise.resolve();
       });
+       sandbox.stub(Thesis, "addUser", (reqbody) => {
+        return Promise.resolve(mockDB.users[0]);
+      });
     });
 
     after(function () {
@@ -90,43 +94,43 @@
     describe("GET /thesis", () => {
       it("findAll should call Thesis-model correctly and return theses", (done) => {
         request(app)
-      .get("/thesis")
-      .set("Accept", "application/json")
-      .set("X-Access-Token", authorizedAdmin.token)
-      .set("X-Key", authorizedAdmin.id)
-      .expect("Content-Type", /json/)
-      .expect(200, mockDB.theses, done);
+        .get("/thesis")
+        .set("Accept", "application/json")
+        .set("X-Access-Token", authorizedAdmin.token)
+        .set("X-Key", authorizedAdmin.id)
+        .expect("Content-Type", /json/)
+        .expect(200, mockDB.theses, done);
       });
       it("findOne should call Thesis-model correctly and return the correct thesis", (done) => {
         request(app)
-      .get("/thesis/2000")
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(200, mockDB.thesis, done);
+        .get("/thesis/2000")
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200, mockDB.thesis, done);
       });
     });
     describe("POST /thesis (saveOne)", () => {
       it("should save thesis and return thesis", (done) => {
         request(app)
-      .post("/thesis")
-      .send({ name: "thesis to be saved" })
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(200, mockDB.thesis, done);
+        .post("/thesis")
+        .send({ name: "thesis to be saved" })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200, mockDB.thesis, done);
       });
 
       it("should add a new thesisprogress correctly", (done) => {
         let saveFromNewThesis = sinon.spy(ThesisProgress, "saveFromNewThesis");
 
         request(app)
-     .post("/thesis")
-     .send({ name: "thesis to be saved" })
-     .set("Accept", "application/json")
-     .expect("Content-Type", /json/)
-     .expect(res => {
-       expect(saveFromNewThesis.calledWith(mockDB.thesis)).to.equal(true);
-     })
-     .expect(200, mockDB.thesis, done);
+        .post("/thesis")
+        .send({ name: "thesis to be saved" })
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(res => {
+         expect(saveFromNewThesis.calledWith(mockDB.thesis)).to.equal(true);
+       })
+        .expect(200, mockDB.thesis, done);
       });
       it("should create correct deadline", (done) => {
         let earlierDate = new Date(mockDB.thesis.deadline);
@@ -145,48 +149,48 @@
       it("should add graders", (done) => {
 
         request(app)
-     .post("/thesis")
-     .send(mockDB.thesis)
-     .set("Accept", "application/json")
-     .expect("Content-Type", /json/)
-     .expect(res => {
+        .post("/thesis")
+        .send(mockDB.thesis)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(res => {
 
-      /* First value in first call of findOrCreate() */
-       expect(findOrCreateGrader.args[0][0])
-      .to.deep.equal(mockDB.thesis.graders[0]);
+          /* First value in first call of findOrCreate() */
+          expect(findOrCreateGrader.args[0][0])
+          .to.deep.equal(mockDB.thesis.graders[0]);
 
-      /* First value in second call of findOrCreate() */
-       expect(findOrCreateGrader.args[1][0])
-      .to.deep.equal(mockDB.thesis.graders[1]);
-     })
-     .expect(200, mockDB.thesis, done);
+          /* First value in second call of findOrCreate() */
+          expect(findOrCreateGrader.args[1][0])
+          .to.deep.equal(mockDB.thesis.graders[1]);
+        })
+        .expect(200, mockDB.thesis, done);
       });
 
       it("should send reminder to student with correct token", (done) => {
         const token = tokenGen.generateEthesisToken(mockDB.thesis.author, mockDB.thesis.id);
 
         request(app)
-      .post("/thesis")
-      .send(mockDB.thesis)
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(res => {
-        expect(sendStudentReminder.calledWith(mockDB.thesis.email, token)).to.equal(true);
-      })
-      .expect(200, mockDB.thesis, done);
+        .post("/thesis")
+        .send(mockDB.thesis)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(res => {
+          expect(sendStudentReminder.calledWith(mockDB.thesis.email, token)).to.equal(true);
+        })
+        .expect(200, mockDB.thesis, done);
       });
 
       it("should link studyfield correctly", (done) => {
 
         request(app)
-     .post("/thesis")
-     .send(mockDB.thesis)
-     .set("Accept", "application/json")
-     .expect("Content-Type", /json/)
-     .expect(res => {
-       expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.field)).to.equal(true);
-     })
-     .expect(200, mockDB.thesis, done);
+        .post("/thesis")
+        .send(mockDB.thesis)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(res => {
+         expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.field)).to.equal(true);
+       })
+        .expect(200, mockDB.thesis, done);
       });
     });
   });

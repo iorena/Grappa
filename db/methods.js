@@ -40,10 +40,12 @@ module.exports.addTestData = () => Promise.all([
     id: 4,
     name: "Software Systems",
   }),
+  /*USE PASSWORD 'asdf' for all users! The hash stored for these users
+  is for asdf    */
   models.User.create({
     id: 1,
     name: "Kjell Lemström",
-    password: "asdf",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa@gmail.com",
     role: "admin",
     isActive: true,
@@ -52,7 +54,7 @@ module.exports.addTestData = () => Promise.all([
   models.User.create({
     id: 2,
     name: "B Virtanen",
-    password: "asdf",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa2@gmail.com",
     role: "print-person",
     isActive: false,
@@ -61,7 +63,7 @@ module.exports.addTestData = () => Promise.all([
   models.User.create({
     id: 3,
     name: "Tohtori Sykerö",
-    password: "asdf",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa3@gmail.com",
     role: "professor",
     isActive: false,
@@ -70,7 +72,7 @@ module.exports.addTestData = () => Promise.all([
   models.User.create({
     id: 4,
     name: "Tohtori Outolempi",
-    password: "asdf",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa4@gmail.com",
     role: "professor",
     isActive: false,
@@ -79,7 +81,7 @@ module.exports.addTestData = () => Promise.all([
   models.User.create({
     id: 5,
     name: "Alikersantti Rokka",
-    password: "asdf",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa5@gmail.com",
     role: "instructor",
     isActive: false,
@@ -88,7 +90,7 @@ module.exports.addTestData = () => Promise.all([
   models.User.create({
     id: 6,
     name: "Vänrikki Koskela",
-    password: "asdf",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa6@gmail.com",
     role: "instructor",
     isActive: false,
@@ -162,7 +164,7 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-])
+  ])
 // add connections here
 .then((createdTables) => {
   const graders = createdTables.filter(table => {

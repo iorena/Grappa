@@ -3,6 +3,8 @@
 const BaseModel = require("./base_model");
 const StudyField = require("./studyfield");
 const Grader = require("./grader");
+const User = require("./user");
+const tokenGen = require("../services/TokenGenerator");
 
 
 class Thesis extends BaseModel {
@@ -12,7 +14,7 @@ class Thesis extends BaseModel {
   /*
    * Or remove, I don't really know what it does..
    */
-  add10DaysToDeadline(deadline) {
+   add10DaysToDeadline(deadline) {
     const date = new Date(deadline);
     date.setDate(date.getDate() - 10);
     return date.toISOString();
@@ -23,6 +25,16 @@ class Thesis extends BaseModel {
     .then((studyfield) => thesis.setStudyField(studyfield))
     .then(() => {
       console.log("Thesis linked to StudyField");
+    });
+  }
+  addUser(thesis, req){
+    let user = tokenGen.decodeToken(req.headers["x-access-token"]).user;
+
+    return User.getModel()
+    .findOne({ where: { id: user.id } })
+    .then((user) => thesis.setUser(user))
+    .then(() => {
+      console.log("Thesis linked to user");
     });
   }
   saveOne(params) {
@@ -69,7 +81,7 @@ class Thesis extends BaseModel {
     return this.Models[this.modelname]
     .findAll({
       include :
-     [{
+      [{
        model: this.Models.Grader,
      }, {
        model: this.Models.ThesisProgress,
@@ -78,7 +90,7 @@ class Thesis extends BaseModel {
      }, {
        model: this.Models.User
      }]
-    });
+   });
 
 
   }

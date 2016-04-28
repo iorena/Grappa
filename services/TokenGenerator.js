@@ -23,7 +23,7 @@ class TokenGenerator {
   }
   decodeToken(token) {
     const user = jwt.decode(token, this.secret);
-    console.log(user);
+    return user;
   }
   generateEthesisToken(authorname, thesisId) {
     const payload = {
