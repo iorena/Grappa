@@ -23,6 +23,12 @@ const index = (req, res) => {
   });
 };
 
+const authTest = (req, res) => {
+  res.json({
+    message: "You've successfully authenticated.",
+  });
+};
+
 const dump = (req, res) => {
   dbMethods
   .dump()
@@ -38,6 +44,7 @@ const dump = (req, res) => {
 };
 
 router.get("/", index);
+router.get("/auth", auth.authenticate, authTest);
 
 /* Thesis routes */
 router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
@@ -45,6 +52,7 @@ router.put("/thesis/:id", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
 router.get("/thesis/:id", thesisCtrl.findOne);
 router.delete("/thesis/:id", thesisCtrl.deleteOne);
+router.post("/thesis/ethesis", thesisCtrl.updateOneWithEthesis);
 
 /* Councilmeeting routes */
 router.get("/councilmeeting", councilmeetingCtrl.findAll);

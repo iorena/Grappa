@@ -90,7 +90,7 @@ module.exports.loginUser = (req, res) => {
     if (user === null) {
       res.status(401).send({
         message: "Logging in failed authentication",
-        error: "Dawg",
+        error: "",
       });
     } else {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {

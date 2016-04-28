@@ -7,7 +7,6 @@ const sinon = require("sinon");
 const app = require("../testhelper").app;
 
 const authorizedAdmin = require("../mockdata/token").admin;
-// const authorizedAdmin = require("../mockdata/token").generatedAdmin();
 
 const ThesisController = require("../../controllers/thesis");
 

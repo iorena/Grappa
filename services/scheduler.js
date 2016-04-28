@@ -34,13 +34,14 @@ class Scheduler {
     let thesisProgress = progress;
     /* ThesisProgress should be pre-created, but just in case... */
     if (progress === null) {
-      thesisProgress = ThesisProgress.saveOne({ thesisId: thesis.id,
-                               ethesisReminder: Date.now(),
-                               professorReminder: Date.now(),
-                               gradersStatus: false,
-                               documentsSent: Date.now(),
-                               isDone: false,
-                              });
+      thesisProgress = ThesisProgress.saveOne({
+        thesisId: thesis.id,
+        ethesisReminder: Date.now(),
+        professorReminder: Date.now(),
+        gradersStatus: false,
+        documentsSent: Date.now(),
+        isDone: false,
+      });
     }
     const values = thesis;
     for (const attr in thesisProgress) {

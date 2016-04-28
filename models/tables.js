@@ -1,3 +1,5 @@
+"use strict";
+
 const Sequelize = require("sequelize");
 const seq = require("../db/db_connection").sequalize;
 
@@ -56,7 +58,7 @@ const EmailStatus = seq.define("EmailStatus", {
   lastSent: Sequelize.DATE,
   type: Sequelize.STRING,
   to: Sequelize.STRING,
-  whoAddedEmail: Sequelize.STRING, 
+  whoAddedEmail: Sequelize.STRING,
   deadline: Sequelize.DATE,
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
