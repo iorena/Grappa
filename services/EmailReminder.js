@@ -127,10 +127,10 @@ class EmailReminder {
    */
   sendProfessorReminder(thesis) {
     let email;
-    return User.findOne({ role: "professor" , StudyFieldId: thesis.StudyFieldId })
+    return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
       .then(professor => {
         email = this.composeEmail("toProfessor", professor.email, thesis, `http://grappa-app.herokuapp.com/thesis/${thesis.id}`);
-        return Sender.sendEmail(email.to, email.subject, email.body)
+        return Sender.sendEmail(email.to, email.subject, email.body);
       })
       .then(() => EmailStatus.saveOne({
         lastSent: Date.now(),

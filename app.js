@@ -15,8 +15,12 @@ const port = process.env.PORT || 9876;
 if (process.env.NODE_ENV !== "production") {
   const logger = require("morgan");
   app.use(logger("dev"));
-  const dbMethods = require("./db/methods");
+  // const dbMethods = require("./db/methods");
   // dbMethods.dropAndCreateTables();
+// } else {
+//   app.use(cors({
+//     origin: "https://grappa-app.herokuapp.com",
+//   }));
 }
 
 app.use(bodyParser.urlencoded({
@@ -25,18 +29,21 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 
-scheduler.start();
+scheduler.startAndRunOnceInHour();
+// scheduler.checkThesisProgresses();
 
 const routes = require("./controllers/routes");
 
 app.use("/", routes);
 
-app.listen(port, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(`App is listening on port ${port}`);
-  }
-});
+if (!module.parent) {
+  app.listen(port, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`App is listening on port ${port}`);
+    }
+  });
+}
 
 module.exports = app;
