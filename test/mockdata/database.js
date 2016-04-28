@@ -10,8 +10,8 @@ module.exports.thesis = {
   deadline: "2016-04-15T08:51:01.894Z",
   field: "Software Systems",
   graders:
-  [ { name: 'PENTTI', title: 'AdjProf' },
-  { name: 'VERTTI', title: 'Prof' } ],
+  [{ name: "PENTTI", title: "AdjProf" },
+  { name: "VERTTI", title: "Prof" }],
 };
 
 module.exports.theses = [{
@@ -69,17 +69,17 @@ module.exports.councilmeeting = {
 };
 
 module.exports.councilmeetings = [
-{
-  id: 1,
-  date: "2016-04-15T08:51:01.894Z",
-  createdAt: "2016-04-15T08:51:01.895Z",
-  updatedAt: "2016-04-15T08:51:01.895Z",
-},
+  {
+    id: 1,
+    date: "2016-04-15T08:51:01.894Z",
+    createdAt: "2016-04-15T08:51:01.895Z",
+    updatedAt: "2016-04-15T08:51:01.895Z",
+  },
 ];
 module.exports.thesisprogresses = [{
-  "id":30,
-  "thesisId":2000,
-  "ethesisReminder":null,
+  id:30,
+  thesisId:2000,
+  ethesisReminder:null,
   "professorReminder":null,
   "gradersStatus":false,
   "documentsSent":null,
@@ -88,9 +88,9 @@ module.exports.thesisprogresses = [{
   "updatedAt":"2016-04-18T11:12:51.865Z",
 }
 , {
-  "id":31,
-  "thesisId":2000,
-  "ethesisReminder":null,
+  id:31,
+  thesisId:2000,
+  ethesisReminder:null,
   "professorReminder":null,
   "gradersStatus":false,
   "documentsSent":null,
@@ -98,9 +98,9 @@ module.exports.thesisprogresses = [{
   "createdAt":"2016-04-18T11:14:28.003Z",
   "updatedAt":"2016-04-18T11:14:28.003Z",
 }, {
-  "id":32,
-  "thesisId":2000,
-  "ethesisReminder":null,
+  id:32,
+  thesisId:2000,
+  ethesisReminder:null,
   "professorReminder":null,
   "gradersStatus":false,
   "documentsSent":null,
@@ -108,7 +108,7 @@ module.exports.thesisprogresses = [{
   "createdAt":"2016-04-18T11:14:28.003Z",
   "updatedAt":"2016-04-18T11:14:28.003Z",
 }];
-module.exports.competentGraders= [ {
+module.exports.competentGraders = [{
   name: "PENTTI", title: "AdjProf",
 }, {
   name: "VERTTI", title: "Prof",
@@ -132,36 +132,36 @@ module.exports.incompetentGraders = [{
 }];
 
 module.exports.studyfields = [{
-  "id":1,
+  id:1,
   "name":"Algorithmic Bioinformatics",
   "createdAt":"2016-04-21T08:38:47.440Z",
   "updatedAt":"2016-04-21T08:38:47.440Z"
-} ,{
-  "id":2,
+}, {
+  id:2,
   "name":"Algorithms, Data Analytics and Machine Learning",
   "createdAt":"2016-04-21T08:38:47.442Z",
   "updatedAt":"2016-04-21T08:38:47.442Z"
 }, {
-  "id":3,
+  id:3,
   "name":"Networking and Services",
   "createdAt":"2016-04-21T08:38:47.443Z",
   "updatedAt":"2016-04-21T08:38:47.443Z"
-},{
-  "id":4,
+}, {
+  id:4,
   "name":"Software Systems",
   "createdAt":"2016-04-21T08:38:47.443Z",
   "updatedAt":"2016-04-21T08:38:47.443Z"
-}]
+}];
 module.exports.reviews = [{
-  "id":1,
+  id:1,
   "authoredByProf":null,
   "text":"Sup dawg.",
   "createdAt":"2016-04-21T08:38:47.451Z",
   "updatedAt":"2016-04-21T08:38:47.451Z",
   "ThesisId":1,
   "UserId":3
-},{
-  "id":2,
+}, {
+  id:2,
   "authoredByProf":null,
   "text":"Aika heikko suoritus. Arvioijat täysin ala-arvoisia.",
   "createdAt":"2016-04-21T08:38:47.452Z",
@@ -220,8 +220,8 @@ module.exports.users = [
     role: "instructor",
     StudyFieldId: 2,
   },
-]
+];
 
 module.exports.users_admin = module.exports.users[0];
 
-module.exports.users_printperson =  module.exports.users[1];
+module.exports.users_printperson = module.exports.users[1];

@@ -6,4 +6,4 @@ module.exports.admin = {
   token: TokenGenerator.generateToken(users_admin),
   expiredToken: "TODO",
   id: users_admin.id,
-}
+};

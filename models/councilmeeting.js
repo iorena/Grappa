@@ -18,7 +18,7 @@ class CouncilMeeting extends BaseModel {
         return CM.addTheses(thesis);
       })
       .then(() => {
-        console.log("Thesis linked to councilmeeting")
+        console.log("Thesis linked to councilmeeting");
       });
   }
 }

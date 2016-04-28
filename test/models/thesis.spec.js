@@ -13,7 +13,7 @@ const mockDB = require("../mockdata/database");
 describe("ThesisModel", () => {
 
   before(() => {
-  /* 
+  /*
    * Replace sequelize's db calls with a simple filter of mock database,
    * which is just an array
    */
@@ -41,14 +41,14 @@ describe("ThesisModel", () => {
   });
   describe("findAll()", () => {
     it("should do stuff..", () => {
-    })
-  })
+    });
+  });
   describe("saveOne(thesis)", () => {
     it("should save correctly validated thesis", () => {
     });
     it("should throw an error when validation fails", () => {
     });
-  })
+  });
   describe("findAllByRole", () => {
     it("should find all theses when searching as print person", () => {
       Thesis.findAllByUserRole({ role: "print-person" })

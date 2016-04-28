@@ -79,15 +79,15 @@ User.belongsTo(StudyField);
 
 Thesis.hasMany(Review);
 
-User.hasMany(Thesis, {as: "Theses"});
+User.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(User);
 
 User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
-ThesisProgress.belongsTo(Thesis, {foreignKey: "thesisId"});
-Thesis.hasOne(ThesisProgress, {foreignKey: "thesisId"});
+ThesisProgress.belongsTo(Thesis, { foreignKey: "thesisId" });
+Thesis.hasOne(ThesisProgress, { foreignKey: "thesisId" });
 
 module.exports.sync = () => {
   return seq.sync();

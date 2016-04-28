@@ -176,7 +176,7 @@ module.exports.addTestData = () => Promise.all([
     }
   });
   return theses.map(thesis => Grader.linkThesisToGraders(thesis, graders));
-})
+});
 
 module.exports.dump = () => {
   return Promise.all(Object.keys(models).map(key => {
@@ -188,19 +188,19 @@ module.exports.dump = () => {
 
 module.exports.dropAndCreateTables = () => {
   return module.exports.createTables()
-  .then(() => module.exports.addTestData() )
+  .then(() => module.exports.addTestData())
   .then(() => {
     console.log("Dropped and created models with test data succesfully!");
   })
   .catch((err) => {
     console.log("dropAndCreateTables produced an error!");
     console.log(err);
-  })
-}
+  });
+};
 
 module.exports.resetTestData = () => {
   module.exports.destroyTables()
-  .then(() => module.exports.addTestData() )
+  .then(() => module.exports.addTestData())
   .then(() => {
     console.log("Resetted the database with test data successfully!");
   })
@@ -208,4 +208,4 @@ module.exports.resetTestData = () => {
     console.log("resetTestData produced an error!");
     console.log(err);
   });
-}
+};

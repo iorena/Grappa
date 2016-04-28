@@ -53,7 +53,7 @@ module.exports.checkEmail = (req, res) => {
     });
   })
   .catch(err => {
-    console.log(err)
+    console.log(err);
     res.status(500).send({
       message: "checkEmail hajos",
       error: err,

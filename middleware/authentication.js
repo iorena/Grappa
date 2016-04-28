@@ -66,13 +66,13 @@ module.exports.authenticate = (req, res, next) => {
     req.user = decoded.user;
     next();
   }
-}
+};
 
 module.exports.authenticate2 = (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
+    return res.status(401).send({ message: "Please make sure your request has an Authorization header" });
   }
-  var token = req.headers.authorization.split(' ')[1];
+  var token = req.headers.authorization.split(" ")[1];
 
   var payload = null;
   try {
@@ -83,8 +83,8 @@ module.exports.authenticate2 = (req, res, next) => {
   }
 
   if (payload.exp <= moment().unix()) {
-    return res.status(401).send({ message: 'Token has expired' });
+    return res.status(401).send({ message: "Token has expired" });
   }
   req.user = payload.sub;
   next();
-}
+};

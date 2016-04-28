@@ -25,7 +25,7 @@ module.exports.findAll = (req, res) => {
 
 module.exports.findOne = (req, res) => {
   Thesis
-  .findOne({id: req.params.id})
+  .findOne({ id: req.params.id })
   .then(thesis => {
     res.status(200).send(thesis);
   })
@@ -72,13 +72,13 @@ module.exports.updateOne = (req, res) => {
 
 module.exports.deleteOne = (req, res) => {
   Thesis
-  .delete({id: req.params.id})
+  .delete({ id: req.params.id })
   .then(deletedRows => {
     if (deletedRows !== 0) {
-      res.status(200).send({message: "Thesis with id: " + req.params.id+ " successfully deleted"});
+      res.status(200).send({ message: "Thesis with id: " + req.params.id + " successfully deleted" });
     }
     else {
-      res.status(404).send({message: "Thesis to delete with id: " + req.params.id +  " was not found"})
+      res.status(404).send({ message: "Thesis to delete with id: " + req.params.id + " was not found" });
     }
   })
   .catch(err => {

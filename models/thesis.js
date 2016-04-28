@@ -12,7 +12,7 @@ class Thesis extends BaseModel {
   /*
    * Or remove, I don't really know what it does..
    */
-   add10DaysToDeadline(deadline) {
+  add10DaysToDeadline(deadline) {
     const date = new Date(deadline);
     date.setDate(date.getDate() - 10);
     return date.toISOString();
@@ -68,17 +68,17 @@ class Thesis extends BaseModel {
     }
     return this.Models[this.modelname]
     .findAll({
-     include :
+      include :
      [{
-      model: this.Models.Grader,
-    }, {
-      model: this.Models.ThesisProgress,
-    }, {
-      model: this.Models.StudyField,
-    }, {
-      model: this.Models.User
-    }]
-  });
+       model: this.Models.Grader,
+     }, {
+       model: this.Models.ThesisProgress,
+     }, {
+       model: this.Models.StudyField,
+     }, {
+       model: this.Models.User
+     }]
+    });
 
 
   }
