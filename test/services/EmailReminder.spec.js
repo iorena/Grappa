@@ -15,25 +15,25 @@
 
 
       describe("EmailReminder", () => {
-      before(() => {
-          Sinon.stub(Sender, "sendEmail", (to, subject, body) => {
-        calledParams = {
+        before(() => {
+        Sinon.stub(Sender, "sendEmail", (to, subject, body) => {
+            calledParams = {
           to,
           subject,
           body,
         };
-              return Promise.resolve(calledParams);
-      });
-      Sinon.stub(EmailStatus, "saveOne", function (params) {
+            return Promise.resolve(calledParams);
+          });
+        Sinon.stub(EmailStatus, "saveOne", function (params) {
         return Promise.resolve(params);
       });
-      
-      Sinon.stub(Thesis, "findOne", () => {
-            return Promise.resolve();
-          });
-    });
+
+        Sinon.stub(Thesis, "findOne", () => {
+        return Promise.resolve();
+      });
+      });
         after(() => {
-         
+
         });
 
 
@@ -52,16 +52,16 @@
           it("should call sendEmail with correct values", (done) => {
             Sinon.stub(User, "findOne", (params) => {
               if (typeof params.role !== "undefined" && params.role === "print-person") {
-                  return Promise.resolve({
+                return Promise.resolve({
                     id: 2,
                     name: "B Virtanen",
                     title: "print-person",
                     email: "printperson@gmail.com",
                     admin: true,
                   });
-                } else {
-                  return Promise.resolve(null);
-                  }
+              } else {
+                return Promise.resolve(null);
+              }
             });
             Reminder.sendPrintPersonReminder(thesis)
             .then(status => {
@@ -76,16 +76,16 @@
           it("should call sendEmail with correct values", (done) => {
             Sinon.stub(User, "findOne", (params) => {
               if (typeof params.role !== "undefined" && params.role === "professor") {
-                  return Promise.resolve({
+                return Promise.resolve({
                     id: 2,
                     name: "B Virtanen",
                     title: "professor",
                     email: "professor@gmail.com",
                     admin: true,
                   });
-                } else {
-                  return Promise.resolve(null);
-                  }
+              } else {
+                return Promise.resolve(null);
+              }
             });
             Reminder.sendProfessorReminder(thesis)
             .then(status => {

@@ -50,11 +50,11 @@ module.exports.findOne = (req, res) => {
 module.exports.saveOne = (req, res) => {
   if (req.body.password !== undefined) {
     req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
-  };
+  }
   User
   .saveOne(req.body)
   .then(user => {
-    res.status(200).send({message: "User was successfully saved"});
+    res.status(200).send({ message: "User was successfully saved" });
   })
   .catch(err => {
     res.status(500).send({
@@ -85,7 +85,7 @@ module.exports.deleteOne = (req, res) => {
 
 module.exports.loginUser = (req, res) => {
   User
-  .findOne({ email: req.body.email})
+  .findOne({ email: req.body.email })
   .then(user => {
     if (user === null) {
       res.status(401).send({
@@ -94,7 +94,7 @@ module.exports.loginUser = (req, res) => {
       });
     } else {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
-        res.status(403).send({message: "Wrong username and password combination!"})
+        res.status(403).send({ message: "Wrong username and password combination!" });
       }
       else {
         const token = TokenGenerator.generateToken(user);
