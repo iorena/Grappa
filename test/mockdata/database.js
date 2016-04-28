@@ -174,8 +174,9 @@ module.exports.users = [
   {
     id: 1,
     name: "Kjell Lemström",
-    password: "asdf",
-    email: "ohtugrappa@gmail.com",
+    password: "moro",
+    passwordHash: "$2a$10$mVhq5OchvjtHoZ0ZOvGimO/f/5H9yt22.6iqIG2.mh36qNA6mgshS",
+    email: "moikkamoi",
     role: "admin",
     StudyFieldId: null,
   },
