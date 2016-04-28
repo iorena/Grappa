@@ -47,7 +47,8 @@ router.get("/", index);
 router.get("/auth", auth.authenticate, authTest);
 
 /* Thesis routes */
-router.get("/thesis", auth.authenticate, thesisCtrl.findAll);
+// router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
+router.get("/thesis", thesisCtrl.findAll);
 router.put("/thesis/:id", thesisCtrl.updateOne);
 router.post("/thesis", thesisCtrl.saveOne);
 router.get("/thesis/:id", thesisCtrl.findOne);

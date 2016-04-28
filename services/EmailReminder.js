@@ -98,7 +98,6 @@ class EmailReminder {
           lastSent: Date.now(),
           type: "StudentReminder",
           to: email.to,
-          whoAddedEmail: "ohtugrappa@gmail.com", // vai User
           deadline: new Date("1 1 2017"),
         });
       });
@@ -118,7 +117,6 @@ class EmailReminder {
         lastSent: Date.now(),
         type: "PrinterReminder",
         to: email.to,
-        whoAddedEmail: "ohtugrappa@gmail.com", // vai User
         deadline: new Date("1 1 2017"),
       }));
   }
@@ -136,7 +134,6 @@ class EmailReminder {
         lastSent: Date.now(),
         type: "ProfessorReminder",
         to: professorEmail,
-        whoAddedEmail: "ohtugrappa@gmail.com", // vai User
         deadline: new Date("1 1 2017"),
       }));
   }
