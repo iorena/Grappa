@@ -13,7 +13,7 @@ module.exports.findAll = (req, res) => {
   Thesis
   .findAll()
   .then(theses => {
-    console.log(theses)
+    console.log(theses);
     res.status(200).send(theses);
   })
   .catch(err => {

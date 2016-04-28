@@ -38,7 +38,7 @@ class Scheduler {
           console.log(`id:${thesis.id} Processing Thesis status to see whether eThesis link has been added.`);
           Processor.processThesisStatus(thesis);
         }
-      })
+      });
     })
     .catch(err => {
       console.log(err);

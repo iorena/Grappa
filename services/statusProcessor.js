@@ -21,7 +21,7 @@ class StatusProcessor {
   processThesisStatus(thesis) {
     return this.checkForEthesis(thesis)
       .then(wasUpdated => {
-        console.log(wasUpdated)
+        console.log(wasUpdated);
         if (wasUpdated) {
           // TODO isn't this kinda spamming?
           this.sendToPrintPerson(thesis);
@@ -37,7 +37,7 @@ class StatusProcessor {
       console.log(thesis.ethesis);
       return this.fetchAbstract(thesis.ethesis)
         .then((value) => Thesis.update({ abstract: value }, { id: thesis.id }))
-        .then(() => { return true});
+        .then(() => { return true;});
     } else {
       console.log("Either no eThesis-link found or abstract already exists. No action will be taken.");
       return Promise.resolve(false);

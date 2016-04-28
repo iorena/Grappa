@@ -40,16 +40,16 @@ describe("EmailReminder", () => {
     it("should call sendEmail with correct values", (done) => {
       Sinon.stub(User, "findOne", (params) => {
         if (typeof params.role !== "undefined" && params.role === "print-person") {
-            return Promise.resolve({
+          return Promise.resolve({
               id: 2,
               name: "B Virtanen",
               title: "print-person",
               email: "printperson@gmail.com",
               admin: true,
             });
-          } else {
-            return Promise.resolve(null);
-          }
+        } else {
+          return Promise.resolve(null);
+        }
       });
       Reminder.sendPrintPersonReminder(thesis)
       .then(status => {
