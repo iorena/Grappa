@@ -27,11 +27,13 @@ class EmailReminder {
    */
   readDrafts(drafts) {
     const newDrafts = Object.assign({}, drafts);
-    return Promise.all(Object.keys(drafts).map(key => this.readDraft(key)
+    return Promise.all(Object.keys(drafts).map(key =>
+        this.readDraft(key)
         .then(draft => {
           newDrafts[key] = draft;
-        })))
-    .then(() => newDrafts);
+        })
+      ))
+      .then(() => newDrafts);
   }
   /*
    * Reads a single draft from email_drafts folder and returns its content

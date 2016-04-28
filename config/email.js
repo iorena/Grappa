@@ -8,7 +8,7 @@ module.exports.imap = {
   host: "imap.gmail.com",
   port: 993,
   tls: true,
-}
+};
 
 // module.exports.imap = {
 //   user: "cs-tunnus",

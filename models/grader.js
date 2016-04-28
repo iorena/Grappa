@@ -26,11 +26,11 @@ class Grader extends BaseModel {
     return Promise.all(graders.map(grader => {
       return this.getModel()
         .findOne({ where: { name: grader.name, title: grader.title } })
-        .then(grader => grader.addThesis(thesis))
-      }))
+        .then(grader => grader.addThesis(thesis));
+    }))
       .then(() => {
         console.log("Thesis and Graders all linked!");
-      })
+      });
   }
 }
 

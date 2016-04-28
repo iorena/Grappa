@@ -11,7 +11,7 @@ const Grader = require("../models/grader");
 
 module.exports.findAll = (req, res) => {
   Thesis
-  .findAllByUserRole(req.body.user)
+  .findAllByUserRole(req.user)
   .then(theses => {
     res.status(200).send(theses);
   })
@@ -25,7 +25,7 @@ module.exports.findAll = (req, res) => {
 
 module.exports.findOne = (req, res) => {
   Thesis
-  .findOne({id: req.params.id})
+  .findOne({ id: req.params.id })
   .then(thesis => {
     res.status(200).send(thesis);
   })
@@ -42,7 +42,7 @@ module.exports.findOne = (req, res) => {
  *
  * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
  */
-module.exports.updateOne = (req, res) => {
+module.exports.updateOneWithEthesis = (req, res) => {
   Thesis
   .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
   .then(thesis => {
@@ -56,15 +56,29 @@ module.exports.updateOne = (req, res) => {
   });
 };
 
+module.exports.updateOne = (req, res) => {
+  Thesis
+  .update(req.body, { id: req.params.id })
+  .then(thesis => {
+    res.status(200).send(thesis);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis update produced an error",
+      error: err,
+    });
+  });
+};
+
 module.exports.deleteOne = (req, res) => {
   Thesis
-  .delete({id: req.params.id})
+  .delete({ id: req.params.id })
   .then(deletedRows => {
     if (deletedRows !== 0) {
-      res.status(200).send({message: "Thesis with id: " + req.params.id+ " successfully deleted"});
+      res.status(200).send({ message: "Thesis with id: " + req.params.id + " successfully deleted" });
     }
     else {
-      res.status(404).send({message: "Thesis to delete with id: " + req.params.id +  " was not found"})
+      res.status(404).send({ message: "Thesis to delete with id: " + req.params.id + " was not found" });
     }
   })
   .catch(err => {

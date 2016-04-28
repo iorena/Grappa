@@ -1,10 +1,12 @@
+"use strict";
+
 const Sequelize = require("sequelize");
 const seq = require("../db/db_connection").sequalize;
 
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   email: { type: Sequelize.STRING, unique: true },
-  password: Sequelize.STRING, // removed once we get Shittboleth
+  passwordHash: Sequelize.STRING,
   name: Sequelize.STRING,
   role: Sequelize.STRING,
   isActive: { type: Sequelize.BOOLEAN, defaultValue: false },
@@ -56,7 +58,7 @@ const EmailStatus = seq.define("EmailStatus", {
   lastSent: Sequelize.DATE,
   type: Sequelize.STRING,
   to: Sequelize.STRING,
-  whoAddedEmail: Sequelize.STRING, 
+  whoAddedEmail: Sequelize.STRING,
   deadline: Sequelize.DATE,
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
@@ -77,15 +79,15 @@ User.belongsTo(StudyField);
 
 Thesis.hasMany(Review);
 
-User.hasMany(Thesis, {as: "Theses"});
+User.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(User);
 
 User.hasMany(Review);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
-ThesisProgress.belongsTo(Thesis, {foreignKey: "thesisId"});
-Thesis.hasOne(ThesisProgress, {foreignKey: "thesisId"});
+ThesisProgress.belongsTo(Thesis, { foreignKey: "thesisId" });
+Thesis.hasOne(ThesisProgress, { foreignKey: "thesisId" });
 
 module.exports.sync = () => {
   return seq.sync();

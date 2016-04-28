@@ -2,6 +2,7 @@
 
 const tables = require("../models/tables");
 const models = tables.Models;
+const Grader = require("../models/grader");
 
 module.exports.destroyTables = () => {
   return Promise.all(Object.keys(models).map(key => {
@@ -45,6 +46,7 @@ module.exports.addTestData = () => Promise.all([
     password: "asdf",
     email: "ohtugrappa@gmail.com",
     role: "admin",
+    isActive: true,
     StudyFieldId: null,
   }),
   models.User.create({
@@ -53,38 +55,43 @@ module.exports.addTestData = () => Promise.all([
     password: "asdf",
     email: "ohtugrappa2@gmail.com",
     role: "print-person",
+    isActive: false,
     StudyFieldId: null,
   }),
   models.User.create({
     id: 3,
     name: "Tohtori Sykerö",
-    password: "asdfasdf",
+    password: "asdf",
     email: "ohtugrappa3@gmail.com",
     role: "professor",
+    isActive: false,
     StudyFieldId: 1,
   }),
   models.User.create({
     id: 4,
     name: "Tohtori Outolempi",
-    password: "asdfasdf",
+    password: "asdf",
     email: "ohtugrappa4@gmail.com",
     role: "professor",
+    isActive: false,
     StudyFieldId: 2,
   }),
   models.User.create({
     id: 5,
     name: "Alikersantti Rokka",
-    password: "asdfasdfasdf",
+    password: "asdf",
     email: "ohtugrappa5@gmail.com",
     role: "instructor",
+    isActive: false,
     StudyFieldId: 1,
   }),
   models.User.create({
     id: 6,
     name: "Vänrikki Koskela",
-    password: "asdfasdfasdf",
+    password: "asdf",
     email: "ohtugrappa6@gmail.com",
     role: "instructor",
+    isActive: false,
     StudyFieldId: 2,
   }),
   models.Thesis.create({
@@ -126,8 +133,12 @@ module.exports.addTestData = () => Promise.all([
     ThesisId: 2,
   }),
   models.Grader.create({
-    name: "Mr. Grader2",
+    name: "Mr. Grader",
     title: "Professor of internet",
+  }),
+  models.Grader.create({
+    name: "some dude",
+    title: "human",
   }),
   models.CouncilMeeting.create({
     date: new Date("1.1.2016"),
@@ -151,7 +162,21 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-]);
+])
+// add connections here
+.then((createdTables) => {
+  const graders = createdTables.filter(table => {
+    if (table.$modelOptions.name.singular === "Grader") {
+      return table;
+    }
+  });
+  const theses = createdTables.filter(table => {
+    if (table.$modelOptions.name.singular === "Thesis") {
+      return table;
+    }
+  });
+  return theses.map(thesis => Grader.linkThesisToGraders(thesis, graders));
+});
 
 module.exports.dump = () => {
   return Promise.all(Object.keys(models).map(key => {
@@ -163,19 +188,19 @@ module.exports.dump = () => {
 
 module.exports.dropAndCreateTables = () => {
   return module.exports.createTables()
-  .then(() => module.exports.addTestData() )
+  .then(() => module.exports.addTestData())
   .then(() => {
     console.log("Dropped and created models with test data succesfully!");
   })
   .catch((err) => {
     console.log("dropAndCreateTables produced an error!");
     console.log(err);
-  })
-}
+  });
+};
 
 module.exports.resetTestData = () => {
   module.exports.destroyTables()
-  .then(() => module.exports.addTestData() )
+  .then(() => module.exports.addTestData())
   .then(() => {
     console.log("Resetted the database with test data successfully!");
   })
@@ -183,4 +208,4 @@ module.exports.resetTestData = () => {
     console.log("resetTestData produced an error!");
     console.log(err);
   });
-}
+};

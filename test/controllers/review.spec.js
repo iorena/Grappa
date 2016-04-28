@@ -21,12 +21,12 @@ describe("ReviewController", () => {
     sinon.stub(Review, "saveOne", (reqbody) => {
       return Promise.resolve(mockDB.reviews[0]);
     });
-  })
+  });
 
   after(() => {
     Review.findAllByRole.restore();
     Review.saveOne.restore();
-  })
+  });
 
   it("GET /review (findAllByRole)", () => {
     it("should call Review-model correctly and return reviews", (done) => {
@@ -44,9 +44,9 @@ describe("ReviewController", () => {
       request(app)
       .get("/review")
       .set("Accept", "application/json")
-      .expect(500, {message: "Review findAllByRole produced an error"}, done);
-    })
-  })
+      .expect(500, { message: "Review findAllByRole produced an error" }, done);
+    });
+  });
   describe("POST /review (saveOne)", () => {
     it("should save review and return it", (done) => {
       request(app)
@@ -68,7 +68,7 @@ describe("ReviewController", () => {
       .set("Accept", "application/json")
       .set("X-Access-Token", authorizedAdmin.token)
       .set("X-Key", authorizedAdmin.id)
-      .expect(500, {message: "Review saveOne produced an error"}, done);
-    })
-  })
-})
+      .expect(500, { message: "Review saveOne produced an error" }, done);
+    });
+  });
+});

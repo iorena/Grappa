@@ -17,7 +17,7 @@ const mockHTML = (url) => {
       resolve();
     });
   });
-}
+};
 
 describe("status processor", () => {
   const mockThesis1 = {

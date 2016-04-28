@@ -16,10 +16,10 @@ var graderEval;
 var changeGraderStatus;
 
 describe("ThesisProgress", () => {
-  before (() => {
+  before(() => {
     changeGraderStatus = sinon.spy(ThesisProgress, "changeGraderStatus");
     graderEval = sinon.spy(ThesisProgress, "evaluateGraders");
-    
+
     sinon.stub(Thesis, "findOne", () => {
       return Promise.resolve(mockDB.thesis);
     });
@@ -29,20 +29,20 @@ describe("ThesisProgress", () => {
     sinon.stub(ThesisProgress, "findOne", () => {
       return Promise.resolve(mockDB.thesisprogresses[0]);
     });
-  })
-  after (() => {
+  });
+  after(() => {
     ThesisProgress.evaluateGraders.restore();
     Thesis.findOne.restore();
     ThesisProgressSeqModel.update.restore();
     ThesisProgress.findOne.restore();
-  }) 
+  });
 
   describe("When adding a new thesisprogress", () => {
 
 
     it("graders should update if they are competent", () => {
 
-      ThesisProgress.evaluateGraders(mockDB.thesis.id, mockDB.competentGraders);      
+      ThesisProgress.evaluateGraders(mockDB.thesis.id, mockDB.competentGraders);
       expect(graderEval.called).to.equal(true);
       expect(changeGraderStatus.calledOnce).to.equal(true);
       expect(changeGraderStatus.calledWith(mockDB.thesis.id)).to.equal(true);

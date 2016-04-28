@@ -3,4 +3,4 @@
  */
  module.exports = {
    secret: "Grappa on pahaa :(",
- }
+ };

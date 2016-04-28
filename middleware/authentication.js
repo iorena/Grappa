@@ -15,17 +15,17 @@ const secret = require("../config/authentication").secret;
  */
 module.exports.authenticate = (req, res, next) => {
   // console.log(req.headers);
-  // req.body.user = {
+  // req.user = {
   //   id: 1,
   //   role: "admin",
   //   StudyFieldId: null,
   // };
-  // req.body.user = {
+  // req.user = {
   //   id: 3,
   //   role: "professor",
   //   StudyFieldId: 1,
   // };
-  // req.body.user = {
+  // req.user = {
   //   id: 6,
   //   role: "instructor",
   //   StudyFieldId: 2,
@@ -58,21 +58,21 @@ module.exports.authenticate = (req, res, next) => {
   // checks if userId is the same that the one who was created
   // TODO should also check if token expired..
   if (decoded.user.id !== userid) {
-    return res.status(403).send({
+    return res.status(401).send({
       message: "User authentication failed",
     });
   } else {
     console.log("autentikoitu!");
-    req.body.user = decoded.user;
+    req.user = decoded.user;
     next();
   }
-}
+};
 
 module.exports.authenticate2 = (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
+    return res.status(401).send({ message: "Please make sure your request has an Authorization header" });
   }
-  var token = req.headers.authorization.split(' ')[1];
+  var token = req.headers.authorization.split(" ")[1];
 
   var payload = null;
   try {
@@ -83,8 +83,8 @@ module.exports.authenticate2 = (req, res, next) => {
   }
 
   if (payload.exp <= moment().unix()) {
-    return res.status(401).send({ message: 'Token has expired' });
+    return res.status(401).send({ message: "Token has expired" });
   }
   req.user = payload.sub;
   next();
-}
+};
