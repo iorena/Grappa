@@ -10,6 +10,7 @@ const mockDB = require("../mockdata/database");
 
 const Thesis = require("../../models/thesis");
 const ThesisProgress = require("../../models/thesisprogress");
+const User = require("../../models/user");
 const ThesisProgressSeqModel = ThesisProgress.getModel();
 
 var graderEval;
@@ -29,12 +30,16 @@ describe("ThesisProgress", () => {
     sinon.stub(ThesisProgress, "findOne", () => {
       return Promise.resolve(mockDB.thesisprogresses[0]);
     });
+    sinon.stub(User, "findOne", () => {
+      return Promise.resolve(mockDB.users[0]);
+    });
   });
   after(() => {
     ThesisProgress.evaluateGraders.restore();
     Thesis.findOne.restore();
     ThesisProgressSeqModel.update.restore();
     ThesisProgress.findOne.restore();
+    User.findOne.restore();
   });
 
   describe("When adding a new thesisprogress", () => {
