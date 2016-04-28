@@ -128,6 +128,7 @@ module.exports.saveOne = (req, res) => {
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
       Grader.linkThesisToGraders(thesis, req.body.graders),
       Thesis.linkStudyField(thesis, req.body.field),
+      Thesis.addUser(thesis, req),
     ]);
   })
   .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
