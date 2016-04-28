@@ -2,6 +2,7 @@
 
 const TokenGenerator = require("../services/TokenGenerator");
 const User = require("../models/user");
+const passwordHelper = require("../config/passwordHelper");
 
 module.exports.findAllNotActive = (req, res) => {
   User
@@ -47,10 +48,13 @@ module.exports.findOne = (req, res) => {
 };
 
 module.exports.saveOne = (req, res) => {
+  if (req.body.password !== undefined) {
+    req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
+  };
   User
   .saveOne(req.body)
   .then(user => {
-    res.status(200).send(user);
+    res.status(200).send({message: "User was successfully saved"});
   })
   .catch(err => {
     res.status(500).send({
@@ -81,7 +85,7 @@ module.exports.deleteOne = (req, res) => {
 
 module.exports.loginUser = (req, res) => {
   User
-  .findOne({ email: req.body.email, password: req.body.password})
+  .findOne({ email: req.body.email})
   .then(user => {
     if (user === null) {
       res.status(401).send({
@@ -89,17 +93,17 @@ module.exports.loginUser = (req, res) => {
         error: "",
       });
     } else {
-      const token = TokenGenerator.generateToken(user);
-      res.status(200).send({
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          StudyFieldId: user.StudyFieldId,
-        },
-        token: token,
-      });
+      if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
+        res.status(403).send({message: "Wrong username and password combination!"})
+      }
+      else {
+        const token = TokenGenerator.generateToken(user);
+        user.passwordHash = undefined;
+        res.status(200).send({
+          user: user,
+          token: token,
+        });
+      }
     }
   })
   .catch(err => {

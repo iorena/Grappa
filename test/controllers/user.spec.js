@@ -40,7 +40,7 @@
       .send({ name: "user to be saved"})
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200, mockDB.users[0], done);
+      .expect(200, { message: "User was successfully saved" }, done);
     });
     it("should fail with 500 if saveone throws error", (done) => {
       User.saveOne.restore();
@@ -125,7 +125,7 @@
 
       request(app)
       .post("/login")
-      .send({ name: "user to be login"})
+      .send(mockDB.users[0])
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(res => {

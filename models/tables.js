@@ -6,7 +6,7 @@ const seq = require("../db/db_connection").sequalize;
 const User = seq.define("User", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   email: { type: Sequelize.STRING, unique: true },
-  password: Sequelize.STRING, // removed once we get Shittboleth
+  passwordHash: Sequelize.STRING,
   name: Sequelize.STRING,
   role: Sequelize.STRING,
   isActive: { type: Sequelize.BOOLEAN, defaultValue: false },
