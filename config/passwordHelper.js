@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt-nodejs');
 
 exports.hashPassword = (password) => {
-    return bcrypt.hashSync(password, 10)
+    return bcrypt.hashSync(password)
 };
 
 exports.comparePassword = (password, hash) => {
