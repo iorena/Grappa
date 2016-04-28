@@ -1,6 +1,6 @@
 "use strict";
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 
 exports.hashPassword = (password) => {
     return bcrypt.hashSync(password, 10)
