@@ -1,6 +1,7 @@
 "use strict";
+
 const expect = require("chai").expect;
-const scheduler = require("../../services/scheduler");
+const scheduler = require("../../services/Scheduler");
 const sinon = require("sinon");
 
 describe("scheduler", () => {
