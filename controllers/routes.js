@@ -93,7 +93,7 @@ router.post("/emailstatus", emailstatusCtrl.saveOne);
 /* Email routes */
 router.get("/email/send", emailCtrl.sendEmail);
 router.get("/email/check", emailCtrl.checkEmail);
-router.get("/email/remind", emailCtrl.sendReminder);
+router.post("/email/remind", emailCtrl.sendReminder);
 
 /* Studyfield routes */
 router.get("/studyfield", studyfieldCtrl.findAll);
