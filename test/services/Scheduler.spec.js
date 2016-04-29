@@ -1,6 +1,7 @@
 "use strict";
+
 const expect = require("chai").expect;
-const scheduler = require("../../services/scheduler");
+const scheduler = require("../../services/Scheduler");
 const sinon = require("sinon");
 
 describe("scheduler", () => {
@@ -13,9 +14,10 @@ describe("scheduler", () => {
       gradersStatus: false,
     };
     const newObj = scheduler.combineProps(thesis, thesisProgress);
-    expect(newObj).to.deep.equal({ id: 1,
-                                   author: "meitsi",
-                                   gradersStatus: false,
-                                 });
+    expect(newObj).to.deep.equal({
+      id: 1,
+      author: "meitsi",
+      gradersStatus: false,
+    });
   });
 });

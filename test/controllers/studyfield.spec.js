@@ -9,7 +9,6 @@ const app = require("../testhelper").app;
 
 const StudyField = require("../../models/studyfield");
 
-
 describe("StudyFieldController", () => {
   before(() => {
     sinon.stub(StudyField, "findAll", () => {

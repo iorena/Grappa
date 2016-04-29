@@ -40,7 +40,7 @@ module.exports.addTestData = () => Promise.all([
     id: 4,
     name: "Software Systems",
   }),
-  /*USE PASSWORD 'asdf' for all users! The hash stored for these users
+  /* USE PASSWORD 'asdf' for all users! The hash stored for these users
   is for asdf    */
   models.User.create({
     id: 1,
@@ -182,7 +182,7 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-  ])
+])
 // add connections here
 .then((createdTables) => {
   const graders = createdTables.filter(table => {

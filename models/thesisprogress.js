@@ -35,15 +35,15 @@ class ThesisProgress extends BaseModel {
     if (professor && doctor) {
       this.changeGraderStatus(thesisId);
     } else {
-        Thesis
+      Thesis
         .findOne({ id: thesisId })
         .then(fT => {
           if (fT === null) {
             throw new TypeError("Professor not found");
           } else {
-            Reminder.sendProfessorReminder(fT)
+            Reminder.sendProfessorReminder(fT);
           }
-        })
+        });
     }
   }
 }

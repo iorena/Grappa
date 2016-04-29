@@ -1,4 +1,5 @@
 "use strict";
+
 const ThesisProgress = require("../models/thesisprogress");
 const Thesis = require("../models/thesis");
 // const EmailReader = require("./EmailReader");
@@ -18,22 +19,28 @@ class StatusProcessor {
   }
 
   processThesisStatus(thesis) {
-    /*
-     * check mailbox for boomerangs
-     */
-    // EmailReader.checkEmail();
-
-    this.checkForEthesis(thesis);
-    this.sendToPrintPerson(thesis);
+    return this.checkForEthesis(thesis)
+      .then(wasUpdated => {
+        console.log(wasUpdated);
+        if (wasUpdated) {
+          // TODO isn't this kinda spamming?
+          this.sendToPrintPerson(thesis);
+        }
+      });
   }
-  /*
+  /**
    * Check if ethesis link has been added, in which case fetch abstract
    */
   checkForEthesis(thesis) {
     if (thesis.ethesis !== null && thesis.abstract === null) {
-      module.exports.fetchAbstract(thesis.ethesis).then((value) => {
-        Thesis.update({ abstract: value }, { id: thesis.id });
-      });
+      console.log("eThesis-link found on thesis but no abstract, fetching it from eThesis.com!");
+      console.log(thesis.ethesis);
+      return this.fetchAbstract(thesis.ethesis)
+        .then((value) => Thesis.update({ abstract: value }, { id: thesis.id }))
+        .then(() => { return true;});
+    } else {
+      console.log("Either no eThesis-link found or abstract already exists. No action will be taken.");
+      return Promise.resolve(false);
     }
   }
 

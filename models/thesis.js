@@ -14,11 +14,11 @@ class Thesis extends BaseModel {
   /*
    * Or remove, I don't really know what it does..
    */
-   add10DaysToDeadline(deadline) {
-    const date = new Date(deadline);
-    date.setDate(date.getDate() - 10);
-    return date.toISOString();
-  }
+  add10DaysToDeadline(deadline) {
+     const date = new Date(deadline);
+     date.setDate(date.getDate() - 10);
+     return date.toISOString();
+   }
   linkStudyField(thesis, field) {
     return StudyField.getModel()
     .findOne({ where: { name: field } })
@@ -27,7 +27,7 @@ class Thesis extends BaseModel {
       console.log("Thesis linked to StudyField");
     });
   }
-  addUser(thesis, req){
+  addUser(thesis, req) {
     let user = tokenGen.decodeToken(req.headers["x-access-token"]).user;
 
     return User.getModel()
@@ -82,15 +82,15 @@ class Thesis extends BaseModel {
     .findAll({
       include :
       [{
-       model: this.Models.Grader,
-     }, {
+        model: this.Models.Grader,
+      }, {
        model: this.Models.ThesisProgress,
      }, {
        model: this.Models.StudyField,
      }, {
        model: this.Models.User
      }]
-   });
+    });
 
 
   }
