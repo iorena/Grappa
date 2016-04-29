@@ -79,6 +79,24 @@ module.exports.addTestData = () => Promise.all([
     StudyFieldId: 2,
   }),
   models.User.create({
+    id: 7,
+    name: "Tohtori Uusinimi",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
+    email: "ohtugrappa45@gmail.com",
+    role: "professor",
+    isActive: false,
+    StudyFieldId: 3,
+  }),
+  models.User.create({
+    id: 8,
+    name: "Tohtori JokuNimi",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
+    email: "ohtugrappa44@gmail.com",
+    role: "professor",
+    isActive: false,
+    StudyFieldId: 4,
+  }),
+  models.User.create({
     id: 5,
     name: "Alikersantti Rokka",
     passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
@@ -136,14 +154,14 @@ module.exports.addTestData = () => Promise.all([
   }),
   models.Grader.create({
     name: "Mr. Grader",
-    title: "Professor of internet",
+    title: "Prof",
   }),
   models.Grader.create({
     name: "some dude",
-    title: "human",
+    title: "Other",
   }),
   models.CouncilMeeting.create({
-    date: new Date("1.1.2016"),
+    date: "2016-09-15 21:00:00.000 +00:00",
   }),
   models.CouncilMeeting.create({
     date: Date.now(),
