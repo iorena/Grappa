@@ -24,6 +24,12 @@ module.exports.dropTables = () => {
 };
 
 module.exports.addTestData = () => Promise.all([
+  models.CouncilMeeting.create({
+    date: "2016-09-15 21:00:00.000 +00:00",
+  }),
+  models.CouncilMeeting.create({
+    date: Date.now(),
+  }),
   models.StudyField.create({
     id: 1,
     name: "Algorithmic Bioinformatics",
@@ -163,12 +169,6 @@ module.exports.addTestData = () => Promise.all([
   models.Grader.create({
     name: "some dude",
     title: "Other",
-  }),
-  models.CouncilMeeting.create({
-    date: "2016-09-15 21:00:00.000 +00:00",
-  }),
-  models.CouncilMeeting.create({
-    date: Date.now(),
   }),
   models.ThesisProgress.create({
     thesisId: 1,
