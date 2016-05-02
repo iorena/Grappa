@@ -89,10 +89,13 @@ class EmailReminder {
   /*
    *Method for handling the process of composing and sending an email to the student
    */
-  sendStudentReminder(studentEmail, token) {
-    const foundThesis = Thesis.findOne({ id: token.thesisId });
-    const email = this.composeEmail("toStudent", studentEmail, null, `http://grappa-app.herokuapp.com/ethesis/${token}`);
-    return Sender.sendEmail(email.to, email.subject, email.body)
+  sendStudentReminder(studentEmail, token, thesisId) {
+    let foundThesis;
+    return Thesis.findOne({ id: thesisId })
+    .then((thesis) => {
+      foundThesis = thesis;
+      const email = this.composeEmail("toStudent", studentEmail, null, `http://grappa-app.herokuapp.com/ethesis/${token}`);
+      return Sender.sendEmail(email.to, email.subject, email.body)
       .then(() => {
         console.log("saving status");
         return EmailStatus.saveOne({
@@ -102,6 +105,7 @@ class EmailReminder {
           deadline: foundThesis.deadline,
         });
       });
+    });
   }
 
   /*

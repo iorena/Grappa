@@ -29,7 +29,7 @@
       });
 
         Sinon.stub(Thesis, "findOne", () => {
-        return Promise.resolve();
+        return Promise.resolve(thesis);
       });
       });
         after(() => {
@@ -40,7 +40,7 @@
         describe("sendStudentReminder(thesis)", () => {
           it("should call sendEmail with correct values", (done) => {
             const email = "pertti@perttinen.fi";
-            Reminder.sendStudentReminder(email, "ASDF123")
+            Reminder.sendStudentReminder(email, "ASDF123", 0)
             .then(status => {
               expect(calledParams.to).to.equal(email);
               expect(calledParams.subject).to.equal("REMINDER: Submit your thesis to eThesis");

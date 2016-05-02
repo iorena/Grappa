@@ -27,18 +27,18 @@ module.exports.sendReminder = (req, res) => {
     });
   } else if (req.body.type === "student") {
     const token = tokenGen.generateEthesisToken(req.body.thesis.author, req.body.thesis.id);
-    Reminder.sendStudentReminder(req.body.thesis.email, token)
+    Reminder.sendStudentReminder(req.body.thesis.email, token, req.body.thesis.id)
     .then(result => {
       res.status(200).send({
         result,
       });
     })
-    .catch(err => {
-      res.status(500).send({
-        message: "sendStudentReminder hajos",
-        error: err,
-      });
-    });
+    // .catch(err => {
+    //   res.status(500).send({
+    //     message: "sendStudentReminder hajos",
+    //     error: err,
+    //   });
+    // });
   } else if (req.body.type === "print") {
     Reminder.sendPrintPersonReminder(req.body.thesis)
     .then(result => {
