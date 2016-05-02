@@ -2,6 +2,7 @@
 
 const Reminder = require("../services/EmailReminder");
 const tokenGen = require("../services/TokenGenerator");
+const pdfCreator = require("../services/PdfCreator");
 
 const Thesis = require("../models/thesis");
 const EthesisToken = require("../models/ethesisToken");
@@ -52,12 +53,33 @@ module.exports.findOne = (req, res) => {
   });
 };
 
+module.exports.createPdf = (req, res) => {
+  Thesis
+  .findOne({ id: req.params.id })
+  .then(thesis => {
+    let docStream = pdfCreator.generateDoc(thesis);
+
+    docStream.on('data', function(data) {
+      res.write(data);
+    });
+
+    docStream.on('end', function() {
+      res.end();
+    });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis createPdf produced an error",
+      error: err,
+    });
+  });
+};
 /*
  * Recieves hashed id and updates thesis
  *
  * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
  */
-module.exports.updateOneWithEthesis = (req, res) => {
+ module.exports.updateOneWithEthesis = (req, res) => {
   Thesis
   .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
   .then(thesis => {
@@ -110,7 +132,7 @@ module.exports.deleteOne = (req, res) => {
  * Required fields for a thesis:
  * author, email, deadline, graders?, and stuff?
  */
-module.exports.saveOne = (req, res) => {
+ module.exports.saveOne = (req, res) => {
   let savedthesis;
   let foundCouncilMeeting;
   const originalDate = new Date(req.body.deadline);
@@ -144,7 +166,7 @@ module.exports.saveOne = (req, res) => {
       Grader.linkThesisToGraders(thesis, req.body.graders),
       Thesis.linkStudyField(thesis, req.body.field),
       Thesis.addUser(thesis, req),
-    ]);
+      ]);
   })
   .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
   .then(() => {
