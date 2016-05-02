@@ -126,6 +126,7 @@ module.exports.addTestData = () => Promise.all([
     graderEvaluation: "I think these graders are great because of things and stuff!",
     UserId: 4,
     StudyFieldId: 1,
+    CouncilMeetingId: 2,
   }),
   models.Thesis.create({
     id: 2,
@@ -139,6 +140,7 @@ module.exports.addTestData = () => Promise.all([
     graderEvaluation: "These two graders are not good enough :(",
     UserId: 6,
     StudyFieldId: 2,
+    CouncilMeetingId: 2,
   }),
   models.Review.create({
     id: 1,
@@ -184,7 +186,7 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-])
+  ])
 // add connections here
 .then((createdTables) => {
   const graders = createdTables.filter(table => {
