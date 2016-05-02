@@ -93,6 +93,9 @@ const Thesis = seq.define("Thesis", {
       notEmpty: true,
     },
   },
+  graderEvaluation: {
+    type: Sequelize.TEXT,
+  },
 });
 
 const EthesisToken = seq.define("EthesisToken", {
