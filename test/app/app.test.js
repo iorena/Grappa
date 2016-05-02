@@ -3,7 +3,7 @@
 const request = require("request");
 const expect = require("chai").expect;
 
-describe("app", () => {
+xdescribe("app", () => {
   let url = "http://localhost:9876";
   it("should load", () => {
     request(url, (error, response) => {
