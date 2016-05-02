@@ -34,6 +34,7 @@
     "node-schedule": "^1.1.0",
     "nodemailer": "^2.3.1",
     "nodemon": "^1.9.1",
+    "pdfkit": "^0.7.2",
     "pg": "^4.5.2",
     "pg-hstore": "^2.3.2",
     "request": "^2.69.0",
