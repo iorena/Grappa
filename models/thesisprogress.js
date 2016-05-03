@@ -13,7 +13,7 @@ class ThesisProgress extends BaseModel {
   }
   saveFromNewThesis(thesis) {
     console.log("Thesisprogress saved!");
-    return this.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
+    return this.saveOne({ thesisId: thesis.id, ethesisReminder: Date.now(), professorReminder: null,
       documentsSent: null, isDone: false, gradersStatus: false });
   }
 
