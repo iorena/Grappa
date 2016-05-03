@@ -90,6 +90,7 @@ class EmailReminder {
    *Method for handling the process of composing and sending an email to the student
    */
   sendStudentReminder(studentEmail, token, thesisId) {
+    const ThesisProgress = require("../models/thesisprogress");
     let foundThesis;
     return Thesis.findOne({ id: thesisId })
     .then((thesis) => {
@@ -104,6 +105,9 @@ class EmailReminder {
           to: email.to,
           deadline: foundThesis.deadline,
         });
+      })
+      .then(() => {
+        return ThesisProgress.update({ethesisReminder: Date.now()}, { thesisId: thesisId });
       });
     });
   }
@@ -130,6 +134,7 @@ class EmailReminder {
    *Method for handling the process of composing and sending an email to the professor
    */
   sendProfessorReminder(thesis) {
+    const ThesisProgress = require("../models/thesisprogress");
     let email;
     return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
       .then(professor => {
@@ -141,7 +146,10 @@ class EmailReminder {
         type: "ProfessorReminder",
         to: email.to,
         deadline: thesis.deadline,
-      }));
+      }))
+      .then(() => {
+        return ThesisProgress.update({professorReminder: Date.now()}, { thesisId: thesis.id });
+      });
   }
 }
 
