@@ -178,6 +178,14 @@ module.exports.addTestData = () => Promise.all([
     documentsSent: Date.now(),
     isDone: false,
   }),
+  models.ThesisProgress.create({
+    thesisId: 2,
+    ethesisReminder: Date.now(),
+    professorReminder: Date.now(),
+    gradersStatus: false,
+    documentsSent: Date.now(),
+    isDone: false,
+  }),
   models.EmailStatus.create({
     lastSent: Date.now(),
     type: "StudentReminder",
