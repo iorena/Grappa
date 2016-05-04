@@ -179,6 +179,7 @@ module.exports.users = [
     email: "moikkamoi",
     role: "admin",
     StudyFieldId: null,
+    isActive: true,
   },
   {
     id: 2,
@@ -187,6 +188,8 @@ module.exports.users = [
     email: "ohtugrappa2@gmail.com",
     role: "print-person",
     StudyFieldId: null,
+    isActive: false,
+
   },
   {
     id: 3,
@@ -195,6 +198,8 @@ module.exports.users = [
     email: "ohtugrappa3@gmail.com",
     role: "professor",
     StudyFieldId: 1,
+    isActive: true,
+
   },
   {
     id: 4,
@@ -203,6 +208,7 @@ module.exports.users = [
     email: "ohtugrappa4@gmail.com",
     role: "professor",
     StudyFieldId: 2,
+    isActive: true,    
   },
   {
     id: 5,
@@ -211,6 +217,8 @@ module.exports.users = [
     email: "ohtugrappa5@gmail.com",
     role: "instructor",
     StudyFieldId: 1,
+    isActive: true,
+
   },
   {
     id: 6,
@@ -219,6 +227,7 @@ module.exports.users = [
     email: "ohtugrappa6@gmail.com",
     role: "instructor",
     StudyFieldId: 2,
+    isActive: true,
   },
 ];
 
