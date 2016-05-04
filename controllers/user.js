@@ -92,7 +92,14 @@ module.exports.loginUser = (req, res) => {
         message: "Logging in failed authentication",
         error: "",
       });
-    } else {
+    } else if (!user.isActive){
+      res.status(401).send({
+        message: "Your account is inactive, please contact admin for activation",
+        error: "",
+      });
+    }
+
+    else {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
         res.status(403).send({ message: "Wrong username and password combination!" });
       }
