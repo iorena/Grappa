@@ -9,9 +9,9 @@ class CouncilMeeting extends BaseModel {
   constructor() {
     super("CouncilMeeting");
   }
-  linkThesisToCouncilMeeting(thesis, date) {
+  linkThesisToCouncilMeeting(thesis, id) {
     return this.getModel()
-      .findOne({ where: { date: new Date(date) } })
+      .findOne({ where: { id, } })
       .then((CM) => {
         // console.log("HEI CM");
         // console.log(CM);

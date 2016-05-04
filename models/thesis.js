@@ -6,7 +6,6 @@ const Grader = require("./grader");
 const User = require("./user");
 const tokenGen = require("../services/TokenGenerator");
 
-
 class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
@@ -14,31 +13,34 @@ class Thesis extends BaseModel {
   /*
    * Or remove, I don't really know what it does..
    */
-   add10DaysToDeadline(deadline) {
-     const date = new Date(deadline);
+   setDeadline10DaysBefore(CouncilMeeting) {
+     const date = new Date(CouncilMeeting.date);
      date.setDate(date.getDate() - 10);
      return date.toISOString();
    }
-   linkStudyField(thesis, field) {
-    return StudyField.getModel()
-    .findOne({ where: { name: field } })
-    .then((studyfield) => thesis.setStudyField(studyfield))
-    .then(() => {
-      console.log("Thesis linked to StudyField");
-    });
-  }
-  addUser(thesis, req) {
-    let user = tokenGen.decodeToken(req.headers["x-access-token"]).user;
 
-    return User.getModel()
-    .findOne({ where: { id: user.id } })
-    .then((user) => thesis.setUser(user))
-    .then(() => {
-      console.log("Thesis linked to user");
-    });
+   linkStudyField(thesis, fieldname) {
+    return StudyField.getModel()
+      .findOne({ where: { name: fieldname } })
+      .then((studyfield) => thesis.setStudyField(studyfield))
+      .then(() => {
+        console.log("Thesis linked to StudyField");
+      });
   }
+
+  addUser(thesis, user) {
+    // let user = tokenGen.decodeToken(req.headers["x-access-token"]).user;
+    // console.log("USER: " + JSON.stringify(user))
+    return User.getModel()
+      .findOne({ where: { id: user.id } })
+      .then((user) => thesis.setUser(user))
+      .then(() => {
+        console.log("Thesis linked to user");
+      });
+  }
+
   saveOne(params) {
-    // console.log("params are: " + JSON.stringify(params));
+    console.log("params are: " + JSON.stringify(params));
     const values = Object.assign({}, params);
     // the crazy validation loop. wee!
     Object.keys(params).map(key => {
@@ -46,11 +48,12 @@ class Thesis extends BaseModel {
         throw new Error(key + " isn't the wanted type!");
       }
     });
-    if (values.deadline !== null) {
-      values.deadline = this.add10DaysToDeadline(params.deadline);
+    if (values.CouncilMeeting !== null) {
+      values.deadline = this.setDeadline10DaysBefore(params.CouncilMeeting);
     }
     return this.getModel().create(values);
   }
+
   findAllByUserRole(user) {
     if (user.role === "admin" || user.role === "print-person") {
       return this.findAll();
@@ -98,7 +101,7 @@ class Thesis extends BaseModel {
   }
   findOne(params) {
     return this.Models[this.modelname]
-    .findOne({ 
+    .findOne({
       where: params,
       include :
       [{

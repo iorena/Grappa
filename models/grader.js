@@ -10,13 +10,13 @@ class Grader extends BaseModel {
 
   findOrCreate(grader) {
     return this.getModel()
-    .findOne({ where: { name: grader.name, title: grader.title } })
-    .then((newgrader) => {
-      if (newgrader === null) {
-        return this.getModel().create({ name: grader.name, title: grader.title });
-      }
-      return newgrader;
-    });
+      .findOne({ where: { name: grader.name, title: grader.title } })
+      .then((newgrader) => {
+        if (newgrader === null) {
+          return this.getModel().create({ name: grader.name, title: grader.title });
+        }
+        return newgrader;
+      });
   }
 
   linkThesisToGraders(thesis, graders) {

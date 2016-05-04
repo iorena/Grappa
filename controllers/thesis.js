@@ -135,16 +135,17 @@ module.exports.deleteOne = (req, res) => {
  module.exports.saveOne = (req, res) => {
   let savedthesis;
   let foundCouncilMeeting;
-  const originalDate = new Date(req.body.deadline);
-
+  // const originalDate = new Date(req.body.deadline);
+  console.log(req.user)
+  console.log(req.body)
   CouncilMeeting
-  .findOne({ date: originalDate })
+  .findOne({ id: req.body.CouncilMeeting.id })
   .then(cm => {
     if (cm === null) {
-      throw new TypeError("ValidationError: unvalid deadline, no such CouncilMeeting found");
+      throw new TypeError("ValidationError: Unvalid CouncilMeetingId, no such CouncilMeeting found");
     } else {
       foundCouncilMeeting = cm;
-      if (typeof req.body.graders === "undefined") {
+      if (req.body.graders === undefined) {
         return;
       }
       return Promise.all(req.body.graders.map(grader => Grader.findOrCreate(grader)));
@@ -162,27 +163,27 @@ module.exports.deleteOne = (req, res) => {
       }),
       Reminder.sendStudentReminder(thesis.email, token, thesis.id),
       ThesisProgress.saveFromNewThesis(thesis),
-      CouncilMeeting.linkThesisToCouncilMeeting(thesis, originalDate),
+      CouncilMeeting.linkThesisToCouncilMeeting(thesis, req.body.CouncilMeeting.id),
       Grader.linkThesisToGraders(thesis, req.body.graders),
-      Thesis.linkStudyField(thesis, req.body.field),
-      Thesis.addUser(thesis, req),
-      ]);
+      Thesis.linkStudyField(thesis, req.body.StudyFieldName),
+      Thesis.addUser(thesis, req.user),
+    ]);
   })
   .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
   .then(() => {
     res.status(200).send(savedthesis);
   })
-  .catch(err => {
-    if (err.message.indexOf("ValidationError") !== -1) {
-      res.status(400).send({
-        message: "Thesis saveOne failed validation",
-        error: err.message,
-      });
-    } else {
-      res.status(500).send({
-        message: "Thesis saveOne produced an error",
-        error: err.message,
-      });
-    }
-  });
+  // .catch(err => {
+  //   if (err.message.indexOf("ValidationError") !== -1) {
+  //     res.status(400).send({
+  //       message: "Thesis saveOne failed validation",
+  //       error: err.message,
+  //     });
+  //   } else {
+  //     res.status(500).send({
+  //       message: "Thesis saveOne produced an error",
+  //       error: err.message,
+  //     });
+  //   }
+  // });
 };
