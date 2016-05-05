@@ -192,7 +192,7 @@ module.exports.addTestData = () => Promise.all([
     deadline: new Date("1 1 2017"),
     wasError: true,
   })
-  ])
+])
 // add connections here
 .then((createdTables) => {
   const graders = createdTables.filter(table => {

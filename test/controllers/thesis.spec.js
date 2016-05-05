@@ -83,8 +83,8 @@ describe("ThesisController", () => {
       return Promise.resolve();
     });
     sandbox.stub(Thesis, "addUser", (reqbody) => {
-       return Promise.resolve(mockDB.users[0]);
-     });
+      return Promise.resolve(mockDB.users[0]);
+    });
   });
 
   after(function () {
@@ -115,7 +115,12 @@ describe("ThesisController", () => {
       .post("/thesis")
       .send({ name: "thesis to be saved" })
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
+      .expect(res => {
+        console.log(res);
+      })
       .expect(200, mockDB.thesis, done);
     });
 
@@ -126,6 +131,8 @@ describe("ThesisController", () => {
       .post("/thesis")
       .send({ name: "thesis to be saved" })
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
         expect(saveFromNewThesis.calledWith(mockDB.thesis)).to.equal(true);
@@ -137,13 +144,12 @@ describe("ThesisController", () => {
       earlierDate.setDate(earlierDate.getDate() - 10);
       earlierDate = earlierDate.toISOString();
 
-      let add10DaysToDl = sinon.spy(Thesis, "add10DaysToDeadline");
+      let setDeadline = sinon.spy(Thesis, "setDeadline10DaysBeforeCM");
 
+      Thesis.setDeadline10DaysBeforeCM(mockDB.thesis.deadline);
 
-      Thesis.add10DaysToDeadline(mockDB.thesis.deadline);
-
-      expect(add10DaysToDl.calledWith(mockDB.thesis.deadline)).to.equal(true);
-      expect(add10DaysToDl.returned(earlierDate)).to.equal(true);
+      expect(setDeadline.calledWith(mockDB.thesis.deadline)).to.equal(true);
+      expect(setDeadline.returned(earlierDate)).to.equal(true);
       done();
     });
     it("should add graders", (done) => {
@@ -152,13 +158,13 @@ describe("ThesisController", () => {
       .post("/thesis")
       .send(mockDB.thesis)
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
-
         /* First value in first call of findOrCreate() */
         expect(findOrCreateGrader.args[0][0])
         .to.deep.equal(mockDB.thesis.graders[0]);
-
         /* First value in second call of findOrCreate() */
         expect(findOrCreateGrader.args[1][0])
         .to.deep.equal(mockDB.thesis.graders[1]);
@@ -173,6 +179,8 @@ describe("ThesisController", () => {
       .post("/thesis")
       .send(mockDB.thesis)
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
         expect(sendStudentReminder.calledWith(mockDB.thesis.email, token)).to.equal(true);
@@ -186,9 +194,11 @@ describe("ThesisController", () => {
       .post("/thesis")
       .send(mockDB.thesis)
       .set("Accept", "application/json")
+      .set("X-Access-Token", authorizedAdmin.token)
+      .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
-        expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.field)).to.equal(true);
+        expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.StudyFieldName)).to.equal(true);
       })
       .expect(200, mockDB.thesis, done);
     });

@@ -107,7 +107,7 @@ class EmailReminder {
         });
       })
       .then(() => {
-        return ThesisProgress.update({ethesisReminder: Date.now()}, { thesisId: thesisId });
+        return ThesisProgress.update({ ethesisReminder: Date.now() }, { thesisId: thesisId });
       });
     });
   }
@@ -148,7 +148,7 @@ class EmailReminder {
         deadline: thesis.deadline,
       }))
       .then(() => {
-        return ThesisProgress.update({professorReminder: Date.now()}, { thesisId: thesis.id });
+        return ThesisProgress.update({ professorReminder: Date.now() }, { thesisId: thesis.id });
       });
   }
 }

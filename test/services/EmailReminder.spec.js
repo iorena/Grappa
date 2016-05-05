@@ -8,7 +8,7 @@
 
       const Reminder = require("../../services/EmailReminder");
       const Sender = require("../../services/EmailSender");
-      
+
       const Thesis = require("../../models/thesis");
       const User = require("../../models/user");
       const EmailStatus = require("../../models/email_status");
@@ -40,7 +40,7 @@
 
           Sinon.stub(ThesisProgress, "update", () => {
             return Promise.resolve();
-          })
+          });
         });
 
 
