@@ -53,17 +53,40 @@ module.exports.findOne = (req, res) => {
   });
 };
 
+module.exports.createAllPdfs = (req, res) => {
+  console.log(req.body)
+  Thesis
+  .findAll()
+  .then(theses => {
+    let docStream = pdfCreator.generateThesesDocs(theses, req.body.thesesToPrint);
+
+    docStream.on('data', data => {
+      res.write(data);
+    });
+
+    docStream.on('end', () => {
+      res.end();
+    });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis createPdf produced an error",
+      error: err,
+    });
+  });
+};
+
 module.exports.createPdf = (req, res) => {
   Thesis
   .findOne({ id: req.params.id })
   .then(thesis => {
-    let docStream = pdfCreator.generateDoc(thesis);
+    let docStream = pdfCreator.generateOneThesisDoc(thesis);
 
-    docStream.on('data', function(data) {
+    docStream.on('data', data => {
       res.write(data);
     });
 
-    docStream.on('end', function() {
+    docStream.on('end', () => {
       res.end();
     });
   })

@@ -25,9 +25,7 @@ module.exports.dropTables = () => {
 
 module.exports.addTestData = () => Promise.all([
   models.CouncilMeeting.create({
-    date: "2016-09-15 21:00:00.000 +00:00",
-  }),
-  models.CouncilMeeting.create({
+    id: 1,
     date: Date.now(),
   }),
   models.StudyField.create({
@@ -132,7 +130,7 @@ module.exports.addTestData = () => Promise.all([
     graderEvaluation: "I think these graders are great because of things and stuff!",
     UserId: 4,
     StudyFieldId: 1,
-    CouncilMeetingId: 2,
+    CouncilMeetingId: 1,
   }),
   models.Thesis.create({
     id: 2,
@@ -146,7 +144,7 @@ module.exports.addTestData = () => Promise.all([
     graderEvaluation: "These two graders are not good enough :(",
     UserId: 6,
     StudyFieldId: 2,
-    CouncilMeetingId: 2,
+    CouncilMeetingId: 1,
   }),
   models.Review.create({
     id: 1,
