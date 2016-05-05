@@ -135,8 +135,6 @@ module.exports.deleteOne = (req, res) => {
  module.exports.saveOne = (req, res) => {
   let savedthesis;
   let foundCouncilMeeting;
-  // const originalDate = new Date(req.body.deadline);
-  console.log(req.user)
   console.log(req.body)
   CouncilMeeting
   .findOne({ id: req.body.CouncilMeeting.id })
@@ -173,17 +171,17 @@ module.exports.deleteOne = (req, res) => {
   .then(() => {
     res.status(200).send(savedthesis);
   })
-  // .catch(err => {
-  //   if (err.message.indexOf("ValidationError") !== -1) {
-  //     res.status(400).send({
-  //       message: "Thesis saveOne failed validation",
-  //       error: err.message,
-  //     });
-  //   } else {
-  //     res.status(500).send({
-  //       message: "Thesis saveOne produced an error",
-  //       error: err.message,
-  //     });
-  //   }
-  // });
+  .catch(err => {
+    if (err.message.indexOf("ValidationError") !== -1) {
+      res.status(400).send({
+        message: "Thesis saveOne failed validation",
+        error: err.message,
+      });
+    } else {
+      res.status(500).send({
+        message: "Thesis saveOne produced an error",
+        error: err.message,
+      });
+    }
+  });
 };

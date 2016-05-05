@@ -13,7 +13,7 @@ class EmailReader {
     this.daemonName = "mailer-daemon@googlemail.com";
   }
 
-  /*
+  /**
    * Method for reading single message stream
    */
   readMessage(msg) {
@@ -37,7 +37,7 @@ class EmailReader {
     });
   }
 
-  /*
+  /**
    * Fetches the messages from inbox and reads them as streams
    */
   readInbox(box) {
@@ -71,7 +71,7 @@ class EmailReader {
     });
   }
 
-  /*
+  /**
    * Opens the connection to IMAP-server
    */
   openImap() {
@@ -92,7 +92,7 @@ class EmailReader {
     });
   }
 
-  /*
+  /**
    * Once connected to server opens the inbox
    */
   openInbox() {
@@ -158,7 +158,11 @@ class EmailReader {
       })
       .then(updatedEmails => {
         console.log("lol " + updatedEmails);
-      });
+      })
+      .catch(err => {
+        console.log("EmailReader checkEmail() errored!");
+        console.log(err);
+      })
   }
 }
 
