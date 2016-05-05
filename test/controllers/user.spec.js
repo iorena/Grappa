@@ -12,29 +12,29 @@ const TokenGenerator = require("../../services/TokenGenerator");
 
 describe("UserController", () => {
   before(() => {
-   sinon.stub(User, "findAllNotActive", () => {
+    sinon.stub(User, "findAllNotActive", () => {
      return Promise.resolve(mockDB.users);
    });
-   sinon.stub(User, "saveOne", (reqbody) => {
+    sinon.stub(User, "saveOne", (reqbody) => {
      return Promise.resolve(mockDB.users[0]);
    });
-   sinon.stub(User, "findOne", () => {
+    sinon.stub(User, "findOne", () => {
      return Promise.resolve(mockDB.users[0]);
    });
-   sinon.stub(User, "update", () => {
+    sinon.stub(User, "update", () => {
      return Promise.resolve([1]);
    });
- });
+  });
 
   after(() => {
-   User.findAllNotActive.restore();
-   User.saveOne.restore();
-   User.findOne.restore();
-   User.update.restore();
- });
+    User.findAllNotActive.restore();
+    User.saveOne.restore();
+    User.findOne.restore();
+    User.update.restore();
+  });
 
   describe("POST /user (saveOne)", () => {
-   it("should save user and return it", (done) => {
+    it("should save user and return it", (done) => {
      request(app)
      .post("/user")
      .send({ name: "user to be saved" })
@@ -42,20 +42,20 @@ describe("UserController", () => {
      .expect("Content-Type", /json/)
      .expect(200, { message: "User was successfully saved" }, done);
    });
-   it("should fail with 500 if saveone throws error", (done) => {
-    User.saveOne.restore();
-    sinon.stub(User, "saveOne", () => {
+    it("should fail with 500 if saveone throws error", (done) => {
+     User.saveOne.restore();
+     sinon.stub(User, "saveOne", () => {
       return Promise.reject();
     });
-    request(app)
+     request(app)
     .post("/user")
     .set("Accept", "application/json")
     .expect(500, { message: "User saveOne produced an error" }, done);
+   });
   });
- });
 
   describe("GET /user", () => {
-   it("findOne should call User-model correctly and return correct user", (done) => {
+    it("findOne should call User-model correctly and return correct user", (done) => {
      request(app)
      .get("/user/1")
      .set("Accept", "application/json")
@@ -63,7 +63,7 @@ describe("UserController", () => {
      .expect(200, mockDB.users[0], done);
    });
 
-   it("should fail with 500 if findAllNotActive throws error", (done) => {
+    it("should fail with 500 if findAllNotActive throws error", (done) => {
      User.findOne.restore();
      sinon.stub(User, "findOne", () => {
        return Promise.reject();
@@ -73,7 +73,7 @@ describe("UserController", () => {
      .set("Accept", "application/json")
      .expect(500, { message: "User findOne produced an error" }, done);
    });
-   it("findAllNotActive should call User-model correctly and return all users", (done) => {
+    it("findAllNotActive should call User-model correctly and return all users", (done) => {
      request(app)
      .get("/user")
      .set("Accept", "application/json")
@@ -81,7 +81,7 @@ describe("UserController", () => {
      .expect(200, mockDB.users, done);
    });
 
-   it("should fail with 500 if findAllNotActive throws error", (done) => {
+    it("should fail with 500 if findAllNotActive throws error", (done) => {
      User.findAllNotActive.restore();
      sinon.stub(User, "findAllNotActive", () => {
        return Promise.reject();
@@ -91,17 +91,17 @@ describe("UserController", () => {
      .set("Accept", "application/json")
      .expect(500, { message: "User findAllNotActive produced an error" }, done);
    });
- });
+  });
 
   describe("PUT /user/:id", () => {
-   it("should call User-model and update one User correctly", (done) => {
+    it("should call User-model and update one User correctly", (done) => {
      request(app)
      .put("/user/1")
      .set("Accept", "application/json")
      .expect("Content-Type", /json/)
      .expect(200, done);
    });
-   it("should fail miserably with 500 if update throws error", (done) => {
+    it("should fail miserably with 500 if update throws error", (done) => {
      User.update.restore();
      sinon.stub(User, "update", () => {
        return Promise.reject();
@@ -113,10 +113,10 @@ describe("UserController", () => {
      .expect("Content-Type", /json/)
      .expect(500, done);
    });
- });
+  });
 
   describe("POST /login", () => {
-   it("should find correct user and create a token", (done) => {
+    it("should find correct user and create a token", (done) => {
      User.findOne.restore();
      sinon.stub(User, "findOne", () => {
        return Promise.resolve(mockDB.users[0]);
@@ -129,11 +129,11 @@ describe("UserController", () => {
      .set("Accept", "application/json")
      .expect("Content-Type", /json/)
      .expect(res => {
-      expect(generateTokenSpy.calledWith(mockDB.users[0])).to.equal(true);
-    })
+       expect(generateTokenSpy.calledWith(mockDB.users[0])).to.equal(true);
+     })
      .expect(200, done);
    });
-   it("should fail with 401 if user is not found", (done) => {
+    it("should fail with 401 if user is not found", (done) => {
      User.findOne.restore();
      sinon.stub(User, "findOne", () => {
        return Promise.resolve(null);
@@ -143,7 +143,7 @@ describe("UserController", () => {
      .set("Accept", "application/json")
      .expect(401, { message: "Logging in failed authentication", error: "" }, done);
    });
-   it("should fail with 401 if user is not activated", (done) => {
+    it("should fail with 401 if user is not activated", (done) => {
      User.findOne.restore();
      sinon.stub(User, "findOne", () => {
        return Promise.resolve(mockDB.users[1]);
@@ -153,7 +153,7 @@ describe("UserController", () => {
      .set("Accept", "application/json")
      .expect(401, { message: "Your account is inactive, please contact admin for activation", error: "" }, done);
    });
-   it("should fail with 500 if findOne throws error", (done) => {
+    it("should fail with 500 if findOne throws error", (done) => {
      User.findOne.restore();
      sinon.stub(User, "findOne", () => {
        return Promise.reject();
@@ -164,5 +164,5 @@ describe("UserController", () => {
      .set("Accept", "application/json")
      .expect(500, { message: "User loginUser produced an error" }, done);
    });
- });
+  });
 });

@@ -54,7 +54,7 @@ class PdfCreator {
     const doc = new PDF();
     allTheses.map((thesis, i) => {
       thesesToPrint.map((thesisToPrint) => {
-        if (thesisToPrint===thesis.id) {
+        if (thesisToPrint === thesis.id) {
           doc
           .fontSize(14)
           .text(`Title: ${thesis.title}`)
@@ -96,8 +96,8 @@ class PdfCreator {
           .text(thesis.abstract)
           .addPage();
         }
-      })
-    })
+      });
+    });
     doc.end();
     return doc;
   }

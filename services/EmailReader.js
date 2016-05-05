@@ -162,7 +162,7 @@ class EmailReader {
       .catch(err => {
         console.log("EmailReader checkEmail() errored!");
         console.log(err);
-      })
+      });
   }
 }
 
