@@ -54,7 +54,6 @@ module.exports.findOne = (req, res) => {
 };
 
 module.exports.createAllPdfs = (req, res) => {
-  console.log(req.body.thesesToPrint)
   if (req.body.thesesToPrint.length===0) {
     res.status(500).send({
       message: "There are no theses to print.",

@@ -53,7 +53,6 @@ class PdfCreator {
   generateThesesDocs(thesesToPrint) {
     const doc = new PDF();
     thesesToPrint.map((thesis, i) => {
-        console.log("PRINTING THESIS: ", thesis.title)
           doc
           .fontSize(14)
           .text(`Title: ${thesis.title}`)
