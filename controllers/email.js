@@ -33,12 +33,12 @@ module.exports.sendReminder = (req, res) => {
         result,
       });
     })
-    // .catch(err => {
-    //   res.status(500).send({
-    //     message: "sendStudentReminder hajos",
-    //     error: err,
-    //   });
-    // });
+    .catch(err => {
+      res.status(500).send({
+        message: "sendStudentReminder hajos",
+        error: err,
+      });
+    });
   } else if (req.body.type === "print") {
     Reminder.sendPrintPersonReminder(req.body.thesis)
     .then(result => {
