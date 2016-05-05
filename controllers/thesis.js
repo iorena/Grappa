@@ -54,11 +54,15 @@ module.exports.findOne = (req, res) => {
 };
 
 module.exports.createAllPdfs = (req, res) => {
-  console.log(req.body)
-  Thesis
-  .findAll()
-  .then(theses => {
-    let docStream = pdfCreator.generateThesesDocs(theses, req.body.thesesToPrint);
+  console.log(req.body.thesesToPrint)
+  if (req.body.thesesToPrint.length===0) {
+    res.status(500).send({
+      message: "There are no theses to print.",
+      error: "List was empty",
+    });
+  }
+  else {
+    let docStream = pdfCreator.generateThesesDocs(req.body.thesesToPrint);
 
     docStream.on('data', data => {
       res.write(data);
@@ -67,13 +71,7 @@ module.exports.createAllPdfs = (req, res) => {
     docStream.on('end', () => {
       res.end();
     });
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Thesis createPdf produced an error",
-      error: err,
-    });
-  });
+  }
 };
 
 module.exports.createPdf = (req, res) => {
