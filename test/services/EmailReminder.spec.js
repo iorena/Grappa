@@ -2,38 +2,53 @@
 
       const request = require("request");
       const expect = require("chai").expect;
-      const Thesis = require("../../models/thesis");
-      const Sender = require("../../services/EmailSender");
-      const Reminder = require("../../services/EmailReminder");
       const Sinon = require("sinon");
-      const User = require("../../models/user");
-      const EmailStatus = require("../../models/email_status");
 
       const thesis = require("../mockdata/database").thesis;
+
+      const Reminder = require("../../services/EmailReminder");
+      const Sender = require("../../services/EmailSender");
+      
+      const Thesis = require("../../models/thesis");
+      const User = require("../../models/user");
+      const EmailStatus = require("../../models/email_status");
+      const ThesisProgress = require("../../models/thesisprogress");
+
 
       let calledParams = {};
 
 
       describe("EmailReminder", () => {
+
         before(() => {
-        Sinon.stub(Sender, "sendEmail", (to, subject, body) => {
+
+          Sinon.stub(Sender, "sendEmail", (to, subject, body) => {
             calledParams = {
-          to,
-          subject,
-          body,
-        };
+              to,
+              subject,
+              body,
+            };
             return Promise.resolve(calledParams);
           });
-        Sinon.stub(EmailStatus, "saveOne", function (params) {
-        return Promise.resolve(params);
-      });
+          Sinon.stub(EmailStatus, "saveOne", function (params) {
+            return Promise.resolve(params);
+          });
 
-        Sinon.stub(Thesis, "findOne", () => {
-        return Promise.resolve(thesis);
-      });
-      });
+          Sinon.stub(Thesis, "findOne", () => {
+            return Promise.resolve(thesis);
+          });
+
+          Sinon.stub(ThesisProgress, "update", () => {
+            return Promise.resolve();
+          })
+        });
+
+
         after(() => {
-
+          Sender.sendEmail.restore();
+          EmailStatus.saveOne.restore();
+          Thesis.findOne.restore();
+          ThesisProgress.update.restore();
         });
 
 
@@ -53,12 +68,12 @@
             Sinon.stub(User, "findOne", (params) => {
               if (typeof params.role !== "undefined" && params.role === "print-person") {
                 return Promise.resolve({
-                    id: 2,
-                    name: "B Virtanen",
-                    title: "print-person",
-                    email: "printperson@gmail.com",
-                    admin: true,
-                  });
+                  id: 2,
+                  name: "B Virtanen",
+                  title: "print-person",
+                  email: "printperson@gmail.com",
+                  admin: true,
+                });
               } else {
                 return Promise.resolve(null);
               }
@@ -77,12 +92,12 @@
             Sinon.stub(User, "findOne", (params) => {
               if (typeof params.role !== "undefined" && params.role === "professor") {
                 return Promise.resolve({
-                    id: 2,
-                    name: "B Virtanen",
-                    title: "professor",
-                    email: "professor@gmail.com",
-                    admin: true,
-                  });
+                  id: 2,
+                  name: "B Virtanen",
+                  title: "professor",
+                  email: "professor@gmail.com",
+                  admin: true,
+                });
               } else {
                 return Promise.resolve(null);
               }
