@@ -79,6 +79,8 @@ router.delete("/grader/:id", graderCtrl.deleteOne);
 router.get("/thesisprogress", thesisprogressCtrl.findAll);
 router.get("/thesisprogress/:id", thesisprogressCtrl.findOne);
 router.post("/thesisprogress", thesisprogressCtrl.saveOne);
+router.put("/thesisprogress", thesisprogressCtrl.updateEval);
+
 
 /* User routes */
 router.get("/user", userCtrl.findAllNotActive);
