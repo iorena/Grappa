@@ -3,8 +3,6 @@
 const config = require("../config/email");
 const nodemailer = require("nodemailer");
 
-// const EmailStatus = require("../models/email_status");
-
 class EmailSender {
   constructor(options) {
     this.mailOptions = {

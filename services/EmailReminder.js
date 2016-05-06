@@ -86,7 +86,7 @@ class EmailReminder {
     return email;
   }
 
-  /*
+  /**
    *Method for handling the process of composing and sending an email to the student
    */
   sendStudentReminder(studentEmail, token, thesisId) {
@@ -107,12 +107,12 @@ class EmailReminder {
         });
       })
       .then(() => {
-        return ThesisProgress.update({ethesisReminder: Date.now()}, { thesisId: thesisId });
+        return ThesisProgress.update({ ethesisReminder: Date.now() }, { thesisId: thesisId });
       });
     });
   }
 
-  /*
+  /**
    *Method for handling the process of composing and sending an email to the print-person
    */
   sendPrintPersonReminder(thesis) {
@@ -130,7 +130,7 @@ class EmailReminder {
       }));
   }
 
-  /*
+  /**
    *Method for handling the process of composing and sending an email to the professor
    */
   sendProfessorReminder(thesis) {
@@ -148,7 +148,7 @@ class EmailReminder {
         deadline: thesis.deadline,
       }))
       .then(() => {
-        return ThesisProgress.update({professorReminder: Date.now()}, { thesisId: thesis.id });
+        return ThesisProgress.update({ professorReminder: Date.now() }, { thesisId: thesis.id });
       });
   }
 }

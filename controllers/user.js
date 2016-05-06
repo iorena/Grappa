@@ -92,7 +92,7 @@ module.exports.loginUser = (req, res) => {
         message: "Logging in failed authentication",
         error: "",
       });
-    } else if (!user.isActive){
+    } else if (!user.isActive) {
       res.status(401).send({
         message: "Your account is inactive, please contact admin for activation",
         error: "",

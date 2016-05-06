@@ -50,7 +50,7 @@ router.get("/auth", auth.authenticate, authTest);
 router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
 // router.get("/thesis", thesisCtrl.findAll);
 router.put("/thesis/:id", thesisCtrl.updateOne);
-router.post("/thesis", thesisCtrl.saveOne);
+router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 router.get("/thesis/:id", thesisCtrl.findOne);
 router.delete("/thesis/:id", thesisCtrl.deleteOne);
 router.post("/thesis/ethesis", thesisCtrl.updateOneWithEthesis);

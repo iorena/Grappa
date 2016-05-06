@@ -8,7 +8,21 @@ module.exports.thesis = {
   abstract: "Abstract from ethesis blaablaa",
   grade: "Laudatur",
   deadline: "2016-04-15T08:51:01.894Z",
-  field: "Software Systems",
+  StudyFieldName: "Software Systems",
+  graders:
+  [{ name: "PENTTI", title: "AdjProf" },
+  { name: "VERTTI", title: "Prof" }],
+};
+
+module.exports.thesisFromFrontend = {
+  author: "Pekka Graduttaja",
+  email: "ohtugrappa@gmail.com",
+  title: "Oliko Jeesus olemassa",
+  urkund: "",
+  ethesis: "",
+  grade: "Laudatur",
+  StudyFieldName: "Software Systems",
+  CouncilMeetingId: 1,
   graders:
   [{ name: "PENTTI", title: "AdjProf" },
   { name: "VERTTI", title: "Prof" }],
@@ -208,7 +222,7 @@ module.exports.users = [
     email: "ohtugrappa4@gmail.com",
     role: "professor",
     StudyFieldId: 2,
-    isActive: true,    
+    isActive: true,
   },
   {
     id: 5,

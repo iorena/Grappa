@@ -12,7 +12,7 @@ const Thesis = require("../models/thesis");
 *@param {Object} req - The build of req.body being {thesis[], "professor/student"}
 */
 module.exports.sendReminder = (req, res) => {
-  if (req.body.type === "professor"){
+  if (req.body.type === "professor") {
     Reminder.sendProfessorReminder(req.body.thesis)
     .then(result => {
       res.status(200).send({

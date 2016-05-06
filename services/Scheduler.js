@@ -18,7 +18,7 @@ class Scheduler {
     scheduler.scheduleJob("55 13 * * * 1-7", () => {
       console.log("scheduler event ran");
       this.checkThesisProgresses();
-      // EmailReader.checkMessagesForErrors();
+      EmailReader.checkEmail();
     });
   }
 

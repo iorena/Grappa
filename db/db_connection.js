@@ -3,7 +3,6 @@
 const Sequelize = require("sequelize");
 
 const dbUrl = process.env.DATABASE_URL || "postgres://keuoblxbkbspkf:7DOjZx2eHir2SYgemNZo_3EbxI@ec2-54-225-151-64.compute-1.amazonaws.com:5432/d2ts0v8erk5vak";
-// console.log("env " + process.env.NODE_ENV);
 let seq;
 if (process.env.NODE_ENV === "production") {
   seq = new Sequelize(dbUrl, {
