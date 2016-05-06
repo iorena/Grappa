@@ -4,7 +4,7 @@ const jwt = require("jwt-simple");
 // const secret = process.env.TOKEN_SECRET;
 const secret = require("../config/authentication").secret;
 
-/*
+/**
  * Authentication middleware that is called before any requests
  *
  * Checks the request for the correct Headers and then decodes

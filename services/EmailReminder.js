@@ -86,7 +86,7 @@ class EmailReminder {
     return email;
   }
 
-  /*
+  /**
    *Method for handling the process of composing and sending an email to the student
    */
   sendStudentReminder(studentEmail, token, thesisId) {
@@ -112,7 +112,7 @@ class EmailReminder {
     });
   }
 
-  /*
+  /**
    *Method for handling the process of composing and sending an email to the print-person
    */
   sendPrintPersonReminder(thesis) {
@@ -130,7 +130,7 @@ class EmailReminder {
       }));
   }
 
-  /*
+  /**
    *Method for handling the process of composing and sending an email to the professor
    */
   sendProfessorReminder(thesis) {
