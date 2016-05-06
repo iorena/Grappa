@@ -13,8 +13,6 @@ class CouncilMeeting extends BaseModel {
     return this.getModel()
       .findOne({ where: { id, } })
       .then((CM) => {
-        // console.log("HEI CM");
-        // console.log(CM);
         return CM.addTheses(thesis);
       })
       .then(() => {

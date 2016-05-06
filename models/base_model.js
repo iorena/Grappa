@@ -18,7 +18,7 @@ class BaseModel {
   delete(params) {
     return this.Models[this.modelname].destroy({ where: params });
   }
-  /*
+  /**
    * Returns all the rows from a table.
    *
    * Basically SELECT * FROM @this.modelname
@@ -32,7 +32,7 @@ class BaseModel {
     }
     return this.Models[this.modelname].findAll();
   }
-  /*
+  /**
    * Creates new instance of table with validated(!) @params.
    *
    * Kinda like INSERT (@params) INTO @modelname RETURNING ID
@@ -44,7 +44,7 @@ class BaseModel {
   saveOne(params) {
     return this.Models[this.modelname].create(params);
   }
-  /*
+  /**
    * Updates a field
    */
   update(values, params) {
