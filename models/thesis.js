@@ -57,10 +57,14 @@ class Thesis extends BaseModel {
     if (councilmeeting !== null) {
       values.deadline = this.setDeadline10DaysBeforeCM(councilmeeting.date);
     }
-    return this.getModel().create(values);
+    return this.getModel().create(values)
+      .then(thesis =>
+        this.findOne({ id: thesis.id })
+      )
   }
 
   findAllByUserRole(user) {
+    console.log(user)
     if (user.role === "admin" || user.role === "print-person") {
       return this.findAll();
     } else if (user.role === "professor") {
