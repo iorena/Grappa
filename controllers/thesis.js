@@ -54,26 +54,29 @@ module.exports.findOne = (req, res) => {
 };
 
 module.exports.createAllPdfs = (req, res) => {
-  console.log(req.body);
-  Thesis
-  .findAll()
-  .then(theses => {
-    let docStream = pdfCreator.generateThesesDocs(theses, req.body.thesesToPrint);
-
-    docStream.on("data", data => {
-      res.write(data);
-    });
-
-    docStream.on("end", () => {
-      res.end();
-    });
-  })
-  .catch(err => {
+  if (req.body.thesesToPrint.length===0) {
     res.status(500).send({
-      message: "Thesis createPdf produced an error",
-      error: err,
+      message: "There are no theses to print.",
+      error: "List was empty",
     });
-  });
+  }
+  else {
+    let docStream = pdfCreator.generateThesesDocs(req.body.thesesToPrint);
+    console.log(req.body);
+    Thesis
+    .findAll()
+    .then(theses => {
+      let docStream = pdfCreator.generateThesesDocs(theses, req.body.thesesToPrint);
+
+      docStream.on("data", data => {
+        res.write(data);
+      });
+
+      docStream.on("end", () => {
+        res.end();
+      });
+    })
+  }
 };
 
 module.exports.createPdf = (req, res) => {
@@ -102,13 +105,13 @@ module.exports.createPdf = (req, res) => {
  *
  * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
  */
-module.exports.updateOneWithEthesis = (req, res) => {
+ module.exports.updateOneWithEthesis = (req, res) => {
    Thesis
-  .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
-  .then(thesis => {
+   .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
+   .then(thesis => {
     res.status(200).send(thesis);
   })
-  .catch(err => {
+   .catch(err => {
     res.status(500).send({
       message: "Thesis update produced an error",
       error: err,
@@ -116,7 +119,7 @@ module.exports.updateOneWithEthesis = (req, res) => {
   });
  };
 
-module.exports.updateOne = (req, res) => {
+ module.exports.updateOne = (req, res) => {
   Thesis
   .update(req.body, { id: req.params.id })
   .then(thesis => {
@@ -155,13 +158,13 @@ module.exports.deleteOne = (req, res) => {
  * Required fields for a thesis:
  * author, email, deadline, graders?, and stuff?
  */
-module.exports.saveOne = (req, res) => {
+ module.exports.saveOne = (req, res) => {
    let savedthesis;
    let foundCouncilMeeting;
    console.log(req.body);
    CouncilMeeting
-  .findOne({ id: req.body.CouncilMeetingId })
-  .then(cm => {
+   .findOne({ id: req.body.CouncilMeetingId })
+   .then(cm => {
     if (cm === null) {
       throw new TypeError("ValidationError: Unvalid CouncilMeetingId, no such CouncilMeeting found");
     } else {
@@ -172,8 +175,8 @@ module.exports.saveOne = (req, res) => {
       return Promise.all(req.body.graders.map(grader => Grader.findOrCreate(grader)));
     }
   })
-  .then(() => Thesis.saveOne(req.body, foundCouncilMeeting))
-  .then(thesis => {
+   .then(() => Thesis.saveOne(req.body, foundCouncilMeeting))
+   .then(thesis => {
     savedthesis = thesis;
     const token = tokenGen.generateEthesisToken(thesis.author, thesis.id);
     return Promise.all([
@@ -188,10 +191,10 @@ module.exports.saveOne = (req, res) => {
       Grader.linkThesisToGraders(thesis, req.body.graders),
       Thesis.linkStudyField(thesis, req.body.StudyFieldName),
       Thesis.addUser(thesis, req.user),
-    ]);
+      ]);
   })
-  .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
-  .then(() => {
+   .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
+   .then(() => {
     res.status(200).send(savedthesis);
   });
   // .catch(err => {
@@ -207,4 +210,4 @@ module.exports.saveOne = (req, res) => {
   //     });
   //   }
   // });
- };
+};
