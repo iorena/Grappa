@@ -24,6 +24,33 @@ module.exports.dropTables = () => {
 };
 
 module.exports.addTestData = () => Promise.all([
+  models.StudyField.create({
+    id: 1,
+    name: "Algorithmic Bioinformatics",
+  }),
+  models.StudyField.create({
+    id: 2,
+    name: "Algorithms, Data Analytics and Machine Learning",
+  }),
+  models.StudyField.create({
+    id: 3,
+    name: "Networking and Services",
+  }),
+  models.StudyField.create({
+    id: 4,
+    name: "Software Systems",
+  }),
+  models.User.create({
+    name: "Kjell Lemström",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
+    email: "ohtugrappa@gmail.com",
+    role: "admin",
+    isActive: true,
+    StudyFieldId: null,
+  }),
+]);
+
+module.exports.addTestDataOld = () => Promise.all([
   models.CouncilMeeting.create({
     id: 1,
     date: Date.now(),
@@ -151,14 +178,14 @@ module.exports.addTestData = () => Promise.all([
     author: "Kumpulan Kuningas",
     text: "Sup dawg.",
     UserId: 3,
-    ThesisId: 1,
+    // ThesisId: 1,
   }),
   models.Review.create({
     id: 2,
     author: "Mr. Isokiho Proffa",
     text: "Aika heikko suoritus. Arvioijat täysin ala-arvoisia.",
     UserId: 4,
-    ThesisId: 2,
+    // ThesisId: 2,
   }),
   models.Grader.create({
     name: "Mr. Grader",
