@@ -3,9 +3,9 @@
  */
 
 module.exports.imap = {
-  user: "ohtugrappa",
-  password: "grappa123",
-  host: "imap.gmail.com",
+  user: process.env.EMAIL_USER || "ohtugrappa",
+  password: process.env.EMAIL_PASSWORD || "grappa123",
+  host: `imap.${process.env.EMAIL_HOST}` || "imap.gmail.com",
   port: 993,
   tls: true,
 };
@@ -20,13 +20,13 @@ module.exports.imap = {
 
 module.exports.smtp = {
   from: "Grappa Robotti <nimi.sukunimi@cs.helsinki.fi>",
-  host: "smtp.gmail.com",
+  host: `smpt.${process.env.EMAIL_HOST}` || "smpt.gmail.com",
   port: 465,
   secure: true, // use SSL
   auth: {
-    user: "ohtugrappa@gmail.com",
-    pass: "grappa123"
-  }
+    user: process.env.EMAIL_USER || "ohtugrappa",
+    pass: process.env.EMAIL_PASSWORD || "grappa123",
+  },
 };
 
 // module.exports.smtp = {

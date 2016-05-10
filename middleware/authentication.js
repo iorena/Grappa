@@ -1,8 +1,7 @@
 "use strict";
 
 const jwt = require("jwt-simple");
-// const secret = process.env.TOKEN_SECRET;
-const secret = require("../config/authentication").secret;
+const secret = process.env.TOKEN_SECRET || "testsecret";
 
 /**
  * Authentication middleware that is called before any requests
@@ -10,8 +9,8 @@ const secret = require("../config/authentication").secret;
  * Checks the request for the correct Headers and then decodes
  * the token and checks if everything matches out after which
  * it lets the user to access the controller's method.
- * NOTE: Currently every request is being accepted to fasten
- * the development process.
+ * NOTE: You can comment out the req.user -statements to hard-code
+ * succesfull authentication the fasten the development process.
  */
 module.exports.authenticate = (req, res, next) => {
   // console.log(req.headers);
