@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 scheduler.startAndRunOnceInHour();
-// scheduler.checkThesisProgresses();
+scheduler.checkThesisProgresses();
 
 const routes = require("./controllers/routes");
 
