@@ -1,11 +1,10 @@
 "use strict";
 
 const jwt = require("jwt-simple");
-const config = require("../config/authentication");
 
 class TokenGenerator {
-  constructor(config) {
-    this.secret = config.secret;
+  constructor() {
+    this.secret = process.env.TOKEN_SECRET || "testsecret";
   }
   generateToken(user) {
     const date = new Date();
@@ -39,4 +38,4 @@ class TokenGenerator {
   }
 }
 
-module.exports = new TokenGenerator(config);
+module.exports = new TokenGenerator();
