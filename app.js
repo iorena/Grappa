@@ -15,12 +15,6 @@ const port = process.env.PORT || 9876;
 if (process.env.NODE_ENV !== "production") {
   const logger = require("morgan");
   app.use(logger("dev"));
-  // const dbMethods = require("./db/methods");
-  // dbMethods.dropAndCreateTables();
-// } else {
-//   app.use(cors({
-//     origin: "https://grappa-app.herokuapp.com",
-//   }));
 }
 
 app.use(bodyParser.urlencoded({
