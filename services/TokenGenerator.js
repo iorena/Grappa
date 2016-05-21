@@ -4,7 +4,7 @@ const jwt = require("jwt-simple");
 
 class TokenGenerator {
   constructor() {
-    this.secret = process.env.TOKEN_SECRET || "testsecret";
+    this.secret = process.env.TOKEN_SECRET;
   }
   generateToken(user) {
     const date = new Date();

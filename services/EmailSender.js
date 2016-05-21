@@ -5,7 +5,6 @@ const nodemailer = require("nodemailer");
 
 class EmailSender {
   constructor(options) {
-    console.log(options)
     this.mailOptions = {
       from: options.from,
     };
