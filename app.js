@@ -1,5 +1,6 @@
 "use strict";
 
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -24,7 +25,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 scheduler.startAndRunOnceInHour();
-scheduler.checkThesisProgresses();
+// scheduler.checkThesisProgresses();
 
 const routes = require("./controllers/routes");
 

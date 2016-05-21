@@ -167,4 +167,4 @@ class EmailReader {
 }
 
 module.exports.class = EmailReader;
-module.exports = new EmailReader(config.imap);
+module.exports = new EmailReader(config.imap());
