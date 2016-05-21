@@ -1,5 +1,6 @@
 NODE_ENV=development
 DB_URL=null
+TOKEN_SECRET=testi_secret
 EMAIL_USER=ohtugrappa
 EMAIL_PASSWORD=grappa123
 EMAIL_HOST=gmail.com
