@@ -8,7 +8,7 @@ const db_methods = require("../db/methods");
  * Logic for dynamic npm script "db" and "db:prod"
  *
  * Parses the command as JSON from npm_config_argv.original
- * which stores them in a list eg. ["npm", "run", "db", "stuff"]
+ * which stores them in a list eg. ["run", "db", "stuff"]
  * and calls database-methods as defined in switch-cases.
  * "db"-script does the methods to the local Sqlite-database,
  * "db:prod" does them to Heroku's Postgres-database

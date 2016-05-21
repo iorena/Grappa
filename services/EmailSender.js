@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 
 class EmailSender {
   constructor(options) {
+    console.log(options)
     this.mailOptions = {
       from: options.from,
     };
@@ -33,4 +34,4 @@ class EmailSender {
 }
 
 module.exports.class = EmailSender;
-module.exports = new EmailSender(config.smtp);
+module.exports = new EmailSender(config.smtp());

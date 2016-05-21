@@ -24,7 +24,9 @@ For Linux:
 
 Same for both OSes:
 
-1. Go to the root folder of this repository and enter ```npm install```
+1. Download this repository if you haven't done so already and go to the root of it with terminal and enter ```npm install```
+
+2. At this moment I should probably mention that this repository stores all of its important variables in a file called ```.env``` that is stored in the root of this folder. But since holding important data inside public repository is unpreferable that file has been left out and as a temporary fix you should rename the ```.dev-env``` file inside ```config```-folder to ```.env``` and move it to the root of this repository. It is the development version which isn't used anywhere else (Travis and Heroku store their own environment variables).
 
 2. Then enter ```npm start``` to run the server
 
