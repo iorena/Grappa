@@ -15,6 +15,7 @@ module.exports.findAll = (req, res) => {
     });
   });
 };
+
 module.exports.saveOne = (req, res) => {
   StudyField
   .saveOne(req.body)
@@ -28,6 +29,7 @@ module.exports.saveOne = (req, res) => {
     });
   });
 };
+
 module.exports.updateOne = (req, res) => {
   StudyField
   .update(req.body, req.params)

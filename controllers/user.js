@@ -97,13 +97,10 @@ module.exports.loginUser = (req, res) => {
         message: "Your account is inactive, please contact admin for activation",
         error: "",
       });
-    }
-
-    else {
+    } else {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
         res.status(403).send({ message: "Wrong username and password combination!" });
-      }
-      else {
+      } else {
         const token = TokenGenerator.generateToken(user);
         user.passwordHash = undefined;
         res.status(200).send({

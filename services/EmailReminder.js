@@ -27,12 +27,14 @@ class EmailReminder {
    */
   readDrafts(drafts) {
     const newDrafts = Object.assign({}, drafts);
-    return Promise.all(Object.keys(drafts).map(key =>
-        this.readDraft(key)
-        .then(draft => {
-          newDrafts[key] = draft;
-        })
-      ))
+    return Promise.all(Object.keys(drafts)
+        .map(key =>
+          this.readDraft(key)
+          .then(draft => {
+            newDrafts[key] = draft;
+          })
+        )
+      )
       .then(() => newDrafts);
   }
   /*
@@ -52,7 +54,7 @@ class EmailReminder {
       });
     });
   }
-  /*
+  /**
    * Method for composing an automatic email-response
    *
    * @param {String} type - Name of the reminder
@@ -92,24 +94,31 @@ class EmailReminder {
   sendStudentReminder(studentEmail, token, thesisId) {
     const ThesisProgress = require("../models/thesisprogress");
     let foundThesis;
-    return Thesis.findOne({ id: thesisId })
-    .then((thesis) => {
-      foundThesis = thesis;
-      const email = this.composeEmail("toStudent", studentEmail, null, `http://grappa-app.herokuapp.com/ethesis/${token}`);
-      return Sender.sendEmail(email.to, email.subject, email.body)
-      .then(() => {
-        console.log("saving status");
-        return EmailStatus.saveOne({
-          lastSent: Date.now(),
-          type: "StudentReminder",
-          to: email.to,
-          deadline: foundThesis.deadline,
+
+    return Thesis
+      .findOne({ id: thesisId })
+      .then((thesis) => {
+        foundThesis = thesis;
+        const email = this.composeEmail(
+          "toStudent",
+          studentEmail,
+          null,
+          `${process.env.APP_URL}/thesis/${token}`
+        );
+        return Sender.sendEmail(email.to, email.subject, email.body)
+        .then(() => {
+          console.log("saving status");
+          return EmailStatus.saveOne({
+            lastSent: Date.now(),
+            type: "StudentReminder",
+            to: email.to,
+            deadline: foundThesis.deadline,
+          });
+        })
+        .then(() => {
+          return ThesisProgress.update({ ethesisReminder: Date.now() }, { thesisId: thesisId });
         });
-      })
-      .then(() => {
-        return ThesisProgress.update({ ethesisReminder: Date.now() }, { thesisId: thesisId });
       });
-    });
   }
 
   /**
@@ -139,7 +148,12 @@ class EmailReminder {
     return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
       .then(professor => {
         if (professor !== null) {
-          email = this.composeEmail("toProfessor", professor.email, thesis, `http://grappa-app.herokuapp.com/thesis/${thesis.id}`);
+          email = this.composeEmail(
+            "toProfessor",
+            professor.email,
+            thesis,
+            `${process.env.APP_URL}/thesis/${thesis.id}`
+          );
           return Sender.sendEmail(email.to, email.subject, email.body);
         } else {
           throw("No professor found!");

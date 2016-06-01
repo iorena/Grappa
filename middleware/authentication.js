@@ -1,7 +1,7 @@
 "use strict";
 
 const jwt = require("jwt-simple");
-const secret = process.env.TOKEN_SECRET || "testsecret";
+const secret = process.env.TOKEN_SECRET;
 
 /**
  * Authentication middleware that is called before any requests
