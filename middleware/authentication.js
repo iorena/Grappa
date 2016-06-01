@@ -65,7 +65,7 @@ module.exports.authenticate = (req, res, next) => {
       message: "Token has expired",
     });
   } else {
-    console.log("autentikoitu!");
+    // console.log("autentikoitu!");
     req.user = decoded.user;
     next();
   }

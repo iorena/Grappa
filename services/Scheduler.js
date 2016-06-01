@@ -15,11 +15,11 @@ class Scheduler {
    * will run its task. TODO this JSdoc.
    */
   startAndRunOnceInHour() {
-    scheduler.scheduleJob("55 13 * * * 1-7", () => {
+    setInterval(() => {
       console.log("scheduler event ran");
       this.checkThesisProgresses();
       EmailReader.checkEmail();
-    });
+    }, 3600)
   }
 
   checkThesisProgresses() {

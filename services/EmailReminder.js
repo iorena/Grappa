@@ -89,7 +89,7 @@ class EmailReminder {
   }
 
   /**
-   *Method for handling the process of composing and sending an email to the student
+   * Sends an email reminder to student about submitting their thesis to eThesis.com
    */
   sendStudentReminder(studentEmail, token, thesisId) {
     const ThesisProgress = require("../models/thesisprogress");
@@ -103,7 +103,7 @@ class EmailReminder {
           "toStudent",
           studentEmail,
           null,
-          `${process.env.APP_URL}/thesis/${token}`
+          `${process.env.APP_URL}/ethesis/${token}`
         );
         return Sender.sendEmail(email.to, email.subject, email.body)
         .then(() => {
@@ -122,7 +122,7 @@ class EmailReminder {
   }
 
   /**
-   *Method for handling the process of composing and sending an email to the print-person
+   * Sends an email to print-person about thesis being ready to print for the councilmeeting
    */
   sendPrintPersonReminder(thesis) {
     let email;
@@ -140,7 +140,7 @@ class EmailReminder {
   }
 
   /**
-   *Method for handling the process of composing and sending an email to the professor
+   * Sends an email reminder to the professor of thesises studyfield for reviewing
    */
   sendProfessorReminder(thesis) {
     const ThesisProgress = require("../models/thesisprogress");
