@@ -2,6 +2,8 @@
 pm2 start app.js -n appname
 # start up a cluster of four
 pm2 start app.js -n appname -i 4
+# start server with name and npm start
+pm2 start -n grappa-backend npm -- start
 # scale the cluster size
 pm2 scale appname 2
 # do stuf with a server of id 0
