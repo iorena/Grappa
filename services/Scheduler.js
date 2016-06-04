@@ -1,6 +1,5 @@
 "use strict";
 
-const scheduler = require("node-schedule");
 const EmailReader = require("./EmailReader");
 const Thesis = require("../models/thesis");
 const ThesisProgress = require("../models/thesisprogress");
