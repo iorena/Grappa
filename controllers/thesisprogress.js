@@ -30,6 +30,28 @@ module.exports.findOne = (req, res) => {
   });
 };
 
+module.exports.updateEval = (req, res) => {
+  console.log("yolo");
+  let theprog;
+  theprog = ThesisProgress
+  .findOne({ thesisId: req.body.id })
+  .then(thesisprog => {
+    return thesisprog;
+  });
+  if(req.body.graderEvaluation !== "") {
+      theprog.gradersStatus = true;
+  }
+
+  ThesisProgress
+  .update(theprog, ({thesisId: req.body.id}))
+  .catch(err => {
+    res.status(500).send({
+      message: "ThesisProgress updateEval produced an error",
+      error: err,
+    });
+  });
+};
+
 module.exports.saveOne = (req, res) => {
   ThesisProgress
   .saveOne(req.body)
