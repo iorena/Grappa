@@ -198,7 +198,7 @@ describe("ThesisController", () => {
       .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
-        expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.StudyFieldName)).to.equal(true);
+        expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.StudyFieldId)).to.equal(true);
       })
       .expect(200, mockDB.thesis, done);
     });

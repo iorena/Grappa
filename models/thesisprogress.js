@@ -9,12 +9,22 @@ class ThesisProgress extends BaseModel {
     super("ThesisProgress");
   }
   changeGraderStatus(thesisId) {
-    this.getModel().update({ gradersStatus: true }, { where: { thesisId } });
+    return this.getModel().update({
+        gradersStatus: true
+      }, {
+        where: { thesisId }
+      });
   }
   saveFromNewThesis(thesis) {
     console.log("Thesisprogress saved!");
-    return this.saveOne({ thesisId: thesis.id, ethesisReminder: null, professorReminder: null,
-      documentsSent: null, isDone: false, gradersStatus: false });
+    return this.saveOne({
+      thesisId: thesis.id,
+      ethesisReminder: null,
+      professorReminder: null,
+      documentsSent: null,
+      isDone: false,
+      gradersStatus: false,
+    });
   }
 
   evaluateGraders(thesisId, graders) {
@@ -33,21 +43,19 @@ class ThesisProgress extends BaseModel {
       }
     });
     if (professor && doctor) {
-      this.changeGraderStatus(thesisId);
-    } else {
-      Thesis
-        .findOne({ id: thesisId })
-        .then(fT => {
-          if (fT === null) {
-            throw new TypeError("Professor not found");
-          } else {
-            Reminder.sendProfessorReminder(fT);
-          }
-        });
+      return this.changeGraderStatus(thesisId);
     }
+    return Thesis
+      .findOne({ id: thesisId })
+      .then(fT => {
+        if (fT === null) {
+          throw new TypeError("Professor not found");
+        } else {
+          return Reminder.sendProfessorReminder(fT);
+        }
+      });
   }
 }
-
 
 module.exports.class = ThesisProgress;
 module.exports = new ThesisProgress();

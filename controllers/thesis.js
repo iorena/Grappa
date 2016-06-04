@@ -193,25 +193,26 @@ module.exports.saveOne = (req, res) => {
       ThesisProgress.saveFromNewThesis(thesis),
       CouncilMeeting.linkThesisToCouncilMeeting(thesis, req.body.CouncilMeetingId),
       Grader.linkThesisToGraders(thesis, req.body.graders),
-      Thesis.linkStudyField(thesis, req.body.StudyFieldName),
+      Thesis.linkStudyField(thesis, req.body.StudyFieldId),
       Thesis.addUser(thesis, req.user),
     ]);
   })
   .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
   .then(() => {
+    console.log("Thesis saved succesfully")
     res.status(200).send(savedthesis);
   })
-  .catch(err => {
-    if (err.message.indexOf("ValidationError") !== -1) {
-      res.status(400).send({
-        message: "Thesis saveOne failed validation",
-        error: err.message,
-      });
-    } else {
-      res.status(500).send({
-        message: "Thesis saveOne produced an error",
-        error: err.message,
-      });
-    }
-  });
+  // .catch(err => {
+  //   if (err.message.indexOf("ValidationError") !== -1) {
+  //     res.status(400).send({
+  //       message: "Thesis saveOne failed validation",
+  //       error: err.message,
+  //     });
+  //   } else {
+  //     res.status(500).send({
+  //       message: "Thesis saveOne produced an error",
+  //       error: err.message,
+  //     });
+  //   }
+  // });
 };

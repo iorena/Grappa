@@ -17,11 +17,11 @@ class Thesis extends BaseModel {
     return date.toISOString();
   }
 
-  linkStudyField(thesis, fieldname) {
+  linkStudyField(thesis, studyfield_id) {
     return StudyField.getModel()
       .findOne({
         where: {
-          name: fieldname
+          id: studyfield_id,
         }
       })
       .then((studyfield) => thesis.setStudyField(studyfield))

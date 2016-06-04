@@ -4,6 +4,7 @@ const fs = require("fs");
 const Sender = require("./EmailSender");
 const User = require("../models/user");
 const Thesis = require("../models/thesis");
+const ThesisProgress = require("../models/thesisprogress");
 const EmailStatus = require("../models/email_status");
 
 class EmailReminder {
@@ -92,33 +93,32 @@ class EmailReminder {
    * Sends an email reminder to student about submitting their thesis to eThesis.com
    */
   sendStudentReminder(studentEmail, token, thesisId) {
-    const ThesisProgress = require("../models/thesisprogress");
     let foundThesis;
+    let email;
 
     return Thesis
       .findOne({ id: thesisId })
       .then((thesis) => {
         foundThesis = thesis;
-        const email = this.composeEmail(
+        email = this.composeEmail(
           "toStudent",
           studentEmail,
           null,
           `${process.env.APP_URL}/ethesis/${token}`
         );
-        return Sender.sendEmail(email.to, email.subject, email.body)
-        .then(() => {
-          console.log("saving status");
-          return EmailStatus.saveOne({
-            lastSent: Date.now(),
-            type: "StudentReminder",
-            to: email.to,
-            deadline: foundThesis.deadline,
-          });
-        })
-        .then(() => {
-          return ThesisProgress.update({ ethesisReminder: Date.now() }, { thesisId: thesisId });
-        });
-      });
+        return Sender.sendEmail(email.to, email.subject, email.body);
+      })
+      .then(() => EmailStatus.saveOne({
+        lastSent: Date.now(),
+        type: "StudentReminder",
+        to: email.to,
+        deadline: foundThesis.deadline,
+      }))
+      // .then(() => ThesisProgress.update({
+      //   ethesisReminder: Date.now(),
+      // }, {
+      //   thesisId: thesisId,
+      // }))
   }
 
   /**
@@ -143,7 +143,6 @@ class EmailReminder {
    * Sends an email reminder to the professor of thesises studyfield for reviewing
    */
   sendProfessorReminder(thesis) {
-    const ThesisProgress = require("../models/thesisprogress");
     let email;
     return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
       .then(professor => {
@@ -156,6 +155,7 @@ class EmailReminder {
           );
           return Sender.sendEmail(email.to, email.subject, email.body);
         } else {
+          console.log("no professor :(")
           throw("No professor found!");
         }
       })
@@ -165,12 +165,14 @@ class EmailReminder {
         to: email.to,
         deadline: thesis.deadline,
       }))
-      .then(() => {
-        return ThesisProgress.update({ professorReminder: Date.now() }, { thesisId: thesis.id });
-      })
       .catch(err => {
         console.log("ERROR ", err);
       })
+      // .then(() => ThesisProgress.update({
+      //   professorReminder: Date.now()
+      // }, {
+      //   thesisId: thesis.id
+      // }))
   }
 }
 

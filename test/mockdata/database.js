@@ -21,7 +21,7 @@ module.exports.thesisFromFrontend = {
   urkund: "",
   ethesis: "",
   grade: "Laudatur",
-  StudyFieldName: "Software Systems",
+  StudyFieldId: 1,
   CouncilMeetingId: 1,
   graders:
   [{ name: "PENTTI", title: "AdjProf" },
