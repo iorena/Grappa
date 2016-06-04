@@ -33,7 +33,6 @@
     "imap": "^0.8.16",
     "jwt-simple": "^0.5.0",
     "morgan": "^1.7.0",
-    "node-schedule": "^1.1.0",
     "nodemailer": "^2.3.1",
     "nodemon": "^1.9.1",
     "pdfkit": "^0.7.2",
