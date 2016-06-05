@@ -54,7 +54,7 @@ module.exports.findOne = (req, res) => {
 };
 
 module.exports.createAllPdfs = (req, res) => {
-  if (req.body.thesesToPrint.length===0) {
+  if (req.body.thesesToPrint.length === 0) {
     res.status(500).send({
       message: "There are no theses to print.",
       error: "List was empty",
@@ -75,7 +75,7 @@ module.exports.createAllPdfs = (req, res) => {
       docStream.on("end", () => {
         res.end();
       });
-    })
+    });
   }
 };
 
@@ -105,21 +105,21 @@ module.exports.createPdf = (req, res) => {
  *
  * request is in form { token: "ABC123", thesis: { ethesis: "link.com" } }
  */
- module.exports.updateOneWithEthesis = (req, res) => {
-   Thesis
+module.exports.updateOneWithEthesis = (req, res) => {
+  Thesis
    .update(req.body.thesis, { id: tokenGen.decodeEthesisToken(req.body.token).thesisId })
    .then(thesis => {
-    res.status(200).send(thesis);
-  })
+     res.status(200).send(thesis);
+   })
    .catch(err => {
-    res.status(500).send({
-      message: "Thesis update produced an error",
-      error: err,
-    });
-  });
- };
+     res.status(500).send({
+       message: "Thesis update produced an error",
+       error: err,
+     });
+   });
+};
 
- module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res) => {
   Thesis
   .update(req.body, { id: req.params.id })
   .then(thesis => {
@@ -159,9 +159,9 @@ module.exports.deleteOne = (req, res) => {
  * author, email, deadline, graders?, and stuff?
  */
 module.exports.saveOne = (req, res) => {
-  let savedthesis;
+  let savedThesis;
   let foundCouncilMeeting;
-  console.log(req.body);
+  // console.log(req.body);
   CouncilMeeting
   .findOne({ id: req.body.CouncilMeetingId })
   .then(cm => {
@@ -181,7 +181,7 @@ module.exports.saveOne = (req, res) => {
   })
   .then(() => Thesis.saveOne(req.body, foundCouncilMeeting))
   .then(thesis => {
-    savedthesis = thesis;
+    savedThesis = thesis;
     const token = tokenGen.generateEthesisToken(thesis.author, thesis.id);
     return Promise.all([
       EthesisToken.saveOne({
@@ -197,11 +197,17 @@ module.exports.saveOne = (req, res) => {
       Thesis.addUser(thesis, req.user),
     ]);
   })
-  .then(() => ThesisProgress.evaluateGraders(savedthesis.id, req.body.graders))
   .then(() => {
-    console.log("Thesis saved succesfully")
-    res.status(200).send(savedthesis);
+    if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.graders)) {
+      return Reminder.sendProfessorReminder(savedThesis);
+    } else {
+      return ThesisProgress.changeGraderStatus(savedThesis.id);
+    }
   })
+  .then(() => {
+    console.log("Thesis saved succesfully");
+    res.status(200).send(savedThesis);
+  });
   // .catch(err => {
   //   if (err.message.indexOf("ValidationError") !== -1) {
   //     res.status(400).send({

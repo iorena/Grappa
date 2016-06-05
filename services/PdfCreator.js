@@ -52,7 +52,7 @@ class PdfCreator {
   }
   generateThesesDocs(thesesToPrint) {
     const doc = new PDF();
-    thesesToPrint.map((thesis, i) => {  
+    thesesToPrint.map((thesis, i) => {
 
       doc
       .fontSize(14)

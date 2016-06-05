@@ -11,7 +11,7 @@ class CouncilMeeting extends BaseModel {
   }
   linkThesisToCouncilMeeting(thesis, id) {
     return this.getModel()
-      .findOne({ where: { id, } })
+      .findOne({ where: { id } })
       .then((CM) => {
         return CM.addTheses(thesis);
       })

@@ -44,7 +44,7 @@ describe("StatusProcessor", () => {
     it("should successfully fetch abstract", (done) => {
       const url = "https://helda.helsinki.fi/handle/10138/161191";
       const expectedAbstractBlurb = "Tutkimuksessa käsitellään laittomasti hankittujen todisteiden hyödyntämiskieltoa";
-      mockHTML(url) .then(() => {
+      mockHTML(url).then(() => {
         return Processor.fetchAbstract(url);
       })
       .then((fetchedAbstract) => {
