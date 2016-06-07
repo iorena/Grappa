@@ -18,7 +18,7 @@ class Scheduler {
       console.log("scheduler event ran");
       this.checkThesisProgresses();
       EmailReader.checkEmail();
-    }, 3600)
+    }, 3600);
   }
 
   checkThesisProgresses() {

@@ -114,11 +114,11 @@ class EmailReminder {
         to: email.to,
         deadline: foundThesis.deadline,
       }))
-      // .then(() => ThesisProgress.update({
-      //   ethesisReminder: Date.now(),
-      // }, {
-      //   thesisId: thesisId,
-      // }))
+      .then(() => ThesisProgress.update({
+        ethesisReminder: Date.now(),
+      }, {
+        thesisId: thesisId,
+      }));
   }
 
   /**
@@ -155,8 +155,8 @@ class EmailReminder {
           );
           return Sender.sendEmail(email.to, email.subject, email.body);
         } else {
-          console.log("no professor :(")
-          throw("No professor found!");
+          console.log("no professor :(");
+          throw new Error("No professor found!");
         }
       })
       .then(() => EmailStatus.saveOne({
@@ -165,14 +165,15 @@ class EmailReminder {
         to: email.to,
         deadline: thesis.deadline,
       }))
+      .then(() => ThesisProgress.update({
+        professorReminder: Date.now(),
+      }, {
+        thesisId: thesis.id,
+      }))
       .catch(err => {
+        // something useful here..
         console.log("ERROR ", err);
-      })
-      // .then(() => ThesisProgress.update({
-      //   professorReminder: Date.now()
-      // }, {
-      //   thesisId: thesis.id
-      // }))
+      });
   }
 }
 

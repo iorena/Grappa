@@ -16,7 +16,7 @@ class User extends BaseModel {
       include: [{
         model: this.Models.Thesis,
         as: "Theses",
-      }]
+      }],
     });
   }
 }

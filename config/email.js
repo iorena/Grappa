@@ -10,7 +10,7 @@ module.exports.imap = () => (
     port: 993,
     tls: true,
   }
-)
+);
 
 // module.exports.imap = {
 //   user: "cs-tunnus",
@@ -31,7 +31,7 @@ module.exports.smtp = () => (
       pass: process.env.EMAIL_PASSWORD,
     },
   }
-)
+);
 
 // module.exports.smtp = {
 //   from: "Grappa Robotti <nimi.sukunimi@cs.helsinki.fi>",

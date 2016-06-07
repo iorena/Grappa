@@ -90,7 +90,20 @@ module.exports.councilmeetings = [
     updatedAt: "2016-04-15T08:51:01.895Z",
   },
 ];
-module.exports.thesisprogresses = [{
+
+module.exports.thesisProgress = {
+  id:30,
+  thesisId:2000,
+  ethesisReminder:null,
+  "professorReminder":null,
+  "gradersStatus":false,
+  "documentsSent":null,
+  "isDone":false,
+  "createdAt":"2016-04-18T11:12:51.865Z",
+  "updatedAt":"2016-04-18T11:12:51.865Z",
+};
+
+module.exports.thesisProgresses = [{
   id:30,
   thesisId:2000,
   ethesisReminder:null,
@@ -122,6 +135,7 @@ module.exports.thesisprogresses = [{
   "createdAt":"2016-04-18T11:14:28.003Z",
   "updatedAt":"2016-04-18T11:14:28.003Z",
 }];
+
 module.exports.competentGraders = [{
   name: "PENTTI", title: "AdjProf",
 }, {
@@ -133,6 +147,7 @@ module.exports.competentGraders = [{
 }, {
   name: "KERTTU", title: "AdjProf",
 }];
+
 module.exports.incompetentGraders = [{
   name: "PENTTI", title: "AdjProf",
 }, {
@@ -149,23 +164,24 @@ module.exports.studyfields = [{
   id:1,
   "name":"Algorithmic Bioinformatics",
   "createdAt":"2016-04-21T08:38:47.440Z",
-  "updatedAt":"2016-04-21T08:38:47.440Z"
+  "updatedAt":"2016-04-21T08:38:47.440Z",
 }, {
   id:2,
   "name":"Algorithms, Data Analytics and Machine Learning",
   "createdAt":"2016-04-21T08:38:47.442Z",
-  "updatedAt":"2016-04-21T08:38:47.442Z"
+  "updatedAt":"2016-04-21T08:38:47.442Z",
 }, {
   id:3,
   "name":"Networking and Services",
   "createdAt":"2016-04-21T08:38:47.443Z",
-  "updatedAt":"2016-04-21T08:38:47.443Z"
+  "updatedAt":"2016-04-21T08:38:47.443Z",
 }, {
   id:4,
   "name":"Software Systems",
   "createdAt":"2016-04-21T08:38:47.443Z",
-  "updatedAt":"2016-04-21T08:38:47.443Z"
+  "updatedAt":"2016-04-21T08:38:47.443Z",
 }];
+
 module.exports.reviews = [{
   id:1,
   "authoredByProf":null,
@@ -173,7 +189,7 @@ module.exports.reviews = [{
   "createdAt":"2016-04-21T08:38:47.451Z",
   "updatedAt":"2016-04-21T08:38:47.451Z",
   "ThesisId":1,
-  "UserId":3
+  "UserId":3,
 }, {
   id:2,
   "authoredByProf":null,
@@ -181,7 +197,7 @@ module.exports.reviews = [{
   "createdAt":"2016-04-21T08:38:47.452Z",
   "updatedAt":"2016-04-21T08:38:47.452Z",
   "ThesisId":2,
-  "UserId":4
+  "UserId":4,
 }];
 
 module.exports.users = [

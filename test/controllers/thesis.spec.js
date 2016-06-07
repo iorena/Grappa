@@ -23,38 +23,47 @@ const EmailSender = require("../../services/EmailSender");
 const tokenGen = require("../../services/TokenGenerator");
 
 const mockDB = require("../mockdata/database");
+const stubs = require("../mockdata/stubs");
+
+const stubber = require("../mockdata/stubber");
 
 let linkStudyField;
 let findOrCreateGrader;
 let sendStudentReminder;
+let sendProfessorReminder;
 let sandbox;
+let Stubs = {};
+let StubThesis;
 
 describe("ThesisController", () => {
 
-  before(function () {
+  before(() => {
     sandbox = sinon.sandbox.create();
 
-    sandbox.stub(Thesis, "saveOne", (reqbody) => {
-      return Promise.resolve(mockDB.thesis);
-    });
-    sandbox.stub(Thesis, "findAll", () => {
-      return Promise.resolve(mockDB.theses);
-    });
-    sandbox.stub(Thesis, "findAllByUserRole", () => {
-      return Promise.resolve(mockDB.theses);
-    });
-    sandbox.stub(Thesis, "findOne", () => {
-      return Promise.resolve(mockDB.thesis);
-    });
-    linkStudyField = sandbox.stub(Thesis, "linkStudyField", (reqbody) => {
-      return Promise.resolve();
-    });
-    sandbox.stub(ThesisProgress, "saveOne", (reqbody) => {
-      return Promise.resolve(mockDB.thesisprogresses[0]);
-    });
-    sandbox.stub(ThesisProgress, "evaluateGraders", () => {
-      return Promise.resolve();
-    });
+    Stubs.Thesis = stubber.Thesis(sandbox);
+    Stubs.ThesisProgress = stubber.ThesisProgress(sandbox);
+
+    // sandbox.stub(Thesis, "saveOne", (reqbody) => {
+    //   return Promise.resolve(mockDB.thesis);
+    // });
+    // sandbox.stub(Thesis, "findAll", () => {
+    //   return Promise.resolve(mockDB.theses);
+    // });
+    // sandbox.stub(Thesis, "findAllByUserRole", () => {
+    //   return Promise.resolve(mockDB.theses);
+    // });
+    // sandbox.stub(Thesis, "findOne", () => {
+    //   return Promise.resolve(mockDB.thesis);
+    // });
+    // linkStudyField = sandbox.stub(Thesis, "linkStudyField", (reqbody) => {
+    //   return Promise.resolve();
+    // });
+    // sandbox.stub(ThesisProgress, "saveOne", (reqbody) => {
+    //   return Promise.resolve(mockDB.thesisprogresses[0]);
+    // });
+    // sandbox.stub(ThesisProgress, "changeGraderStatus", (thesisId) => {
+    //   return Promise.resolve();
+    // });
     sandbox.stub(CouncilMeeting, "findOne", (reqbody) => {
       return Promise.resolve(mockDB.councilmeeting);
     });
@@ -82,12 +91,15 @@ describe("ThesisController", () => {
     sendStudentReminder = sandbox.stub(EmailReminder, "sendStudentReminder", (reqbody) => {
       return Promise.resolve();
     });
+    sendProfessorReminder = sandbox.stub(EmailReminder, "sendProfessorReminder", (thesis) => {
+      return Promise.resolve();
+    });
     sandbox.stub(Thesis, "addUser", (reqbody) => {
       return Promise.resolve(mockDB.users[0]);
     });
   });
 
-  after(function () {
+  after(() => {
     sandbox.restore();
   });
 
@@ -109,7 +121,7 @@ describe("ThesisController", () => {
       .expect(200, mockDB.thesis, done);
     });
   });
-  describe("POST /thesis (saveOne)", () => {
+  describe("saveOne (POST /thesis)", () => {
     it("should save thesis and return thesis", (done) => {
       request(app)
       .post("/thesis")
@@ -198,7 +210,7 @@ describe("ThesisController", () => {
       .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
-        expect(linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.StudyFieldId)).to.equal(true);
+        expect(Stubs.Thesis.linkStudyField.calledWith(mockDB.thesis, mockDB.thesis.StudyFieldId)).to.equal(true);
       })
       .expect(200, mockDB.thesis, done);
     });

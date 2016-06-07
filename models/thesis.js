@@ -22,7 +22,7 @@ class Thesis extends BaseModel {
       .findOne({
         where: {
           id: studyfield_id,
-        }
+        },
       })
       .then((studyfield) => thesis.setStudyField(studyfield))
       .then(() => {
@@ -36,8 +36,8 @@ class Thesis extends BaseModel {
     return User.getModel()
       .findOne({
         where: {
-          id: user.id
-        }
+          id: user.id,
+        },
       })
       .then((user) => thesis.setUser(user))
       .then(() => {
@@ -60,20 +60,20 @@ class Thesis extends BaseModel {
     return this.getModel().create(values)
       .then(thesis =>
         this.findOne({ id: thesis.id })
-      )
+      );
   }
 
   findAllByUserRole(user) {
-    console.log(user)
+    console.log(user);
     if (user.role === "admin" || user.role === "print-person") {
       return this.findAll();
     } else if (user.role === "professor") {
       return this.findAll({
-        StudyFieldId: user.StudyFieldId
+        StudyFieldId: user.StudyFieldId,
       });
     } else if (user.role === "instructor") {
       return this.findOne({
-        UserId: user.id
+        UserId: user.id,
       });
     }
   }
@@ -88,12 +88,12 @@ class Thesis extends BaseModel {
         }, {
           model: this.Models.ThesisProgress,
         }, {
-          model: this.Models.StudyField
+          model: this.Models.StudyField,
         }, {
-          model: this.Models.User
+          model: this.Models.User,
         }, {
-          model: this.Models.CouncilMeeting
-        }]
+          model: this.Models.CouncilMeeting,
+        }],
       });
     }
     return this.Models[this.modelname]
@@ -105,10 +105,10 @@ class Thesis extends BaseModel {
         }, {
           model: this.Models.StudyField,
         }, {
-          model: this.Models.User
+          model: this.Models.User,
         }, {
-          model: this.Models.CouncilMeeting
-        }]
+          model: this.Models.CouncilMeeting,
+        }],
       });
   }
   findOne(params) {
@@ -122,10 +122,10 @@ class Thesis extends BaseModel {
         }, {
           model: this.Models.StudyField,
         }, {
-          model: this.Models.User
+          model: this.Models.User,
         }, {
-          model: this.Models.CouncilMeeting
-        }]
+          model: this.Models.CouncilMeeting,
+        }],
       });
   }
 }

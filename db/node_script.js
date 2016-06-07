@@ -18,7 +18,7 @@ const commands = JSON.parse(process.env.npm_config_argv).original;
 if (commands.length > 2) {
   const command = commands[2];
   // console.log(command);
-  switch(command) {
+  switch (command) {
     case "create":
       db_methods.createTables();
       break;
@@ -41,7 +41,7 @@ if (commands.length > 2) {
       db_methods.dump()
       .then(data => {
         console.log(data);
-      })
+      });
       break;
     default:
       console.log(`Unknown command ${command}`);

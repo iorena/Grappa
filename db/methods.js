@@ -218,7 +218,7 @@ module.exports.addTestDataOld = () => Promise.all([
     whoAddedEmail: "ohtugrappa@gmail.com", // vai User
     deadline: new Date("1 1 2017"),
     wasError: true,
-  })
+  }),
 ])
 // add connections here
 .then((createdTables) => {

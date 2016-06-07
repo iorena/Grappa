@@ -1,8 +1,6 @@
 "use strict";
 
 const BaseModel = require("./base_model");
-const Reminder = require("../services/EmailReminder");
-const Thesis = require("./thesis");
 
 class ThesisProgress extends BaseModel {
   constructor() {
@@ -10,10 +8,10 @@ class ThesisProgress extends BaseModel {
   }
   changeGraderStatus(thesisId) {
     return this.getModel().update({
-        gradersStatus: true
-      }, {
-        where: { thesisId }
-      });
+      gradersStatus: true,
+    }, {
+      where: { thesisId },
+    });
   }
   saveFromNewThesis(thesis) {
     console.log("Thesisprogress saved!");
@@ -27,7 +25,7 @@ class ThesisProgress extends BaseModel {
     });
   }
 
-  evaluateGraders(thesisId, graders) {
+  isGraderEvaluationNeeded(thesisId, graders) {
     let professor = false;
     let doctor = false;
     graders.map((grader) => {
@@ -42,18 +40,7 @@ class ThesisProgress extends BaseModel {
         doctor = true;
       }
     });
-    if (professor && doctor) {
-      return this.changeGraderStatus(thesisId);
-    }
-    return Thesis
-      .findOne({ id: thesisId })
-      .then(fT => {
-        if (fT === null) {
-          throw new TypeError("Professor not found");
-        } else {
-          return Reminder.sendProfessorReminder(fT);
-        }
-      });
+    return !(professor && doctor);
   }
 }
 
