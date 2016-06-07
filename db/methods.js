@@ -1,6 +1,6 @@
 "use strict";
 
-const tables = require("../models/tables");
+const tables = require("./tables");
 const models = tables.Models;
 const Grader = require("../models/grader");
 

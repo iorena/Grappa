@@ -13,15 +13,12 @@ class ThesisProgress extends BaseModel {
       where: { thesisId },
     });
   }
-  saveFromNewThesis(thesis) {
-    console.log("Thesisprogress saved!");
+  saveFromThesis(thesis) {
     return this.saveOne({
       thesisId: thesis.id,
-      ethesisReminder: null,
-      professorReminder: null,
-      documentsSent: null,
-      isDone: false,
-      gradersStatus: false,
+      ethesisReminderId: null,
+      graderevalReminderId: null,
+      printReminderId: null,
     });
   }
 
