@@ -1,9 +1,8 @@
 "use strict";
 
 const TokenGenerator = require("../services/TokenGenerator");
-const passwordHelper = require("../config/passwordHelper");
-
 const User = require("../models/user");
+const passwordHelper = require("../config/passwordHelper");
 
 module.exports.findAllNotActive = (req, res) => {
   User
@@ -23,11 +22,26 @@ module.exports.updateOne = (req, res) => {
   User
   .update(req.body, { id: req.params.id })
   .then(user => {
+    console.log(user);
     res.status(200).send(user);
   })
   .catch(err => {
     res.status(500).send({
       message: "User updateOne produced an error",
+      error: err,
+    });
+  });
+};
+
+module.exports.findOne = (req, res) => {
+  User
+  .findOne({ id: req.params.id })
+  .then(user => {
+    res.status(200).send(user);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "User findOne produced an error",
       error: err,
     });
   });
@@ -56,7 +70,8 @@ module.exports.deleteOne = (req, res) => {
   .then(deletedRows => {
     if (deletedRows !== 0) {
       res.status(200).send({ message: "User with id: " + req.params.id + " successfully deleted" });
-    } else {
+    }
+    else {
       res.status(404).send({ message: "User to delete with id: " + req.params.id + " was not found" });
     }
   })

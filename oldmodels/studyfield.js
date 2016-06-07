@@ -8,4 +8,5 @@ class StudyField extends BaseModel {
   }
 }
 
+module.exports.class = StudyField;
 module.exports = new StudyField();

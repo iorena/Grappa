@@ -1,10 +1,11 @@
 "use strict";
 
-const ThesisProgress = require("../models/thesisprogress");
-const Thesis = require("../models/thesis");
+const request = require("request");
 // const EmailReader = require("./EmailReader");
 const EmailReminder = require("./EmailReminder");
-const request = require("request");
+
+const ThesisProgress = require("../models/thesisprogress");
+const Thesis = require("../models/thesis");
 
 class StatusProcessor {
   fetchAbstract(ethesisUrl) {

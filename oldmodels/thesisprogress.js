@@ -6,7 +6,6 @@ class ThesisProgress extends BaseModel {
   constructor() {
     super("ThesisProgress");
   }
-  
   changeGraderStatus(thesisId) {
     return this.getModel().update({
       gradersStatus: true,
@@ -14,7 +13,6 @@ class ThesisProgress extends BaseModel {
       where: { thesisId },
     });
   }
-
   saveFromThesis(thesis) {
     return this.saveOne({
       thesisId: thesis.id,

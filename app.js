@@ -27,9 +27,7 @@ app.use(cors());
 // scheduler.startAndRunOnceInHour();
 // scheduler.checkThesisProgresses();
 
-const routes = require("./controllers/routes");
-
-app.use("/", routes);
+app.use("", require("./config/routes"));
 
 if (!module.parent) {
   app.listen(port, (err) => {

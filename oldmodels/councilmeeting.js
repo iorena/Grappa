@@ -2,16 +2,22 @@
 
 const BaseModel = require("./base_model");
 
+// id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
+// date: Sequelize.DATE,
+
 class CouncilMeeting extends BaseModel {
   constructor() {
     super("CouncilMeeting");
   }
-  linkThesis(meeting, thesis) {
+  linkThesisToCouncilMeeting(thesis, id) {
     return this.getModel()
-      .findOne({ where: { id: meeting.id } })
+      .findOne({ where: { id } })
       .then((CM) => {
         return CM.addTheses(thesis);
       })
+      .then(() => {
+        console.log("Thesis linked to councilmeeting");
+      });
   }
 }
 

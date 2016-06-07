@@ -1,9 +1,10 @@
 "use strict";
 
 const EmailReader = require("./EmailReader");
+const Processor = require("./StatusProcessor");
+
 const Thesis = require("../models/thesis");
 const ThesisProgress = require("../models/thesisprogress");
-const Processor = require("./StatusProcessor");
 
 class Scheduler {
   /**

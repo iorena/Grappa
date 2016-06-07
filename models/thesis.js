@@ -1,61 +1,53 @@
 "use strict";
 
 const BaseModel = require("./base_model");
-const StudyField = require("./studyfield");
-const Grader = require("./grader");
-const User = require("./user");
-const tokenGen = require("../services/TokenGenerator");
 
 class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
   }
 
-  setDeadline10DaysBeforeCM(cmdate) {
-    const date = new Date(cmdate);
-    date.setDate(date.getDate() - 10);
-    return date.toISOString();
+  findConnections(thesis) {
+    return Promise.all([
+      this.Models.CouncilMeeting.findOne({
+        id: thesis.CouncilMeetingId,
+      }),
+      this.Models.StudyField.findOne({
+        id: thesis.StudyFieldId,
+      }),
+    ]);
+  }
+
+  setDateDaysBefore(date, days) {
+    const newdate = new Date(date);
+    newdate.setDate(newdate.getDate() - days);
+    return newdate.toISOString();
   }
 
   linkStudyField(thesis, studyfield_id) {
-    return StudyField.getModel()
+    return this.Models.StudyField
       .findOne({
         where: {
           id: studyfield_id,
         },
       })
       .then((studyfield) => thesis.setStudyField(studyfield))
-      .then(() => {
-        console.log("Thesis linked to StudyField");
-      });
   }
 
-  addUser(thesis, user) {
-    // let user = tokenGen.decodeToken(req.headers["x-access-token"]).user;
-    // console.log("USER: " + JSON.stringify(user))
-    return User.getModel()
+  linkUser(thesis, user) {
+    return this.Models.User
       .findOne({
         where: {
           id: user.id,
         },
       })
       .then((user) => thesis.setUser(user))
-      .then(() => {
-        console.log("Thesis linked to user");
-      });
   }
 
   saveOne(params, councilmeeting) {
-    console.log("params are: " + JSON.stringify(params));
     const values = Object.assign({}, params);
-    // the crazy validation loop. wee!
-    Object.keys(params).map(key => {
-      if (values[key] !== null && !this.Validator.validate(values[key], key)) {
-        throw new Error(key + " isn't the wanted type!");
-      }
-    });
     if (councilmeeting !== null) {
-      values.deadline = this.setDeadline10DaysBeforeCM(councilmeeting.date);
+      values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
     }
     return this.getModel().create(values)
       .then(thesis =>
@@ -67,7 +59,7 @@ class Thesis extends BaseModel {
     let savedThesis;
     const values = Object.assign({}, params);
     if (councilmeeting !== null) {
-      values.deadline = this.setDeadline10DaysBeforeCM(councilmeeting.date);
+      values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
     }
     return this.getModel().create(values)
       .then(thesis => {
@@ -79,8 +71,9 @@ class Thesis extends BaseModel {
   }
 
   findAllByUserRole(user) {
-    console.log(user);
-    if (user.role === "admin" || user.role === "print-person") {
+    if (user === undefined) {
+      return Promise.resolve([]);
+    } else if (user.role === "admin" || user.role === "print-person") {
       return this.findAll();
     } else if (user.role === "professor") {
       return this.findAll({
@@ -94,56 +87,21 @@ class Thesis extends BaseModel {
   }
 
   findAll(params) {
-    var thesesList;
-    if (typeof params !== "undefined") {
-      return this.getModel().findAll({
-        where: params,
-        include: [{
-          model: this.Models.Grader,
-        }, {
-          model: this.Models.ThesisProgress,
-        }, {
-          model: this.Models.StudyField,
-        }, {
-          model: this.Models.User,
-        }, {
-          model: this.Models.CouncilMeeting,
-        }],
-      });
-    }
-    return this.Models[this.modelname]
-      .findAll({
-        include: [{
-          model: this.Models.Grader,
-        }, {
-          model: this.Models.ThesisProgress,
-        }, {
-          model: this.Models.StudyField,
-        }, {
-          model: this.Models.User,
-        }, {
-          model: this.Models.CouncilMeeting,
-        }],
-      });
-  }
-  findOne(params) {
-    return this.Models[this.modelname]
-      .findOne({
-        where: params,
-        include: [{
-          model: this.Models.Grader,
-        }, {
-          model: this.Models.ThesisProgress,
-        }, {
-          model: this.Models.StudyField,
-        }, {
-          model: this.Models.User,
-        }, {
-          model: this.Models.CouncilMeeting,
-        }],
-      });
+    return this.getModel().findAll({
+      where: params === undefined ? {} : params,
+      include: [{
+        model: this.Models.Grader,
+      }, {
+        model: this.Models.ThesisProgress,
+      }, {
+        model: this.Models.StudyField,
+      }, {
+        model: this.Models.User,
+      }, {
+        model: this.Models.CouncilMeeting,
+      }],
+    });
   }
 }
 
-module.exports.class = Thesis;
 module.exports = new Thesis();

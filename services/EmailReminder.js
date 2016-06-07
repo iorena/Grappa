@@ -2,10 +2,11 @@
 
 const fs = require("fs");
 const Sender = require("./EmailSender");
+
 const User = require("../models/user");
 const Thesis = require("../models/thesis");
 const ThesisProgress = require("../models/thesisprogress");
-const EmailStatus = require("../models/email_status");
+const EmailStatus = require("../models/emailstatus");
 
 class EmailReminder {
   constructor() {
