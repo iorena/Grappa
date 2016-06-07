@@ -42,14 +42,21 @@ const Thesis = seq.define("Thesis", {
     autoIncrement: true,
     primaryKey: true,
   },
-  author:
+  authorFirstname:
   {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,
     },
   },
-  email: {
+  authorLastname:
+  {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  authorEmail: {
     type: Sequelize.STRING,
     validate: {
       isEmail: true,

@@ -1,7 +1,8 @@
 module.exports.thesis = {
   id: 2000,
-  author: "Pekka Graduttaja",
-  email: "ohtugrappa@gmail.com",
+  authorFirstname: "Pekka",
+  authorLastname: "Graduttaja",
+  authorEmail: "ohtugrappa@gmail.com",
   title: "Oliko Jeesus olemassa",
   urkund: "urkunlinkki.com",
   ethesis: "ethesislinkki.com",
@@ -15,8 +16,9 @@ module.exports.thesis = {
 };
 
 module.exports.thesisFromFrontend = {
-  author: "Pekka Graduttaja",
-  email: "ohtugrappa@gmail.com",
+  authorFirstname: "Pekka",
+  authorLastname: "Graduttaja",
+  authorEmail: "ohtugrappa@gmail.com",
   title: "Oliko Jeesus olemassa",
   urkund: "",
   ethesis: "",
@@ -30,8 +32,9 @@ module.exports.thesisFromFrontend = {
 
 module.exports.theses = [{
   id: 1,
-  author: "Pekka Graduttaja",
-  email: "ohtugrappa@gmail.com",
+  authorFirstname: "Pekka",
+  authorLastname: "Graduttaja",
+  authorEmail: "ohtugrappa@gmail.com",
   title: "Oliko Jeesus olemassa",
   urkund: "urkunlinkki.com",
   ethesis: "ethesislinkki.com",
@@ -45,8 +48,9 @@ module.exports.theses = [{
   UserId: 2,
 }, {
   id: 2,
-  author: null,
-  email: null,
+  authorFirstname: "Pekka",
+  authorLastname: "Graduttaja",
+  authorEmail: "ohtugrappa@gmail.com",
   title: null,
   urkund: null,
   ethesis: null,
@@ -60,8 +64,9 @@ module.exports.theses = [{
   UserId: 4,
 }, {
   id: 3,
-  author: null,
-  email: null,
+  authorFirstname: "Pekka",
+  authorLastname: "Graduttaja",
+  authorEmail: "ohtugrappa@gmail.com",
   title: null,
   urkund: null,
   ethesis: null,
