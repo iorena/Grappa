@@ -24,17 +24,6 @@ module.exports.findAllByUserRole = (req, res) => {
   });
 };
 
-function findThesisConnections(thesis) {
-  return Promise.all([
-    CouncilMeeting.findOne({
-      id: thesis.CouncilMeetingId,
-    }),
-    StudyField.findOne({
-      id: thesis.StudyFieldId,
-    }),
-  ])
-}
-
 module.exports.saveOne = (req, res) => {
   let savedThesis;
   let savedGraders;
@@ -105,66 +94,16 @@ module.exports.saveOne = (req, res) => {
   // });
 }
 
-module.exports.saveOneOld = (req, res) => {
-  let savedThesis;
-  let foundCouncilMeeting;
-  // console.log(req.body);
-  CouncilMeeting
-  .findOne({ id: req.body.CouncilMeetingId })
-  .then(cm => {
-    if (cm === null) {
-      throw new TypeError("ValidationError: Unvalid CouncilMeetingId, no such CouncilMeeting found");
-    } else {
-      foundCouncilMeeting = cm;
-      if (req.body.graders === undefined) {
-        return;
-      }
-      return Promise.all(
-        req.body.graders.map(grader =>
-          Grader.findOrCreate(grader)
-        )
-      );
-    }
-  })
-  .then(() => Thesis.saveOne(req.body, foundCouncilMeeting))
-  .then(thesis => {
-    savedThesis = thesis;
-    const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
-    return Promise.all([
-      // EthesisToken.saveOne({
-      //   thesisId: thesis.id,
-      //   author: thesis.author,
-      //   token,
-      // }),
-      Reminder.sendStudentReminder(thesis.authorEmail, token, thesis.id),
-      ThesisProgress.saveFromNewThesis(thesis),
-      CouncilMeeting.linkThesis(foundCouncilMeeting, thesis),
-      Grader.linkThesisToGraders(thesis, req.body.graders),
-      Thesis.linkStudyField(thesis, req.body.StudyFieldId),
-      Thesis.addUser(thesis, req.user),
-    ]);
-  })
-  .then(() => {
-    if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.graders)) {
-      return Reminder.sendProfessorReminder(savedThesis);
-    } else {
-      return ThesisProgress.changeGraderStatus(savedThesis.id);
-    }
-  })
-  .then(() => {
-    res.status(200).send(savedThesis);
-  })
-  .catch(err => {
-    if (err.message.indexOf("ValidationError") !== -1) {
-      res.status(400).send({
-        message: "Thesis saveOne failed validation",
-        error: err.message,
-      });
-    } else {
-      res.status(500).send({
-        message: "Thesis saveOne produced an error",
-        error: err.message,
-      });
-    }
-  });
+module.exports.updateOneEthesis = (req, res) => {
+  Thesis
+   .update(req.body.thesis, { id: TokenGen.decodeEthesisToken(req.body.token).thesisId })
+   .then(thesis => {
+     res.status(200).send(thesis);
+   })
+   .catch(err => {
+     res.status(500).send({
+       message: "Thesis update produced an error",
+       error: err,
+     });
+   });
 };

@@ -53,7 +53,7 @@ router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
 router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 // router.get("/thesis/:id", thesisCtrl.findOne);
 // router.delete("/thesis/:id", thesisCtrl.deleteOne);
-// router.post("/thesis/ethesis", thesisCtrl.updateOneWithEthesis);
+router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 // router.get("/thesis/:id/pdf", thesisCtrl.createPdf);
 // router.post("/thesis/pdf", thesisCtrl.createAllPdfs);
 
