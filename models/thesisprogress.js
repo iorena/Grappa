@@ -7,6 +7,14 @@ class ThesisProgress extends BaseModel {
     super("ThesisProgress");
   }
 
+  setEthesisDone(thesisId) {
+    return this.getModel().update({
+      ethesisDone: true,
+    }, {
+      where: { thesisId },
+    });
+  }
+
   setGraderEvalDone(thesisId) {
     return this.getModel().update({
       graderevalDone: true,

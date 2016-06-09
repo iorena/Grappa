@@ -95,10 +95,12 @@ module.exports.saveOne = (req, res) => {
 }
 
 module.exports.updateOneEthesis = (req, res) => {
+  const thesis_id = TokenGen.decodeEthesisToken(req.body.token).thesisId;
   Thesis
-   .update(req.body.thesis, { id: TokenGen.decodeEthesisToken(req.body.token).thesisId })
-   .then(thesis => {
-     res.status(200).send(thesis);
+   .update(req.body.thesis, { id: thesis_id })
+   .then(thesis => ThesisProgress.setEthesisDone(thesis_id))
+   .then(() => {
+     res.status(200).send();
    })
    .catch(err => {
      res.status(500).send({
