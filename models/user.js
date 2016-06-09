@@ -1,6 +1,6 @@
 "use strict";
 
-const BaseModel = require("./base_model");
+const BaseModel = require("./BaseModel");
 
 class User extends BaseModel {
   constructor() {
@@ -21,5 +21,4 @@ class User extends BaseModel {
   }
 }
 
-module.exports.class = User;
 module.exports = new User();

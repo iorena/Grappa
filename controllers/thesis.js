@@ -3,12 +3,12 @@
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
 
-const Thesis = require("../models/thesis");
-// const EthesisToken = require("../models/ethesisToken");
-const ThesisProgress = require("../models/thesisprogress");
-const CouncilMeeting = require("../models/councilmeeting");
-const StudyField = require("../models/studyfield");
-const Grader = require("../models/grader");
+const Thesis = require("../models/Thesis");
+const EthesisToken = require("../models/EthesisToken");
+const ThesisProgress = require("../models/ThesisProgress");
+const CouncilMeeting = require("../models/CouncilMeeting");
+const StudyField = require("../models/StudyField");
+const Grader = require("../models/Grader");
 
 module.exports.findAllByUserRole = (req, res) => {
   Thesis
@@ -63,27 +63,28 @@ module.exports.saveOne = (req, res) => {
     return Thesis.saveOne(req.body, foundConnections[0]);
   })
   .then(thesis => {
+    console.log("joo")
     savedThesis = thesis;
     const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
     return Promise.all([
-      // EthesisToken.saveOne({
-      //   thesisId: thesis.id,
-      //   author: thesis.author,
-      //   token,
-      // }),
-      // Reminder.sendStudentReminder(thesis.authorEmail, token, thesis.id),
+      EthesisToken.saveOne({
+        thesisId: thesis.id,
+        token,
+      }),
+      Reminder.sendStudentReminder(thesis.authorEmail, token, thesis.id),
       ThesisProgress.saveFromThesis(thesis),
-      // CouncilMeeting.linkThesis(foundConnections[0], thesis),
-      // Grader.linkThesisToGraders(savedGraders, thesis),
-      Thesis.linkStudyField(foundConnections[1], thesis),
-      // Thesis.addUser(thesis, req.user),
+      CouncilMeeting.linkThesis(foundConnections[0], thesis),
+      Grader.linkThesisToGraders(savedGraders, thesis.id),
+      Thesis.linkStudyField(thesis, foundConnections[1].id),
+      Thesis.linkUser(thesis, req.user.id),
     ]);
   })
   .then(() => {
+    console.log("joo")
     if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.graders)) {
       return Reminder.sendProfessorReminder(savedThesis);
     } else {
-      return ThesisProgress.changeGraderStatus(savedThesis.id);
+      return ThesisProgress.setGraderEvalDone(savedThesis.id);
     }
   })
   .then(() => {

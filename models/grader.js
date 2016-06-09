@@ -1,6 +1,6 @@
 "use strict";
 
-const BaseModel = require("./base_model");
+const BaseModel = require("./BaseModel");
 
 class Grader extends BaseModel {
   constructor() {
@@ -18,15 +18,15 @@ class Grader extends BaseModel {
       });
   }
 
-  linkThesisToGraders(thesis, graders) {
-    if (typeof graders === "undefined") {
+  linkThesisToGraders(graders, thesis) {
+    if (graders === undefined) {
       return Promise.resolve();
     }
     return Promise.all(graders.map(grader => {
-      return this.getModel()
-        .findOne({ where: { name: grader.name, title: grader.title } })
-        .then(grader => grader.addThesis(thesis));
-    }))
+        return this.getModel()
+          .findOne({ where: { id: grader.id } })
+          .then(grader => grader.addThesis(thesis));
+      }))
       .then(() => {
         console.log("Thesis and Graders all linked!");
       });

@@ -107,7 +107,6 @@ const Thesis = seq.define("Thesis", {
 
 const EthesisToken = seq.define("EthesisToken", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  author: Sequelize.STRING,
   token: Sequelize.STRING,
 });
 

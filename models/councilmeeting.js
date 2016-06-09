@@ -1,6 +1,6 @@
 "use strict";
 
-const BaseModel = require("./base_model");
+const BaseModel = require("./BaseModel");
 
 class CouncilMeeting extends BaseModel {
   constructor() {

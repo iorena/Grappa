@@ -1,22 +1,23 @@
 "use strict";
 
-const BaseModel = require("./base_model");
+const BaseModel = require("./BaseModel");
 
 class ThesisProgress extends BaseModel {
   constructor() {
     super("ThesisProgress");
   }
-  
-  changeGraderStatus(thesisId) {
+
+  setGraderEvalDone(thesisId) {
     return this.getModel().update({
-      gradersStatus: true,
+      graderevalDone: true,
     }, {
       where: { thesisId },
     });
   }
 
   saveFromThesis(thesis) {
-    return this.saveOne({
+    return this.getModel().create({
+    // return this.saveOne({
       thesisId: thesis.id,
       ethesisReminderId: null,
       graderevalReminderId: null,

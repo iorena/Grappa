@@ -3,7 +3,7 @@
 const TokenGenerator = require("../services/TokenGenerator");
 const passwordHelper = require("../config/passwordHelper");
 
-const User = require("../models/user");
+const User = require("../models/User");
 
 module.exports.findAllNotActive = (req, res) => {
   User

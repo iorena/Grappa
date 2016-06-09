@@ -4,8 +4,8 @@ const request = require("request");
 // const EmailReader = require("./EmailReader");
 const EmailReminder = require("./EmailReminder");
 
-const ThesisProgress = require("../models/thesisprogress");
-const Thesis = require("../models/thesis");
+const ThesisProgress = require("../models/ThesisProgress");
+const Thesis = require("../models/Thesis");
 
 class StatusProcessor {
   fetchAbstract(ethesisUrl) {

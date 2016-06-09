@@ -1,6 +1,6 @@
 "use strict";
 
-const CouncilMeeting = require("../models/councilmeeting");
+const CouncilMeeting = require("../models/CouncilMeeting");
 
 module.exports.findAll = (req, res) => {
   CouncilMeeting

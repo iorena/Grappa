@@ -1,6 +1,6 @@
 "use strict";
 
-const BaseModel = require("./base_model");
+const BaseModel = require("./BaseModel");
 
 class Thesis extends BaseModel {
   constructor() {
@@ -34,11 +34,11 @@ class Thesis extends BaseModel {
       .then((studyfield) => thesis.setStudyField(studyfield))
   }
 
-  linkUser(thesis, user) {
+  linkUser(thesis, user_id) {
     return this.Models.User
       .findOne({
         where: {
-          id: user.id,
+          id: user_id,
         },
       })
       .then((user) => thesis.setUser(user))

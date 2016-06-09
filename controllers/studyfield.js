@@ -1,6 +1,6 @@
 "use strict";
 
-const StudyField = require("../models/studyfield");
+const StudyField = require("../models/StudyField");
 
 module.exports.findAll = (req, res) => {
   StudyField

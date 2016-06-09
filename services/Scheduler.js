@@ -3,8 +3,8 @@
 const EmailReader = require("./EmailReader");
 const Processor = require("./StatusProcessor");
 
-const Thesis = require("../models/thesis");
-const ThesisProgress = require("../models/thesisprogress");
+const Thesis = require("../models/Thesis");
+const ThesisProgress = require("../models/ThesisProgress");
 
 class Scheduler {
   /**
