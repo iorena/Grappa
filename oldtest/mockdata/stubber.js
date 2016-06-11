@@ -1,5 +1,5 @@
-const Thesis = require("../../models/Thesis");
-const ThesisProgress = require("../../models/ThesisProgress");
+const Thesis = require("../../models/thesis");
+const ThesisProgress = require("../../models/thesisprogress");
 
 const stubbed = {
   Thesis: Thesis,

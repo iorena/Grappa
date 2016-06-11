@@ -195,7 +195,7 @@ describe("ThesisController", () => {
       .set("X-Key", authorizedAdmin.id)
       .expect("Content-Type", /json/)
       .expect(res => {
-        expect(sendStudentReminder.calledWith(mockDB.thesis.email, token)).to.equal(true);
+        expect(sendStudentReminder.calledWith(mockDB.thesis.authorEmail, token)).to.equal(true);
       })
       .expect(200, mockDB.thesis, done);
     });

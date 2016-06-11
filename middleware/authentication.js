@@ -70,3 +70,9 @@ module.exports.authenticate = (req, res, next) => {
     next();
   }
 };
+
+module.exports.onlyAdmin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  }
+};

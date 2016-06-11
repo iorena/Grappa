@@ -4,7 +4,7 @@ const config = require("../config/email");
 const Imap = require("imap");
 const inspect = require("util").inspect;
 
-const EmailStatus = require("../models/email_status");
+const EmailStatus = require("../models/EmailStatus");
 
 class EmailReader {
   constructor(options) {

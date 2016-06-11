@@ -9,10 +9,10 @@ const thesis = require("../mockdata/database").thesis;
 const Reminder = require("../../services/EmailReminder");
 const Sender = require("../../services/EmailSender");
 
-const Thesis = require("../../models/Thesis");
-const User = require("../../models/User");
-const EmailStatus = require("../../models/EmailStatus");
-const ThesisProgress = require("../../models/ThesisProgress");
+const Thesis = require("../../models/thesis");
+const User = require("../../models/user");
+const EmailStatus = require("../../models/email_status");
+const ThesisProgress = require("../../models/thesisprogress");
 
 let calledParams = {};
 

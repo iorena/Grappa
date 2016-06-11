@@ -1,6 +1,6 @@
 "use strict";
 
-const Grader = require("../models/grader");
+const Grader = require("../models/Grader");
 
 module.exports.findAll = (req, res) => {
   Grader
@@ -16,48 +16,16 @@ module.exports.findAll = (req, res) => {
   });
 };
 
-module.exports.saveOne = (req, res) => {
-  Grader
-  .saveOne(req.body)
-  .then(grader => {
-    res.status(200).send(grader);
+module.exports.updateMany = (req, res) => {
+  Promise.all(req.body.map(grader =>
+    Grader.updateOne(grader)
+  ))
+  .then(rowsUpdated => {
+    res.status(200).send(rowsUpdated);
   })
   .catch(err => {
     res.status(500).send({
-      message: "Grader saveOne produced an error",
-      error: err,
-    });
-  });
-};
-
-module.exports.updateOne = (req, res) => {
-  Grader
-  .update(req.body, req.params)
-  .then(grader => {
-    res.status(200).send(grader);
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Grader updateOne produced an error",
-      error: err,
-    });
-  });
-};
-
-module.exports.deleteOne = (req, res) => {
-  Grader
-  .delete({ id: req.params.id })
-  .then(deletedRows => {
-    if (deletedRows !== 0) {
-      res.status(200).send({ message: "Grader with id: " + req.params.id + " successfully deleted" });
-    }
-    else {
-      res.status(404).send({ message: "Grader to delete with id: " + req.params.id + " was not found" });
-    }
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Grader deleteOne produced an error",
+      message: "Grader updateMany produced an error",
       error: err,
     });
   });

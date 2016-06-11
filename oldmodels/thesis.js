@@ -63,6 +63,21 @@ class Thesis extends BaseModel {
       );
   }
 
+  saveOneWithProgress(params, councilmeeting) {
+    let savedThesis;
+    const values = Object.assign({}, params);
+    if (councilmeeting !== null) {
+      values.deadline = this.setDeadline10DaysBeforeCM(councilmeeting.date);
+    }
+    return this.getModel().create(values)
+      .then(thesis => {
+        savedThesis = thesis;
+        return this.Models.ThesisProgress.create({});
+      })
+      .then(progress => progress.setThesis(savedThesis))
+      .then(() => savedThesis);
+  }
+
   findAllByUserRole(user) {
     console.log(user);
     if (user.role === "admin" || user.role === "print-person") {

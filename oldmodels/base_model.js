@@ -1,6 +1,6 @@
 "use strict";
 
-const Models = require("./tables.js").Models;
+const Models = require("../db/tables").Models;
 const Validator = require("./base_validator");
 
 class BaseModel {

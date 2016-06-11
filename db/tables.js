@@ -42,14 +42,21 @@ const Thesis = seq.define("Thesis", {
     autoIncrement: true,
     primaryKey: true,
   },
-  author:
+  authorFirstname:
   {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,
     },
   },
-  email: {
+  authorLastname:
+  {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  authorEmail: {
     type: Sequelize.STRING,
     validate: {
       isEmail: true,
@@ -100,7 +107,6 @@ const Thesis = seq.define("Thesis", {
 
 const EthesisToken = seq.define("EthesisToken", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  author: Sequelize.STRING,
   token: Sequelize.STRING,
 });
 
@@ -164,13 +170,24 @@ const Review = seq.define("Review", {
   },
 });
 
+// const ThesisProgress = seq.define("ThesisProgress", {
+//   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+//   ethesisReminder: Sequelize.DATE,
+//   professorReminder: Sequelize.DATE,
+//   gradersStatus: { type: Sequelize.BOOLEAN, defaultValue: false },
+//   documentsSent: Sequelize.DATE,
+//   isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
+// });
+
 const ThesisProgress = seq.define("ThesisProgress", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  ethesisReminder: Sequelize.DATE,
-  professorReminder: Sequelize.DATE,
-  gradersStatus: { type: Sequelize.BOOLEAN, defaultValue: false },
-  documentsSent: Sequelize.DATE,
-  isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
+  ethesisReminderId: Sequelize.INTEGER,
+  ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
+  graderevalReminderId: Sequelize.INTEGER,
+  graderevalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
+  printReminderId: Sequelize.INTEGER,
+  printDone: { type: Sequelize.BOOLEAN, defaultValue: false },
+  done: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
 const EmailStatus = seq.define("EmailStatus", {
@@ -203,6 +220,8 @@ User.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(User);
 
 User.hasMany(Review);
+
+ThesisProgress.hasMany(EmailStatus);
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);

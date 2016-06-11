@@ -1,7 +1,6 @@
 "use strict";
 
 const BaseModel = require("./base_model");
-const tables = require("./tables.js");
 
 class Grader extends BaseModel {
   constructor() {

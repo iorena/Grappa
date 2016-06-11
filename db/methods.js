@@ -1,8 +1,8 @@
 "use strict";
 
-const tables = require("../models/tables");
+const tables = require("./tables");
 const models = tables.Models;
-const Grader = require("../models/grader");
+const Grader = require("../models/Grader");
 
 module.exports.destroyTables = () => {
   return Promise.all(Object.keys(models).map(key => {
@@ -232,7 +232,7 @@ module.exports.addTestDataOld = () => Promise.all([
       return table;
     }
   });
-  return theses.map(thesis => Grader.linkThesisToGraders(thesis, graders));
+  return theses.map(thesis => Grader.linkThesisToGraders(graders, thesis.id));
 });
 
 module.exports.dump = () => {

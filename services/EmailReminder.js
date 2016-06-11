@@ -2,10 +2,11 @@
 
 const fs = require("fs");
 const Sender = require("./EmailSender");
-const User = require("../models/user");
-const Thesis = require("../models/thesis");
-const ThesisProgress = require("../models/thesisprogress");
-const EmailStatus = require("../models/email_status");
+
+const User = require("../models/User");
+const Thesis = require("../models/Thesis");
+const ThesisProgress = require("../models/ThesisProgress");
+const EmailStatus = require("../models/EmailStatus");
 
 class EmailReminder {
   constructor() {
@@ -114,8 +115,8 @@ class EmailReminder {
         to: email.to,
         deadline: foundThesis.deadline,
       }))
-      .then(() => ThesisProgress.update({
-        ethesisReminder: Date.now(),
+      .then((sentReminder) => ThesisProgress.update({
+        ethesisReminderId: sentReminder.id,
       }, {
         thesisId: thesisId,
       }));
@@ -165,8 +166,8 @@ class EmailReminder {
         to: email.to,
         deadline: thesis.deadline,
       }))
-      .then(() => ThesisProgress.update({
-        professorReminder: Date.now(),
+      .then((reminder) => ThesisProgress.update({
+        graderevalReminderId: reminder.id,
       }, {
         thesisId: thesis.id,
       }))
