@@ -10,8 +10,8 @@
     "pm2:start": "pm2 start -n grappa-backend app.js",
     "db": "node db/node_script",
     "db:prod": "export NODE_ENV=production|| set NODE_ENV=production&& node db/node_script",
-    "test": "istanbul cover node_modules/mocha/bin/_mocha test/testhelper.js && test/**/*.js",
-    "test:noc": "mocha test/testhelper.js && test/**/*.js",
+    "test": "istanbul cover node_modules/mocha/bin/_mocha --require test/testhelper.js test/**/*.js",
+    "test:noc": "mocha --require test/testhelper.js test/**/*.js",
     "test-no-coverage:watch": "npm run test-no-coverage -- --watch",
     "test:watch": "npm run test -- --watch",
     "check": "eslint ./**/*.js && npm test && npm start"
