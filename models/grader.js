@@ -7,6 +7,19 @@ class Grader extends BaseModel {
     super("Grader");
   }
 
+  updateOrCreateAndLinkToThesis(values, thesis) {
+    return this.getModel()
+      .findOne({ where: { id: values.id } })
+      .then(foundGrader => {
+        if (foundGrader === null) {
+          return this.getModel().create(values);
+        } else {
+          return this.getModel().update(values, { where: { id: values.id } });
+        }
+      })
+      .then(updatedGrader => updatedGrader.addThesis(thesis));
+  }
+
   findOrCreate(grader) {
     return this.getModel()
       .findOne({ where: { name: grader.name, title: grader.title } })
@@ -23,10 +36,10 @@ class Grader extends BaseModel {
       return Promise.resolve();
     }
     return Promise.all(graders.map(grader => {
-        return this.getModel()
+      return this.getModel()
           .findOne({ where: { id: grader.id } })
           .then(grader => grader.addThesis(thesis));
-      }))
+    }))
       .then(() => {
         console.log("Thesis and Graders all linked!");
       });

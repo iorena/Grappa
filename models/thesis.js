@@ -31,7 +31,7 @@ class Thesis extends BaseModel {
           id: studyfield_id,
         },
       })
-      .then((studyfield) => thesis.setStudyField(studyfield))
+      .then((studyfield) => thesis.setStudyField(studyfield));
   }
 
   linkUser(thesis, user_id) {
@@ -41,7 +41,7 @@ class Thesis extends BaseModel {
           id: user_id,
         },
       })
-      .then((user) => thesis.setUser(user))
+      .then((user) => thesis.setUser(user));
   }
 
   saveOne(params, councilmeeting) {
@@ -64,10 +64,10 @@ class Thesis extends BaseModel {
     return this.getModel().create(values)
       .then(thesis => {
         savedThesis = thesis;
-        return this.Models.ThesisProgress.create({})
+        return this.Models.ThesisProgress.create({});
       })
       .then(progress => progress.setThesis(savedThesis))
-      .then(() => savedThesis)
+      .then(() => savedThesis);
   }
 
   findAllByUserRole(user) {

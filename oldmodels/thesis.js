@@ -72,10 +72,10 @@ class Thesis extends BaseModel {
     return this.getModel().create(values)
       .then(thesis => {
         savedThesis = thesis;
-        return this.Models.ThesisProgress.create({})
+        return this.Models.ThesisProgress.create({});
       })
       .then(progress => progress.setThesis(savedThesis))
-      .then(() => savedThesis)
+      .then(() => savedThesis);
   }
 
   findAllByUserRole(user) {

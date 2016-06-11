@@ -11,7 +11,7 @@ class CouncilMeeting extends BaseModel {
       .findOne({ where: { id: meeting.id } })
       .then((CM) => {
         return CM.addTheses(thesis);
-      })
+      });
   }
 }
 

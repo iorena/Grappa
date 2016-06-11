@@ -52,7 +52,7 @@ module.exports.saveOne = (req, res) => {
     return Thesis.saveOne(req.body, foundConnections[0]);
   })
   .then(thesis => {
-    console.log("joo")
+    console.log("joo");
     savedThesis = thesis;
     const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
     return Promise.all([
@@ -69,7 +69,7 @@ module.exports.saveOne = (req, res) => {
     ]);
   })
   .then(() => {
-    console.log("joo")
+    console.log("joo");
     if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.graders)) {
       return Reminder.sendProfessorReminder(savedThesis);
     } else {
@@ -78,7 +78,7 @@ module.exports.saveOne = (req, res) => {
   })
   .then(() => {
     res.status(200).send(savedThesis);
-  })
+  });
   // .catch(err => {
   //   if (err.message.indexOf("ValidationError") !== -1) {
   //     res.status(400).send({
@@ -92,7 +92,22 @@ module.exports.saveOne = (req, res) => {
   //     });
   //   }
   // });
-}
+};
+
+module.exports.updateOneAndConnections = (req, res) => {
+  Thesis
+   .update(req.body, { id: req.body.id })
+  //  .then(thesis => ThesisProgress.setEthesisDone(thesis_id))
+   .then(() => {
+     res.status(200).send();
+   })
+   .catch(err => {
+     res.status(500).send({
+       message: "Thesis update produced an error",
+       error: err,
+     });
+   });
+};
 
 module.exports.updateOneEthesis = (req, res) => {
   const thesis_id = TokenGen.decodeEthesisToken(req.body.token).thesisId;

@@ -10,7 +10,7 @@ const auth = require("../middleware/authentication");
 const thesisCtrl = require("../controllers/thesis");
 const councilmeetingCtrl = require("../controllers/councilmeeting");
 // const reviewCtrl = require("./review");
-// const graderCtrl = require("./grader");
+const graderCtrl = require("../controllers/grader");
 const userCtrl = require("../controllers/user");
 // const thesisprogressCtrl = require("./thesisprogress");
 // const emailCtrl = require("./email");
@@ -48,8 +48,11 @@ router.get("/auth", auth.authenticate, authTest);
 
 router.post("/login", userCtrl.loginUser);
 
+// router.use("", auth.authenticate);
+
 router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
-// router.put("/thesis/:id", thesisCtrl.updateOne);
+// router.put("/thesis/:id", auth.onlyAdmin, thesisCtrl.updateOneAndConnections);
+router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 // router.get("/thesis/:id", thesisCtrl.findOne);
 // router.delete("/thesis/:id", thesisCtrl.deleteOne);
@@ -67,6 +70,7 @@ router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 // router.put("/review/:id", reviewCtrl.updateOne);
 // router.delete("/review/:id", reviewCtrl.deleteOne);
 
+router.post("/grader/many", graderCtrl.updateMany);
 // router.get("/grader", graderCtrl.findAll);
 // router.post("/grader", graderCtrl.saveOne);
 // router.put("/grader/:id", graderCtrl.updateOne);
