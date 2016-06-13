@@ -16,12 +16,12 @@ module.exports.findAllByUserRole = (req, res) => {
   .then(theses => {
     res.status(200).send(theses);
   })
-  .catch(err => {
-    res.status(500).send({
-      message: "Thesis findAllByUserRole produced an error",
-      error: err,
-    });
-  });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "Thesis findAllByUserRole produced an error",
+  //     error: err,
+  //   });
+  // });
 };
 
 module.exports.saveOne = (req, res) => {

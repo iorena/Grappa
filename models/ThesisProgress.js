@@ -27,9 +27,6 @@ class ThesisProgress extends BaseModel {
     return this.getModel().create({
     // return this.saveOne({
       thesisId: thesis.id,
-      ethesisReminderId: null,
-      graderevalReminderId: null,
-      printReminderId: null,
     });
   }
 
@@ -52,5 +49,4 @@ class ThesisProgress extends BaseModel {
   }
 }
 
-module.exports.class = ThesisProgress;
 module.exports = new ThesisProgress();

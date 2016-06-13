@@ -93,6 +93,10 @@ class Thesis extends BaseModel {
         model: this.Models.Grader,
       }, {
         model: this.Models.ThesisProgress,
+        // include: [{
+        //   model: this.Models.EmailStatus,
+        //   as: "ethesisReminder",
+        // }, ],
       }, {
         model: this.Models.StudyField,
       }, {
