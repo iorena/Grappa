@@ -95,6 +95,8 @@ class EmailReminder {
    */
   sendStudentReminder(studentEmail, token, thesisId) {
     let foundThesis;
+    let sentReminder;
+    // let foundTProgress;
     let email;
 
     return Thesis
@@ -115,11 +117,18 @@ class EmailReminder {
         to: email.to,
         deadline: foundThesis.deadline,
       }))
-      .then((sentReminder) => ThesisProgress.update({
-        ethesisReminderId: sentReminder.id,
-      }, {
-        thesisId: thesisId,
-      }));
+      // .then((reminder) => {
+      //   sentReminder = reminder;
+      //   return ThesisProgress.getModel().findOne({ where: { thesisId } })
+      // })
+      // .then((TProgress) => {
+      //   return TProgress.addEthesisReminder(sentReminder);
+      // })
+      // .then((sentReminder) => ThesisProgress.update({
+      //   ethesisReminderId: sentReminder.id,
+      // }, {
+      //   thesisId: thesisId,
+      // }));
   }
 
   /**
@@ -166,11 +175,13 @@ class EmailReminder {
         to: email.to,
         deadline: thesis.deadline,
       }))
-      .then((reminder) => ThesisProgress.update({
-        graderevalReminderId: reminder.id,
-      }, {
-        thesisId: thesis.id,
-      }))
+      // .then((reminder) => {
+      //   sentReminder = reminder;
+      //   return ThesisProgress.getModel().findOne({ where: { thesisId } })
+      // })
+      // .then((TProgress) => {
+      //   return TProgress.addEthesisReminder(sentReminder);
+      // })
       .catch(err => {
         // something useful here..
         console.log("ERROR ", err);

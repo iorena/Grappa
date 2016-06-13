@@ -181,11 +181,11 @@ const Review = seq.define("Review", {
 
 const ThesisProgress = seq.define("ThesisProgress", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  ethesisReminderId: Sequelize.INTEGER,
+  // ethesisReminderId: Sequelize.INTEGER,
   ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-  graderevalReminderId: Sequelize.INTEGER,
+  // graderevalReminderId: Sequelize.INTEGER,
   graderevalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-  printReminderId: Sequelize.INTEGER,
+  // printReminderId: Sequelize.INTEGER,
   printDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   done: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
@@ -221,7 +221,17 @@ Thesis.belongsTo(User);
 
 User.hasMany(Review);
 
-ThesisProgress.hasMany(EmailStatus);
+// ThesisProgress.hasMany(EmailStatus);
+
+EmailStatus.belongsTo(ThesisProgress, {
+  as: "ethesisReminder",
+  foreignKey: "ethesisReminderFk",
+});
+
+EmailStatus.belongsTo(ThesisProgress, {
+  as: "graderevalReminder",
+  foreignKey: "graderevalReminderFk",
+});
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);

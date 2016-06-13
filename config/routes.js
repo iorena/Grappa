@@ -80,7 +80,8 @@ router.post("/grader/many", graderCtrl.updateMany);
 // router.get("/thesisprogress/:id", thesisprogressCtrl.findOne);
 // router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
-router.get("/user", userCtrl.findAllNotActive);
+router.get("/user", userCtrl.findAll);
+router.get("/user/inactive", userCtrl.findAllNotActive);
 router.post("/user", userCtrl.saveOne);
 router.put("/user/:id", userCtrl.updateOne);
 router.delete("/user/:id", userCtrl.deleteOne);

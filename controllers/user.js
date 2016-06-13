@@ -5,6 +5,20 @@ const passwordHelper = require("../config/passwordHelper");
 
 const User = require("../models/User");
 
+module.exports.findAll = (req, res) => {
+  User
+  .findAll()
+  .then(users => {
+    res.status(200).send(users);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "User findAll produced an error",
+      error: err,
+    });
+  });
+};
+
 module.exports.findAllNotActive = (req, res) => {
   User
   .findAllNotActive()
