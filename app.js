@@ -26,6 +26,10 @@ app.use(cors());
 
 // scheduler.startAndRunOnceInHour();
 // scheduler.checkThesisProgresses();
+const asdf = require("./services/StatusProcessor")
+// asdf.fetchPageFromPdf("https://get.adobe.com/fi/reader/", 1);
+asdf.splitShit();
+// asdf.fetchPageFromPdf("https://helda.helsinki.fi/bitstream/handle/10138/161386/ProGraduOjanen.pdf?sequence=1", 1);
 
 app.use("", require("./config/routes"));
 

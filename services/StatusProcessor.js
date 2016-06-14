@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
 const request = require("request");
 // const EmailReader = require("./EmailReader");
 const EmailReminder = require("./EmailReminder");
@@ -8,6 +10,48 @@ const ThesisProgress = require("../models/ThesisProgress");
 const Thesis = require("../models/Thesis");
 
 class StatusProcessor {
+
+  splitShit() {
+    var exec = require('child_process').exec;
+    var pathToPdf = path.join(__dirname, '../pdf/gradu.pdf');
+    var pathToOutput = path.join(__dirname, "../pdf/output.pdf");
+    var cmd = `pdftk ${pathToPdf} cat 2-2 output ${pathToOutput}`;
+    var child = exec(cmd, function (err, stdout, stderr) {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log("jepa");
+      }
+    });
+  }
+
+  joinPdfs() {
+    const cmd = `pdftk *.pdf cat output newfile.pdf`;
+  }
+
+  fetchPageFromPdf(pdfUrl, page) {
+    const file = fs.createWriteStream("temp.pdf");
+
+    request.get({ url: pdfUrl }, (error, response, body) => {
+      if (error) reject(error);
+
+      resolve(body);
+    })
+
+    // request.get(pdfUrl).pipe(file).on('close', function () {
+    //   postData(fs.readFileSync('temp.pdf'));
+    // });
+    // return new Promise((resolve, reject) => {
+    //   request.get({ url: pdfUrl }, (error, response, body) => {
+    //     if (error) reject(error);
+    //     resolve(body);
+    //   });
+    // })
+    // .then(body => {
+    //   fs.createWriteStream("./peedeeäf");
+    // })
+  }
+
   fetchAbstract(ethesisUrl) {
     return new Promise((resolve, reject) => {
       request.get({ url: ethesisUrl }, (error, response, body) => {
@@ -56,5 +100,4 @@ class StatusProcessor {
   }
 }
 
-module.exports.class = StatusProcessor;
 module.exports = new StatusProcessor();
