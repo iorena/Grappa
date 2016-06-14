@@ -96,6 +96,12 @@ class Thesis extends BaseModel {
         include: [{
           model: this.Models.EmailStatus,
           as: "EthesisEmail",
+        }, {
+          model: this.Models.EmailStatus,
+          as: "GraderEvalEmail",
+        }, {
+          model: this.Models.EmailStatus,
+          as: "PrintEmail",
         }, ],
       }, {
         model: this.Models.StudyField,

@@ -28,7 +28,7 @@ class ThesisProgress extends BaseModel {
 
   setGraderEvalDone(thesisId) {
     return this.getModel().update({
-      graderevalDone: true,
+      graderEvalDone: true,
     }, {
       where: { thesisId },
     });
