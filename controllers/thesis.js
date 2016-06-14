@@ -10,12 +10,20 @@ const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
 
+module.exports.asdf = (req, res) => {
+  ThesisProgress
+  .findLove()
+  .then(tps => {
+    res.status(200).send(tps);
+  });
+};
+
 module.exports.findAllByUserRole = (req, res) => {
   Thesis
   .findAllByUserRole(req.user)
   .then(theses => {
     res.status(200).send(theses);
-  })
+  });
   // .catch(err => {
   //   res.status(500).send({
   //     message: "Thesis findAllByUserRole produced an error",
@@ -49,27 +57,24 @@ module.exports.saveOne = (req, res) => {
   })
   .then((graders) => {
     savedGraders = graders;
-    return Thesis.saveOne(req.body, foundConnections[0]);
+    return Thesis.saveOneAndProgress(req.body, foundConnections[0]);
   })
   .then(thesis => {
-    console.log("joo");
     savedThesis = thesis;
-    const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
+    const token = TokenGen.generateEthesisToken(savedThesis.author, savedThesis.id);
     return Promise.all([
       EthesisToken.saveOne({
-        thesisId: thesis.id,
+        thesisId: savedThesis.id,
         token,
       }),
-      Reminder.sendStudentReminder(thesis.authorEmail, token, thesis.id),
-      ThesisProgress.saveFromThesis(thesis),
-      CouncilMeeting.linkThesis(foundConnections[0], thesis),
-      Grader.linkThesisToGraders(savedGraders, thesis.id),
-      Thesis.linkStudyField(thesis, foundConnections[1].id),
-      Thesis.linkUser(thesis, req.user.id),
+      Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
+      CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
+      Grader.linkThesisToGraders(savedGraders, savedThesis.id),
+      Thesis.linkStudyField(savedThesis, foundConnections[1].id),
+      Thesis.linkUser(savedThesis, req.user.id),
     ]);
   })
   .then(() => {
-    console.log("joo");
     if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.graders)) {
       return Reminder.sendProfessorReminder(savedThesis);
     } else {

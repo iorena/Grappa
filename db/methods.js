@@ -48,6 +48,9 @@ module.exports.addTestData = () => Promise.all([
     isActive: true,
     StudyFieldId: null,
   }),
+  models.CouncilMeeting.create({
+    date: new Date("11/05/2016"),
+  }),
 ]);
 
 module.exports.addTestDataOld = () => Promise.all([

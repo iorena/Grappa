@@ -117,18 +117,13 @@ class EmailReminder {
         to: email.to,
         deadline: foundThesis.deadline,
       }))
-      // .then((reminder) => {
-      //   sentReminder = reminder;
-      //   return ThesisProgress.getModel().findOne({ where: { thesisId } })
-      // })
-      // .then((TProgress) => {
-      //   return TProgress.addEthesisReminder(sentReminder);
-      // })
-      // .then((sentReminder) => ThesisProgress.update({
-      //   ethesisReminderId: sentReminder.id,
-      // }, {
-      //   thesisId: thesisId,
-      // }));
+      .then((reminder) => {
+        sentReminder = reminder;
+        return ThesisProgress.getModel().findOne({ where: { ThesisId: thesisId } });
+      })
+      .then((TProgress) => {
+        return TProgress.setEthesisEmail(sentReminder);
+      });
   }
 
   /**
@@ -136,6 +131,7 @@ class EmailReminder {
    */
   sendPrintPersonReminder(thesis) {
     let email;
+    let sentReminder;
     return User.findOne({ role: "print-person" })
       .then(printPerson => {
         email = this.composeEmail("toPrintPerson", printPerson.email, thesis, "");
@@ -146,7 +142,14 @@ class EmailReminder {
         type: "PrinterReminder",
         to: email.to,
         deadline: thesis.deadline,
-      }));
+      }))
+      .then((reminder) => {
+        sentReminder = reminder;
+        return ThesisProgress.getModel().findOne({ where: { ThesisId: thesis.id } });
+      })
+      .then((TProgress) => {
+        return TProgress.setPrintEmail(sentReminder);
+      });
   }
 
   /**
@@ -154,6 +157,7 @@ class EmailReminder {
    */
   sendProfessorReminder(thesis) {
     let email;
+    let sentReminder;
     return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
       .then(professor => {
         if (professor !== null) {
@@ -175,13 +179,13 @@ class EmailReminder {
         to: email.to,
         deadline: thesis.deadline,
       }))
-      // .then((reminder) => {
-      //   sentReminder = reminder;
-      //   return ThesisProgress.getModel().findOne({ where: { thesisId } })
-      // })
-      // .then((TProgress) => {
-      //   return TProgress.addEthesisReminder(sentReminder);
-      // })
+      .then((reminder) => {
+        sentReminder = reminder;
+        return ThesisProgress.getModel().findOne({ where: { ThesisId: thesis.id } });
+      })
+      .then((TProgress) => {
+        return TProgress.setGraderEvalEmail(sentReminder);
+      })
       .catch(err => {
         // something useful here..
         console.log("ERROR ", err);
