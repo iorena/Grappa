@@ -16,7 +16,7 @@ const ThesisProgress = require("../../models/ThesisProgress");
 
 let calledParams = {};
 
-describe("EmailReminder", () => {
+xdescribe("EmailReminder", () => {
   before(() => {
     Sinon.stub(Sender, "sendEmail", (to, subject, body) => {
       calledParams = {

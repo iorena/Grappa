@@ -55,7 +55,7 @@ class Thesis extends BaseModel {
       );
   }
 
-  saveOneWithProgress(params, councilmeeting) {
+  saveOneAndProgress(params, councilmeeting) {
     let savedThesis;
     const values = Object.assign({}, params);
     if (councilmeeting !== null) {
@@ -93,10 +93,16 @@ class Thesis extends BaseModel {
         model: this.Models.Grader,
       }, {
         model: this.Models.ThesisProgress,
-        // include: [{
-        //   model: this.Models.EmailStatus,
-        //   as: "ethesisReminder",
-        // }, ],
+        include: [{
+          model: this.Models.EmailStatus,
+          as: "EthesisEmail",
+        }, {
+          model: this.Models.EmailStatus,
+          as: "GraderEvalEmail",
+        }, {
+          model: this.Models.EmailStatus,
+          as: "PrintEmail",
+        }, ],
       }, {
         model: this.Models.StudyField,
       }, {

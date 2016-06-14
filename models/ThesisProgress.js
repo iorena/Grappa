@@ -7,6 +7,17 @@ class ThesisProgress extends BaseModel {
     super("ThesisProgress");
   }
 
+  findLove() {
+    return this.getModel().findAll({
+      include: [
+        {
+          model: this.Models.EmailStatus,
+          as: "PrintEmail",
+        },
+      ],
+    });
+  }
+
   setEthesisDone(thesisId) {
     return this.getModel().update({
       ethesisDone: true,
@@ -17,7 +28,7 @@ class ThesisProgress extends BaseModel {
 
   setGraderEvalDone(thesisId) {
     return this.getModel().update({
-      graderevalDone: true,
+      graderEvalDone: true,
     }, {
       where: { thesisId },
     });

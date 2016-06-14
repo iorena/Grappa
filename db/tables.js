@@ -170,22 +170,10 @@ const Review = seq.define("Review", {
   },
 });
 
-// const ThesisProgress = seq.define("ThesisProgress", {
-//   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-//   ethesisReminder: Sequelize.DATE,
-//   professorReminder: Sequelize.DATE,
-//   gradersStatus: { type: Sequelize.BOOLEAN, defaultValue: false },
-//   documentsSent: Sequelize.DATE,
-//   isDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-// });
-
 const ThesisProgress = seq.define("ThesisProgress", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  // ethesisReminderId: Sequelize.INTEGER,
   ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-  // graderevalReminderId: Sequelize.INTEGER,
-  graderevalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-  // printReminderId: Sequelize.INTEGER,
+  graderEvalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   printDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   done: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
@@ -221,22 +209,14 @@ Thesis.belongsTo(User);
 
 User.hasMany(Review);
 
-// ThesisProgress.hasMany(EmailStatus);
-
-EmailStatus.belongsTo(ThesisProgress, {
-  as: "ethesisReminder",
-  foreignKey: "ethesisReminderFk",
-});
-
-EmailStatus.belongsTo(ThesisProgress, {
-  as: "graderevalReminder",
-  foreignKey: "graderevalReminderFk",
-});
+ThesisProgress.belongsTo(EmailStatus, { as: "EthesisEmail" });
+ThesisProgress.belongsTo(EmailStatus, { as: "GraderEvalEmail" });
+ThesisProgress.belongsTo(EmailStatus, { as: "PrintEmail" });
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
-ThesisProgress.belongsTo(Thesis, { foreignKey: "thesisId" });
-Thesis.hasOne(ThesisProgress, { foreignKey: "thesisId" });
+ThesisProgress.belongsTo(Thesis);
+Thesis.hasOne(ThesisProgress);
 
 module.exports.sync = () => {
   return seq.sync();
