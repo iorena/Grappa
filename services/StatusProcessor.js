@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
 const request = require("request");
 // const EmailReader = require("./EmailReader");
 const EmailReminder = require("./EmailReminder");
@@ -8,6 +10,7 @@ const ThesisProgress = require("../models/ThesisProgress");
 const Thesis = require("../models/Thesis");
 
 class StatusProcessor {
+
   fetchAbstract(ethesisUrl) {
     return new Promise((resolve, reject) => {
       request.get({ url: ethesisUrl }, (error, response, body) => {
@@ -56,5 +59,4 @@ class StatusProcessor {
   }
 }
 
-module.exports.class = StatusProcessor;
 module.exports = new StatusProcessor();

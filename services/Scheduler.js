@@ -7,13 +7,7 @@ const Thesis = require("../models/Thesis");
 const ThesisProgress = require("../models/ThesisProgress");
 
 class Scheduler {
-  /**
-   * Starts the scheduler to be run once in hour
-   *
-   * "55 13 * * * 1-7" = means that every 55th second of every 13th minute
-   * every hour every xxx every xxx and every day of week this scheduler
-   * will run its task. TODO this JSdoc.
-   */
+
   startAndRunOnceInHour() {
     setInterval(() => {
       console.log("scheduler event ran");
@@ -68,5 +62,4 @@ class Scheduler {
   }
 }
 
-module.exports.class = Scheduler;
 module.exports = new Scheduler();

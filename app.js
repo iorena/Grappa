@@ -26,6 +26,8 @@ app.use(cors());
 
 // scheduler.startAndRunOnceInHour();
 // scheduler.checkThesisProgresses();
+// const asdf = require("./services/PdfManipulator")
+// asdf.prepareAbstractsForMeeting();
 
 app.use("", require("./config/routes"));
 
