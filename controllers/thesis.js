@@ -10,12 +10,15 @@ const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
 
+const fs = require("fs")
+
 module.exports.asdf = (req, res) => {
-  ThesisProgress
-  .findLove()
-  .then(tps => {
-    res.status(200).send(tps);
-  });
+  var file = fs.createReadStream('./tmp/print.pdf');
+  var stat = fs.statSync('./tmp/print.pdf');
+  res.setHeader('Content-Length', stat.size);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=theses.pdf');
+  file.pipe(res);
 };
 
 module.exports.findAllByUserRole = (req, res) => {

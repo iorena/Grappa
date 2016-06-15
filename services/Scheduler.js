@@ -7,7 +7,7 @@ const Thesis = require("../models/Thesis");
 const ThesisProgress = require("../models/ThesisProgress");
 
 class Scheduler {
-  
+
   startAndRunOnceInHour() {
     setInterval(() => {
       console.log("scheduler event ran");
