@@ -48,7 +48,7 @@ router.get("/auth", auth.authenticate, authTest);
 
 router.post("/login", userCtrl.loginUser);
 
-// router.use("", auth.authenticate);
+router.use("", auth.authenticate);
 
 router.get("/asdf", thesisCtrl.asdf);
 router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);

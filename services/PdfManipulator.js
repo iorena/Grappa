@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const request = require("request");
-const exec = require('child_process').exec;
+const exec = require("child_process").exec;
 
 class PdfManipulator {
   constructor() {
@@ -14,30 +14,30 @@ class PdfManipulator {
   cleanFolder() {
     fs
     .readdirSync(this.outputPath)
-    .map(file => fs.unlinkSync(this.outputPath + file))
+    .map(file => fs.unlinkSync(this.outputPath + file));
   }
 
   downloadPdf(url, name) {
     return new Promise((resolve, reject) => {
       request(url)
         .pipe(fs.createWriteStream(this.outputPath + name + ".pdf"))
-        .on("close", function(error) {
+        .on("close", function (error) {
           if (error) reject(error);
           resolve();
-        })
-    })
+        });
+    });
   }
 
   copyPageFromPdf(pageNumber, name) {
     return new Promise((resolve, reject) => {
-      const pathToPdf = this.outputPath + name + '.pdf';
-      const pathToOutput = this.outputPath + name + '.abstract.pdf';
+      const pathToPdf = this.outputPath + name + ".pdf";
+      const pathToOutput = this.outputPath + name + ".abstract.pdf";
       const cmd = `pdftk ${pathToPdf} cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) reject(err);
         resolve();
       });
-    })
+    });
   }
 
   joinPdfs() {
@@ -47,13 +47,13 @@ class PdfManipulator {
         if (err) reject(err);
         resolve();
       });
-    })
+    });
   }
 
   fetchAbstractForThesis(thesis) {
     const name = Date.now();
     return this.downloadPdf(thesis.ethesis, name)
-      .then(() => this.copyPageFromPdf(2, name))
+      .then(() => this.copyPageFromPdf(2, name));
   }
 
   fetchAbstractsForTheses(theses) {
@@ -61,8 +61,8 @@ class PdfManipulator {
     return Promise.all(theses.map(thesis => thesis.fetchAbstractForThesis(thesis)))
       .then(() => this.joinPdfs())
       .then(() => {
-        console.log("abstracts prepared, Sir!")
-      })
+        console.log("abstracts prepared, Sir!");
+      });
   }
 
   prepareAbstractsForMeeting() {
@@ -72,8 +72,8 @@ class PdfManipulator {
       .then(() => this.copyPageFromPdf(2, name))
       .then(() => this.joinPdfs())
       .then(() => {
-        console.log("abstracts prepared, Sir!")
-      })
+        console.log("abstracts prepared, Sir!");
+      });
   }
 }
 

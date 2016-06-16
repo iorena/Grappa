@@ -38,13 +38,13 @@ module.exports.updateOne = (req, res) => {
   .update(req.body, { id: req.params.id })
   .then(user => {
     res.status(200).send(user);
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "User updateOne produced an error",
-      error: err,
-    });
   });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "User updateOne produced an error",
+  //     error: err,
+  //   });
+  // });
 };
 
 module.exports.saveOne = (req, res) => {

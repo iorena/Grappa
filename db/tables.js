@@ -100,7 +100,7 @@ const Thesis = seq.define("Thesis", {
       notEmpty: true,
     },
   },
-  graderEvaluation: {
+  graderEval: {
     type: Sequelize.TEXT,
   },
 });

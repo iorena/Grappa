@@ -10,14 +10,14 @@ const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
 
-const fs = require("fs")
+const fs = require("fs");
 
 module.exports.asdf = (req, res) => {
-  var file = fs.createReadStream('./tmp/print.pdf');
-  var stat = fs.statSync('./tmp/print.pdf');
-  res.setHeader('Content-Length', stat.size);
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'attachment; filename=theses.pdf');
+  var file = fs.createReadStream("./tmp/print.pdf");
+  var stat = fs.statSync("./tmp/print.pdf");
+  res.setHeader("Content-Length", stat.size);
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
   file.pipe(res);
 };
 
@@ -103,18 +103,34 @@ module.exports.saveOne = (req, res) => {
 };
 
 module.exports.updateOneAndConnections = (req, res) => {
-  Thesis
-   .update(req.body, { id: req.body.id })
-  //  .then(thesis => ThesisProgress.setEthesisDone(thesis_id))
-   .then(() => {
-     res.status(200).send();
-   })
-   .catch(err => {
-     res.status(500).send({
-       message: "Thesis update produced an error",
-       error: err,
-     });
-   });
+  if (req.user.role === "professor" && req.body.graderEval && req.body.graderEval.length > 0) {
+    Thesis
+    .update({ graderEval: req.body.graderEval }, { id: req.body.id })
+    .then(() => {
+      return ThesisProgress.setGraderEvalDone(req.body.id);
+    })
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Thesis update produced an error",
+        error: err,
+      });
+    });
+  } else if (req.user.role === "admin") {
+    Thesis
+    .update(req.body, { id: req.body.id })
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Thesis update produced an error",
+        error: err,
+      });
+    });
+  }
 };
 
 module.exports.updateOneEthesis = (req, res) => {
