@@ -6,6 +6,7 @@ const TokenGen = require("../services/TokenGenerator");
 const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
 const ThesisProgress = require("../models/ThesisProgress");
+const ThesisPdf = require("../models/ThesisPdf");
 const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
@@ -13,6 +14,33 @@ const Grader = require("../models/Grader");
 const fs = require("fs");
 
 module.exports.asdf = (req, res) => {
+  ThesisPdf
+  .findOne({ id: 6 })
+  .then((pdf) => {
+    fs.writeFile("./tmp/out.pdf", pdf.review, 'base64', function(err) {
+      console.log(err);
+    });
+    res.status(200).send("pdf seivattu");
+  })
+};
+
+module.exports.asdf = (req, res) => {
+  var pdf = fs.readFileSync('./tmp/print.pdf');
+  // fs.writeFileSync("./tmp/out.pdf", pdf);
+  ThesisPdf
+  .saveOne({ review: pdf })
+  .then((savedPdf) => {
+    return ThesisPdf.findOne({id: savedPdf.id})
+  })
+  .then((found) => {
+    fs.writeFile("./tmp/out2.pdf", found.review, "base64", function(err) {
+      console.log(err);
+      res.status(200).send("pdf seivattu");
+    });
+  })
+};
+
+module.exports.sendPdf = (req, res) => {
   var file = fs.createReadStream("./tmp/print.pdf");
   var stat = fs.statSync("./tmp/print.pdf");
   res.setHeader("Content-Length", stat.size);

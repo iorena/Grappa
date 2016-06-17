@@ -48,9 +48,10 @@ router.get("/auth", auth.authenticate, authTest);
 
 router.post("/login", userCtrl.loginUser);
 
+router.get("/asdf", thesisCtrl.asdf);
+
 router.use("", auth.authenticate);
 
-router.get("/asdf", thesisCtrl.asdf);
 router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
 // router.put("/thesis/:id", auth.onlyAdmin, thesisCtrl.updateOneAndConnections);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);

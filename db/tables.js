@@ -187,6 +187,13 @@ const EmailStatus = seq.define("EmailStatus", {
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
+const ThesisPdf = seq.define("ThesisPdf", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  review: Sequelize.BLOB,
+  graderEval: Sequelize.BLOB,
+  abstract: Sequelize.BLOB,
+});
+
 Thesis.belongsTo(StudyField);
 
 EthesisToken.belongsTo(Thesis);
@@ -216,6 +223,7 @@ ThesisProgress.belongsTo(EmailStatus, { as: "PrintEmail" });
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
 ThesisProgress.belongsTo(Thesis);
+ThesisPdf.belongsTo(Thesis);
 Thesis.hasOne(ThesisProgress);
 
 module.exports.sync = () => {
@@ -233,6 +241,7 @@ module.exports.Models = {
   StudyField,
   Review,
   ThesisProgress,
+  ThesisPdf,
   EmailStatus,
   EthesisToken,
 };
