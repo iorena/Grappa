@@ -1,4 +1,5 @@
 "use strict";
+"use strict";
 
 const BaseModel = require("./BaseModel");
 
@@ -15,6 +16,14 @@ class ThesisProgress extends BaseModel {
           as: "PrintEmail",
         },
       ],
+    });
+  }
+
+  linkEthesisEmail(thesisId, emailId) {
+    return this.getModel().update({
+      EthesisEmailId: emailId,
+    }, {
+      where: { ThesisId: thesisId },
     });
   }
 

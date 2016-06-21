@@ -75,9 +75,6 @@ const Thesis = seq.define("Thesis", {
   ethesis: {
     type: Sequelize.STRING,
   },
-  abstract: {
-    type: Sequelize.TEXT,
-  },
   grade: {
     type: Sequelize.STRING,
     validate: {
@@ -103,6 +100,7 @@ const Thesis = seq.define("Thesis", {
   graderEval: {
     type: Sequelize.TEXT,
   },
+  pathToFileReview: Sequelize.STRING,
 });
 
 const EthesisToken = seq.define("EthesisToken", {
@@ -178,6 +176,13 @@ const ThesisProgress = seq.define("ThesisProgress", {
   done: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
+const EmailDraft = seq.define("EmailDraft", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  type: Sequelize.STRING,
+  title: Sequelize.STRING,
+  body: Sequelize.STRING,
+});
+
 const EmailStatus = seq.define("EmailStatus", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   lastSent: Sequelize.DATE,
@@ -218,6 +223,8 @@ StudyField.hasMany(User);
 ThesisProgress.belongsTo(Thesis);
 Thesis.hasOne(ThesisProgress);
 
+EmailStatus.belongsTo(EmailDraft);
+
 module.exports.sync = () => {
   return seq.sync();
 };
@@ -234,5 +241,6 @@ module.exports.Models = {
   Review,
   ThesisProgress,
   EmailStatus,
+  EmailDraft,
   EthesisToken,
 };

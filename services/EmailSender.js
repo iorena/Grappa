@@ -12,25 +12,26 @@ class EmailSender {
   }
 
   sendEmail(to, subject, body) {
-    const options = Object.assign({
-      to,
-      subject,
-      text: body,
-    }, this.mailOptions);
+    return Promise.resolve();
 
-    return new Promise((resolve, reject) => {
-      this.transporter
-      .sendMail(options, (err, info) => {
-        if (err) {
-          console.log(err);
-          reject(err);
-        } else {
-          resolve(info);
-        }
-      });
-    });
+    // const options = Object.assign({
+    //   to,
+    //   subject,
+    //   text: body,
+    // }, this.mailOptions);
+
+    // return new Promise((resolve, reject) => {
+    //   this.transporter
+    //   .sendMail(options, (err, info) => {
+    //     if (err) {
+    //       console.log(err);
+    //       reject(err);
+    //     } else {
+    //       resolve(info);
+    //     }
+    //   });
+    // });
   }
 }
 
-module.exports.class = EmailSender;
 module.exports = new EmailSender(config.smtp());

@@ -106,6 +106,5 @@ class PdfCreator {
   }
 }
 
-module.exports.class = PdfCreator;
 module.exports = new PdfCreator();
 

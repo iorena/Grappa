@@ -48,9 +48,10 @@ router.get("/auth", auth.authenticate, authTest);
 
 router.post("/login", userCtrl.loginUser);
 
+router.get("/asdf", thesisCtrl.asdf);
+
 router.use("", auth.authenticate);
 
-router.get("/asdf", thesisCtrl.asdf);
 router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
 // router.put("/thesis/:id", auth.onlyAdmin, thesisCtrl.updateOneAndConnections);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
@@ -60,6 +61,7 @@ router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 // router.get("/thesis/:id/pdf", thesisCtrl.createPdf);
 // router.post("/thesis/pdf", thesisCtrl.createAllPdfs);
+router.post("/thesis/review", thesisCtrl.uploadReview);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);

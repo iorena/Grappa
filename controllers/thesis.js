@@ -2,10 +2,12 @@
 
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
+const FileUploader = require("../services/FileUploader");
 
 const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
 const ThesisProgress = require("../models/ThesisProgress");
+// const ThesisPdf = require("../models/ThesisPdf");
 const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
@@ -13,6 +15,33 @@ const Grader = require("../models/Grader");
 const fs = require("fs");
 
 module.exports.asdf = (req, res) => {
+  ThesisPdf
+  .findOne({ id: 6 })
+  .then((pdf) => {
+    fs.writeFile("./tmp/out.pdf", pdf.review, "base64", function (err) {
+      console.log(err);
+    });
+    res.status(200).send("pdf seivattu");
+  });
+};
+
+module.exports.regeneratePdf = (req, res) => {
+  var pdf = fs.readFileSync("./tmp/print.pdf");
+  // fs.writeFileSync("./tmp/out.pdf", pdf);
+  ThesisPdf
+  .saveOne({ review: pdf })
+  .then((savedPdf) => {
+    return ThesisPdf.findOne({ id: savedPdf.id });
+  })
+  .then((found) => {
+    fs.writeFile("./tmp/out2.pdf", found.review, "base64", function (err) {
+      console.log(err);
+      res.status(200).send("pdf seivattu");
+    });
+  });
+};
+
+module.exports.sendPdf = (req, res) => {
   var file = fs.createReadStream("./tmp/print.pdf");
   var stat = fs.statSync("./tmp/print.pdf");
   res.setHeader("Content-Length", stat.size);
@@ -29,7 +58,7 @@ module.exports.findAllByUserRole = (req, res) => {
   });
   // .catch(err => {
   //   res.status(500).send({
-  //     message: "Thesis findAllByUserRole produced an error",
+  //     message-: "Thesis findAllByUserRole produced an error",
   //     error: err,
   //   });
   // });
@@ -39,6 +68,8 @@ module.exports.saveOne = (req, res) => {
   let savedThesis;
   let savedGraders;
   let foundConnections;
+
+  console.log(req.headers);
 
   Thesis
   .findConnections(req.body)
@@ -84,8 +115,9 @@ module.exports.saveOne = (req, res) => {
       return ThesisProgress.setGraderEvalDone(savedThesis.id);
     }
   })
-  .then(() => {
-    res.status(200).send(savedThesis);
+  .then(() => Thesis.findOne({ id: savedThesis.id }))
+  .then((thesisWithConnections) => {
+    res.status(200).send(thesisWithConnections);
   });
   // .catch(err => {
   //   if (err.message.indexOf("ValidationError") !== -1) {
@@ -147,4 +179,62 @@ module.exports.updateOneEthesis = (req, res) => {
        error: err,
      });
    });
+};
+
+module.exports.uploadReview = (req, res) => {
+  let parsedData;
+  let pathToFile;
+
+  FileUploader
+  .parseUploadData(req, "pdf")
+  .then(data => {
+    parsedData = data;
+    // console.log(data);
+    return Thesis.findOne({ id: data.id });
+  })
+  .then(thesis => {
+    if (thesis) {
+      return FileUploader.createThesisFolder(thesis);
+    } else {
+      throw new Error("No thesis found");
+    }
+  })
+  .then(pathToFolder => {
+    pathToFile = pathToFolder + "/review.pdf";
+    return FileUploader.writeFile(pathToFile, parsedData.file);
+  })
+  .then(() => {
+    return Thesis.update({ pathToFileReview: pathToFile, }, { id: parsedData.id });
+  })
+  .then(() => {
+    res.status(200).send();
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis uploadReview produced an error",
+      error: err,
+    });
+  })
+  // console.log("yo upload");
+  // req.pipe(req.busboy);
+  // req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
+  //   console.log(`${key} : ${value}`);
+  // });
+  // req.busboy.on('file', function (fieldname, file, filename) {
+  //   var ext = filename.substr(filename.lastIndexOf('.')+1);
+  //   console.log(ext)
+  //   if (filename) {
+  //     console.log("Uploading: " + filename);
+  //     var fstream = fs.createWriteStream("./pdf/" + filename);
+  //     file.pipe(fstream);
+  //     fstream.on('close', function () {
+  //         // res.redirect('back');
+  //       res.status(200).send();
+  //     });
+  //   } else {
+  //     console.log("Nothing to upload")
+  //     // res.redirect("back")
+  //     res.status(200).send();
+  //   }
+  // });
 };
