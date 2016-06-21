@@ -32,6 +32,7 @@
     "express": "^4.13.4",
     "imap": "^0.8.16",
     "jwt-simple": "^0.5.0",
+    "mkdirp": "^0.5.1",
     "morgan": "^1.7.0",
     "nodemailer": "^2.3.1",
     "nodemon": "^1.9.1",

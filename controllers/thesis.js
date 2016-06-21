@@ -188,10 +188,18 @@ module.exports.uploadReview = (req, res) => {
   .parseUploadData(req, "pdf")
   .then(data => {
     parsedData = data;
+    console.log(data)
     return Thesis.findOne({ id: data.id });
   })
   .then(thesis => {
-    return FileUploader.writeFile(parsedData.file, parsedData.ext);
+    if (thesis) {
+      return FileUploader.createThesisFolder(thesis);
+    } else {
+      throw new Error("No thesis found");
+    }
+  })
+  .then(pathToFolder => {
+    return FileUploader.writeFile(pathToFolder + "/graderEval.pdf", parsedData.file);
   })
   .then(() => {
     res.status(200).send();

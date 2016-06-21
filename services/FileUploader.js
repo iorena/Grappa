@@ -1,14 +1,18 @@
 "use strict";
 
+const moment = require("moment");
+const mkdirp = require('mkdirp');
 const fs = require("fs");
+const path = require("path");
 
 class FileUploader {
   parseUploadData(req, requiredExt) {
-    const data = {
+    const parsedData = {
       id: "",
       file: "",
       ext: "",
     };
+    const chunks = [];
     return new Promise((resolve, reject) => {
       console.log("yo upload");
       req.pipe(req.busboy);
@@ -18,34 +22,66 @@ class FileUploader {
       req.busboy.on('field', (key, value, keyTruncated, valueTruncated) => {
         console.log(`${key} : ${value}`);
         if (key === "id" && value) {
-          data.id = value;
+          parsedData.id = value;
         }
       });
       req.busboy.on('file', (fieldname, file, filename) => {
         const ext = filename.substr(filename.lastIndexOf('.')+1);
-        console.log(ext)
-        if (filename && requiredExt === ext) {
-          data.file = file;
-          data.ext = ext;
-          resolve(data);
-        } else {
-          console.log("Nothing to upload or wrong extension")
+        console.log('File [' + fieldname + ']: filename: ' + filename);
+        if (filename === null && requiredExt !== ext) {
           reject();
+        }
+        file.on('data', function(data) {
+          console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
+          chunks.push(data);
+        });
+        file.on('end', function() {
+          // parsedData.file = file;
+          parsedData.file = Buffer.concat(chunks);
+          parsedData.ext = ext;
+          console.log('File [' + fieldname + '] Finished');
+        });
+      });
+      req.busboy.on("finish", () => {
+        console.log("finish busboy parsing")
+        resolve(parsedData);
+      })
+    })
+  }
+  createThesisFolder(thesis) {
+    console.log("luon kansion!")
+    const date = moment(new Date()).format("DD.MM.YYYY");
+    const dirName = `${thesis.authorLastname}-${thesis.authorFirstname}-${date}`;
+    const pathToFolder = `./pdf/${dirName}`;
+    // console.log(pathToFolder);
+    return new Promise((resolve, reject) => {
+      mkdirp(pathToFolder, (err) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(pathToFolder);
         }
       });
     })
   }
-  writeFile(file, ext) {
+  writeFile(pathToFile, file) {
+    // console.log(file)
     return new Promise((resolve, reject) => {
-      console.log("writing temp pdf");
-      const fstream = fs.createWriteStream("./pdf/temp.pdf");
-      file.pipe(fstream);
-      fstream.on('close', () => {
+      console.log("writing pdf file: " + pathToFile);
+      fs.writeFile(pathToFile, file, (err) => {
+        if (err) reject(err);
         resolve();
       });
-      fstream.on("error", err => {
-        reject(err);
-      })
+      // const fstream = fs.createWriteStream(pathToFile);
+      // const fstream = fs.createWriteStream("./tmp/asdf.pdf");
+      // file.pipe(fstream);
+      // fstream.on('close', () => {
+      //   resolve();
+      // });
+      // fstream.on("error", err => {
+      //   reject(err);
+      // })
     })
   }
 }
