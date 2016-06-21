@@ -61,6 +61,7 @@ router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 // router.get("/thesis/:id/pdf", thesisCtrl.createPdf);
 // router.post("/thesis/pdf", thesisCtrl.createAllPdfs);
+router.post("/thesis/review", thesisCtrl.uploadReview);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);

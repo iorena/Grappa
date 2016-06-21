@@ -19,6 +19,14 @@ class ThesisProgress extends BaseModel {
     });
   }
 
+  linkEthesisEmail(thesisId, emailId) {
+    return this.getModel().update({ 
+      EthesisEmailId: emailId,
+    }, {
+      where: { ThesisId: thesisId, },
+    });
+  }
+
   setEthesisDone(thesisId) {
     return this.getModel().update({
       ethesisDone: true,

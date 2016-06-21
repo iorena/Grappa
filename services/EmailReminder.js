@@ -117,13 +117,14 @@ class EmailReminder {
         to: email.to,
         deadline: foundThesis.deadline,
       }))
-      .then((reminder) => {
-        sentReminder = reminder;
-        return ThesisProgress.getModel().findOne({ where: { ThesisId: thesisId } });
-      })
-      .then((TProgress) => {
-        return TProgress.setEthesisEmail(sentReminder);
-      });
+      .then(reminder => ThesisProgress.linkEthesisEmail(thesisId, reminder.id))
+      // .then((reminder) => {
+      //   sentReminder = reminder;
+      //   return ThesisProgress.getModel().findOne({ where: { ThesisId: thesisId } });
+      // })
+      // .then((TProgress) => {
+      //   return TProgress.setEthesisEmail(sentReminder);
+      // });
   }
 
   /**
@@ -193,5 +194,4 @@ class EmailReminder {
   }
 }
 
-module.exports.class = EmailReminder;
 module.exports = new EmailReminder();

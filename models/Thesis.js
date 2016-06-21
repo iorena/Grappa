@@ -86,6 +86,29 @@ class Thesis extends BaseModel {
     }
   }
 
+  findOne(params) {
+    return this.getModel().findOne({
+      where: params === undefined ? {} : params,
+      include: [{
+        model: this.Models.Grader,
+      }, {
+        model: this.Models.ThesisProgress,
+        include: [{
+          model: this.Models.EmailStatus,
+          as: "EthesisEmail",
+        }, {
+          model: this.Models.EmailStatus,
+          as: "GraderEvalEmail",
+        }, {
+          model: this.Models.EmailStatus,
+          as: "PrintEmail",
+        }, ],
+      }, {
+        model: this.Models.CouncilMeeting,
+      }],
+    });
+  }
+
   findAll(params) {
     return this.getModel().findAll({
       where: params === undefined ? {} : params,

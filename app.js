@@ -2,6 +2,7 @@
 
 require("dotenv").config();
 const express = require("express");
+const busboy = require("connect-busboy");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const scheduler = require("./services/Scheduler");
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV !== "production") {
   app.use(logger("dev"));
 }
 
+app.use(busboy()); 
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
@@ -26,7 +28,8 @@ app.use(cors());
 
 // scheduler.startAndRunOnceInHour();
 // scheduler.checkThesisProgresses();
-// const asdf = require("./services/PdfManipulator")
+const asdf = require("./services/PdfManipulator");
+asdf.generateGraderEval();
 // asdf.prepareAbstractsForMeeting();
 
 app.use("", require("./config/routes"));

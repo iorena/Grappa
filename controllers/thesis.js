@@ -2,11 +2,12 @@
 
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
+const FileUploader = require("../services/FileUploader");
 
 const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
 const ThesisProgress = require("../models/ThesisProgress");
-const ThesisPdf = require("../models/ThesisPdf");
+// const ThesisPdf = require("../models/ThesisPdf");
 const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
@@ -24,7 +25,7 @@ module.exports.asdf = (req, res) => {
   })
 };
 
-module.exports.asdf = (req, res) => {
+module.exports.regeneratePdf = (req, res) => {
   var pdf = fs.readFileSync('./tmp/print.pdf');
   // fs.writeFileSync("./tmp/out.pdf", pdf);
   ThesisPdf
@@ -57,7 +58,7 @@ module.exports.findAllByUserRole = (req, res) => {
   });
   // .catch(err => {
   //   res.status(500).send({
-  //     message: "Thesis findAllByUserRole produced an error",
+  //     message-: "Thesis findAllByUserRole produced an error",
   //     error: err,
   //   });
   // });
@@ -67,6 +68,8 @@ module.exports.saveOne = (req, res) => {
   let savedThesis;
   let savedGraders;
   let foundConnections;
+
+  console.log(req.headers)
 
   Thesis
   .findConnections(req.body)
@@ -98,11 +101,11 @@ module.exports.saveOne = (req, res) => {
         thesisId: savedThesis.id,
         token,
       }),
-      Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
-      CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
-      Grader.linkThesisToGraders(savedGraders, savedThesis.id),
-      Thesis.linkStudyField(savedThesis, foundConnections[1].id),
-      Thesis.linkUser(savedThesis, req.user.id),
+      // Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
+      // CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
+      // Grader.linkThesisToGraders(savedGraders, savedThesis.id),
+      // Thesis.linkStudyField(savedThesis, foundConnections[1].id),
+      // Thesis.linkUser(savedThesis, req.user.id),
     ]);
   })
   .then(() => {
@@ -112,8 +115,9 @@ module.exports.saveOne = (req, res) => {
       return ThesisProgress.setGraderEvalDone(savedThesis.id);
     }
   })
-  .then(() => {
-    res.status(200).send(savedThesis);
+  .then(() => Thesis.findOne({ id: savedThesis.id }))
+  .then((thesisWithConnections) => {
+    res.status(200).send(thesisWithConnections);
   });
   // .catch(err => {
   //   if (err.message.indexOf("ValidationError") !== -1) {
@@ -176,3 +180,42 @@ module.exports.updateOneEthesis = (req, res) => {
      });
    });
 };
+
+module.exports.uploadReview = (req, res) => {
+  let parsedData;
+
+  FileUploader
+  .parseUploadData(req, "pdf")
+  .then(data => {
+    parsedData = data;
+    return Thesis.findOne({ id: data.id });
+  })
+  .then(thesis => {
+    return FileUploader.writeFile(parsedData.file, parsedData.ext);
+  })
+  .then(() => {
+    res.status(200).send();
+  })
+  // console.log("yo upload");
+  // req.pipe(req.busboy);
+  // req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
+  //   console.log(`${key} : ${value}`);
+  // });
+  // req.busboy.on('file', function (fieldname, file, filename) {
+  //   var ext = filename.substr(filename.lastIndexOf('.')+1);
+  //   console.log(ext)
+  //   if (filename) {
+  //     console.log("Uploading: " + filename);
+  //     var fstream = fs.createWriteStream("./pdf/" + filename);
+  //     file.pipe(fstream);
+  //     fstream.on('close', function () {
+  //         // res.redirect('back');
+  //       res.status(200).send();
+  //     }); 
+  //   } else {
+  //     console.log("Nothing to upload")
+  //     // res.redirect("back")
+  //     res.status(200).send();
+  //   }
+  // });
+}
