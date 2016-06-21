@@ -117,7 +117,7 @@ class EmailReminder {
         to: email.to,
         deadline: foundThesis.deadline,
       }))
-      .then(reminder => ThesisProgress.linkEthesisEmail(thesisId, reminder.id))
+      .then(reminder => ThesisProgress.linkEthesisEmail(thesisId, reminder.id));
       // .then((reminder) => {
       //   sentReminder = reminder;
       //   return ThesisProgress.getModel().findOne({ where: { ThesisId: thesisId } });

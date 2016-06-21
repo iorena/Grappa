@@ -20,10 +20,10 @@ class ThesisProgress extends BaseModel {
   }
 
   linkEthesisEmail(thesisId, emailId) {
-    return this.getModel().update({ 
+    return this.getModel().update({
       EthesisEmailId: emailId,
     }, {
-      where: { ThesisId: thesisId, },
+      where: { ThesisId: thesisId },
     });
   }
 

@@ -100,7 +100,7 @@ const Thesis = seq.define("Thesis", {
   graderEval: {
     type: Sequelize.TEXT,
   },
-  pdfFolderName: Sequelize.STRING,
+  pathToFileReview: Sequelize.STRING,
 });
 
 const EthesisToken = seq.define("EthesisToken", {

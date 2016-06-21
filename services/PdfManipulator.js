@@ -22,13 +22,13 @@ class PdfManipulator {
 
     doc
     .fontSize(14)
-    .text(`Title: `)
+    .text("Title: ")
     .moveDown()
     .text("Author: ")
     .moveDown()
     .text("Instructor:")
     .moveDown()
-    .text(`Intended date for councilmeeting:`)
+    .text("Intended date for councilmeeting:")
     .moveDown();
 
     doc.end();

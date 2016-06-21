@@ -1,7 +1,7 @@
 "use strict";
 
 const moment = require("moment");
-const mkdirp = require('mkdirp');
+const mkdirp = require("mkdirp");
 const fs = require("fs");
 const path = require("path");
 
@@ -14,42 +14,42 @@ class FileUploader {
     };
     const chunks = [];
     return new Promise((resolve, reject) => {
-      console.log("yo upload");
+      // console.log("yo upload");
       req.pipe(req.busboy);
       req.busboy.on("error", (error) => {
         reject(error);
-      })
-      req.busboy.on('field', (key, value, keyTruncated, valueTruncated) => {
+      });
+      req.busboy.on("field", (key, value, keyTruncated, valueTruncated) => {
         console.log(`${key} : ${value}`);
         if (key === "id" && value) {
           parsedData.id = value;
         }
       });
-      req.busboy.on('file', (fieldname, file, filename) => {
-        const ext = filename.substr(filename.lastIndexOf('.')+1);
-        console.log('File [' + fieldname + ']: filename: ' + filename);
+      req.busboy.on("file", (fieldname, file, filename) => {
+        const ext = filename.substr(filename.lastIndexOf(".") + 1);
+        // console.log("File [" + fieldname + "]: filename: " + filename);
         if (filename === null && requiredExt !== ext) {
           reject();
         }
-        file.on('data', function(data) {
-          console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
+        file.on("data", (data) => {
+          // console.log("File [" + fieldname + "] got " + data.length + " bytes");
           chunks.push(data);
         });
-        file.on('end', function() {
+        file.on("end", () => {
           // parsedData.file = file;
           parsedData.file = Buffer.concat(chunks);
           parsedData.ext = ext;
-          console.log('File [' + fieldname + '] Finished');
+          // console.log("File [" + fieldname + "] Finished");
         });
       });
       req.busboy.on("finish", () => {
-        console.log("finish busboy parsing")
+        // console.log("finish busboy parsing")
         resolve(parsedData);
-      })
-    })
+      });
+    });
   }
   createThesisFolder(thesis) {
-    console.log("luon kansion!")
+    console.log("luon kansion!");
     const date = moment(new Date()).format("DD.MM.YYYY");
     const dirName = `${thesis.authorLastname}-${thesis.authorFirstname}-${date}`;
     const pathToFolder = `./pdf/${dirName}`;
@@ -63,26 +63,16 @@ class FileUploader {
           resolve(pathToFolder);
         }
       });
-    })
+    });
   }
   writeFile(pathToFile, file) {
-    // console.log(file)
     return new Promise((resolve, reject) => {
       console.log("writing pdf file: " + pathToFile);
       fs.writeFile(pathToFile, file, (err) => {
         if (err) reject(err);
         resolve();
       });
-      // const fstream = fs.createWriteStream(pathToFile);
-      // const fstream = fs.createWriteStream("./tmp/asdf.pdf");
-      // file.pipe(fstream);
-      // fstream.on('close', () => {
-      //   resolve();
-      // });
-      // fstream.on("error", err => {
-      //   reject(err);
-      // })
-    })
+    });
   }
 }
 

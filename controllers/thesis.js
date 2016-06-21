@@ -18,27 +18,27 @@ module.exports.asdf = (req, res) => {
   ThesisPdf
   .findOne({ id: 6 })
   .then((pdf) => {
-    fs.writeFile("./tmp/out.pdf", pdf.review, 'base64', function(err) {
+    fs.writeFile("./tmp/out.pdf", pdf.review, "base64", function (err) {
       console.log(err);
     });
     res.status(200).send("pdf seivattu");
-  })
+  });
 };
 
 module.exports.regeneratePdf = (req, res) => {
-  var pdf = fs.readFileSync('./tmp/print.pdf');
+  var pdf = fs.readFileSync("./tmp/print.pdf");
   // fs.writeFileSync("./tmp/out.pdf", pdf);
   ThesisPdf
   .saveOne({ review: pdf })
   .then((savedPdf) => {
-    return ThesisPdf.findOne({id: savedPdf.id})
+    return ThesisPdf.findOne({ id: savedPdf.id });
   })
   .then((found) => {
-    fs.writeFile("./tmp/out2.pdf", found.review, "base64", function(err) {
+    fs.writeFile("./tmp/out2.pdf", found.review, "base64", function (err) {
       console.log(err);
       res.status(200).send("pdf seivattu");
     });
-  })
+  });
 };
 
 module.exports.sendPdf = (req, res) => {
@@ -69,7 +69,7 @@ module.exports.saveOne = (req, res) => {
   let savedGraders;
   let foundConnections;
 
-  console.log(req.headers)
+  console.log(req.headers);
 
   Thesis
   .findConnections(req.body)
@@ -101,11 +101,11 @@ module.exports.saveOne = (req, res) => {
         thesisId: savedThesis.id,
         token,
       }),
-      // Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
-      // CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
-      // Grader.linkThesisToGraders(savedGraders, savedThesis.id),
-      // Thesis.linkStudyField(savedThesis, foundConnections[1].id),
-      // Thesis.linkUser(savedThesis, req.user.id),
+      Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
+      CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
+      Grader.linkThesisToGraders(savedGraders, savedThesis.id),
+      Thesis.linkStudyField(savedThesis, foundConnections[1].id),
+      Thesis.linkUser(savedThesis, req.user.id),
     ]);
   })
   .then(() => {
@@ -183,12 +183,13 @@ module.exports.updateOneEthesis = (req, res) => {
 
 module.exports.uploadReview = (req, res) => {
   let parsedData;
+  let pathToFile;
 
   FileUploader
   .parseUploadData(req, "pdf")
   .then(data => {
     parsedData = data;
-    console.log(data)
+    // console.log(data);
     return Thesis.findOne({ id: data.id });
   })
   .then(thesis => {
@@ -199,10 +200,20 @@ module.exports.uploadReview = (req, res) => {
     }
   })
   .then(pathToFolder => {
-    return FileUploader.writeFile(pathToFolder + "/graderEval.pdf", parsedData.file);
+    pathToFile = pathToFolder + "/review.pdf";
+    return FileUploader.writeFile(pathToFile, parsedData.file);
+  })
+  .then(() => {
+    return Thesis.update({ pathToFileReview: pathToFile, }, { id: parsedData.id });
   })
   .then(() => {
     res.status(200).send();
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis uploadReview produced an error",
+      error: err,
+    });
   })
   // console.log("yo upload");
   // req.pipe(req.busboy);
@@ -219,11 +230,11 @@ module.exports.uploadReview = (req, res) => {
   //     fstream.on('close', function () {
   //         // res.redirect('back');
   //       res.status(200).send();
-  //     }); 
+  //     });
   //   } else {
   //     console.log("Nothing to upload")
   //     // res.redirect("back")
   //     res.status(200).send();
   //   }
   // });
-}
+};
