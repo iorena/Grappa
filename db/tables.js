@@ -152,16 +152,10 @@ const StudyField = seq.define("StudyField", {
   },
 });
 
-const Review = seq.define("Review", {
+const ThesisReview = seq.define("ThesisReview", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  authoredByProf: {
-    type: Sequelize.STRING,
-    validate: {
-      notEmpty: true,
-    },
-  },
-  text: {
-    type: Sequelize.TEXT,
+  pdf: {
+    type: Sequelize.BLOB,
     validate: {
       notEmpty: true,
     },
@@ -196,8 +190,8 @@ Thesis.belongsTo(StudyField);
 
 EthesisToken.belongsTo(Thesis);
 
-Review.belongsTo(Thesis);
-Review.belongsTo(User);
+ThesisReview.belongsTo(Thesis);
+ThesisReview.belongsTo(User);
 
 Grader.belongsToMany(Thesis, { through: "GraderThesis" });
 Thesis.belongsToMany(Grader, { through: "GraderThesis" });
@@ -207,12 +201,8 @@ Thesis.belongsTo(CouncilMeeting);
 
 User.belongsTo(StudyField);
 
-Thesis.hasMany(Review);
-
 User.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(User);
-
-User.hasMany(Review);
 
 ThesisProgress.belongsTo(EmailStatus, { as: "EthesisEmail" });
 ThesisProgress.belongsTo(EmailStatus, { as: "GraderEvalEmail" });
@@ -238,7 +228,7 @@ module.exports.Models = {
   Grader,
   CouncilMeeting,
   StudyField,
-  Review,
+  ThesisReview,
   ThesisProgress,
   EmailStatus,
   EmailDraft,

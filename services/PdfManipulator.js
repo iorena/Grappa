@@ -17,6 +17,15 @@ class PdfManipulator {
     .map(file => fs.unlinkSync(this.tmpPath + file));
   }
 
+  deleteFolder(pathToFolder) {
+    fs
+    .readdirSync(pathToFolder)
+    .map(file => fs.unlinkSync(this.tmpPath + file));
+
+    fs
+    .rmddir(pathToFolder);
+  }
+
   generateGraderEval() {
     const doc = new PDF();
 
@@ -58,6 +67,8 @@ class PdfManipulator {
     });
   }
 
+// joinPdfsInsideTmp
+// or pathToFolder as parameter?
   joinPdfs() {
     return new Promise((resolve, reject) => {
       const cmd = `pdftk ${this.tmpPath}*.abstract.pdf cat output ${this.tempPath}print.pdf`;
@@ -68,6 +79,7 @@ class PdfManipulator {
     });
   }
 
+// downloadEthesisAndCopyAbstract
   fetchAbstractForThesis(thesis) {
     const name = Date.now();
     return this.downloadPdf(thesis.ethesis, name)
@@ -75,10 +87,13 @@ class PdfManipulator {
   }
 
   fetchAbstractsForTheses(theses) {
+    const tmpFolderName = Date.now();
+    // this.createFolder(this.pathToTmp + tmpFolderName);
     this.cleanTmpFolder();
     return Promise.all(theses.map(thesis => thesis.fetchAbstractForThesis(thesis)))
       .then(() => this.joinPdfs())
       .then(() => {
+        // this.deleteFolder(this.pathToTmp + tmpFolderName);
         console.log("abstracts prepared, Sir!");
       });
   }

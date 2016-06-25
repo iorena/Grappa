@@ -70,22 +70,6 @@ class Thesis extends BaseModel {
       .then(() => savedThesis);
   }
 
-  findAllByUserRole(user) {
-    if (user === undefined) {
-      return Promise.resolve([]);
-    } else if (user.role === "admin" || user.role === "print-person") {
-      return this.findAll();
-    } else if (user.role === "professor") {
-      return this.findAll({
-        StudyFieldId: user.StudyFieldId,
-      });
-    } else if (user.role === "instructor") {
-      return this.findOne({
-        UserId: user.id,
-      });
-    }
-  }
-
   findOne(params) {
     return this.getModel().findOne({
       where: params === undefined ? {} : params,
@@ -134,6 +118,43 @@ class Thesis extends BaseModel {
         model: this.Models.CouncilMeeting,
       }],
     });
+  }
+
+  findAllByUserRole(user) {
+    if (user === undefined) {
+      return Promise.resolve([]);
+    } else if (user.role === "admin" || user.role === "print-person") {
+      return this.findAll();
+    } else if (user.role === "professor") {
+      return this.findAll({
+        StudyFieldId: user.StudyFieldId,
+      });
+    } else if (user.role === "instructor") {
+      return this.findOne({
+        UserId: user.id,
+      });
+    }
+  }
+
+  /**
+   * Finds all pdfs related to thesis and puts them inside tmp-folder
+   *
+   * @return {Array<Array<Promise<File>>>} - List of lists of PDF documents as file streams
+   */
+  findAllDocuments(theses) {
+    return Promise.all(theses.map(thesis => {
+      let pdfs = [];
+      if (thesis.ethesis) {
+        pdfs.push(FileUploader.downloadPdf(thesis.ethesis));
+      }
+      if (thesis.pathToFileReview) {
+        pdfs.push(FileUploader.copyReview(thesis.pathToFileReview));
+      }
+      if (thesis.graderEval) {
+        pdfs.push(FileUploader.generateGraderEvalPdf(thesis.graderEval));
+      }
+      return Promise.all(pdfs);
+    }));
   }
 }
 
