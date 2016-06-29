@@ -2,6 +2,8 @@
 
 const fs = require("fs");
 const path = require("path");
+
+const mkdirp = require("mkdirp");
 const PDF = require("pdfkit");
 const request = require("request");
 const exec = require("child_process").exec;
@@ -11,87 +13,179 @@ class PdfManipulator {
     this.tmpPath = path.join(__dirname, "../tmp/");
   }
 
+  createFolder(name) {
+    const pathToFolder = path.join(__dirname, `../tmp/${name}`);
+    return new Promise((resolve, reject) => {
+      mkdirp(pathToFolder, (err) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(pathToFolder);
+        }
+      });
+    });
+  }
+
+  generatePdfFromReview(review, pathToFile) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(`${pathToFile}.review.pdf`, review, "base64", err => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  downloadEthesisPdf(url, pathToFile) {
+    return new Promise((resolve, reject) => {
+      request(url)
+        .pipe(fs.createWriteStream(pathToFile))
+        .on("close", (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+    });
+  }
+
+  copyAbstractFromEthesis(pageNumber, pathToFile) {
+    return new Promise((resolve, reject) => {
+      const pathToOutput = `${pathToFile}.abstract.pdf`;
+      const cmd = `pdftk ${pathToFile}.ethesis.pdf cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  generatePdfFromEthesis(url, pathToFile) {
+    return this.downloadEthesisPdf(url, `${pathToFile}.ethesis.pdf`)
+      .then(() => this.copyAbstractFromEthesis(2, pathToFile))
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          fs.unlink(`${pathToFile}.ethesis.pdf`, (err) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      });
+  }
+
+  generatePdfFromGraderEval(graderEval, pathToFile) {
+    return new Promise((resolve, reject) => {
+      const doc = new PDF();
+
+      doc
+      .fontSize(14)
+      .text("Title: ")
+      .moveDown()
+      .text("Author: ")
+      .moveDown()
+      .text("Instructor:")
+      .moveDown()
+      .text("Intended date for councilmeeting:")
+      .moveDown()
+      .text("Graders:")
+      .moveDown()
+      .text("Evaluator:")
+      .moveDown()
+      .text("Evaluation: ")
+      .moveDown()
+      .text(graderEval)
+      .moveDown();
+
+      const stream = doc.pipe(fs.createWriteStream(`${pathToFile}.graderEval.pdf`));
+
+      doc.end();
+
+      stream.on("finish", (err) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  joinPdfs(pathToFolder) {
+    return new Promise((resolve, reject) => {
+      const pdfs = path.join(pathToFolder, "/*.pdf");
+      const output = path.join(pathToFolder, "/print.pdf");
+      const cmd = `pdftk ${pdfs} cat output ${output}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(output);
+        }
+      });
+    });
+  }
+
+  generatePdfFromTheses(theses) {
+    const docName = Date.now();
+    let pathToFolder;
+    let order = 1;
+    return this.createFolder(docName)
+      .then((path) => {
+        pathToFolder = path;
+        return Promise.all(theses.map(thesis => {
+          let pdfs = [];
+          if (thesis.ethesis) {
+            pdfs.push(this.generatePdfFromEthesis(thesis.ethesis, `${pathToFolder}/${order}-1`));
+          }
+          if (thesis.ThesisReview) {
+            pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
+          }
+          if (thesis.graderEval) {
+            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, `${pathToFolder}/${order}-3`));
+          }
+          order++;
+          return Promise.all(pdfs);
+        }));
+      })
+      .then(() => {
+        return this.joinPdfs(pathToFolder);
+      })
+      .then((pathToPrintFile) => {
+        return pathToPrintFile;
+      });
+  }
+
+  // unchecked methods if necessary
+
   cleanTmpFolder() {
     fs
     .readdirSync(this.tmpPath)
     .map(file => fs.unlinkSync(this.tmpPath + file));
   }
 
-  generateGraderEval() {
-    const doc = new PDF();
+  deleteFolder(pathToFolder) {
+    fs
+    .readdirSync(pathToFolder)
+    .map(file => fs.unlinkSync(this.tmpPath + file));
 
-    doc
-    .fontSize(14)
-    .text("Title: ")
-    .moveDown()
-    .text("Author: ")
-    .moveDown()
-    .text("Instructor:")
-    .moveDown()
-    .text("Intended date for councilmeeting:")
-    .moveDown();
-
-    doc.end();
-    return doc;
-  }
-
-  downloadPdf(url, name) {
-    return new Promise((resolve, reject) => {
-      request(url)
-        .pipe(fs.createWriteStream(this.tmpPath + name + ".pdf"))
-        .on("close", function (error) {
-          if (error) reject(error);
-          resolve();
-        });
-    });
-  }
-
-  copyPageFromPdf(pageNumber, name) {
-    return new Promise((resolve, reject) => {
-      const pathToPdf = this.tmpPath + name + ".pdf";
-      const pathToOutput = this.tmpPath + name + ".abstract.pdf";
-      const cmd = `pdftk ${pathToPdf} cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
-      const child = exec(cmd, function (err, stdout, stderr) {
-        if (err) reject(err);
-        resolve();
-      });
-    });
-  }
-
-  joinPdfs() {
-    return new Promise((resolve, reject) => {
-      const cmd = `pdftk ${this.tmpPath}*.abstract.pdf cat output ${this.tempPath}print.pdf`;
-      const child = exec(cmd, function (err, stdout, stderr) {
-        if (err) reject(err);
-        resolve();
-      });
-    });
-  }
-
-  fetchAbstractForThesis(thesis) {
-    const name = Date.now();
-    return this.downloadPdf(thesis.ethesis, name)
-      .then(() => this.copyPageFromPdf(2, name));
-  }
-
-  fetchAbstractsForTheses(theses) {
-    this.cleanTmpFolder();
-    return Promise.all(theses.map(thesis => thesis.fetchAbstractForThesis(thesis)))
-      .then(() => this.joinPdfs())
-      .then(() => {
-        console.log("abstracts prepared, Sir!");
-      });
-  }
-
-  prepareAbstractsForMeeting() {
-    const name = Date.now();
-    this.cleanFolder();
-    return this.downloadPdf("https://helda.helsinki.fi/bitstream/handle/10138/161386/ProGraduOjanen.pdf?sequence=1", name)
-      .then(() => this.copyPageFromPdf(2, name))
-      .then(() => this.joinPdfs())
-      .then(() => {
-        console.log("abstracts prepared, Sir!");
-      });
+    fs
+    .rmddir(pathToFolder);
   }
 }
 

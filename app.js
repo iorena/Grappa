@@ -28,8 +28,9 @@ app.use(cors());
 
 // scheduler.startAndRunOnceInHour();
 // scheduler.checkThesisProgresses();
-const asdf = require("./services/PdfManipulator");
-asdf.generateGraderEval();
+// const asdf = require("./services/PdfManipulator");
+// asdf.join();
+// asdf.generatePdfFromGraderEval("hyviä jätkiä", "./tmp/graderit");
 // asdf.prepareAbstractsForMeeting();
 
 app.use("", require("./config/routes"));

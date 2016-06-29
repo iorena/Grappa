@@ -4,5 +4,4 @@ npm-debug.log
 db/dev-db.sqlite
 coverage/
 .env
-pdf/
 tmp/

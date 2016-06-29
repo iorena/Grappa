@@ -3,9 +3,11 @@
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
 const FileUploader = require("../services/FileUploader");
+const PdfManipulator = require("../services/PdfManipulator");
 
 const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
+const ThesisReview = require("../models/ThesisReview");
 const ThesisProgress = require("../models/ThesisProgress");
 // const ThesisPdf = require("../models/ThesisPdf");
 const CouncilMeeting = require("../models/CouncilMeeting");
@@ -14,7 +16,7 @@ const Grader = require("../models/Grader");
 
 const fs = require("fs");
 
-module.exports.asdf = (req, res) => {
+module.exports.asdf2 = (req, res) => {
   ThesisPdf
   .findOne({ id: 6 })
   .then((pdf) => {
@@ -25,13 +27,14 @@ module.exports.asdf = (req, res) => {
   });
 };
 
-module.exports.regeneratePdf = (req, res) => {
+module.exports.asdf = (req, res) => {
   var pdf = fs.readFileSync("./tmp/print.pdf");
+  console.log(pdf);
   // fs.writeFileSync("./tmp/out.pdf", pdf);
-  ThesisPdf
-  .saveOne({ review: pdf })
+  ThesisReview
+  .saveOne({ pdf: pdf })
   .then((savedPdf) => {
-    return ThesisPdf.findOne({ id: savedPdf.id });
+    return ThesisReview.findOne({ id: savedPdf.id });
   })
   .then((found) => {
     fs.writeFile("./tmp/out2.pdf", found.review, "base64", function (err) {
@@ -64,12 +67,27 @@ module.exports.findAllByUserRole = (req, res) => {
   // });
 };
 
+module.exports.findAllByCouncilMeeting = (req, res) => {
+  Thesis
+  .findAllByCouncilMeeting(req.body.CouncilMeetingId)
+  .then(theses => {
+    res.status(200).send(theses);
+  });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message-: "Thesis findAllByUserRole produced an error",
+  //     error: err,
+  //   });
+  // });
+};
+
+
 module.exports.saveOne = (req, res) => {
   let savedThesis;
   let savedGraders;
   let foundConnections;
 
-  console.log(req.headers);
+  // console.log(req.headers);
 
   Thesis
   .findConnections(req.body)
@@ -103,7 +121,7 @@ module.exports.saveOne = (req, res) => {
       }),
       Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
       CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
-      Grader.linkThesisToGraders(savedGraders, savedThesis.id),
+      // Grader.linkThesisToGraders(savedGraders, savedThesis.id),
       Thesis.linkStudyField(savedThesis, foundConnections[1].id),
       Thesis.linkUser(savedThesis, req.user.id),
     ]);
@@ -189,6 +207,39 @@ module.exports.uploadReview = (req, res) => {
   .parseUploadData(req, "pdf")
   .then(data => {
     parsedData = data;
+    console.log(data.file);
+    return Thesis.findOne({ id: data.id });
+  })
+  .then(thesis => {
+    if (thesis) {
+      return ThesisReview.saveOne({
+        pdf: parsedData.file,
+        ThesisId: parsedData.id,
+        UserId: req.user.id,
+      });
+    } else {
+      throw new Error("No thesis found");
+    }
+  })
+  .then(() => {
+    res.status(200).send();
+  });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "Thesis uploadReview produced an error",
+  //     error: err,
+  //   });
+  // })
+};
+
+module.exports.uploadReview2 = (req, res) => {
+  let parsedData;
+  let pathToFile;
+
+  FileUploader
+  .parseUploadData(req, "pdf")
+  .then(data => {
+    parsedData = data;
     // console.log(data);
     return Thesis.findOne({ id: data.id });
   })
@@ -204,7 +255,7 @@ module.exports.uploadReview = (req, res) => {
     return FileUploader.writeFile(pathToFile, parsedData.file);
   })
   .then(() => {
-    return Thesis.update({ pathToFileReview: pathToFile, }, { id: parsedData.id });
+    return Thesis.update({ pathToFileReview: pathToFile }, { id: parsedData.id });
   })
   .then(() => {
     res.status(200).send();
@@ -214,27 +265,27 @@ module.exports.uploadReview = (req, res) => {
       message: "Thesis uploadReview produced an error",
       error: err,
     });
+  });
+};
+
+module.exports.generateThesesToPdf = (req, res) => {
+  // console.log(req.headers)
+  const thesisIDs = req.body;
+  Thesis
+  .findAllDocuments(thesisIDs)
+  .then((theses) => PdfManipulator.generatePdfFromTheses(theses))
+  .then((pathToFile) => {
+    const file = fs.createReadStream(pathToFile);
+    const stat = fs.statSync(pathToFile);
+    res.setHeader("Content-Length", stat.size);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
+    file.pipe(res);
   })
-  // console.log("yo upload");
-  // req.pipe(req.busboy);
-  // req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
-  //   console.log(`${key} : ${value}`);
-  // });
-  // req.busboy.on('file', function (fieldname, file, filename) {
-  //   var ext = filename.substr(filename.lastIndexOf('.')+1);
-  //   console.log(ext)
-  //   if (filename) {
-  //     console.log("Uploading: " + filename);
-  //     var fstream = fs.createWriteStream("./pdf/" + filename);
-  //     file.pipe(fstream);
-  //     fstream.on('close', function () {
-  //         // res.redirect('back');
-  //       res.status(200).send();
-  //     });
-  //   } else {
-  //     console.log("Nothing to upload")
-  //     // res.redirect("back")
-  //     res.status(200).send();
-  //   }
-  // });
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis generateThesesToPdf produced an error",
+      error: err,
+    });
+  });
 };

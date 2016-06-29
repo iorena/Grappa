@@ -51,7 +51,7 @@ class FileUploader {
   createThesisFolder(thesis) {
     console.log("luon kansion!");
     const date = moment(new Date()).format("DD.MM.YYYY");
-    const dirName = `${thesis.authorLastname}-${thesis.authorFirstname}-${date}`;
+    const dirName = `${thesis.authorLastname.toLowerCase()}-${thesis.authorFirstname.toLowerCase()}-${date}`;
     const pathToFolder = `./pdf/${dirName}`;
     // console.log(pathToFolder);
     return new Promise((resolve, reject) => {

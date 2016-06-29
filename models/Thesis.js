@@ -10,10 +10,14 @@ class Thesis extends BaseModel {
   findConnections(thesis) {
     return Promise.all([
       this.Models.CouncilMeeting.findOne({
-        id: thesis.CouncilMeetingId,
+        where: {
+          id: thesis.CouncilMeetingId,
+        },
       }),
       this.Models.StudyField.findOne({
-        id: thesis.StudyFieldId,
+        where: {
+          id: thesis.StudyFieldId,
+        },
       }),
     ]);
   }
@@ -45,6 +49,7 @@ class Thesis extends BaseModel {
   }
 
   saveOne(params, councilmeeting) {
+    console.log(councilmeeting);
     const values = Object.assign({}, params);
     if (councilmeeting !== null) {
       values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
@@ -70,22 +75,6 @@ class Thesis extends BaseModel {
       .then(() => savedThesis);
   }
 
-  findAllByUserRole(user) {
-    if (user === undefined) {
-      return Promise.resolve([]);
-    } else if (user.role === "admin" || user.role === "print-person") {
-      return this.findAll();
-    } else if (user.role === "professor") {
-      return this.findAll({
-        StudyFieldId: user.StudyFieldId,
-      });
-    } else if (user.role === "instructor") {
-      return this.findOne({
-        UserId: user.id,
-      });
-    }
-  }
-
   findOne(params) {
     return this.getModel().findOne({
       where: params === undefined ? {} : params,
@@ -103,6 +92,11 @@ class Thesis extends BaseModel {
           model: this.Models.EmailStatus,
           as: "PrintEmail",
         }, ],
+      }, {
+        model: this.Models.StudyField,
+      }, {
+        model: this.Models.User,
+        attributes: ["id", "email", "name", "role", "StudyFieldId"],
       }, {
         model: this.Models.CouncilMeeting,
       }],
@@ -130,11 +124,49 @@ class Thesis extends BaseModel {
         model: this.Models.StudyField,
       }, {
         model: this.Models.User,
+        attributes: ["id", "email", "name", "role", "StudyFieldId"],
       }, {
         model: this.Models.CouncilMeeting,
       }],
     });
   }
+
+  findAllByUserRole(user) {
+    if (user === undefined) {
+      return Promise.resolve([]);
+    } else if (user.role === "admin" || user.role === "print-person") {
+      return this.findAll();
+    } else if (user.role === "professor") {
+      return this.findAll({
+        StudyFieldId: user.StudyFieldId,
+      });
+    } else if (user.role === "instructor") {
+      return this.findOne({
+        UserId: user.id,
+      });
+    }
+  }
+
+  findAllByCouncilMeeting(cm_id) {
+    return this.findAll({
+      CouncilMeetingId: cm_id,
+    });
+  }
+
+  findOneDocuments(thesisID) {
+    return this.getModel().findOne({
+      attributes: ["id", "ethesis", "graderEval"],
+      where: { id: thesisID },
+      include: [{
+        model: this.Models.ThesisReview,
+      }],
+    });
+  }
+
+  findAllDocuments(thesisIDs) {
+    return Promise.all(thesisIDs.map(thesisID => this.findOneDocuments(thesisID)));
+  }
 }
+
 
 module.exports = new Thesis();

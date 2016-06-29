@@ -48,6 +48,14 @@ module.exports.addTestData = () => Promise.all([
     isActive: true,
     StudyFieldId: null,
   }),
+  models.User.create({
+    name: "Proffa 1",
+    passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
+    email: "tkoivisto456@gmail.com",
+    role: "professor",
+    isActive: true,
+    StudyFieldId: 1,
+  }),
   models.CouncilMeeting.create({
     date: new Date("11/05/2016"),
   }),

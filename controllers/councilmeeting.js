@@ -2,6 +2,20 @@
 
 const CouncilMeeting = require("../models/CouncilMeeting");
 
+module.exports.getNextMeetingWithTheses = (req, res) => {
+  CouncilMeeting
+  .getNextMeetingWithTheses()
+  .then(cmeeting => {
+    res.status(200).send(cmeeting);
+  });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "CouncilMeeting getNextMeetingWithTheses produced an error",
+  //     error: err,
+  //   });
+  // });
+};
+
 module.exports.findAll = (req, res) => {
   CouncilMeeting
   .findAll()
