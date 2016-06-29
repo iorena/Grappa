@@ -37,7 +37,7 @@ class PdfManipulator {
           resolve();
         }
       });
-    })
+    });
   }
 
   downloadEthesisPdf(url, pathToFile) {
@@ -84,7 +84,7 @@ class PdfManipulator {
             }
           });
         });
-      })
+      });
   }
 
   generatePdfFromGraderEval(graderEval, pathToFile) {
@@ -110,7 +110,7 @@ class PdfManipulator {
       .text(graderEval)
       .moveDown();
 
-      const stream = doc.pipe(fs.createWriteStream(`${pathToFile}.graderEval.pdf`))
+      const stream = doc.pipe(fs.createWriteStream(`${pathToFile}.graderEval.pdf`));
 
       doc.end();
 
@@ -121,8 +121,8 @@ class PdfManipulator {
         } else {
           resolve();
         }
-      })
-    })
+      });
+    });
   }
 
   joinPdfs(pathToFolder) {
@@ -161,14 +161,14 @@ class PdfManipulator {
           }
           order++;
           return Promise.all(pdfs);
-        }))
+        }));
       })
       .then(() => {
         return this.joinPdfs(pathToFolder);
       })
       .then((pathToPrintFile) => {
         return pathToPrintFile;
-      })
+      });
   }
 
   // unchecked methods if necessary

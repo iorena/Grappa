@@ -14,7 +14,7 @@ class CouncilMeeting extends BaseModel {
 
   getNextMeetingWithTheses() {
     return this.getModel()
-      .findOne({ 
+      .findOne({
         where: {
           createdAt: {
             $lt: new Date(),
@@ -23,16 +23,16 @@ class CouncilMeeting extends BaseModel {
         include: [{
           model: this.Models.Thesis,
           include: [{
-              model: this.Models.Grader,
-            }, {
+            model: this.Models.Grader,
+          }, {
               model: this.Models.ThesisProgress,
             }, {
               model: this.Models.StudyField,
             }, {
               model: this.Models.User,
             }],
-          }],
-      })
+        }],
+      });
   }
 }
 

@@ -49,7 +49,7 @@ class Thesis extends BaseModel {
   }
 
   saveOne(params, councilmeeting) {
-    console.log(councilmeeting)
+    console.log(councilmeeting);
     const values = Object.assign({}, params);
     if (councilmeeting !== null) {
       values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
@@ -164,7 +164,7 @@ class Thesis extends BaseModel {
   }
 
   findAllDocuments(thesisIDs) {
-    return Promise.all(thesisIDs.map(thesisID => this.findOneDocuments(thesisID)))
+    return Promise.all(thesisIDs.map(thesisID => this.findOneDocuments(thesisID)));
   }
 }
 

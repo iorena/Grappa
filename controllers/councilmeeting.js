@@ -7,7 +7,7 @@ module.exports.getNextMeetingWithTheses = (req, res) => {
   .getNextMeetingWithTheses()
   .then(cmeeting => {
     res.status(200).send(cmeeting);
-  })
+  });
   // .catch(err => {
   //   res.status(500).send({
   //     message: "CouncilMeeting getNextMeetingWithTheses produced an error",
