@@ -79,6 +79,38 @@ class PdfManipulator {
     });
   }
 
+  generatePdfFromReview(review, pdfName) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(`./tmp/${pdfName}.review.pdf`, review, "base64", err => {
+        if (err) reject(err);
+        resolve();
+      });
+    })
+  }
+
+  generatePdfFromGraderEval(graderEval, pdfName) {
+    return new Promise((resolve, reject) => {
+      const doc = new PDF();
+
+      doc
+      .fontSize(14)
+      .text("Title: ")
+      .moveDown()
+      .text("Author: ")
+      .moveDown()
+      .text("Instructor:")
+      .moveDown()
+      .text("Intended date for councilmeeting:")
+      .moveDown();
+
+      doc.end();
+      fs.writeFile(`./tmp/${pdfName}.graderEval.pdf`, doc, "base64", err => {
+        if (err) reject(err);
+        resolve();
+      });
+    })
+  }
+
 // downloadEthesisAndCopyAbstract
   fetchAbstractForThesis(thesis) {
     const name = Date.now();

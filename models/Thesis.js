@@ -2,6 +2,8 @@
 
 const BaseModel = require("./BaseModel");
 
+const PdfManipulator = require("../services/PdfManipulator");
+
 class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
@@ -10,10 +12,14 @@ class Thesis extends BaseModel {
   findConnections(thesis) {
     return Promise.all([
       this.Models.CouncilMeeting.findOne({
-        id: thesis.CouncilMeetingId,
+        where: {
+          id: thesis.CouncilMeetingId,
+        },
       }),
       this.Models.StudyField.findOne({
-        id: thesis.StudyFieldId,
+        where: {
+          id: thesis.StudyFieldId,
+        },
       }),
     ]);
   }
@@ -45,6 +51,7 @@ class Thesis extends BaseModel {
   }
 
   saveOne(params, councilmeeting) {
+    console.log(councilmeeting)
     const values = Object.assign({}, params);
     if (councilmeeting !== null) {
       values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
@@ -114,6 +121,7 @@ class Thesis extends BaseModel {
         model: this.Models.StudyField,
       }, {
         model: this.Models.User,
+        attributes: ["id", "email", "name", "role", "StudyFieldId"],
       }, {
         model: this.Models.CouncilMeeting,
       }],
@@ -136,6 +144,12 @@ class Thesis extends BaseModel {
     }
   }
 
+  findAllByCouncilMeeting(cm_id) {
+    return this.findAll({
+      CouncilMeetingId: cm_id,
+    });
+  }
+
   /**
    * Finds all pdfs related to thesis and puts them inside tmp-folder
    *
@@ -143,19 +157,25 @@ class Thesis extends BaseModel {
    */
   findAllDocuments(theses) {
     return Promise.all(theses.map(thesis => {
+      const pdfName = Date.now();
       let pdfs = [];
       if (thesis.ethesis) {
-        pdfs.push(FileUploader.downloadPdf(thesis.ethesis));
+        pdfs.push(PdfManipulator.downloadPdf(thesis.ethesis, pdfName + ".ethesis"));
       }
-      if (thesis.pathToFileReview) {
-        pdfs.push(FileUploader.copyReview(thesis.pathToFileReview));
-      }
+      pdfs.push(
+        this.Models.ThesisReview
+        .findOne({ where: { ThesisId: thesis.id }})
+        .then(review => {
+          return PdfManipulator.generatePdfFromReview(review, pdfName);
+        })
+      );
       if (thesis.graderEval) {
-        pdfs.push(FileUploader.generateGraderEvalPdf(thesis.graderEval));
+        pdfs.push(PdfManipulator.generatePdfFromGraderEval(thesis.graderEval, pdfName));
       }
       return Promise.all(pdfs);
     }));
   }
 }
+
 
 module.exports = new Thesis();

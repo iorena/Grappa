@@ -49,6 +49,9 @@ router.get("/auth", auth.authenticate, authTest);
 router.post("/login", userCtrl.loginUser);
 
 router.get("/asdf", thesisCtrl.asdf);
+router.post("/thesis/print", thesisCtrl.generateThesesToPdf);
+router.post("/thesis/next", thesisCtrl.findAllByCouncilMeeting);
+router.get("/councilmeeting/next", councilmeetingCtrl.getNextMeetingWithTheses);
 
 router.use("", auth.authenticate);
 
@@ -62,7 +65,6 @@ router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 // router.get("/thesis/:id/pdf", thesisCtrl.createPdf);
 // router.post("/thesis/pdf", thesisCtrl.createAllPdfs);
 router.post("/thesis/review", thesisCtrl.uploadReview);
-router.post("/thesis/print", thesisCtrl.generateThesesToPdf);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);

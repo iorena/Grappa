@@ -66,12 +66,27 @@ module.exports.findAllByUserRole = (req, res) => {
   // });
 };
 
+module.exports.findAllByCouncilMeeting = (req, res) => {
+  Thesis
+  .findAllByCouncilMeeting(req.body.CouncilMeetingId)
+  .then(theses => {
+    res.status(200).send(theses);
+  });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message-: "Thesis findAllByUserRole produced an error",
+  //     error: err,
+  //   });
+  // });
+};
+
+
 module.exports.saveOne = (req, res) => {
   let savedThesis;
   let savedGraders;
   let foundConnections;
 
-  console.log(req.headers);
+  // console.log(req.headers);
 
   Thesis
   .findConnections(req.body)
@@ -256,21 +271,24 @@ module.exports.generateThesesToPdf = (req, res) => {
   const theses = req.body;
   Thesis
   .findAllDocuments(theses)
-  .then(pdfs => {
-    return FileUploader.joinPdfs(pdfs);
+  .then(() => {
+    res.status(200).send();
   })
-  .then(pdf => {
-    var file = fs.createReadStream("./tmp/print.pdf");
-    var stat = fs.statSync("./tmp/print.pdf");
-    res.setHeader("Content-Length", stat.size);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
-    file.pipe(res);
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Thesis generateThesesToPdf produced an error",
-      error: err,
-    });
-  });
+  // .then(pdfs => {
+  //   return FileUploader.joinPdfs(pdfs);
+  // })
+  // .then(pdf => {
+  //   var file = fs.createReadStream("./tmp/print.pdf");
+  //   var stat = fs.statSync("./tmp/print.pdf");
+  //   res.setHeader("Content-Length", stat.size);
+  //   res.setHeader("Content-Type", "application/pdf");
+  //   res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
+  //   file.pipe(res);
+  // })
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "Thesis generateThesesToPdf produced an error",
+  //     error: err,
+  //   });
+  // });
 };
