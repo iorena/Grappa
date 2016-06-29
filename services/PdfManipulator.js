@@ -87,6 +87,44 @@ class PdfManipulator {
       })
   }
 
+  generatePdfFromGraderEval(graderEval, pathToFile) {
+    return new Promise((resolve, reject) => {
+      const doc = new PDF();
+
+      doc
+      .fontSize(14)
+      .text("Title: ")
+      .moveDown()
+      .text("Author: ")
+      .moveDown()
+      .text("Instructor:")
+      .moveDown()
+      .text("Intended date for councilmeeting:")
+      .moveDown()
+      .text("Graders:")
+      .moveDown()
+      .text("Evaluator:")
+      .moveDown()
+      .text("Evaluation: ")
+      .moveDown()
+      .text(graderEval)
+      .moveDown();
+
+      const stream = doc.pipe(fs.createWriteStream(`${pathToFile}.graderEval.pdf`))
+
+      doc.end();
+
+      stream.on("finish", (err) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
+    })
+  }
+
   joinPdfs(pathToFolder) {
     return new Promise((resolve, reject) => {
       const pdfs = path.join(pathToFolder, "/*.pdf");
@@ -119,7 +157,7 @@ class PdfManipulator {
             pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
           }
           if (thesis.graderEval) {
-            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, docName));
+            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, `${pathToFolder}/${order}-3`));
           }
           order++;
           return Promise.all(pdfs);
@@ -148,80 +186,6 @@ class PdfManipulator {
 
     fs
     .rmddir(pathToFolder);
-  }
-
-  generateGraderEval() {
-    const doc = new PDF();
-
-    doc
-    .fontSize(14)
-    .text("Title: ")
-    .moveDown()
-    .text("Author: ")
-    .moveDown()
-    .text("Instructor:")
-    .moveDown()
-    .text("Intended date for councilmeeting:")
-    .moveDown();
-
-    doc.end();
-    return doc;
-  }
-
-// joinPdfsInsideTmp
-// or pathToFolder as parameter?
-
-  generatePdfFromGraderEval(graderEval, pdfName) {
-    return new Promise((resolve, reject) => {
-      const doc = new PDF();
-
-      doc
-      .fontSize(14)
-      .text("Title: ")
-      .moveDown()
-      .text("Author: ")
-      .moveDown()
-      .text("Instructor:")
-      .moveDown()
-      .text("Intended date for councilmeeting:")
-      .moveDown();
-
-      doc.end();
-      fs.writeFile(`./tmp/${pdfName}.graderEval.pdf`, doc, "base64", err => {
-        if (err) reject(err);
-        resolve();
-      });
-    })
-  }
-
-// downloadEthesisAndCopyAbstract
-  fetchAbstractForThesis(thesis) {
-    const name = Date.now();
-    return this.downloadPdf(thesis.ethesis, name)
-      .then(() => this.copyPageFromPdf(2, name));
-  }
-
-  fetchAbstractsForTheses(theses) {
-    const tmpFolderName = Date.now();
-    // this.createFolder(this.pathToTmp + tmpFolderName);
-    this.cleanTmpFolder();
-    return Promise.all(theses.map(thesis => thesis.fetchAbstractForThesis(thesis)))
-      .then(() => this.joinPdfs())
-      .then(() => {
-        // this.deleteFolder(this.pathToTmp + tmpFolderName);
-        console.log("abstracts prepared, Sir!");
-      });
-  }
-
-  prepareAbstractsForMeeting() {
-    const name = Date.now();
-    this.cleanFolder();
-    return this.downloadPdf("https://helda.helsinki.fi/bitstream/handle/10138/161386/ProGraduOjanen.pdf?sequence=1", name)
-      .then(() => this.copyPageFromPdf(2, name))
-      .then(() => this.joinPdfs())
-      .then(() => {
-        console.log("abstracts prepared, Sir!");
-      });
   }
 }
 

@@ -93,6 +93,11 @@ class Thesis extends BaseModel {
           as: "PrintEmail",
         }, ],
       }, {
+        model: this.Models.StudyField,
+      }, {
+        model: this.Models.User,
+        attributes: ["id", "email", "name", "role", "StudyFieldId"],
+      }, {
         model: this.Models.CouncilMeeting,
       }],
     });
