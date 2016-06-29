@@ -269,28 +269,23 @@ module.exports.uploadReview2 = (req, res) => {
 };
 
 module.exports.generateThesesToPdf = (req, res) => {
+  // console.log(req.headers)
   const thesisIDs = req.body;
   Thesis
   .findAllDocuments(thesisIDs)
   .then((theses) => PdfManipulator.generatePdfFromTheses(theses))
-  .then(() => {
-    res.status(200).send();
+  .then((pathToFile) => {
+    const file = fs.createReadStream(pathToFile);
+    const stat = fs.statSync(pathToFile);
+    res.setHeader("Content-Length", stat.size);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
+    file.pipe(res);
   })
-  // .then(pdfs => {
-  //   return FileUploader.joinPdfs(pdfs);
-  // })
-  // .then(pdf => {
-  //   var file = fs.createReadStream("./tmp/print.pdf");
-  //   var stat = fs.statSync("./tmp/print.pdf");
-  //   res.setHeader("Content-Length", stat.size);
-  //   res.setHeader("Content-Type", "application/pdf");
-  //   res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
-  //   file.pipe(res);
-  // })
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message: "Thesis generateThesesToPdf produced an error",
-  //     error: err,
-  //   });
-  // });
+  .catch(err => {
+    res.status(500).send({
+      message: "Thesis generateThesesToPdf produced an error",
+      error: err,
+    });
+  });
 };

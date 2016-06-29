@@ -30,8 +30,12 @@ class PdfManipulator {
   generatePdfFromReview(review, pathToFile) {
     return new Promise((resolve, reject) => {
       fs.writeFile(`${pathToFile}.review.pdf`, review, "base64", err => {
-        if (err) reject(err);
-        resolve();
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
+        }
       });
     })
   }
@@ -40,9 +44,13 @@ class PdfManipulator {
     return new Promise((resolve, reject) => {
       request(url)
         .pipe(fs.createWriteStream(pathToFile))
-        .on("close", function (error) {
-          if (error) reject(error);
-          resolve();
+        .on("close", (err) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve();
+          }
         });
     });
   }
@@ -52,8 +60,12 @@ class PdfManipulator {
       const pathToOutput = `${pathToFile}.abstract.pdf`;
       const cmd = `pdftk ${pathToFile}.ethesis.pdf cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
       const child = exec(cmd, function (err, stdout, stderr) {
-        if (err) reject(err);
-        resolve();
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
+        }
       });
     });
   }
@@ -62,7 +74,62 @@ class PdfManipulator {
     return this.downloadEthesisPdf(url, `${pathToFile}.ethesis.pdf`)
       .then(() => this.copyAbstractFromEthesis(2, pathToFile))
       .then(() => {
-        fs.unlinkSync(`${pathToFile}.ethesis.pdf`);
+        return new Promise((resolve, reject) => {
+          fs.unlink(`${pathToFile}.ethesis.pdf`, (err) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      })
+  }
+
+  joinPdfs(pathToFolder) {
+    return new Promise((resolve, reject) => {
+      const pdfs = path.join(pathToFolder, "/*.pdf");
+      const output = path.join(pathToFolder, "/print.pdf");
+      const cmd = `pdftk ${pdfs} cat output ${output}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(output);
+        }
+      });
+    });
+  }
+
+  generatePdfFromTheses(theses) {
+    const docName = Date.now();
+    let pathToFolder;
+    let order = 1;
+    return this.createFolder(docName)
+      .then((path) => {
+        pathToFolder = path;
+        return Promise.all(theses.map(thesis => {
+          let pdfs = [];
+          if (thesis.ethesis) {
+            pdfs.push(this.generatePdfFromEthesis(thesis.ethesis, `${pathToFolder}/${order}-1`));
+          }
+          if (thesis.ThesisReview) {
+            pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
+          }
+          if (thesis.graderEval) {
+            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, docName));
+          }
+          order++;
+          return Promise.all(pdfs);
+        }))
+      })
+      .then(() => {
+        return this.joinPdfs(pathToFolder);
+      })
+      .then((pathToPrintFile) => {
+        return pathToPrintFile;
       })
   }
 
@@ -103,15 +170,6 @@ class PdfManipulator {
 
 // joinPdfsInsideTmp
 // or pathToFolder as parameter?
-  joinPdfs() {
-    return new Promise((resolve, reject) => {
-      const cmd = `pdftk ${this.tmpPath}*.abstract.pdf cat output ${this.tempPath}print.pdf`;
-      const child = exec(cmd, function (err, stdout, stderr) {
-        if (err) reject(err);
-        resolve();
-      });
-    });
-  }
 
   generatePdfFromGraderEval(graderEval, pdfName) {
     return new Promise((resolve, reject) => {
@@ -164,32 +222,6 @@ class PdfManipulator {
       .then(() => {
         console.log("abstracts prepared, Sir!");
       });
-  }
-
-  generatePdfFromTheses(theses) {
-    // let pathToFolder;
-    const docName = Date.now();
-    let order = 1;
-    return this.createFolder(docName)
-      .then((pathToFolder) =>
-        Promise.all(theses.map(thesis => {
-          let pdfs = [];
-          if (thesis.ethesis) {
-            pdfs.push(this.generatePdfFromEthesis(thesis.ethesis, `${pathToFolder}/${order}-1`));
-          }
-          if (thesis.ThesisReview) {
-            pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
-          }
-          if (thesis.graderEval) {
-            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, docName));
-          }
-          order++;
-          return Promise.all(pdfs);
-        }))
-      )
-    // return new Promise((resolve, reject) => {
-
-    // })
   }
 }
 

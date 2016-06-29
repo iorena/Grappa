@@ -161,33 +161,6 @@ class Thesis extends BaseModel {
   findAllDocuments(thesisIDs) {
     return Promise.all(thesisIDs.map(thesisID => this.findOneDocuments(thesisID)))
   }
-
-  /**
-   * Finds all pdfs related to thesis and puts them inside tmp-folder
-   *
-   * @return {Array<Array<Promise<File>>>} - List of lists of PDF documents as file streams
-   */
-  findAllDocuments2(theses) {
-    return Promise.all(theses.map(thesis => {
-      console.log(thesis)
-      const pdfName = Date.now();
-      let pdfs = [];
-      if (thesis.ethesis) {
-        pdfs.push(PdfManipulator.downloadPdf(thesis.ethesis, pdfName + ".ethesis"));
-      }
-      pdfs.push(
-        this.Models.ThesisReview
-        .findOne({ where: { ThesisId: thesis.id }})
-        .then(review => {
-          return PdfManipulator.generatePdfFromReview(review, pdfName);
-        })
-      );
-      if (thesis.graderEval) {
-        pdfs.push(PdfManipulator.generatePdfFromGraderEval(thesis.graderEval, pdfName));
-      }
-      return Promise.all(pdfs);
-    }));
-  }
 }
 
 
