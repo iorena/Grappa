@@ -49,7 +49,7 @@ router.get("/auth", auth.authenticate, authTest);
 router.post("/login", userCtrl.loginUser);
 
 router.get("/asdf", thesisCtrl.asdf);
-router.post("/thesis/print", thesisCtrl.generateThesesToPdf);
+router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 router.post("/thesis/next", thesisCtrl.findAllByCouncilMeeting);
 router.get("/councilmeeting/next", councilmeetingCtrl.getNextMeetingWithTheses);
 

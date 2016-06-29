@@ -2,6 +2,8 @@
 
 const fs = require("fs");
 const path = require("path");
+
+const mkdirp = require("mkdirp");
 const PDF = require("pdfkit");
 const request = require("request");
 const exec = require("child_process").exec;
@@ -10,6 +12,61 @@ class PdfManipulator {
   constructor() {
     this.tmpPath = path.join(__dirname, "../tmp/");
   }
+
+  createFolder(name) {
+    const pathToFolder = path.join(__dirname, `../tmp/${name}`);
+    return new Promise((resolve, reject) => {
+      mkdirp(pathToFolder, (err) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(pathToFolder);
+        }
+      });
+    });
+  }
+
+  generatePdfFromReview(review, pathToFile) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(`${pathToFile}.review.pdf`, review, "base64", err => {
+        if (err) reject(err);
+        resolve();
+      });
+    })
+  }
+
+  downloadEthesisPdf(url, pathToFile) {
+    return new Promise((resolve, reject) => {
+      request(url)
+        .pipe(fs.createWriteStream(pathToFile))
+        .on("close", function (error) {
+          if (error) reject(error);
+          resolve();
+        });
+    });
+  }
+
+  copyAbstractFromEthesis(pageNumber, pathToFile) {
+    return new Promise((resolve, reject) => {
+      const pathToOutput = `${pathToFile}.abstract.pdf`;
+      const cmd = `pdftk ${pathToFile}.ethesis.pdf cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) reject(err);
+        resolve();
+      });
+    });
+  }
+
+  generatePdfFromEthesis(url, pathToFile) {
+    return this.downloadEthesisPdf(url, `${pathToFile}.ethesis.pdf`)
+      .then(() => this.copyAbstractFromEthesis(2, pathToFile))
+      .then(() => {
+        fs.unlinkSync(`${pathToFile}.ethesis.pdf`);
+      })
+  }
+
+  // unchecked methods if necessary
 
   cleanTmpFolder() {
     fs
@@ -44,29 +101,6 @@ class PdfManipulator {
     return doc;
   }
 
-  downloadPdf(url, name) {
-    return new Promise((resolve, reject) => {
-      request(url)
-        .pipe(fs.createWriteStream(this.tmpPath + name + ".pdf"))
-        .on("close", function (error) {
-          if (error) reject(error);
-          resolve();
-        });
-    });
-  }
-
-  copyPageFromPdf(pageNumber, name) {
-    return new Promise((resolve, reject) => {
-      const pathToPdf = this.tmpPath + name + ".pdf";
-      const pathToOutput = this.tmpPath + name + ".abstract.pdf";
-      const cmd = `pdftk ${pathToPdf} cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
-      const child = exec(cmd, function (err, stdout, stderr) {
-        if (err) reject(err);
-        resolve();
-      });
-    });
-  }
-
 // joinPdfsInsideTmp
 // or pathToFolder as parameter?
   joinPdfs() {
@@ -77,15 +111,6 @@ class PdfManipulator {
         resolve();
       });
     });
-  }
-
-  generatePdfFromReview(review, pdfName) {
-    return new Promise((resolve, reject) => {
-      fs.writeFile(`./tmp/${pdfName}.review.pdf`, review, "base64", err => {
-        if (err) reject(err);
-        resolve();
-      });
-    })
   }
 
   generatePdfFromGraderEval(graderEval, pdfName) {
@@ -139,6 +164,32 @@ class PdfManipulator {
       .then(() => {
         console.log("abstracts prepared, Sir!");
       });
+  }
+
+  generatePdfFromTheses(theses) {
+    // let pathToFolder;
+    const docName = Date.now();
+    let order = 1;
+    return this.createFolder(docName)
+      .then((pathToFolder) =>
+        Promise.all(theses.map(thesis => {
+          let pdfs = [];
+          if (thesis.ethesis) {
+            pdfs.push(this.generatePdfFromEthesis(thesis.ethesis, `${pathToFolder}/${order}-1`));
+          }
+          if (thesis.ThesisReview) {
+            pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
+          }
+          if (thesis.graderEval) {
+            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, docName));
+          }
+          order++;
+          return Promise.all(pdfs);
+        }))
+      )
+    // return new Promise((resolve, reject) => {
+
+    // })
   }
 }
 

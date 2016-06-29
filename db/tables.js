@@ -192,6 +192,7 @@ EthesisToken.belongsTo(Thesis);
 
 ThesisReview.belongsTo(Thesis);
 ThesisReview.belongsTo(User);
+Thesis.hasOne(ThesisReview);
 
 Grader.belongsToMany(Thesis, { through: "GraderThesis" });
 Thesis.belongsToMany(Grader, { through: "GraderThesis" });

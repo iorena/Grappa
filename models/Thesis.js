@@ -2,8 +2,6 @@
 
 const BaseModel = require("./BaseModel");
 
-const PdfManipulator = require("../services/PdfManipulator");
-
 class Thesis extends BaseModel {
   constructor() {
     super("Thesis");
@@ -150,13 +148,28 @@ class Thesis extends BaseModel {
     });
   }
 
+  findOneDocuments(thesisID) {
+    return this.getModel().findOne({
+      attributes: ["id", "ethesis", "graderEval"],
+      where: { id: thesisID },
+      include: [{
+        model: this.Models.ThesisReview,
+      }],
+    });
+  }
+
+  findAllDocuments(thesisIDs) {
+    return Promise.all(thesisIDs.map(thesisID => this.findOneDocuments(thesisID)))
+  }
+
   /**
    * Finds all pdfs related to thesis and puts them inside tmp-folder
    *
    * @return {Array<Array<Promise<File>>>} - List of lists of PDF documents as file streams
    */
-  findAllDocuments(theses) {
+  findAllDocuments2(theses) {
     return Promise.all(theses.map(thesis => {
+      console.log(thesis)
       const pdfName = Date.now();
       let pdfs = [];
       if (thesis.ethesis) {

@@ -3,6 +3,7 @@
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
 const FileUploader = require("../services/FileUploader");
+const PdfManipulator = require("../services/PdfManipulator");
 
 const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
@@ -268,9 +269,10 @@ module.exports.uploadReview2 = (req, res) => {
 };
 
 module.exports.generateThesesToPdf = (req, res) => {
-  const theses = req.body;
+  const thesisIDs = req.body;
   Thesis
-  .findAllDocuments(theses)
+  .findAllDocuments(thesisIDs)
+  .then((theses) => PdfManipulator.generatePdfFromTheses(theses))
   .then(() => {
     res.status(200).send();
   })
