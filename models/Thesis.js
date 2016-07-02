@@ -108,6 +108,7 @@ class Thesis extends BaseModel {
       where: params === undefined ? {} : params,
       include: [{
         model: this.Models.Grader,
+        attributes: ["id", "name", "title"],
       }, {
         model: this.Models.ThesisProgress,
         include: [{
