@@ -30,7 +30,7 @@ nvm install 5.9.1
 npm install pm2 -g
 # install nginx to be run as web-proxy and better performance
 sudo apt-get install -y nginx
-# install PostgreSQL
+# install PostgreSQL 
 sudo apt-get install -y postgresql postgresql-contrib
 # install pdftk for manipulation of PDFs
 sudo apt-get install -y pdftk
