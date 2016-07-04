@@ -16,16 +16,15 @@ module.exports.findAll = (req, res) => {
   });
 };
 
-module.exports.updateMany = (req, res) => {
-  Promise.all(req.body.map(grader =>
-    Grader.updateOne(grader)
-  ))
-  .then(rowsUpdated => {
-    res.status(200).send(rowsUpdated);
+module.exports.saveOne = (req, res) => {
+  Grader
+  .saveOne(req.body)
+  .then(grader => {
+    res.status(200).send(grader);
   })
   .catch(err => {
     res.status(500).send({
-      message: "Grader updateMany produced an error",
+      message: "Grader saveOne produced an error",
       error: err,
     });
   });

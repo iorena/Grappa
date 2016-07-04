@@ -32,6 +32,8 @@ npm install pm2 -g
 sudo apt-get install -y nginx
 # install PostgreSQL
 sudo apt-get install -y postgresql postgresql-contrib
+# install pdftk for manipulation of PDFs
+sudo apt-get install -y pdftk
 
 # Setup the database
 sudo -i -u postgres
