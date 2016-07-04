@@ -35,16 +35,12 @@ class Grader extends BaseModel {
     if (graders === undefined) {
       return Promise.resolve();
     }
-    return Promise.all(graders.map(grader => {
-      return this.getModel()
-          .findOne({ where: { id: grader.id } })
-          .then(grader => grader.addThesis(thesis));
-    }))
-      .then(() => {
-        console.log("Thesis and Graders all linked!");
-      });
+    return Promise.all(graders.map(grader =>
+      this.getModel()
+        .findOne({ where: { id: grader.id } })
+        .then(grader => grader.addThesis(thesis))
+    ));
   }
 }
 
-module.exports.class = Grader;
 module.exports = new Grader();

@@ -73,9 +73,8 @@ router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 // router.put("/review/:id", reviewCtrl.updateOne);
 // router.delete("/review/:id", reviewCtrl.deleteOne);
 
-router.post("/grader/many", graderCtrl.updateMany);
-// router.get("/grader", graderCtrl.findAll);
-// router.post("/grader", graderCtrl.saveOne);
+router.get("/grader", graderCtrl.findAll);
+router.post("/grader", graderCtrl.saveOne);
 // router.put("/grader/:id", graderCtrl.updateOne);
 // router.delete("/grader/:id", graderCtrl.deleteOne);
 

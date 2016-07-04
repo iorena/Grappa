@@ -25,8 +25,8 @@ class CouncilMeeting extends BaseModel {
           include: [{
             model: this.Models.Grader,
           }, {
-              model: this.Models.ThesisProgress,
-            }, {
+            model: this.Models.ThesisProgress,
+          }, {
               model: this.Models.StudyField,
             }, {
               model: this.Models.User,

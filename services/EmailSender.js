@@ -30,7 +30,10 @@ class EmailSender {
           resolve(info);
         }
       });
-    });
+    })
+    .catch(err => {
+      console.error("sendEmail failed! " + err)
+    })
   }
 }
 

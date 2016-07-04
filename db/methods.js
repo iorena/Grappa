@@ -56,6 +56,14 @@ module.exports.addTestData = () => Promise.all([
     isActive: true,
     StudyFieldId: 1,
   }),
+  models.Grader.create({
+    name: "Arto Wikla",
+    title: "Prof",
+  }),
+  models.Grader.create({
+    name: "Arto Vihavainen",
+    title: "Doc",
+  }),
   models.CouncilMeeting.create({
     date: new Date("11/05/2016"),
   }),

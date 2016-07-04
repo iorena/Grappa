@@ -84,11 +84,11 @@ module.exports.findAllByCouncilMeeting = (req, res) => {
 
 module.exports.saveOne = (req, res) => {
   let savedThesis;
-  let savedGraders;
+  let foundGraders;
   let foundConnections;
 
   // console.log(req.headers);
-
+  // console.log(req.body)
   Thesis
   .findConnections(req.body)
   .then(connections => {
@@ -98,17 +98,17 @@ module.exports.saveOne = (req, res) => {
       throw new TypeError("ValidationError: No such StudyField found");
     }
     foundConnections = connections;
-    if (req.body.graders === undefined) {
+    if (req.body.Graders === undefined) {
       return;
     }
     return Promise.all(
-      req.body.graders.map(grader =>
-        Grader.findOrCreate(grader)
+      req.body.Graders.map(grader =>
+        Grader.findOne({ id: grader.id })
       )
     );
   })
   .then((graders) => {
-    savedGraders = graders;
+    foundGraders = graders;
     return Thesis.saveOneAndProgress(req.body, foundConnections[0]);
   })
   .then(thesis => {
@@ -121,19 +121,21 @@ module.exports.saveOne = (req, res) => {
       }),
       Reminder.sendStudentReminder(savedThesis.authorEmail, token, savedThesis.id),
       CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
-      // Grader.linkThesisToGraders(savedGraders, savedThesis.id),
+      Grader.linkThesisToGraders(foundGraders, savedThesis.id),
       Thesis.linkStudyField(savedThesis, foundConnections[1].id),
       Thesis.linkUser(savedThesis, req.user.id),
     ]);
   })
   .then(() => {
-    if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.graders)) {
+    if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.Graders)) {
       return Reminder.sendProfessorReminder(savedThesis);
     } else {
       return ThesisProgress.setGraderEvalDone(savedThesis.id);
     }
   })
-  .then(() => Thesis.findOne({ id: savedThesis.id }))
+  .then(() => {
+    return Thesis.findOne({ id: savedThesis.id });
+  })
   .then((thesisWithConnections) => {
     res.status(200).send(thesisWithConnections);
   });

@@ -9,9 +9,6 @@ const request = require("request");
 const exec = require("child_process").exec;
 
 class PdfManipulator {
-  constructor() {
-    this.tmpPath = path.join(__dirname, "../tmp/");
-  }
 
   createFolder(name) {
     const pathToFolder = path.join(__dirname, `../tmp/${name}`);
@@ -167,26 +164,32 @@ class PdfManipulator {
         return this.joinPdfs(pathToFolder);
       })
       .then((pathToPrintFile) => {
+        this.deleteFolderTimer(10000, pathToFolder);
         return pathToPrintFile;
       });
   }
 
-  // unchecked methods if necessary
-
-  cleanTmpFolder() {
-    fs
-    .readdirSync(this.tmpPath)
-    .map(file => fs.unlinkSync(this.tmpPath + file));
+  deleteFolderTimer(wait, pathToFolder) {
+    setTimeout(() => {
+      this.deleteFolder(pathToFolder);
+    }, wait);
   }
 
   deleteFolder(pathToFolder) {
     fs
     .readdirSync(pathToFolder)
-    .map(file => fs.unlinkSync(this.tmpPath + file));
+    .map(file => fs.unlinkSync(pathToFolder + "/" + file));
 
     fs
-    .rmddir(pathToFolder);
+    .rmdirSync(pathToFolder);
   }
+
+  // cleanTmp() {
+  //   const tmpPath = path.join(__dirname, "../tmp");
+  //   fs
+  //   .readdirSync(p)
+  //   .map(file => fs.unlinkSync(pathToFolder + "/" + file));
+  // }
 }
 
 module.exports = new PdfManipulator();
