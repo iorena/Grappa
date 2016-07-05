@@ -1,7 +1,7 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const seq = require("../db/db_connection").sequalize;
+const seq = require("../db/db_connection").sequelize;
 
 const User = seq.define("User", {
   id: {
@@ -100,7 +100,6 @@ const Thesis = seq.define("Thesis", {
   graderEval: {
     type: Sequelize.TEXT,
   },
-  pathToFileReview: Sequelize.STRING,
 });
 
 const EthesisToken = seq.define("EthesisToken", {

@@ -2,10 +2,9 @@
 
 const Sequelize = require("sequelize");
 
-const dbUrl = process.env.DB_URL;
 let seq;
 if (process.env.NODE_ENV === "production") {
-  seq = new Sequelize(dbUrl, {
+  seq = new Sequelize(process.env.DB_URL, {
     dialectOptions: {
       ssl: true,
     },
@@ -20,5 +19,5 @@ if (process.env.NODE_ENV === "production") {
 }
 
 module.exports = {
-  sequalize: seq,
+  sequelize: seq,
 };
