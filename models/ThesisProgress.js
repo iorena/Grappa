@@ -39,7 +39,7 @@ class ThesisProgress extends BaseModel {
     return this.getModel().update({
       graderEvalDone: true,
     }, {
-      where: { thesisId },
+      where: { ThesisId: thesisId },
     });
   }
 

@@ -11,13 +11,20 @@ apt-get install -y git
 mkdir -p /var/www/grappa.cs.helsinki.fi
 sudo adduser grappauser
 sudo adduser grappauser sudo
-# unneeded???
-sudo chgrp -R grappauser /var/www/grappa.cs.helsinki.fi
+# ?????
+# sudo chgrp -R grappauser /var/www/grappa.cs.helsinki.fi
 # digital ocean wants this
 sudo chmod -R g+rwx /var/www/grappa.cs.helsinki.fi
+# also fix the language shit for digitalocean
+locale-gen "fi_FI.UTF-8"
+dpkg-reconfigure locales
+LANG=fi_FI.UTF-8
+# and remember to setup split you are running on the shittiest digital ocean's server..
 # open up a screen so you can have more terminals open. wee
 screen
 sudo su grappauser
+# you can't download stuff while in root folder
+cd ..
 
 # installation of software
 # install NVM
@@ -30,8 +37,8 @@ nvm install 5.9.1
 npm install pm2 -g
 # install nginx to be run as web-proxy and better performance
 sudo apt-get install -y nginx
-# install PostgreSQL 
-sudo apt-get install -y postgresql postgresql-contrib
+# install PostgreSQL
+sudo apt-get install -y postgresql-9.3 postgresql-contrib
 # install pdftk for manipulation of PDFs
 sudo apt-get install -y pdftk
 
@@ -42,22 +49,31 @@ createdb grappadb
 exit
 # installation of the source files
 cd /var/www/grappa.cs.helsinki.fi
+# you need sudo rights for most of this stuff but this way (root -> user -> root)
+# we have access to our software like npm
+sudo -s
 git clone https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend.git
 git clone https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-front.git
 cd grappa-backend
-export NODE_ENV=production
-npm install
+# here you should name the variables inside .env
+mv .dev-env .env
+# >>> variables <<<<
+npm i
 npm run db init
 cd ../grappa-front
-export NODE_ENV=production
-export API_URL=/backend
+mv .dev-env .env
 npm install
+# if webpack doesn't install automatically you can trigger it yourself
+npm run postinstall
 # Configure nginx
 sudo cp /var/www/grappa.cs.helsinki.fi/grappa-backend/bin/grappa.cs.helsinki.fi.conf /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/grappa.cs.helsinki.fi.conf /etc/nginx/sites-enabled/grappa.cs.helsinki.fi.conf
 sudo rm /etc/nginx/sites-enabled/default
 # nginx can only be restarted with sudo permissions.. haa..
 sudo service nginx restart
-# Start up the server clusters
-pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend -i 2
-pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front -i 1
+# Start up the server cluster
+pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend
+pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front
+# since we are on single core no need to have multiple processess
+# pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend -i 2
+# pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front -i 1

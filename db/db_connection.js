@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "production") {
   seq = new Sequelize("grappa", "", "", {
     dialect: "sqlite",
     storage: "db/dev-db.sqlite",
-    // logging: false,
+    logging: false,
   });
 }
 

@@ -17,3 +17,7 @@ ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 ssh -L 9000:128.214.9.6:80 teekoivi@melkki.cs.helsinki.fi
 # For testing database connection
 psql -h localhost <db> <user>
+# to log into the postgres
+sudo -i -u postgres
+# to connect to database
+psql -d grappadb
