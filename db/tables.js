@@ -174,7 +174,7 @@ const EmailDraft = seq.define("EmailDraft", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   type: Sequelize.STRING,
   title: Sequelize.STRING,
-  body: Sequelize.STRING,
+  body: Sequelize.TEXT,
 });
 
 const EmailStatus = seq.define("EmailStatus", {

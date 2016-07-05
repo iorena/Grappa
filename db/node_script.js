@@ -2,6 +2,7 @@
 
 "use strict";
 
+require("dotenv").config();
 const db_methods = require("../db/methods");
 
 /*
