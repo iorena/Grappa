@@ -27,8 +27,8 @@ class CouncilMeeting extends BaseModel {
           }, {
             model: this.Models.ThesisProgress,
           }, {
-              model: this.Models.StudyField,
-            }, {
+            model: this.Models.StudyField,
+          }, {
               model: this.Models.User,
             }],
         }],
