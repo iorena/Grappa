@@ -32,8 +32,8 @@ class EmailSender {
       });
     })
     .catch(err => {
-      console.error("sendEmail failed! " + err)
-    })
+      console.error("sendEmail failed! " + err);
+    });
   }
 }
 

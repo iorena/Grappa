@@ -16,6 +16,7 @@ const userCtrl = require("../controllers/user");
 // const emailCtrl = require("./email");
 // const emailstatusCtrl = require("./email_status");
 const studyfieldCtrl = require("../controllers/studyfield");
+const emaildraftCtrl = require("../controllers/emaildraft");
 
 const index = (req, res) => {
   res.json({
@@ -47,10 +48,11 @@ router.get("/", index);
 router.get("/auth", auth.authenticate, authTest);
 
 router.post("/login", userCtrl.loginUser);
+router.post("/user", userCtrl.saveOne);
 
-router.get("/asdf", thesisCtrl.sendPdf);
-router.post("/thesis/next", thesisCtrl.findAllByCouncilMeeting);
-router.get("/councilmeeting/next", councilmeetingCtrl.getNextMeetingWithTheses);
+// router.get("/asdf", thesisCtrl.sendPdf);
+// router.post("/thesis/next", thesisCtrl.findAllByCouncilMeeting);
+// router.get("/councilmeeting/next", councilmeetingCtrl.getNextMeetingWithTheses);
 
 router.use("", auth.authenticate);
 
@@ -84,7 +86,6 @@ router.post("/grader", graderCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
 router.get("/user/inactive", userCtrl.findAllNotActive);
-router.post("/user", userCtrl.saveOne);
 router.put("/user/:id", userCtrl.updateOne);
 router.delete("/user/:id", userCtrl.deleteOne);
 
@@ -99,6 +100,8 @@ router.get("/studyfield", studyfieldCtrl.findAll);
 // router.post("/studyfield", studyfieldCtrl.saveOne);
 // router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 // router.delete("/studyfield/:id", studyfieldCtrl.deleteOne);
+
+router.get("/emaildraft", emaildraftCtrl.findAll);
 
 router.get("/dbdump", dump);
 

@@ -19,34 +19,27 @@ class ThesisProgress extends BaseModel {
     });
   }
 
-  linkEthesisEmail(thesisId, emailId) {
+  linkEthesisEmail(ThesisId, emailId) {
     return this.getModel().update({
       EthesisEmailId: emailId,
     }, {
-      where: { ThesisId: thesisId },
+      where: { ThesisId },
     });
   }
 
-  setEthesisDone(thesisId) {
+  setEthesisDone(ThesisId) {
     return this.getModel().update({
       ethesisDone: true,
     }, {
-      where: { thesisId },
+      where: { ThesisId },
     });
   }
 
-  setGraderEvalDone(thesisId) {
+  setGraderEvalDone(ThesisId) {
     return this.getModel().update({
       graderEvalDone: true,
     }, {
-      where: { ThesisId: thesisId },
-    });
-  }
-
-  saveFromThesis(thesis) {
-    return this.getModel().create({
-    // return this.saveOne({
-      thesisId: thesis.id,
+      where: { ThesisId },
     });
   }
 
