@@ -156,10 +156,12 @@ class Thesis extends BaseModel {
 
   findOneDocuments(thesisID) {
     return this.getModel().findOne({
-      attributes: ["id", "ethesis", "graderEval"],
+      attributes: ["id", "title", "ethesis", "graderEval"],
       where: { id: thesisID },
       include: [{
         model: this.Models.ThesisReview,
+      }, {
+        model: this.Models.Grader,
       }],
     });
   }

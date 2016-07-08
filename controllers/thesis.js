@@ -283,11 +283,11 @@ module.exports.generateThesesToPdf = (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
     file.pipe(res);
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Thesis generateThesesToPdf produced an error",
-      error: err,
-    });
   });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "Thesis generateThesesToPdf produced an error",
+  //     error: err,
+  //   });
+  // });
 };

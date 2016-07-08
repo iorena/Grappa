@@ -12,6 +12,7 @@ class CouncilMeeting extends BaseModel {
       .then((CM) => CM.addTheses(thesis));
   }
 
+  // unused
   getNextMeetingWithTheses() {
     return this.getModel()
       .findOne({
@@ -29,8 +30,8 @@ class CouncilMeeting extends BaseModel {
           }, {
             model: this.Models.StudyField,
           }, {
-              model: this.Models.User,
-            }],
+            model: this.Models.User,
+          }],
         }],
       });
   }

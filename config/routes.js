@@ -97,9 +97,8 @@ router.delete("/user/:id", userCtrl.deleteOne);
 // router.post("/email/remind", emailCtrl.sendReminder);
 
 router.get("/studyfield", studyfieldCtrl.findAll);
-// router.post("/studyfield", studyfieldCtrl.saveOne);
-// router.put("/studyfield/:id", studyfieldCtrl.updateOne);
-// router.delete("/studyfield/:id", studyfieldCtrl.deleteOne);
+router.post("/studyfield", studyfieldCtrl.saveOne);
+router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
 

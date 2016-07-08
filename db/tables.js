@@ -141,14 +141,9 @@ const StudyField = seq.define("StudyField", {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,
-      isIn: [[
-        "Algorithmic Bioinformatics",
-        "Algorithms, Data Analytics and Machine Learning",
-        "Networking and Services",
-        "Software Systems",
-      ]],
     },
   },
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
 });
 
 const ThesisReview = seq.define("ThesisReview", {
