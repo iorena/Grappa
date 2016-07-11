@@ -90,7 +90,14 @@ module.exports.saveOne = (req, res) => {
   // console.log(req.headers);
   // console.log(req.body)
   Thesis
-  .findConnections(req.body)
+  .checkIfExists(req.body)
+  .then(exists => {
+    if (exists) {
+      throw new TypeError("ValidationError: Duplicate Thesis found");
+    } else {
+      return Thesis.findConnections(req.body);
+    }
+  })
   .then(connections => {
     if (connections[0] === null) {
       throw new TypeError("ValidationError: No such CouncilMeeting found");
@@ -138,20 +145,20 @@ module.exports.saveOne = (req, res) => {
   })
   .then((thesisWithConnections) => {
     res.status(200).send(thesisWithConnections);
+  })
+  .catch(err => {
+    if (err.message.indexOf("ValidationError") !== -1) {
+      res.status(400).send({
+        message: "Thesis saveOne failed validation",
+        error: err.message,
+      });
+    } else {
+      res.status(500).send({
+        message: "Thesis saveOne produced an error",
+        error: err.message,
+      });
+    }
   });
-  // .catch(err => {
-  //   if (err.message.indexOf("ValidationError") !== -1) {
-  //     res.status(400).send({
-  //       message: "Thesis saveOne failed validation",
-  //       error: err.message,
-  //     });
-  //   } else {
-  //     res.status(500).send({
-  //       message: "Thesis saveOne produced an error",
-  //       error: err.message,
-  //     });
-  //   }
-  // });
 };
 
 module.exports.updateOneAndConnections = (req, res) => {

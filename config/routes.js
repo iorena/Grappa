@@ -77,7 +77,7 @@ router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
-// router.put("/grader/:id", graderCtrl.updateOne);
+router.put("/grader/:id", graderCtrl.updateOne);
 // router.delete("/grader/:id", graderCtrl.deleteOne);
 
 // router.get("/thesisprogress", thesisprogressCtrl.findAll);

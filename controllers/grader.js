@@ -29,3 +29,17 @@ module.exports.saveOne = (req, res) => {
     });
   });
 };
+
+module.exports.updateOne = (req, res) => {
+  Grader
+  .update(req.body, { id: req.params.id })
+  .then(grader => {
+    res.status(200).send(grader);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Grader updateOne produced an error",
+      error: err,
+    });
+  });
+};

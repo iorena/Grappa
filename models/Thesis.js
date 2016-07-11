@@ -7,6 +7,20 @@ class Thesis extends BaseModel {
     super("Thesis");
   }
 
+  checkIfExists(thesis) {
+    return this.getModel().findOne({
+      where: {
+        title: thesis.title,
+        authorFirstname: thesis.authorFirstname,
+        authorLastname: thesis.authorLastname,
+        authorEmail: thesis.authorEmail,
+      },
+    })
+      .then(thesis => {
+        return thesis !== null;
+      });
+  }
+
   findConnections(thesis) {
     return Promise.all([
       this.Models.CouncilMeeting.findOne({
