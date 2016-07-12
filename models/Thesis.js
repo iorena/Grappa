@@ -7,6 +7,8 @@ class Thesis extends BaseModel {
     super("Thesis");
   }
 
+
+
   checkIfExists(thesis) {
     return this.getModel().findOne({
       where: {
@@ -33,6 +35,11 @@ class Thesis extends BaseModel {
           id: thesis.StudyFieldId,
         },
       }),
+      Promise.all(thesis.Graders.map(grader => this.Models.Grader.findOne({
+        where: {
+          id: grader.id,
+        },
+      }))),
     ]);
   }
 

@@ -7,6 +7,7 @@ const User = require("../models/User");
 const Thesis = require("../models/Thesis");
 const ThesisProgress = require("../models/ThesisProgress");
 const EmailStatus = require("../models/EmailStatus");
+const EmailDraft = require("../models/EmailDraft");
 
 class EmailReminder {
   constructor() {
@@ -94,22 +95,34 @@ class EmailReminder {
    * Sends an email reminder to student about submitting their thesis to eThesis.com
    */
   sendStudentReminder(studentEmail, token, thesisId) {
+    let foundDraft;
     let foundThesis;
     let sentReminder;
-    // let foundTProgress;
     let email;
 
-    return Thesis
-      .findOne({ id: thesisId })
+    return EmailDraft
+      .findOne({ type: "EthesisReminder" })
+      .then(reminder => {
+        if (reminder) {
+          foundDraft = reminder;
+          return Thesis.findOne({ id: thesisId });
+        } else {
+          throw new TypeError("No EthesisReminder found");
+        }
+      })
       .then((thesis) => {
-        foundThesis = thesis;
-        email = this.composeEmail(
-          "toStudent",
-          studentEmail,
-          null,
-          `${process.env.APP_URL}/ethesis/${token}`
-        );
-        return Sender.sendEmail(email.to, email.subject, email.body);
+        if (thesis) {
+          foundThesis = thesis;
+          email = this.composeEmail(
+            "toStudent",
+            studentEmail,
+            null,
+            `${process.env.APP_URL}/ethesis/${token}`
+          );
+          return Sender.sendEmail(foundDraft.to, foundDraft.subject, foundDraft.body);
+        } else {
+          throw new TypeError("No Thesis found");
+        }
       })
       .then(() => EmailStatus.saveOne({
         lastSent: Date.now(),

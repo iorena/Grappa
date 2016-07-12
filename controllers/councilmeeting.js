@@ -22,8 +22,9 @@ module.exports.saveOne = (req, res) => {
   .then(exists => {
     if (exists) {
       res.status(400).send({
-        message: "CouncilMeeting saveOne failed validation",
-        error: "There already exists a meeting with the same date.",
+        location: "CouncilMeeting saveOne checkIfExists true",
+        message: "There already exists a meeting with the same date.",
+        error: {},
       });
       return;
     } else {
@@ -35,7 +36,8 @@ module.exports.saveOne = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "CouncilMeeting saveOne produced an error",
+      location: "CouncilMeeting saveOne .catch",
+      message: "Saving a CouncilMeeting caused an internal server error.",
       error: err,
     });
   });
