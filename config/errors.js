@@ -17,19 +17,21 @@ VError.prototype = Object.create(Error.prototype, {
 
 module.exports.ValidationError = VError;
 
-// function BError() {
-//   const temp = Error.apply(this, arguments);
-//   temp.name = this.name = "BadError";
-//   this.stack = temp.stack;
-//   this.message = temp.message;
-// }
-//   //inherit prototype using ECMAScript 5 (IE 9+)
-// BError.prototype = Object.create(Error.prototype, {
-//   constructor: {
-//     value: BError,
-//     writable: true,
-//     configurable: true
-//   }
-// })
+// Error caused when requisite data is missing e.g. email drafts from database
 
-// module.exports.BadError = BError;
+function PError() {
+  const temp = Error.apply(this, arguments);
+  temp.name = this.name = "PremiseError";
+  this.stack = temp.stack;
+  this.message = temp.message;
+}
+  //inherit prototype using ECMAScript 5 (IE 9+)
+PError.prototype = Object.create(Error.prototype, {
+  constructor: {
+    value: PError,
+    writable: true,
+    configurable: true
+  }
+})
+
+module.exports.PremiseError = PError;

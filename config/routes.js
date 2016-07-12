@@ -62,7 +62,6 @@ router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 // router.delete("/thesis/:id", thesisCtrl.deleteOne);
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
-router.post("/thesis/review", thesisCtrl.uploadReview);
 router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
@@ -101,6 +100,7 @@ router.post("/studyfield", studyfieldCtrl.saveOne);
 router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
+router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
 
 router.get("/dbdump", dump);
 
