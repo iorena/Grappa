@@ -6,12 +6,32 @@ class CouncilMeeting extends BaseModel {
   constructor() {
     super("CouncilMeeting");
   }
+
+  checkIfExists(meeting) {
+    const start = new Date(meeting.date);
+    const end = new Date(meeting.date);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 1);
+    return this.getModel().findOne({
+      where: {
+        date: {
+          $between: [start, end],
+        },
+      },
+    })
+      .then(found => {
+        return found !== null;
+      });
+  }
+
+
   linkThesis(meeting, thesis) {
     return this.getModel()
       .findOne({ where: { id: meeting.id } })
       .then((CM) => CM.addTheses(thesis));
   }
 
+  // unused
   getNextMeetingWithTheses() {
     return this.getModel()
       .findOne({
@@ -29,10 +49,16 @@ class CouncilMeeting extends BaseModel {
           }, {
             model: this.Models.StudyField,
           }, {
-              model: this.Models.User,
-            }],
+            model: this.Models.User,
+          }],
         }],
       });
+  }
+
+  saveOne(meeting) {
+    const date = new Date(meeting.date);
+    date.setHours(23, 59, 59, 0);
+    return this.getModel().create({ date: date });
   }
 }
 

@@ -84,23 +84,24 @@ class PdfManipulator {
       });
   }
 
-  generatePdfFromGraderEval(graderEval, pathToFile) {
+  generatePdfFromGraderEval(thesis, graderEval, pathToFile) {
     return new Promise((resolve, reject) => {
       const doc = new PDF();
 
+      const graders = thesis.Graders.reduce((previousValue, current, index) => {
+        if (index === 0) {
+          return `${current.title} ${current.name}`;
+        }
+        return `${previousValue}, ${current.title} ${current.name}`;
+      }, "");
+
       doc
-      .fontSize(14)
-      .text("Title: ")
+      .fontSize(12)
+      .text(`Thesis: ${thesis.title}`)
       .moveDown()
-      .text("Author: ")
+      .text(`Graders: ${graders}`)
       .moveDown()
-      .text("Instructor:")
-      .moveDown()
-      .text("Intended date for councilmeeting:")
-      .moveDown()
-      .text("Graders:")
-      .moveDown()
-      .text("Evaluator:")
+      .text("Evaluator: Professor Arto Wikla")
       .moveDown()
       .text("Evaluation: ")
       .moveDown()
@@ -154,7 +155,7 @@ class PdfManipulator {
             pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
           }
           if (thesis.graderEval) {
-            pdfs.push(this.generatePdfFromGraderEval(thesis.graderEval, `${pathToFolder}/${order}-3`));
+            pdfs.push(this.generatePdfFromGraderEval(thesis, thesis.graderEval, `${pathToFolder}/${order}-3`));
           }
           order++;
           return Promise.all(pdfs);

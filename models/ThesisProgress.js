@@ -8,17 +8,7 @@ class ThesisProgress extends BaseModel {
     super("ThesisProgress");
   }
 
-  findLove() {
-    return this.getModel().findAll({
-      include: [
-        {
-          model: this.Models.EmailStatus,
-          as: "PrintEmail",
-        },
-      ],
-    });
-  }
-
+// deprecated
   linkEthesisEmail(ThesisId, emailId) {
     return this.getModel().update({
       EthesisEmailId: emailId,

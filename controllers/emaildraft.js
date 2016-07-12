@@ -5,8 +5,8 @@ const EmailDraft = require("../models/EmailDraft");
 module.exports.findAll = (req, res) => {
   EmailDraft
   .findAll()
-  .then(graders => {
-    res.status(200).send(graders);
+  .then(drafts => {
+    res.status(200).send(drafts);
   })
   .catch(err => {
     res.status(500).send({
@@ -16,16 +16,16 @@ module.exports.findAll = (req, res) => {
   });
 };
 
-// module.exports.saveOne = (req, res) => {
-//   EmailDraft
-//   .saveOne(req.body)
-//   .then(grader => {
-//     res.status(200).send(grader);
-//   })
-//   .catch(err => {
-//     res.status(500).send({
-//       message: "EmailDraft saveOne produced an error",
-//       error: err,
-//     });
-//   });
-// };
+module.exports.updateOne = (req, res) => {
+  EmailDraft
+  .update(req.body, { id: req.params.id })
+  .then(draft => {
+    res.status(200).send(draft);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "EmailDraft updateOne produced an error",
+      error: err,
+    });
+  });
+};

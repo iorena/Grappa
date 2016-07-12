@@ -70,17 +70,17 @@ module.exports.addTestData = () => Promise.all([
   models.EmailDraft.create({
     type: "EthesisReminder",
     title: "REMINDER: Submit your thesis to eThesis",
-    body: "Hi\n\n This is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\n Please submit your thesis into E-THESIS https://ethesis.helsinki.fi/. And after submitting please copy the E-THESIS link to your thesis and enter it into the supplied field below. $LINK$ \n",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nPlease submit your thesis into E-THESIS https://ethesis.helsinki.fi/. And after submitting please copy the E-THESIS link to your thesis and enter it into the supplied field below.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "GraderEvalReminder",
     title: "REMINDER: Submit your evaluation",
-    body: "Hi\n\n This is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\n Due to rules of the process, your evaluation of the instructors is needed for the process to continue. Please submit your evaluation in the provided link. $LINK$ \n",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nDue to rules of the process, your evaluation of the instructors is needed for the process to continue. Please submit your evaluation in the provided link.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "PrintReminder",
     title: "REMINDER: Theses are ready to print",
-    body: "Hi\n\n This is an automatic reminder from Grappa, a web application to help in managing the bureaucratic side of the processes related to the final stages of a students Masters degree.\n\n Theses for the next councilmeeting are ready to be printed at https://grappa.cs.helsinki.fi.\n",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, a web application to help in managing the bureaucratic side of the processes related to the final stages of a students Masters degree.\n\nTheses for the next councilmeeting are ready to be printed at https://grappa.cs.helsinki.fi.",
   }),
 ]);
 

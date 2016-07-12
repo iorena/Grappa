@@ -7,6 +7,22 @@ class Thesis extends BaseModel {
     super("Thesis");
   }
 
+
+
+  checkIfExists(thesis) {
+    return this.getModel().findOne({
+      where: {
+        title: thesis.title,
+        authorFirstname: thesis.authorFirstname,
+        authorLastname: thesis.authorLastname,
+        authorEmail: thesis.authorEmail,
+      },
+    })
+      .then(thesis => {
+        return thesis !== null;
+      });
+  }
+
   findConnections(thesis) {
     return Promise.all([
       this.Models.CouncilMeeting.findOne({
@@ -19,6 +35,11 @@ class Thesis extends BaseModel {
           id: thesis.StudyFieldId,
         },
       }),
+      Promise.all(thesis.Graders.map(grader => this.Models.Grader.findOne({
+        where: {
+          id: grader.id,
+        },
+      }))),
     ]);
   }
 
@@ -156,10 +177,12 @@ class Thesis extends BaseModel {
 
   findOneDocuments(thesisID) {
     return this.getModel().findOne({
-      attributes: ["id", "ethesis", "graderEval"],
+      attributes: ["id", "title", "ethesis", "graderEval"],
       where: { id: thesisID },
       include: [{
         model: this.Models.ThesisReview,
+      }, {
+        model: this.Models.Grader,
       }],
     });
   }

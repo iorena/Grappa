@@ -6,6 +6,39 @@ const fs = require("fs");
 const path = require("path");
 
 class FileUploader {
+
+  parseFormData(req) {
+    const parsedForm = {};
+    const chunks = [];
+    return new Promise((resolve, reject) => {
+      // console.log("yo upload");
+      req.pipe(req.busboy);
+      req.busboy.on("error", (error) => {
+        reject(error);
+      });
+      req.busboy.on("field", (key, value, keyTruncated, valueTruncated) => {
+        console.log(`${key} : ${value}`);
+        parsedForm.key = value;
+      });
+      req.busboy.on("file", (fieldname, file, filename) => {
+        file.on("data", (data) => {
+          // console.log("File [" + fieldname + "] got " + data.length + " bytes");
+          chunks.push(data);
+        });
+        file.on("end", () => {
+          // parsedData.file = file;
+          parsedForm.file = Buffer.concat(chunks);
+          parsedForm.ext = ext;
+          // console.log("File [" + fieldname + "] Finished");
+        });
+      });
+      req.busboy.on("finish", () => {
+        // console.log("finish busboy parsing")
+        resolve(parsedForm);
+      });
+    });
+  }
+
   parseUploadData(req, requiredExt) {
     const parsedData = {
       id: "",

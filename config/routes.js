@@ -62,7 +62,6 @@ router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
 // router.delete("/thesis/:id", thesisCtrl.deleteOne);
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
-router.post("/thesis/review", thesisCtrl.uploadReview);
 router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
@@ -77,7 +76,7 @@ router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
-// router.put("/grader/:id", graderCtrl.updateOne);
+router.put("/grader/:id", graderCtrl.updateOne);
 // router.delete("/grader/:id", graderCtrl.deleteOne);
 
 // router.get("/thesisprogress", thesisprogressCtrl.findAll);
@@ -97,11 +96,11 @@ router.delete("/user/:id", userCtrl.deleteOne);
 // router.post("/email/remind", emailCtrl.sendReminder);
 
 router.get("/studyfield", studyfieldCtrl.findAll);
-// router.post("/studyfield", studyfieldCtrl.saveOne);
-// router.put("/studyfield/:id", studyfieldCtrl.updateOne);
-// router.delete("/studyfield/:id", studyfieldCtrl.deleteOne);
+router.post("/studyfield", studyfieldCtrl.saveOne);
+router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
+router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
 
 router.get("/dbdump", dump);
 
