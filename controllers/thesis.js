@@ -16,6 +16,7 @@ const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
 
 const fs = require("fs");
+const ValidationError = require("../config/errors").ValidationError;
 
 module.exports.asdf2 = (req, res) => {
   ThesisPdf
@@ -82,10 +83,24 @@ module.exports.findAllByCouncilMeeting = (req, res) => {
   // });
 };
 
+function MyError() {
+var temp = Error.apply(this, arguments);
+temp.name = this.name = 'MyError';
+this.stack = temp.stack;
+this.message = temp.message;
+}
+//inherit prototype using ECMAScript 5 (IE 9+)
+MyError.prototype = Object.create(Error.prototype, {
+constructor: {
+value: MyError,
+writable: true,
+configurable: true
+}
+});
+
 module.exports.saveOne = (req, res) => {
   let parsedForm;
   let savedThesis;
-  let foundGraders;
   let foundConnections;
 
   // console.log(req.headers);
@@ -97,10 +112,12 @@ module.exports.saveOne = (req, res) => {
     // console.log(data)
     parsedForm = data;
     parsedForm.json = JSON.parse(parsedForm.json);
-    if (parsedForm.json === undefined || parsedForm.file === undefined) {
-      throw new TypeError("Bad Request: Invalid form sent");
+    if (!parsedForm.json) {
+      throw new ValidationError("Invalid form");
+    } else if (!parsedForm.file) {
+      throw new ValidationError("No file sent");
     } else if (parsedForm.fileExt !== "pdf") {
-      throw new TypeError("Bad Request: File was not PDF");
+      throw new ValidationError("File wasn't a PDF");
     // } else if (validate.isDataValidSchema(parsedForm.json, "thesis")) {
     } else {
       return Thesis.checkIfExists(parsedForm.json);
@@ -108,18 +125,18 @@ module.exports.saveOne = (req, res) => {
   })
   .then(exists => {
     if (exists) {
-      throw new TypeError("ValidationError: Duplicate Thesis found");
+      throw new ValidationError("Duplicate Thesis found");
     } else {
       return Thesis.findConnections(parsedForm.json);
     }
   })
   .then(connections => {
-    if (connections[0] === null) {
-      throw new TypeError("ValidationError: No such CouncilMeeting found");
-    } else if (connections[1] === null) {
-      throw new TypeError("ValidationError: No such StudyField found");
+    if (!connections[0]) {
+      throw new ValidationError("No such CouncilMeeting found");
+    } else if (!connections[1]) {
+      throw new ValidationError("No such StudyField found");
     } else if (connections[2] < 2) {
-      throw new TypeError("ValidationError: Less than 2 valid Graders found");
+      throw new ValidationError("Less than 2 valid Graders found");
     }
     foundConnections = connections;
     return Thesis.saveOneAndProgress(parsedForm.json, foundConnections[0]);
@@ -158,8 +175,7 @@ module.exports.saveOne = (req, res) => {
     res.status(200).send(thesisWithConnections);
   })
   .catch(err => {
-    console.log(err);
-    if (err.message.indexOf("ValidationError") !== -1) {
+    if (err.name === "ValidationError") {
       res.status(400).send({
         location: "Thesis saveOne .catch ValidationError",
         message: err.message,
@@ -186,16 +202,16 @@ module.exports.saveOne2 = (req, res) => {
   .checkIfExists(req.body)
   .then(exists => {
     if (exists) {
-      throw new TypeError("ValidationError: Duplicate Thesis found");
+      throw new ValidationError("ValidationError: Duplicate Thesis found");
     } else {
       return Thesis.findConnections(req.body);
     }
   })
   .then(connections => {
     if (connections[0] === null) {
-      throw new TypeError("ValidationError: No such CouncilMeeting found");
+      throw new ValidationError("ValidationError: No such CouncilMeeting found");
     } else if (connections[1] === null) {
-      throw new TypeError("ValidationError: No such StudyField found");
+      throw new ValidationError("ValidationError: No such StudyField found");
     }
     foundConnections = connections;
     if (req.body.Graders === undefined) {
