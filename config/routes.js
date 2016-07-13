@@ -84,7 +84,6 @@ router.put("/grader/:id", graderCtrl.updateOne);
 // router.post("/thesisprogress", thesisprogressCtrl.saveOne);
 
 router.get("/user", userCtrl.findAll);
-router.get("/user/inactive", userCtrl.findAllNotActive);
 router.put("/user/:id", userCtrl.updateOne);
 router.delete("/user/:id", userCtrl.deleteOne);
 

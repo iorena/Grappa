@@ -3,7 +3,6 @@
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
 const FormParser = require("../services/FormParser");
-const FileUploader = require("../services/FileUploader");
 const PdfManipulator = require("../services/PdfManipulator");
 
 const Thesis = require("../models/Thesis");

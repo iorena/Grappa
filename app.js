@@ -16,6 +16,9 @@ if (process.env.NODE_ENV !== "production") {
   app.use(logger("dev"));
 }
 
+const FileManipulator = require("./services/FileManipulator");
+FileManipulator.cleanTmp();
+
 app.use(busboy());
 app.use(bodyParser.urlencoded({
   extended: true,
