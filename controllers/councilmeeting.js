@@ -10,7 +10,8 @@ module.exports.findAll = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "CouncilMeeting findAll produced an error",
+      location: "CouncilMeeting findAll .catch other",
+      message: "Getting all CouncilMeetings caused an internal server error.",
       error: err,
     });
   });
@@ -38,6 +39,21 @@ module.exports.saveOne = (req, res) => {
     res.status(500).send({
       location: "CouncilMeeting saveOne .catch",
       message: "Saving a CouncilMeeting caused an internal server error.",
+      error: err,
+    });
+  });
+};
+
+module.exports.updateOne = (req, res) => {
+  CouncilMeeting
+  .update(req.body, { id: req.params.id })
+  .then(cmeeting => {
+    res.status(200).send(cmeeting);
+  })
+  .catch(err => {
+    res.status(500).send({
+      location: "CouncilMeeting updateOne .catch other",
+      message: "Updating a CouncilMeeting caused an internal server error.",
       error: err,
     });
   });

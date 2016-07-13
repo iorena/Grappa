@@ -86,7 +86,7 @@ module.exports.loginUser = (req, res) => {
   User
   .findOne({ email: req.body.email })
   .then(user => {
-    if (user === null) {
+    if (!user) {
       res.status(401).send({
         message: "Logging in failed authentication",
         error: "",

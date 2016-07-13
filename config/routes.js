@@ -66,7 +66,7 @@ router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
-// router.put("/councilmeeting/:id", councilmeetingCtrl.updateOne);
+router.put("/councilmeeting/:id", councilmeetingCtrl.updateOne);
 // router.delete("/councilmeeting/:id", councilmeetingCtrl.deleteOne);
 
 // router.get("/review", auth.authenticate, reviewCtrl.findAll);
