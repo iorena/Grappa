@@ -29,6 +29,14 @@ class User extends BaseModel {
       },
     });
   }
+
+  update(values, params) {
+    // when deleting association setting StudyFieldId="" doesn't work, it must be StudyFieldId=null x_x
+    if (!values.StudyFieldId) {
+      values.StudyFieldId = null;
+    }
+    return this.Models[this.modelname].update(values, { where: params });
+  }
 }
 
 module.exports = new User();

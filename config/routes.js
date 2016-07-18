@@ -9,7 +9,6 @@ const auth = require("../middleware/authentication");
 
 const thesisCtrl = require("../controllers/thesis");
 const councilmeetingCtrl = require("../controllers/councilmeeting");
-// const reviewCtrl = require("./review");
 const graderCtrl = require("../controllers/grader");
 const userCtrl = require("../controllers/user");
 // const thesisprogressCtrl = require("./thesisprogress");
@@ -50,41 +49,41 @@ router.get("/auth", auth.authenticate, authTest);
 router.post("/login", userCtrl.loginUser);
 router.post("/user", userCtrl.saveOne);
 
+// router.get("/dbdump", dump);
 // router.get("/asdf", thesisCtrl.sendPdf);
-// router.post("/thesis/next", thesisCtrl.findAllByCouncilMeeting);
-// router.get("/councilmeeting/next", councilmeetingCtrl.getNextMeetingWithTheses);
 
 router.use("", auth.authenticate);
 
-router.get("/thesis", auth.authenticate, thesisCtrl.findAllByUserRole);
-// router.put("/thesis/:id", auth.onlyAdmin, thesisCtrl.updateOneAndConnections);
+// Routes for all users
+
+router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
-router.post("/thesis", auth.authenticate, thesisCtrl.saveOne);
+router.post("/thesis", thesisCtrl.saveOne);
 // router.delete("/thesis/:id", thesisCtrl.deleteOne);
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 
-router.get("/councilmeeting", councilmeetingCtrl.findAll);
-router.post("/councilmeeting", councilmeetingCtrl.saveOne);
-router.put("/councilmeeting/:id", councilmeetingCtrl.updateOne);
-// router.delete("/councilmeeting/:id", councilmeetingCtrl.deleteOne);
-
-// router.get("/review", auth.authenticate, reviewCtrl.findAll);
-// router.post("/review", auth.authenticate, reviewCtrl.saveOne);
-// router.put("/review/:id", reviewCtrl.updateOne);
-// router.delete("/review/:id", reviewCtrl.deleteOne);
-
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
 router.put("/grader/:id", graderCtrl.updateOne);
-// router.delete("/grader/:id", graderCtrl.deleteOne);
 
-// router.get("/thesisprogress", thesisprogressCtrl.findAll);
-// router.get("/thesisprogress/:id", thesisprogressCtrl.findOne);
-// router.post("/thesisprogress", thesisprogressCtrl.saveOne);
+router.get("/councilmeeting", councilmeetingCtrl.findAll);
+
+router.get("/studyfield", studyfieldCtrl.findAll);
+
+router.put("/user/:id", userCtrl.updateOne);
+
+// Routes accessisable only for admin
+
+router.use("", auth.onlyAdmin);
+
+router.post("/councilmeeting", councilmeetingCtrl.saveOne);
+router.put("/councilmeeting/:id", councilmeetingCtrl.updateOne);
+
+router.post("/studyfield", studyfieldCtrl.saveOne);
+router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 
 router.get("/user", userCtrl.findAll);
-router.put("/user/:id", userCtrl.updateOne);
 router.delete("/user/:id", userCtrl.deleteOne);
 
 // router.get("/emailstatus", emailstatusCtrl.findAll);
@@ -94,13 +93,7 @@ router.delete("/user/:id", userCtrl.deleteOne);
 // router.get("/email/check", emailCtrl.checkEmail);
 // router.post("/email/remind", emailCtrl.sendReminder);
 
-router.get("/studyfield", studyfieldCtrl.findAll);
-router.post("/studyfield", studyfieldCtrl.saveOne);
-router.put("/studyfield/:id", studyfieldCtrl.updateOne);
-
 router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
-
-router.get("/dbdump", dump);
 
 module.exports = router;
