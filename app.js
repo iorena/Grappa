@@ -5,11 +5,10 @@ const express = require("express");
 const busboy = require("connect-busboy");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const scheduler = require("./services/Scheduler");
 
 const app = express();
 
-const port = process.env.PORT || 9876;
+const port = process.env.PORT || 8000;
 
 if (process.env.NODE_ENV !== "production") {
   const logger = require("morgan");
@@ -26,8 +25,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 
-// scheduler.startAndRunOnceInHour();
-// scheduler.checkThesisProgresses();
 // const asdf = require("./services/PdfManipulator");
 // asdf.join();
 // asdf.generatePdfFromGraderEval({},"hyviä jätkiä", "./tmp/graderit");

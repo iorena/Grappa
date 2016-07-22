@@ -195,17 +195,37 @@ module.exports.updateOneEthesis = (req, res) => {
 module.exports.generateThesesToPdf = (req, res) => {
   // console.log(req.headers)
   const thesisIDs = req.body;
-  Thesis
-  .findAllDocuments(thesisIDs)
-  .then((theses) => PdfManipulator.generatePdfFromTheses(theses))
-  .then((pathToFile) => {
-    const file = fs.createReadStream(pathToFile);
-    const stat = fs.statSync(pathToFile);
-    res.setHeader("Content-Length", stat.size);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
-    file.pipe(res);
-  });
+  let pathToFile;
+
+  if (thesisIDs && thesisIDs.length > 0) {
+    Thesis
+    .findAllDocuments(thesisIDs)
+    .then((theses) => PdfManipulator.generatePdfFromTheses(theses))
+    .then((path) => {
+      pathToFile = path;
+      if (req.user.role === "print-person") {
+        return Promise.all(thesisIDs.map(thesis_id => ThesisProgress.setPrintDone(thesis_id)));
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then(() => Promise.all(thesisIDs.map(thesis_id => ThesisProgress.checkAndSetDone(thesis_id))))
+    .then(() => {
+      const file = fs.createReadStream(pathToFile);
+      const stat = fs.statSync(pathToFile);
+      res.setHeader("Content-Length", stat.size);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
+      file.pipe(res);
+    })
+  } else {
+    res.status(400).send({
+      location: "Thesis generateThesesToPdf if !thesisIDs",
+      message: "No theses received",
+      error: {},
+    });
+  }
+  
   // .catch(err => {
   //   res.status(500).send({
   //     message: "Thesis generateThesesToPdf produced an error",
