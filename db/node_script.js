@@ -5,7 +5,7 @@
 require("dotenv").config();
 const db_methods = require("../db/methods");
 
-/*
+/**
  * Logic for dynamic npm script "db" and "db:prod"
  *
  * Parses the command as JSON from npm_config_argv.original

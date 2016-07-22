@@ -184,13 +184,6 @@ class PdfManipulator {
     fs
     .rmdirSync(pathToFolder);
   }
-
-  // cleanTmp() {
-  //   const tmpPath = path.join(__dirname, "../tmp");
-  //   fs
-  //   .readdirSync(p)
-  //   .map(file => fs.unlinkSync(pathToFolder + "/" + file));
-  // }
 }
 
 module.exports = new PdfManipulator();

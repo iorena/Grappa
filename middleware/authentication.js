@@ -74,5 +74,19 @@ module.exports.authenticate = (req, res, next) => {
 module.exports.onlyAdmin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     next();
+  } else {
+    res.status(401).send({
+      message: "User privilege check failed",
+    });
+  }
+};
+
+module.exports.onlyAdminAndPrintPerson = (req, res, next) => {
+  if (req.user && (req.user.role === "admin" || req.user.role === "print-person")) {
+    next();
+  } else {
+    res.status(401).send({
+      message: "User privilege check failed",
+    });
   }
 };

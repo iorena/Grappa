@@ -2,6 +2,7 @@
 
 const moment = require("moment");
 const mkdirp = require("mkdirp");
+const rmdir = require("rmdir");
 const fs = require("fs");
 const path = require("path");
 
@@ -36,12 +37,17 @@ class FileManipulator {
     .rmdirSync(pathToFolder);
   }
 
-  // cleanTmp() {
-  //   const tmpPath = path.join(__dirname, "../tmp");
-  //   fs
-  //   .readdirSync(p)
-  //   .map(file => fs.unlinkSync(pathToFolder + "/" + file));
-  // }
+  cleanTmp() {
+    const tmpPath = path.join(__dirname, "../tmp");
+
+    try{
+      rmdir(tmpPath);
+    }
+    catch(err) {
+      console.log("Clean tmp ERROR")
+      console.error(err)
+    }
+  }
 
   writeFile(pathToFile, file) {
     return new Promise((resolve, reject) => {

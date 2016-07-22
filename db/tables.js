@@ -34,6 +34,10 @@ const User = seq.define("User", {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
+  isRetired: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 const Thesis = seq.define("Thesis", {
