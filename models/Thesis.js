@@ -117,7 +117,7 @@ class Thesis extends BaseModel {
         model: this.Models.StudyField,
       }, {
         model: this.Models.User,
-        attributes: ["id", "email", "name", "role", "StudyFieldId"],
+        attributes: ["id", "email", "firstname", "lastname", "role", "StudyFieldId"],
       }, {
         model: this.Models.CouncilMeeting,
       }],
@@ -146,7 +146,7 @@ class Thesis extends BaseModel {
         model: this.Models.StudyField,
       }, {
         model: this.Models.User,
-        attributes: ["id", "email", "name", "role", "StudyFieldId"],
+        attributes: ["id", "email", "firstname", "lastname", "role", "StudyFieldId"],
       }, {
         model: this.Models.CouncilMeeting,
       }],
