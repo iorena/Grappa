@@ -10,7 +10,7 @@ class User extends BaseModel {
   findAll() {
     return this.Models[this.modelname]
     .findAll({
-      attributes: ["id", "email", "name", "role", "isActive", "StudyFieldId"],
+      attributes: ["id", "email", "firstname", "lastname", "role", "isActive", "isRetired", "StudyFieldId"],
       include: [{
         model: this.Models.Thesis,
         as: "Theses",
@@ -23,7 +23,7 @@ class User extends BaseModel {
   findAllNotActive() {
     return this.Models[this.modelname]
     .findAll({
-      attributes: ["id", "email", "name", "role", "isActive"],
+      attributes: ["id", "email", "firstname", "lastname", "role", "isActive"],
       where: {
         isActive: false,
       },

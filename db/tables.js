@@ -18,7 +18,13 @@ const User = seq.define("User", {
     },
   },
   passwordHash: Sequelize.STRING,
-  name: {
+  firstname: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  lastname: {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,

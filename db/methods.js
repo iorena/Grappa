@@ -41,7 +41,8 @@ module.exports.addTestData = () => Promise.all([
     name: "Software Systems",
   }),
   models.User.create({
-    name: "Kjell Lemström",
+    firstname: "Kjell",
+    lastname: "Lemström",
     passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "ohtugrappa@gmail.com",
     role: "admin",
@@ -49,7 +50,8 @@ module.exports.addTestData = () => Promise.all([
     StudyFieldId: null,
   }),
   models.User.create({
-    name: "Proffa 1",
+    firstname: "Proffa",
+    lastname: "Sykerö",
     passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     email: "tkoivisto456@gmail.com",
     role: "professor",
