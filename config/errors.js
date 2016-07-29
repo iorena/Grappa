@@ -6,13 +6,13 @@ function VError() {
   this.stack = temp.stack;
   this.message = temp.message;
 }
-  //inherit prototype using ECMAScript 5 (IE 9+)
+  // inherit prototype using ECMAScript 5 (IE 9+)
 VError.prototype = Object.create(Error.prototype, {
   constructor: {
     value: VError,
     writable: true,
-    configurable: true
-  }
+    configurable: true,
+  },
 });
 
 module.exports.ValidationError = VError;
@@ -25,13 +25,13 @@ function PError() {
   this.stack = temp.stack;
   this.message = temp.message;
 }
-  //inherit prototype using ECMAScript 5 (IE 9+)
+  // inherit prototype using ECMAScript 5 (IE 9+)
 PError.prototype = Object.create(Error.prototype, {
   constructor: {
     value: PError,
     writable: true,
-    configurable: true
-  }
-})
+    configurable: true,
+  },
+});
 
 module.exports.PremiseError = PError;

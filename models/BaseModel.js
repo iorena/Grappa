@@ -15,7 +15,7 @@ class BaseModel {
   }
   findAll(params) {
     // if (params) {
-      return this.Models[this.modelname].findAll({ where: params });
+    return this.Models[this.modelname].findAll({ where: params });
     // }
     // return this.Models[this.modelname].findAll();
   }

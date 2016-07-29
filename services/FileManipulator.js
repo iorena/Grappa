@@ -40,12 +40,12 @@ class FileManipulator {
   cleanTmp() {
     const tmpPath = path.join(__dirname, "../tmp");
 
-    try{
+    try {
       rmdir(tmpPath);
     }
-    catch(err) {
-      console.log("Clean tmp ERROR")
-      console.error(err)
+    catch (err) {
+      console.log("Clean tmp ERROR");
+      console.error(err);
     }
   }
 
