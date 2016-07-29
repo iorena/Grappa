@@ -9,10 +9,10 @@ const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
 const ThesisReview = require("../models/ThesisReview");
 const ThesisProgress = require("../models/ThesisProgress");
-// const ThesisPdf = require("../models/ThesisPdf");
 const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
+const User = require("../models/User");
 
 const fs = require("fs");
 const ValidationError = require("../config/errors").ValidationError;
@@ -122,7 +122,7 @@ module.exports.saveOne = (req, res) => {
     res.status(200).send(thesisWithConnections);
   })
   .catch(err => {
-    console.error(err)
+    console.error(err);
     if (err.name === "ValidationError") {
       res.status(400).send({
         location: "Thesis saveOne .catch ValidationError",
@@ -195,12 +195,17 @@ module.exports.updateOneEthesis = (req, res) => {
 module.exports.generateThesesToPdf = (req, res) => {
   // console.log(req.headers)
   const thesisIDs = req.body;
+  let professors;
   let pathToFile;
 
   if (thesisIDs && thesisIDs.length > 0) {
-    Thesis
-    .findAllDocuments(thesisIDs)
-    .then((theses) => PdfManipulator.generatePdfFromTheses(theses))
+    User
+    .findAllProfessors()
+    .then(dudes => {
+      professors = dudes;
+      return Thesis.findAllDocuments(thesisIDs);
+    })
+    .then((theses) => PdfManipulator.generatePdfFromTheses(theses, professors))
     .then((path) => {
       pathToFile = path;
       if (req.user.role === "print-person") {
@@ -217,7 +222,7 @@ module.exports.generateThesesToPdf = (req, res) => {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
       file.pipe(res);
-    })
+    });
   } else {
     res.status(400).send({
       location: "Thesis generateThesesToPdf if !thesisIDs",
@@ -225,7 +230,7 @@ module.exports.generateThesesToPdf = (req, res) => {
       error: {},
     });
   }
-  
+
   // .catch(err => {
   //   res.status(500).send({
   //     message: "Thesis generateThesesToPdf produced an error",

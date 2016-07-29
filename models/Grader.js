@@ -7,6 +7,13 @@ class Grader extends BaseModel {
     super("Grader");
   }
 
+  findAll() {
+    return this.Models[this.modelname]
+    .findAll({
+      attributes: ["id", "name", "title"],
+    });
+  }
+
   updateOrCreateAndLinkToThesis(values, thesis) {
     return this.getModel()
       .findOne({ where: { id: values.id } })

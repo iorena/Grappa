@@ -84,7 +84,7 @@ class PdfManipulator {
       });
   }
 
-  generatePdfFromGraderEval(thesis, graderEval, pathToFile) {
+  generatePdfFromGraderEval(thesis, professors, pathToFile) {
     return new Promise((resolve, reject) => {
       const doc = new PDF();
 
@@ -95,17 +95,24 @@ class PdfManipulator {
         return `${previousValue}, ${current.title} ${current.name}`;
       }, "");
 
+      const professor = professors.find(prof => {
+        if (prof.StudyFieldId === thesis.StudyFieldId) {
+          return prof;
+        }
+      });
+      const evaluator = professor ? `Professor ${professor.firstname} ${professor.lastname}` : "No professor assigned";
+
       doc
       .fontSize(12)
       .text(`Thesis: ${thesis.title}`)
       .moveDown()
       .text(`Graders: ${graders}`)
       .moveDown()
-      .text("Evaluator: Professor Arto Wikla")
+      .text(`Evaluator: ${evaluator}`)
       .moveDown()
       .text("Evaluation: ")
       .moveDown()
-      .text(graderEval)
+      .text(thesis.graderEval)
       .moveDown();
 
       const stream = doc.pipe(fs.createWriteStream(`${pathToFile}.graderEval.pdf`));
@@ -139,7 +146,7 @@ class PdfManipulator {
     });
   }
 
-  generatePdfFromTheses(theses) {
+  generatePdfFromTheses(theses, professors) {
     const docName = Date.now();
     let pathToFolder;
     let order = 1;
@@ -155,7 +162,7 @@ class PdfManipulator {
             pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
           }
           if (thesis.graderEval) {
-            pdfs.push(this.generatePdfFromGraderEval(thesis, thesis.graderEval, `${pathToFolder}/${order}-3`));
+            pdfs.push(this.generatePdfFromGraderEval(thesis, professors, `${pathToFolder}/${order}-3`));
           }
           order++;
           return Promise.all(pdfs);

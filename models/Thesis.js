@@ -7,8 +7,6 @@ class Thesis extends BaseModel {
     super("Thesis");
   }
 
-
-
   checkIfExists(thesis) {
     return this.getModel().findOne({
       where: {
@@ -126,7 +124,9 @@ class Thesis extends BaseModel {
 
   findAll(params) {
     return this.getModel().findAll({
-      where: params === undefined ? {} : params,
+      attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "ethesis", "grade",
+        "deadline", "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
+      where: params,
       include: [{
         model: this.Models.Grader,
         attributes: ["id", "name", "title"],
@@ -163,7 +163,7 @@ class Thesis extends BaseModel {
         StudyFieldId: user.StudyFieldId,
       });
     } else if (user.role === "instructor") {
-      return this.findOne({
+      return this.findAll({
         UserId: user.id,
       });
     }
@@ -177,7 +177,7 @@ class Thesis extends BaseModel {
 
   findOneDocuments(thesisID) {
     return this.getModel().findOne({
-      attributes: ["id", "title", "ethesis", "graderEval"],
+      attributes: ["id", "title", "ethesis", "graderEval", "StudyFieldId"],
       where: { id: thesisID },
       include: [{
         model: this.Models.ThesisReview,

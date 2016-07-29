@@ -42,7 +42,7 @@ class ThesisProgress extends BaseModel {
   }
 
   checkAndSetDone(ThesisId) {
-    return this.Models[this.modelname].findOne({ where: { ThesisId }, })
+    return this.Models[this.modelname].findOne({ where: { ThesisId } })
       .then(tprogress => {
         if (tprogress.ethesisDone && tprogress.graderEvalDone && tprogress.printDone) {
           return this.getModel().update({
@@ -53,7 +53,7 @@ class ThesisProgress extends BaseModel {
         } else {
           return Promise.resolve();
         }
-      })
+      });
   }
 
   isGraderEvaluationNeeded(thesisId, graders) {

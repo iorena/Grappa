@@ -97,7 +97,7 @@ class EmailReminder {
         deadline: thesis.deadline,
         EmailDraftId: foundDraft.id,
       }))
-      .then(reminder => ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id,}));
+      .then(reminder => ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id }));
   }
 }
 

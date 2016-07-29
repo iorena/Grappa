@@ -7,6 +7,13 @@ class User extends BaseModel {
     super("User");
   }
 
+  findOne(params) {
+    return this.Models[this.modelname].findOne({
+      attributes: ["id", "email", "passwordHash", "firstname", "lastname", "role", "isActive", "isRetired", "StudyFieldId"],
+      where: params,
+    });
+  }
+
   findAll() {
     return this.Models[this.modelname]
     .findAll({
@@ -28,6 +35,20 @@ class User extends BaseModel {
         isActive: false,
       },
     });
+  }
+
+  findAllProfessors() {
+    return this.Models.StudyField.findAll()
+      .then(fields => {
+        return Promise.all(fields.map(field => {
+          return this.Models.User.findOne({
+            where: {
+              role: "professor",
+              StudyFieldId: field.id,
+            },
+          });
+        }));
+      });
   }
 
   update(values, params) {

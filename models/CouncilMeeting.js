@@ -7,6 +7,13 @@ class CouncilMeeting extends BaseModel {
     super("CouncilMeeting");
   }
 
+  findAll() {
+    return this.Models[this.modelname]
+    .findAll({
+      attributes: ["id", "date"],
+    });
+  }
+
   checkIfExists(meeting) {
     const start = new Date(meeting.date);
     const end = new Date(meeting.date);
@@ -23,7 +30,6 @@ class CouncilMeeting extends BaseModel {
         return found !== null;
       });
   }
-
 
   linkThesis(meeting, thesis) {
     return this.getModel()

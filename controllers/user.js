@@ -20,9 +20,9 @@ module.exports.findAll = (req, res) => {
 };
 
 module.exports.updateOne = (req, res) => {
-  console.log(req.body)
-  console.log(req.user)
-  console.log(req.params.id)
+  // console.log(req.body)
+  // console.log(req.user)
+  // console.log(req.params.id)
   const user = req.body;
   if (!(req.user.id.toString() === req.params.id || (req.user.role === "admin" && !user.newPassword))) {
     res.status(401).send({
@@ -30,15 +30,15 @@ module.exports.updateOne = (req, res) => {
     });
   } else if (user.password && user.newPassword && user.newPasswordConf) {
     if (user.newPassword !== user.newPasswordConf) {
-      res.status(403).send({ 
-        message: "Password confirmation failed" 
+      res.status(403).send({
+        message: "Password confirmation failed",
       });
     } else {
       User.findOne({ id: req.params.id })
       .then(foundUser => {
         if (!passwordHelper.comparePassword(user.password, foundUser.passwordHash)) {
-          res.status(403).send({ 
-            message: "Wrong password" 
+          res.status(403).send({
+            message: "Wrong password",
           });
         } else {
           user.passwordHash = passwordHelper.hashPassword(user.newPassword);
@@ -48,7 +48,7 @@ module.exports.updateOne = (req, res) => {
               res.status(200).send(rows);
             });
         }
-      })
+      });
     }
   } else {
     User
@@ -124,18 +124,20 @@ module.exports.loginUser = (req, res) => {
         res.status(403).send({ message: "Wrong username and password combination!" });
       } else {
         const token = TokenGenerator.generateToken(user);
+        // delete user.passwordHash;
         user.passwordHash = undefined;
+        console.log(user);
         res.status(200).send({
           user: user,
           token: token,
         });
       }
     }
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "User loginUser produced an error",
-      error: err,
-    });
   });
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message: "User loginUser produced an error",
+  //     error: err,
+  //   });
+  // });
 };

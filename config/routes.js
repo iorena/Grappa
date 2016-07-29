@@ -49,6 +49,8 @@ router.get("/auth", auth.authenticate, authTest);
 router.post("/login", userCtrl.loginUser);
 router.post("/user", userCtrl.saveOne);
 
+router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
+
 // router.get("/dbdump", dump);
 // router.get("/asdf", thesisCtrl.sendPdf);
 
@@ -60,7 +62,6 @@ router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", thesisCtrl.saveOne);
 // router.delete("/thesis/:id", thesisCtrl.deleteOne);
-router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 
 router.get("/grader", graderCtrl.findAll);
