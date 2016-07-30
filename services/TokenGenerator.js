@@ -21,8 +21,7 @@ class TokenGenerator {
     return jwt.encode(payload, this.secret);
   }
   decodeToken(token) {
-    const user = jwt.decode(token, this.secret);
-    return user;
+    return jwt.decode(token, this.secret);
   }
   generateEthesisToken(authorname, thesisId) {
     const payload = {
@@ -30,11 +29,6 @@ class TokenGenerator {
       thesisId,
     };
     return jwt.encode(payload, this.secret);
-  }
-  decodeEthesisToken(token) {
-    const ethesisToken = jwt.decode(token, this.secret);
-    // console.log(ethesisToken);
-    return ethesisToken;
   }
 }
 

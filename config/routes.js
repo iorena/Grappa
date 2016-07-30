@@ -11,8 +11,8 @@ const thesisCtrl = require("../controllers/thesis");
 const councilmeetingCtrl = require("../controllers/councilmeeting");
 const graderCtrl = require("../controllers/grader");
 const userCtrl = require("../controllers/user");
-// const thesisprogressCtrl = require("./thesisprogress");
-// const emailCtrl = require("./email");
+const thesisprogressCtrl = require("../controllers/thesisprogress");
+const emailCtrl = require("../controllers/email");
 // const emailstatusCtrl = require("./email_status");
 const studyfieldCtrl = require("../controllers/studyfield");
 const emaildraftCtrl = require("../controllers/emaildraft");
@@ -87,12 +87,15 @@ router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 router.get("/user", userCtrl.findAll);
 router.delete("/user/:id", userCtrl.deleteOne);
 
+router.put("/thesisprogress/:id", thesisprogressCtrl.updateOne);
+
 // router.get("/emailstatus", emailstatusCtrl.findAll);
 // router.post("/emailstatus", emailstatusCtrl.saveOne);
+// router.put("/emailstatus/:id", emailstatusCtrl.updateOne);
 
 // router.get("/email/send", emailCtrl.sendEmail);
 // router.get("/email/check", emailCtrl.checkEmail);
-// router.post("/email/remind", emailCtrl.sendReminder);
+router.post("/email/remind", emailCtrl.sendReminder);
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id", emaildraftCtrl.updateOne);

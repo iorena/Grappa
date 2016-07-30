@@ -84,24 +84,21 @@ module.exports.saveOne = (req, res) => {
       throw new ValidationError("No such StudyField found");
     } else if (connections[2] < 2) {
       throw new ValidationError("Less than 2 valid Graders found");
+    } else if (!connections[3]) {
+      throw new ValidationError("StudyField has no professor");
     }
     foundConnections = connections;
     return Thesis.saveOneAndProgress(parsedForm.json, foundConnections[0]);
   })
   .then(thesis => {
     savedThesis = thesis;
-    const token = TokenGen.generateEthesisToken(savedThesis.author, savedThesis.id);
     return Promise.all([
       ThesisReview.saveOne({
         pdf: parsedForm.file,
         ThesisId: thesis.id,
         UserId: req.user.id,
       }),
-      EthesisToken.saveOne({
-        thesisId: savedThesis.id,
-        token,
-      }),
-      Reminder.sendEthesisReminder(savedThesis, token),
+      Reminder.sendEthesisReminder(savedThesis),
       CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
       Grader.linkThesisToGraders(foundConnections[2], savedThesis.id),
       Thesis.linkStudyField(savedThesis, foundConnections[1].id),
@@ -177,19 +174,41 @@ module.exports.updateOneAndConnections = (req, res) => {
 };
 
 module.exports.updateOneEthesis = (req, res) => {
-  const thesis_id = TokenGen.decodeEthesisToken(req.body.token).thesisId;
-  Thesis
-   .update(req.body.thesis, { id: thesis_id })
-   .then(thesis => ThesisProgress.setEthesisDone(thesis_id))
-   .then(() => {
-     res.status(200).send();
-   })
-   .catch(err => {
-     res.status(500).send({
-       message: "Thesis update produced an error",
-       error: err,
-     });
-   });
+  let foundEtoken;
+
+  EthesisToken
+  .findOne({ token: req.body.token })
+  .then(etoken => {
+    console.log(etoken)
+    if (!etoken) {
+      throw new ValidationError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
+    } else if (etoken.expires && etoken.expires < new Date()) {
+      throw new ValidationError("Token has expired. Ask admin to manually input the ethesis link.");
+    } else {
+      foundEtoken = etoken;
+      return Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId, });
+    }
+  })
+  .then(thesis => ThesisProgress.setEthesisDone(foundEtoken.ThesisId))
+  .then(() => EthesisToken.setToExpire(foundEtoken.ThesisId))
+  .then(() => {
+    res.status(200).send();
+  })
+  .catch(err => {
+    if (err.name === "ValidationError") {
+      res.status(400).send({
+        location: "Thesis updateOneEthesis .catch ValidationError",
+        message: err.message,
+        error: err,
+      });
+    } else {
+      res.status(500).send({
+        location: "Thesis updateOneEthesis .catch other",
+        message: "Updating Thesis' ethesis link caused an internal server error.",
+        error: err,
+      });
+    }
+  });
 };
 
 module.exports.generateThesesToPdf = (req, res) => {

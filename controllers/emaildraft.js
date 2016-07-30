@@ -10,7 +10,8 @@ module.exports.findAll = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "EmailDraft findAll produced an error",
+      location: "EmailDraft findAll .catch other",
+      message: "Getting all EmailDrafts caused an internal server error.",
       error: err,
     });
   });
@@ -19,12 +20,13 @@ module.exports.findAll = (req, res) => {
 module.exports.updateOne = (req, res) => {
   EmailDraft
   .update(req.body, { id: req.params.id })
-  .then(draft => {
-    res.status(200).send(draft);
+  .then(rows => {
+    res.status(200).send(rows);
   })
   .catch(err => {
     res.status(500).send({
-      message: "EmailDraft updateOne produced an error",
+      location: "EmailDraft updateOne .catch other",
+      message: "Updating EmailDraft caused an internal server error.",
       error: err,
     });
   });

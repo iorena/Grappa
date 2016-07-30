@@ -1,12 +1,14 @@
 "use strict";
 
 const Sender = require("./EmailSender");
+const TokenGen = require("../services/TokenGenerator");
 
 const User = require("../models/User");
 const Thesis = require("../models/Thesis");
 const ThesisProgress = require("../models/ThesisProgress");
 const EmailStatus = require("../models/EmailStatus");
 const EmailDraft = require("../models/EmailDraft");
+const EthesisToken = require("../models/EthesisToken");
 
 const PremiseError = require("../config/errors").PremiseError;
 
@@ -15,8 +17,11 @@ class EmailReminder {
   /**
    * Sends an email reminder to student about submitting their thesis to https://helda.helsinki.fi
    */
-  sendEthesisReminder(thesis, token) {
+  sendEthesisReminder(thesis) {
     let foundDraft;
+    let savedReminder;
+
+    const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
 
     return EmailDraft
       .findOne({ type: "EthesisReminder" })
@@ -29,6 +34,11 @@ class EmailReminder {
           throw new PremiseError("EthesisReminder not found from EmailDrafts");
         }
       })
+      .then(() => EthesisToken.updateOrCreate({
+        token,
+        expires: null,
+        ThesisId: thesis.id,
+      }, { ThesisId: thesis.id }))
       .then(() => EmailStatus.saveOne({
         lastSent: Date.now(),
         type: "EthesisReminder",
@@ -36,7 +46,13 @@ class EmailReminder {
         deadline: thesis.deadline,
         EmailDraftId: foundDraft.id,
       }))
-      .then(reminder => ThesisProgress.update({ EthesisEmailId: reminder.id }, { ThesisId: thesis.id }));
+      .then(reminder => {
+        savedReminder = reminder;
+        return ThesisProgress.update({ EthesisEmailId: reminder.id }, { ThesisId: thesis.id })
+      })
+      .then(rows => {
+        return savedReminder;
+      })
   }
 
   /**
@@ -71,6 +87,7 @@ class EmailReminder {
   sendProfessorReminder(thesis) {
     let foundDraft;
     let foundProfessor;
+    let savedReminder;
 
     return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
       .then(professor => {
@@ -78,7 +95,7 @@ class EmailReminder {
           foundProfessor = professor;
           return EmailDraft.findOne({ type: "GraderEvalReminder" });
         } else {
-          throw new PremiseError("StudyField had no professor to whom send grader evaluation");
+          throw new PremiseError("StudyField had no professor to whom send grader evaluation reminder.");
         }
       })
       .then(reminder => {
@@ -97,7 +114,13 @@ class EmailReminder {
         deadline: thesis.deadline,
         EmailDraftId: foundDraft.id,
       }))
-      .then(reminder => ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id }));
+      .then(reminder => {
+        savedReminder = reminder;
+        return ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id })
+      })
+      .then(rows => {
+        return savedReminder;
+      })
   }
 }
 

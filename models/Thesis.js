@@ -9,13 +9,13 @@ class Thesis extends BaseModel {
 
   checkIfExists(thesis) {
     return this.getModel().findOne({
-      where: {
-        title: thesis.title,
-        authorFirstname: thesis.authorFirstname,
-        authorLastname: thesis.authorLastname,
-        authorEmail: thesis.authorEmail,
-      },
-    })
+        where: {
+          title: thesis.title,
+          authorFirstname: thesis.authorFirstname,
+          authorLastname: thesis.authorLastname,
+          authorEmail: thesis.authorEmail,
+        },
+      })
       .then(thesis => {
         return thesis !== null;
       });
@@ -38,6 +38,12 @@ class Thesis extends BaseModel {
           id: grader.id,
         },
       }))),
+      this.Models.User.findOne({
+        where: { 
+          role: "professor", 
+          StudyFieldId: thesis.StudyFieldId,
+        },
+      }),
     ]);
   }
 
