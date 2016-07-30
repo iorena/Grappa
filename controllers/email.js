@@ -3,7 +3,7 @@
 const Reminder = require("../services/EmailReminder");
 const TokenG = require("../services/TokenGenerator");
 
-const Thesis = require("../models/thesis");
+const Thesis = require("../models/Thesis");
 
 const ValidationError = require("../config/errors").ValidationError;
 
