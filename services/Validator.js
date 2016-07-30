@@ -18,8 +18,8 @@ class Validator {
   validate(modelname, values) {
     if (modelname === "thesis") {
       return Promise.all([
-        StudyField.findOne({})
-      ])
+        StudyField.findOne({}),
+      ]);
     }
   }
 }

@@ -48,11 +48,11 @@ class EmailReminder {
       }))
       .then(reminder => {
         savedReminder = reminder;
-        return ThesisProgress.update({ EthesisEmailId: reminder.id }, { ThesisId: thesis.id })
+        return ThesisProgress.update({ EthesisEmailId: reminder.id }, { ThesisId: thesis.id });
       })
       .then(rows => {
         return savedReminder;
-      })
+      });
   }
 
   /**
@@ -116,11 +116,11 @@ class EmailReminder {
       }))
       .then(reminder => {
         savedReminder = reminder;
-        return ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id })
+        return ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id });
       })
       .then(rows => {
         return savedReminder;
-      })
+      });
   }
 }
 

@@ -61,7 +61,6 @@ router.use("", auth.authenticate);
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", thesisCtrl.saveOne);
-// router.delete("/thesis/:id", thesisCtrl.deleteOne);
 router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
 
 router.get("/grader", graderCtrl.findAll);
@@ -77,6 +76,8 @@ router.put("/user/:id", userCtrl.updateOne);
 // Routes accessisable only for admin
 
 router.use("", auth.onlyAdmin);
+
+router.delete("/thesis/:id", thesisCtrl.deleteOne);
 
 router.post("/councilmeeting", councilmeetingCtrl.saveOne);
 router.put("/councilmeeting/:id", councilmeetingCtrl.updateOne);

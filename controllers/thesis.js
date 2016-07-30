@@ -179,14 +179,14 @@ module.exports.updateOneEthesis = (req, res) => {
   EthesisToken
   .findOne({ token: req.body.token })
   .then(etoken => {
-    console.log(etoken)
+    console.log(etoken);
     if (!etoken) {
       throw new ValidationError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
     } else if (etoken.expires && etoken.expires < new Date()) {
       throw new ValidationError("Token has expired. Ask admin to manually input the ethesis link.");
     } else {
       foundEtoken = etoken;
-      return Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId, });
+      return Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId });
     }
   })
   .then(thesis => ThesisProgress.setEthesisDone(foundEtoken.ThesisId))
@@ -256,4 +256,27 @@ module.exports.generateThesesToPdf = (req, res) => {
   //     error: err,
   //   });
   // });
+};
+
+module.exports.deleteOne = (req, res) => {
+  Thesis
+  .delete({ id: req.params.id })
+  .then(deletedRows => {
+    if (deletedRows !== 0) {
+      res.status(200).send();
+    } else {
+      res.status(404).send({
+        location: "Thesis deleteOne deletedRows === 0",
+        message: "No thesis found",
+        error: {},
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      location: "Thesis deleteOne .catch other",
+      message: "Deleting Thesis caused an internal server error.",
+      error: err,
+    });
+  });
 };

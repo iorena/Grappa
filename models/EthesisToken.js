@@ -8,7 +8,7 @@ class EthesisToken extends BaseModel {
   }
   updateOrCreate(values, params) {
     return this.Models.EthesisToken.upsert(values, {
-      where: params
+      where: params,
     });
   }
   setToExpire(ThesisId) {
@@ -19,7 +19,7 @@ class EthesisToken extends BaseModel {
     }, {
       where: {
         ThesisId,
-      }
+      },
     });
   }
 }

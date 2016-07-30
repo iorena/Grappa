@@ -14,7 +14,7 @@ const ValidationError = require("../config/errors").ValidationError;
 *@param {Object} req - The build of req.body being {thesis[], "professor/student"}
 */
 module.exports.sendReminder = (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
 
   Thesis
   .findOne(req.body.thesisId)
