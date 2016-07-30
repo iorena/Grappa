@@ -38,6 +38,12 @@ class Thesis extends BaseModel {
           id: grader.id,
         },
       }))),
+      this.Models.User.findOne({
+        where: {
+          role: "professor",
+          StudyFieldId: thesis.StudyFieldId,
+        },
+      }),
     ]);
   }
 

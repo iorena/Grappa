@@ -10,7 +10,8 @@ module.exports.findAll = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "Grader findAll produced an error",
+      location: "Grader findAll .catch other",
+      message: "Getting all Graders caused an internal server error.",
       error: err,
     });
   });
@@ -24,7 +25,8 @@ module.exports.saveOne = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "Grader saveOne produced an error",
+      location: "Grader saveOne .catch other",
+      message: "Saving Grader caused an internal server error.",
       error: err,
     });
   });
@@ -38,7 +40,8 @@ module.exports.updateOne = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "Grader updateOne produced an error",
+      location: "Grader updateOne .catch other",
+      message: "Updating Grader caused an internal server error.",
       error: err,
     });
   });

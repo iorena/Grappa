@@ -115,6 +115,7 @@ const Thesis = seq.define("Thesis", {
 const EthesisToken = seq.define("EthesisToken", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   token: Sequelize.STRING,
+  expires: Sequelize.DATE,
 });
 
 const Grader = seq.define("Grader", {
@@ -171,7 +172,6 @@ const ThesisProgress = seq.define("ThesisProgress", {
   ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   graderEvalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   printDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-  done: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
 const EmailDraft = seq.define("EmailDraft", {

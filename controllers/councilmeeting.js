@@ -38,7 +38,7 @@ module.exports.saveOne = (req, res) => {
   .catch(err => {
     res.status(500).send({
       location: "CouncilMeeting saveOne .catch",
-      message: "Saving a CouncilMeeting caused an internal server error.",
+      message: "Saving CouncilMeeting caused an internal server error.",
       error: err,
     });
   });
@@ -53,7 +53,7 @@ module.exports.updateOne = (req, res) => {
   .catch(err => {
     res.status(500).send({
       location: "CouncilMeeting updateOne .catch other",
-      message: "Updating a CouncilMeeting caused an internal server error.",
+      message: "Updating CouncilMeeting caused an internal server error.",
       error: err,
     });
   });

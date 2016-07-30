@@ -10,7 +10,8 @@ module.exports.findAll = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "StudyField findAll produced an error",
+      location: "StudyField findAll .catch other",
+      message: "Getting all StudyFields caused an internal server error.",
       error: err,
     });
   });
@@ -24,8 +25,9 @@ module.exports.saveOne = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "StudyField saveOne produced an error",
-      error: err,
+      location: "StudyField saveOne .catch other",
+      message: "Saving StudyField caused an internal server error.",
+      error: err, r,
     });
   });
 };
@@ -38,7 +40,8 @@ module.exports.updateOne = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "StudyField updateOne produced an error",
+      location: "StudyField updateOne .catch other",
+      message: "Updating StudyField caused an internal server error.",
       error: err,
     });
   });
