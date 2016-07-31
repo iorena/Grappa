@@ -57,7 +57,9 @@ module.exports.updateOne = (req, res) => {
       }
     } else {
       strippedUser = user;
-      if (strippedUser.role === "professor") {
+      if ((strippedUser.role === "professor" || strippedUser.role === "instructor") && !strippedUser.StudyFieldId) {
+        throw new ValidationError("Professor or instructor must have a studyfield.");
+      } else if (strippedUser.role === "professor") {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
             if (prof && prof.id !== strippedUser.id) {
@@ -91,20 +93,43 @@ module.exports.updateOne = (req, res) => {
 };
 
 module.exports.saveOne = (req, res) => {
-  if (req.body.password && req.body.password.length > 7) {
-    req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
-  }
-  User
-  .saveOne(req.body)
-  .then(user => {
-    res.status(200).send({ message: "User was successfully saved" });
+  const user = req.body;
+
+  Promise.resolve()
+  .then(() => {
+    if (!user.firstname || !user.lastname || !user.email || !user.password) {
+      throw new ValidationError("Missing fields.");
+    } else if (user.password < 8) {
+      throw new ValidationError("Password too short.");
+    } else {
+      return User.findOne({ email: user.email });
+    }
+  })
+  .then(foundUser => {
+    if (foundUser) {
+      throw new ValidationError("User already exists with the same email.");
+    } else {
+      user.passwordHash = passwordHelper.hashPassword(user.password);
+      return User.saveOne(user);
+    }
+  })
+  .then(savedUser => {
+    res.status(200).send();
   })
   .catch(err => {
-    res.status(500).send({
-      location: "User saveOne .catch other",
-      message: "Creating User caused an internal server error.",
-      error: err,
-    });
+    if (err.name === "ValidationError") {
+      res.status(400).send({
+        location: "User saveOne .catch ValidationError",
+        message: err.message,
+        error: err,
+      });
+    } else {
+      res.status(500).send({
+        location: "User saveOne .catch other",
+        message: "Registering new User caused an internal server error.",
+        error: err,
+      });
+    }
   });
 };
 
