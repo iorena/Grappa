@@ -41,21 +41,6 @@ class ThesisProgress extends BaseModel {
     });
   }
 
-  checkAndSetDone(ThesisId) {
-    return this.Models[this.modelname].findOne({ where: { ThesisId } })
-      .then(tprogress => {
-        if (tprogress.ethesisDone && tprogress.graderEvalDone && tprogress.printDone) {
-          return this.getModel().update({
-            done: true,
-          }, {
-            where: { ThesisId },
-          });
-        } else {
-          return Promise.resolve();
-        }
-      });
-  }
-
   isGraderEvaluationNeeded(thesisId, graders) {
     let professor = false;
     let doctor = false;

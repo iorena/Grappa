@@ -22,27 +22,14 @@ module.exports.findAllByUserRole = (req, res) => {
   .findAllByUserRole(req.user)
   .then(theses => {
     res.status(200).send(theses);
+  })
+  .catch(err => {
+    res.status(500).send({
+      location: "Thesis findAll .catch other",
+      message: "Getting all Theses caused an internal server error.",
+      error: err,
+    });
   });
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message-: "Thesis findAllByUserRole produced an error",
-  //     error: err,
-  //   });
-  // });
-};
-
-module.exports.findAllByCouncilMeeting = (req, res) => {
-  Thesis
-  .findAllByCouncilMeeting(req.body.CouncilMeetingId)
-  .then(theses => {
-    res.status(200).send(theses);
-  });
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message-: "Thesis findAllByUserRole produced an error",
-  //     error: err,
-  //   });
-  // });
 };
 
 module.exports.saveOne = (req, res) => {
@@ -154,7 +141,8 @@ module.exports.updateOneAndConnections = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: "Thesis update produced an error",
+        location: "Thesis updateOne .catch other",
+        message: "Updating Thesis caused an internal server error.",
         error: err,
       });
     });
@@ -166,9 +154,16 @@ module.exports.updateOneAndConnections = (req, res) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: "Thesis update produced an error",
+        location: "Thesis updateOne .catch other",
+        message: "Updating Thesis caused an internal server error.",
         error: err,
       });
+    });
+  } else {
+    res.status(401).send({
+      location: "Thesis updateOne else role",
+      message: "Missing privileges.",
+      error: err,
     });
   }
 };
@@ -179,7 +174,6 @@ module.exports.updateOneEthesis = (req, res) => {
   EthesisToken
   .findOne({ token: req.body.token })
   .then(etoken => {
-    console.log(etoken);
     if (!etoken) {
       throw new ValidationError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
     } else if (etoken.expires && etoken.expires < new Date()) {
@@ -233,7 +227,6 @@ module.exports.generateThesesToPdf = (req, res) => {
         return Promise.resolve();
       }
     })
-    .then(() => Promise.all(thesisIDs.map(thesis_id => ThesisProgress.checkAndSetDone(thesis_id))))
     .then(() => {
       const file = fs.createReadStream(pathToFile);
       const stat = fs.statSync(pathToFile);
@@ -241,21 +234,21 @@ module.exports.generateThesesToPdf = (req, res) => {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
       file.pipe(res);
+    })
+    .catch(err => {
+      res.status(500).send({
+        location: "Thesis generateThesesToPdf .catch other",
+        message: "Generating Theses' to pdf caused an internal server error.",
+        error: err,
+      });
     });
   } else {
     res.status(400).send({
       location: "Thesis generateThesesToPdf if !thesisIDs",
-      message: "No theses received",
+      message: "No thesis ids received",
       error: {},
     });
   }
-
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message: "Thesis generateThesesToPdf produced an error",
-  //     error: err,
-  //   });
-  // });
 };
 
 module.exports.deleteOne = (req, res) => {
