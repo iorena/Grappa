@@ -37,6 +37,16 @@ class User extends BaseModel {
     });
   }
 
+  findStudyfieldsProfessor(StudyFieldId) {
+    return this.Models.User.findOne({
+        where: {
+          role: "professor",
+          StudyFieldId,
+          isRetired: false,
+        },
+      });
+  }
+
   findAllProfessors() {
     return this.Models.StudyField.findAll()
       .then(fields => {

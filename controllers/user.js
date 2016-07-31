@@ -5,6 +5,8 @@ const passwordHelper = require("../config/passwordHelper");
 
 const User = require("../models/User");
 
+const ValidationError = require("../config/errors").ValidationError;
+
 module.exports.findAll = (req, res) => {
   User
   .findAll()
@@ -13,60 +15,83 @@ module.exports.findAll = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "User findAll produced an error",
+      location: "User findAll .catch other",
+      message: "Getting all Users caused an internal server error.",
       error: err,
     });
   });
 };
 
 module.exports.updateOne = (req, res) => {
-  // console.log(req.body)
-  // console.log(req.user)
-  // console.log(req.params.id)
   const user = req.body;
-  if (!(req.user.id.toString() === req.params.id || (req.user.role === "admin" && !user.newPassword))) {
-    res.status(401).send({
-      message: "User has missing privileges",
-    });
-  } else if (user.password && user.newPassword && user.newPasswordConf) {
-    if (user.newPassword !== user.newPasswordConf) {
-      res.status(403).send({
-        message: "Password confirmation failed",
+
+  Promise.resolve()
+  .then(() => {
+    if (req.user.id.toString() !== req.params.id && req.user.role !== "admin") {
+      throw new ValidationError("Missing privileges to edit User.");
+    } else if (!user.password && req.user.role !== "admin") {
+      throw new ValidationError("No password supplied.");
+    } else if (user.newPassword && !user.newPasswordConf || !user.newPassword && user.newPasswordConf) {
+      throw new ValidationError("No new password or confirmation.");
+    } else if (user.newPassword && user.newPasswordConf && user.newPassword !== user.newPasswordConf) {
+      throw new ValidationError("New password didn't match confirmation.");
+    } else {
+      return User.findOne({ id: req.params.id });
+    }
+  })
+  .then(foundUser => {
+    if (!foundUser) {
+      throw new ValidationError("No User found.");
+    } else if (user.password && !passwordHelper.comparePassword(user.password, foundUser.passwordHash)) {
+      throw new ValidationError("Wrong password.");
+    }
+    let strippedUser = {};
+    if (req.user.id.toString() === req.params.id) {
+      strippedUser = {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+      }
+      if (user.newPassword && user.newPasswordConf) {
+        strippedUser.passwordHash = passwordHelper.hashPassword(user.newPassword);
+      }
+    } else {
+      strippedUser = user;
+      if (strippedUser.role === "professor") {
+        return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
+          .then(prof => {
+            if (prof && prof.id !== strippedUser.id) {
+              throw new ValidationError("Studyfield already has professor.");
+            } else {
+              return User.update(strippedUser, { id: req.params.id });
+            }
+          })
+        }
+    }
+    return User.update(strippedUser, { id: req.params.id });
+  })
+  .then(rows => {
+    res.status(200).send();
+  })
+  .catch(err => {
+    if (err.name === "ValidationError") {
+      res.status(400).send({
+        location: "User updateOne .catch ValidationError",
+        message: err.message,
+        error: err,
       });
     } else {
-      User.findOne({ id: req.params.id })
-      .then(foundUser => {
-        if (!passwordHelper.comparePassword(user.password, foundUser.passwordHash)) {
-          res.status(403).send({
-            message: "Wrong password",
-          });
-        } else {
-          user.passwordHash = passwordHelper.hashPassword(user.newPassword);
-          return User
-            .update(user, { id: req.params.id })
-            .then(rows => {
-              res.status(200).send(rows);
-            });
-        }
+      res.status(500).send({
+        location: "User updateOne .catch other",
+        message: "Updating User caused an internal server error.",
+        error: err,
       });
     }
-  } else {
-    User
-    .update(req.body, { id: req.params.id })
-    .then(user => {
-      res.status(200).send(user);
-    });
-    // .catch(err => {
-    //   res.status(500).send({
-    //     message: "User updateOne produced an error",
-    //     error: err,
-    //   });
-    // });
-  }
+  });
 };
 
 module.exports.saveOne = (req, res) => {
-  if (req.body.password !== undefined) {
+  if (req.body.password && req.body.password.length > 7) {
     req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
   }
   User
@@ -76,7 +101,8 @@ module.exports.saveOne = (req, res) => {
   })
   .catch(err => {
     res.status(500).send({
-      message: "User saveOne produced an error",
+      location: "User saveOne .catch other",
+      message: "Creating User caused an internal server error.",
       error: err,
     });
   });
@@ -87,14 +113,19 @@ module.exports.deleteOne = (req, res) => {
   .delete({ id: req.params.id })
   .then(deletedRows => {
     if (deletedRows !== 0) {
-      res.status(200).send({ message: "User with id: " + req.params.id + " successfully deleted" });
+      res.status(200).send();
     } else {
-      res.status(404).send({ message: "User to delete with id: " + req.params.id + " was not found" });
+      res.status(404).send({
+        location: "Thesis deleteOne deletedRows === 0",
+        message: "No User found",
+        error: {},
+      });
     }
   })
   .catch(err => {
     res.status(500).send({
-      message: "User deleteOne produced an error",
+      location: "User deleteOne .catch other",
+      message: "Deleting User caused an internal server error.",
       error: err,
     });
   });
@@ -106,38 +137,44 @@ module.exports.loginUser = (req, res) => {
   .then(user => {
     if (!user) {
       res.status(401).send({
+        location: "User loginUser !user",
         message: "Logging in failed authentication",
         error: "",
       });
     } else if (!user.isActive) {
       res.status(401).send({
+        location: "User loginUser !isActive",
         message: "Your account is inactive, please contact admin for activation",
         error: "",
       });
     } else if (user.isRetired) {
       res.status(401).send({
+        location: "User loginUser isRetired",
         message: "Your account has been retired, please contact admin to reactivate",
         error: "",
       });
     } else {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
-        res.status(403).send({ message: "Wrong username and password combination!" });
+        res.status(403).send({
+          location: "User loginUser !comparePassword",
+          message: "Wrong password",
+          error: "",
+        });
       } else {
         const token = TokenGenerator.generateToken(user);
-        // delete user.passwordHash;
         user.passwordHash = undefined;
-        console.log(user);
         res.status(200).send({
-          user: user,
-          token: token,
+          user,
+          token,
         });
       }
     }
+  })
+  .catch(err => {
+    res.status(500).send({
+      location: "User loginUser .catch other",
+      message: "Logging in caused an internal server error.",
+      error: err,
+    });
   });
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message: "User loginUser produced an error",
-  //     error: err,
-  //   });
-  // });
 };

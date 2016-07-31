@@ -8,7 +8,7 @@ Periodi IV 2016
 Ohjelmistotuotantoprojekti (8 op)  
 (7-week software production project from March to May)
 
-[Heroku deploy](https://tktl-grappa.herokuapp.com/)
+[Heroku](https://tktl-grappa.herokuapp.com/)
 
 [Travis](https://travis-ci.org/ultra-hyper-storm-ohtuprojekti/grappa-backend/)
 
