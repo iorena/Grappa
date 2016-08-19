@@ -5,12 +5,18 @@ server {
 }
 
 server {
-  listen 443 ssl;
+  listen 443;
   server_name grappa.cs.helsinki.fi;
-  # add Strict-Transport-Security to prevent man in the middle attacks
-  add_header Strict-Transport-Security "max-age=31536000";
+  ssl on;
   ssl_certificate /etc/nginx/grappa_cs_helsinki_fi.crt;
   ssl_certificate_key /etc/nginx/grappa_cs_helsinki_fi.key;
+
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # vhautaka 2016 08 01: disable Poodle vulnerability
+  ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+  ssl_prefer_server_ciphers on;
+  ssl_session_cache shared:SSL:10m;
+  ssl_dhparam /etc/ssl/certs/dhparam.pem;
+  add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; ";
 
   root /var/www/grappa.cs.helsinki.fi;
     index index.html;
