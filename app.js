@@ -23,12 +23,7 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.use(bodyParser.json());
-app.use(cors());
-
-// const asdf = require("./services/PdfManipulator");
-// asdf.join();
-// asdf.generatePdfFromGraderEval({},"hyviä jätkiä", "./tmp/graderit");
-// asdf.prepareAbstractsForMeeting();
+// app.use(cors());
 
 app.use("", require("./config/routes"));
 

@@ -13,22 +13,15 @@ const secret = process.env.TOKEN_SECRET;
  * succesfull authentication the fasten the development process.
  */
 module.exports.authenticate = (req, res, next) => {
-  if (typeof req.headers["x-access-token"] === "undefined" || req.headers["x-access-token"] === null) {
-    return res.status(401).json({
+  if (!req.headers["x-access-token"]) {
+    return res.status(401).send({
       message: "Please make sure your request has X-Access-Token header",
     });
   }
-  if (typeof req.headers["x-key"] === "undefined" || req.headers["x-key"] === null) {
-    return res.status(401).send({
-      message: "Please make sure your request has X-Key header",
-    });
-  }
   const token = req.headers["x-access-token"];
-  let userid;
   let decoded;
   try {
     decoded = jwt.decode(token, secret);
-    userid = parseInt(req.headers["x-key"], 10);
   }
   catch (err) {
     return res.status(401).send({
@@ -36,13 +29,7 @@ module.exports.authenticate = (req, res, next) => {
       error: err.message,
     });
   }
-  // checks if userId is the same that the one who was created
-  // TODO should also check if token expired..
-  if (decoded.user.id !== userid) {
-    return res.status(401).send({
-      message: "User authentication failed",
-    });
-  } else if (decoded.created > decoded.expires) {
+  if (decoded.created > decoded.expires) {
     return res.status(401).send({
       message: "Token has expired",
     });
