@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.use(bodyParser.json());
-// app.use(cors());
+app.use(cors());
 
 app.use("", require("./config/routes"));
 
