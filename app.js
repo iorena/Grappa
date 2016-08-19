@@ -25,11 +25,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors());
 
-// const asdf = require("./services/PdfManipulator");
-// asdf.join();
-// asdf.generatePdfFromGraderEval({},"hyviä jätkiä", "./tmp/graderit");
-// asdf.prepareAbstractsForMeeting();
-
 app.use("", require("./config/routes"));
 
 if (!module.parent) {

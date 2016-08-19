@@ -1,5 +1,5 @@
-/*
- * Temporarily hard-coded config file for emailing options
+/**
+ * Config file for emailing options
  */
 
 module.exports.imap = () => (
@@ -11,14 +11,6 @@ module.exports.imap = () => (
     tls: true,
   }
 );
-
-// module.exports.imap = {
-//   user: "cs-tunnus",
-//   password: "cs-salasana",
-//   host: "mail.cs.helsinki.fi",
-//   port: 993,
-//   tls: true,
-// }
 
 module.exports.smtp = () => (
   {
@@ -32,14 +24,3 @@ module.exports.smtp = () => (
     },
   }
 );
-
-// module.exports.smtp = {
-//   from: "Grappa Robotti <nimi.sukunimi@cs.helsinki.fi>",
-//   host: "mail.cs.helsinki.fi",
-//   port: 465,
-//   secure: true, // use SSL
-//   auth: {
-//     user: "cs-tunnus",
-//     pass: "cs-salasana"
-//   }
-// };

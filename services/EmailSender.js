@@ -12,8 +12,6 @@ class EmailSender {
   }
 
   sendEmail(to, subject, body) {
-    // return Promise.resolve();
-
     const options = Object.assign({
       to,
       subject,

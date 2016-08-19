@@ -13,7 +13,6 @@ ip route get 8.8.8.8 | awk '{print $NF; exit}'
 # Or
 ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 # This tunnels the connection to the server(128.214.9.6) through melkki
-# as it is otherwise unaccessible
 ssh -L 9000:128.214.9.6:80 teekoivi@melkki.cs.helsinki.fi
 # For testing database connection
 psql -h localhost <db> <user>

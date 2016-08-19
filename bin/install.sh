@@ -19,7 +19,7 @@ sudo chmod -R g+rwx /var/www/grappa.cs.helsinki.fi
 locale-gen "fi_FI.UTF-8"
 dpkg-reconfigure locales
 LANG=fi_FI.UTF-8
-# and remember to setup split you are running on the shittiest digital ocean's server..
+# and remember to setup split if you are running on the shittiest digital ocean's server..
 # open up a screen so you can have more terminals open. wee
 screen
 sudo su grappauser
@@ -45,6 +45,7 @@ sudo apt-get install -y pdftk
 # Setup the database
 sudo -i -u postgres
 createuser -P grappadbuser
+# >> enter password <<
 createdb grappadb
 exit
 # installation of the source files
@@ -57,13 +58,14 @@ git clone https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-front.git
 cd grappa-backend
 # here you should name the variables inside .env
 mv .dev-env .env
-# >>> variables <<<<
+# >>> rename .env variables <<<<
 npm i
 npm run db init
 cd ../grappa-front
 mv .dev-env .env
-npm install
-# if webpack doesn't install automatically you can trigger it yourself
+# >>> rename .env variables <<<
+npm i
+# if webpack doesn't build automatically you can trigger it yourself
 npm run postinstall
 # Configure nginx
 sudo cp /var/www/grappa.cs.helsinki.fi/grappa-backend/bin/grappa.cs.helsinki.fi.conf /etc/nginx/sites-available
@@ -74,6 +76,6 @@ sudo service nginx restart
 # Start up the server cluster
 pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend
 pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front
-# since we are on single core no need to have multiple processess
+# since we are on single core no need to have multiple processess like this
 # pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend -i 2
 # pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front -i 1

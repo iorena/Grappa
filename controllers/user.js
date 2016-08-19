@@ -51,7 +51,7 @@ module.exports.updateOne = (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
-      }
+      };
       if (user.newPassword && user.newPasswordConf) {
         strippedUser.passwordHash = passwordHelper.hashPassword(user.newPassword);
       }
@@ -67,8 +67,8 @@ module.exports.updateOne = (req, res) => {
             } else {
               return User.update(strippedUser, { id: req.params.id });
             }
-          })
-        }
+          });
+      }
     }
     return User.update(strippedUser, { id: req.params.id });
   })
@@ -141,7 +141,7 @@ module.exports.deleteOne = (req, res) => {
       res.status(200).send();
     } else {
       res.status(404).send({
-        location: "Thesis deleteOne deletedRows === 0",
+        location: "User deleteOne deletedRows === 0",
         message: "No User found",
         error: {},
       });
