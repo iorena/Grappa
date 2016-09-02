@@ -10,6 +10,12 @@ if (process.env.NODE_ENV === "production") {
     },
     logging: false,
   });
+} else if (process.env.NODE_ENV === "testing") {
+  seq = new Sequelize("grappa", "", "", {
+    dialect: "sqlite",
+    storage: "db/test-db.sqlite",
+    logging: false,
+  });
 } else {
   seq = new Sequelize("grappa", "", "", {
     dialect: "sqlite",
