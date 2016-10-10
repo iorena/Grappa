@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require("fs");
+
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
 const FormParser = require("../services/FormParser");
@@ -14,8 +16,7 @@ const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
 const User = require("../models/User");
 
-const fs = require("fs");
-const ValidationError = require("../config/errors").ValidationError;
+const errors = require("../config/errors");
 
 module.exports.findAllByUserRole = (req, res) => {
   Thesis
@@ -23,13 +24,7 @@ module.exports.findAllByUserRole = (req, res) => {
   .then(theses => {
     res.status(200).send(theses);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "Thesis findAll .catch other",
-      message: "Getting all Theses caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
 module.exports.saveOne = (req, res) => {
@@ -37,42 +32,37 @@ module.exports.saveOne = (req, res) => {
   let savedThesis;
   let foundConnections;
 
-  // console.log(req.headers);
-  // console.log(req.body)
   FormParser
   .parseFormData(req)
   .then(data => {
-    // console.log("data")
-    // console.log(data)
     parsedForm = data;
     parsedForm.json = JSON.parse(parsedForm.json);
     if (!parsedForm.json) {
-      throw new ValidationError("Invalid form");
+      throw new errors.BadRequestError("No json field inside form.");
     } else if (!parsedForm.file) {
-      throw new ValidationError("No file sent");
+      throw new errors.BadRequestError("No file sent.");
     } else if (parsedForm.fileExt !== "pdf") {
-      throw new ValidationError("File wasn't a PDF");
-    // } else if (validate.isDataValidSchema(parsedForm.json, "thesis")) {
+      throw new errors.BadRequestError("File wasn't a PDF.");
     } else {
       return Thesis.checkIfExists(parsedForm.json);
     }
   })
   .then(exists => {
     if (exists) {
-      throw new ValidationError("Duplicate Thesis found");
+      throw new errors.BadRequestError("Duplicate Thesis found.");
     } else {
       return Thesis.findConnections(parsedForm.json);
     }
   })
   .then(connections => {
     if (!connections[0]) {
-      throw new ValidationError("No such CouncilMeeting found");
+      throw new errors.NotFoundError("No such CouncilMeeting found.");
     } else if (!connections[1]) {
-      throw new ValidationError("No such StudyField found");
+      throw new errors.NotFoundError("No such StudyField found.");
     } else if (connections[2] < 2) {
-      throw new ValidationError("Less than 2 valid Graders found");
+      throw new errors.BadRequestError("Less than 2 valid Graders found.");
     } else if (!connections[3]) {
-      throw new ValidationError("StudyField has no professor");
+      throw new errors.BadRequestError("StudyField has no professor.");
     }
     foundConnections = connections;
     return Thesis.saveOneAndProgress(parsedForm.json, foundConnections[0]);
@@ -99,73 +89,32 @@ module.exports.saveOne = (req, res) => {
       return ThesisProgress.setGraderEvalDone(savedThesis.id);
     }
   })
-  .then(() => {
-    return Thesis.findOne({ id: savedThesis.id });
-  })
+  .then(() => Thesis.findOne({ id: savedThesis.id }))
   .then((thesisWithConnections) => {
     res.status(200).send(thesisWithConnections);
   })
-  .catch(err => {
-    console.error(err);
-    if (err.name === "ValidationError") {
-      res.status(400).send({
-        location: "Thesis saveOne .catch ValidationError",
-        message: err.message,
-        error: err,
-      });
-    } else if (err.name === "PremiseError") {
-      res.status(400).send({
-        location: "Thesis saveOne .catch PremiseError",
-        message: err.message,
-        error: err,
-      });
-    } else {
-      res.status(500).send({
-        location: "Thesis saveOne .catch other",
-        message: "Saving a Thesis caused an internal server error.",
-        error: err,
-      });
-    }
-  });
+  .catch(err => next(err));
 };
 
 module.exports.updateOneAndConnections = (req, res) => {
+  let update = Promise.reject();
+
   if (req.user.role === "professor" && req.body.graderEval && req.body.graderEval.length > 0) {
-    Thesis
+    update = Thesis
     .update({ graderEval: req.body.graderEval }, { id: req.body.id })
     .then(() => {
       return ThesisProgress.setGraderEvalDone(req.body.id);
     })
-    .then(() => {
-      res.status(200).send();
-    })
-    .catch(err => {
-      res.status(500).send({
-        location: "Thesis updateOne .catch other",
-        message: "Updating Thesis caused an internal server error.",
-        error: err,
-      });
-    });
   } else if (req.user.role === "admin") {
-    Thesis
+    update = Thesis
     .update(req.body, { id: req.body.id })
-    .then(() => {
-      res.status(200).send();
-    })
-    .catch(err => {
-      res.status(500).send({
-        location: "Thesis updateOne .catch other",
-        message: "Updating Thesis caused an internal server error.",
-        error: err,
-      });
-    });
-  } else {
-    res.status(401).send({
-      location: "Thesis updateOne else role",
-      message: "Missing privileges.",
-      error: err,
-    });
   }
+
+  update
+  .then(rows => {
+    res.sendStatus(200);
+  })
+  .catch(err => next(err));
 };
 
 module.exports.updateOneEthesis = (req, res) => {
@@ -175,9 +124,9 @@ module.exports.updateOneEthesis = (req, res) => {
   .findOne({ token: req.body.token })
   .then(etoken => {
     if (!etoken) {
-      throw new ValidationError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
+      throw new errors.NotFoundError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
     } else if (etoken.expires && etoken.expires < new Date()) {
-      throw new ValidationError("Token has expired. Ask admin to manually input the ethesis link.");
+      throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
     } else {
       foundEtoken = etoken;
       return Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId });
@@ -186,69 +135,40 @@ module.exports.updateOneEthesis = (req, res) => {
   .then(thesis => ThesisProgress.setEthesisDone(foundEtoken.ThesisId))
   .then(() => EthesisToken.setToExpire(foundEtoken.ThesisId))
   .then(() => {
-    res.status(200).send();
+    res.sendStatus(200);
   })
-  .catch(err => {
-    if (err.name === "ValidationError") {
-      res.status(400).send({
-        location: "Thesis updateOneEthesis .catch ValidationError",
-        message: err.message,
-        error: err,
-      });
-    } else {
-      res.status(500).send({
-        location: "Thesis updateOneEthesis .catch other",
-        message: "Updating Thesis' ethesis link caused an internal server error.",
-        error: err,
-      });
-    }
-  });
+  .catch(err => next(err));
 };
 
 module.exports.generateThesesToPdf = (req, res) => {
-  // console.log(req.headers)
   const thesisIDs = req.body;
   let professors;
   let pathToFile;
 
-  if (thesisIDs && thesisIDs.length > 0) {
-    User
-    .findAllProfessors()
-    .then(dudes => {
-      professors = dudes;
-      return Thesis.findAllDocuments(thesisIDs);
-    })
-    .then((theses) => PdfManipulator.generatePdfFromTheses(theses, professors))
-    .then((path) => {
-      pathToFile = path;
-      if (req.user.role === "print-person") {
-        return Promise.all(thesisIDs.map(thesis_id => ThesisProgress.setPrintDone(thesis_id)));
-      } else {
-        return Promise.resolve();
-      }
-    })
-    .then(() => {
-      const file = fs.createReadStream(pathToFile);
-      const stat = fs.statSync(pathToFile);
-      res.setHeader("Content-Length", stat.size);
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
-      file.pipe(res);
-    })
-    .catch(err => {
-      res.status(500).send({
-        location: "Thesis generateThesesToPdf .catch other",
-        message: "Generating Theses' to pdf caused an internal server error.",
-        error: err,
-      });
-    });
-  } else {
-    res.status(400).send({
-      location: "Thesis generateThesesToPdf if !thesisIDs",
-      message: "No thesis ids received",
-      error: {},
-    });
-  }
+  User
+  .findAllProfessors()
+  .then(dudes => {
+    professors = dudes;
+    return Thesis.findAllDocuments(thesisIDs);
+  })
+  .then((theses) => PdfManipulator.generatePdfFromTheses(theses, professors))
+  .then((path) => {
+    pathToFile = path;
+    if (req.user.role === "print-person") {
+      return Promise.all(thesisIDs.map(thesis_id => ThesisProgress.setPrintDone(thesis_id)));
+    } else {
+      return Promise.resolve();
+    }
+  })
+  .then(() => {
+    const file = fs.createReadStream(pathToFile);
+    const stat = fs.statSync(pathToFile);
+    res.setHeader("Content-Length", stat.size);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
+    file.pipe(res);
+  })
+  .catch(err => next(err));
 };
 
 module.exports.deleteOne = (req, res) => {
@@ -256,20 +176,10 @@ module.exports.deleteOne = (req, res) => {
   .delete({ id: req.params.id })
   .then(deletedRows => {
     if (deletedRows !== 0) {
-      res.status(200).send();
+      res.sendStatus(200);
     } else {
-      res.status(404).send({
-        location: "Thesis deleteOne deletedRows === 0",
-        message: "No thesis found",
-        error: {},
-      });
+      throw new errors.ForbiddenError("No thesis found.");
     }
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "Thesis deleteOne .catch other",
-      message: "Deleting Thesis caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };

@@ -2,7 +2,9 @@
 
 "use strict";
 
-require("dotenv").config();
+if (!process.env.NODE_ENV) {
+  require("dotenv").config();
+}
 const db_methods = require("../db/methods");
 
 /**

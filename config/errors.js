@@ -1,37 +1,60 @@
 "use strict";
 
-function VError() {
-  const temp = Error.apply(this, arguments);
-  temp.name = this.name = "ValidationError";
-  this.stack = temp.stack;
-  this.message = temp.message;
+function BadRequestError(message, details) {
+  this.name = "BadRequestError";
+  this.message = message || "Something went wrong";
+  this.details = details || {};
+  this.stack = (new Error()).stack;
+  this.statusCode = 400;
 }
-  // inherit prototype using ECMAScript 5 (IE 9+)
-VError.prototype = Object.create(Error.prototype, {
-  constructor: {
-    value: VError,
-    writable: true,
-    configurable: true,
-  },
-});
 
-module.exports.ValidationError = VError;
+BadRequestError.prototype = Object.create(Error.prototype);
+
+function AuthenticationError(message, details) {
+  this.name = "AuthenticationError";
+  this.message = message || "Something went wrong";
+  this.details = details || {};
+  this.statusCode = 401;
+  this.stack = (new Error()).stack;
+}
+
+AuthenticationError.prototype = Object.create(Error.prototype);
+
+function ForbiddenError(message, details) {
+  this.name = "ForbiddenError";
+  this.message = message || "Something went wrong";
+  this.details = details || {};
+  this.statusCode = 403;
+  this.stack = (new Error()).stack;
+}
+
+ForbiddenError.prototype = Object.create(Error.prototype);
+
+function NotFoundError(message, details) {
+  this.name = "NotFoundError";
+  this.message = message || "Something went wrong";
+  this.details = details || {};
+  this.statusCode = 404;
+  this.stack = (new Error()).stack;
+}
 
 // Error caused when requisite data is missing e.g. email drafts from database
+PremiseError.prototype = Object.create(Error.prototype);
 
-function PError() {
-  const temp = Error.apply(this, arguments);
-  temp.name = this.name = "PremiseError";
-  this.stack = temp.stack;
-  this.message = temp.message;
+function PremiseError(message, details) {
+  this.name = "PremiseError";
+  this.message = message || "Something went wrong";
+  this.details = details || {};
+  this.statusCode = 500;
+  this.stack = (new Error()).stack;
 }
-  // inherit prototype using ECMAScript 5 (IE 9+)
-PError.prototype = Object.create(Error.prototype, {
-  constructor: {
-    value: PError,
-    writable: true,
-    configurable: true,
-  },
-});
 
-module.exports.PremiseError = PError;
+PremiseError.prototype = Object.create(Error.prototype);
+
+module.exports = {
+  BadRequestError,
+  AuthenticationError,
+  ForbiddenError,
+  NotFoundError,
+  PremiseError,
+};

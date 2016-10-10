@@ -5,7 +5,7 @@ const TokenG = require("../services/TokenGenerator");
 
 const Thesis = require("../models/Thesis");
 
-const ValidationError = require("../config/errors").ValidationError;
+const errors = require("../config/errors");
 
 /**
 * Method for sending an email reminder to the professor, student or (printperson?)
@@ -16,7 +16,7 @@ module.exports.sendReminder = (req, res) => {
   .findOne(req.body.thesisId)
   .then(thesis => {
     if (!thesis) {
-      throw new ValidationError("No Thesis found with the same id.");
+      throw new errors.NotFoundError("No Thesis found with the same id.");
     } else {
       if (req.body.reminderType === "EthesisEmail") {
         return Reminder.sendEthesisReminder(thesis);
@@ -25,32 +25,12 @@ module.exports.sendReminder = (req, res) => {
       } else if (req.body.reminderType === "PrintEvalEmail") {
         return Reminder.sendPrintReminder(thesis);
       } else {
-        throw new ValidationError("Invalid reminderType.");
+        throw new errors.BadRequestError("Invalid reminderType.");
       }
     }
   })
   .then(result => {
     res.status(200).send(result);
   })
-  .catch(err => {
-    if (err.name === "ValidationError") {
-      res.status(400).send({
-        location: "Email sendReminder .catch ValidationError",
-        message: err.message,
-        error: err,
-      });
-    } else if (err.name === "PremiseError") {
-      res.status(400).send({
-        location: "Email sendReminder .catch PremiseError",
-        message: err.message,
-        error: err,
-      });
-    } else {
-      res.status(500).send({
-        location: "Email sendReminder .catch other",
-        message: "Sending EmailReminder caused an internal server error.",
-        error: err,
-      });
-    }
-  });
+  .catch(err => next(err));
 };

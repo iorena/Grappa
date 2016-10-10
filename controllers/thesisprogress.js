@@ -8,11 +8,5 @@ module.exports.updateOne = (req, res) => {
   .then(rows => {
     res.status(200).send(rows);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "ThesisProgress updateOne .catch other",
-      message: "Updating ThesisProgress caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };

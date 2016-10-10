@@ -6,6 +6,8 @@ const router = new express.Router();
 const dbMethods = require("../db/methods");
 
 const auth = require("../middleware/authentication");
+const validate = require("../middleware/validateBody");
+const errorHandler = require("../middleware/errorHandler");
 
 const thesisCtrl = require("../controllers/thesis");
 const councilmeetingCtrl = require("../controllers/councilmeeting");
@@ -29,30 +31,13 @@ const authTest = (req, res) => {
   });
 };
 
-const dump = (req, res) => {
-  dbMethods
-  .dump()
-  .then(tables => {
-    res.status(200).send(tables);
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Routes dump produced an error",
-      error: err,
-    });
-  });
-};
-
 router.get("/", index);
 router.get("/auth", auth.authenticate, authTest);
 
-router.post("/login", userCtrl.loginUser);
-router.post("/user", userCtrl.saveOne);
+router.post("/login", validate.validateBody("user", "login"), userCtrl.loginUser);
+router.post("/user", validate.validateBody("user", "save"), userCtrl.saveOne);
 
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
-
-// router.get("/dbdump", dump);
-// router.get("/asdf", thesisCtrl.sendPdf);
 
 router.use("", auth.authenticate);
 
@@ -61,7 +46,12 @@ router.use("", auth.authenticate);
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", thesisCtrl.saveOne);
-router.post("/thesis/pdf", thesisCtrl.generateThesesToPdf);
+
+
+// if (thesisIDs && thesisIDs.length > 0) {
+router.post("/thesis/pdf",
+  validate.validateBody("thesis", "pdf"),
+  thesisCtrl.generateThesesToPdf);
 
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader", graderCtrl.saveOne);
@@ -96,9 +86,13 @@ router.put("/thesisprogress/:id", thesisprogressCtrl.updateOne);
 
 // router.get("/email/send", emailCtrl.sendEmail);
 // router.get("/email/check", emailCtrl.checkEmail);
-router.post("/email/remind", emailCtrl.sendReminder);
+router.post("/email/remind",
+  validate.validateBody("email", "remind"),
+  emailCtrl.sendReminder);
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
+
+router.use("", errorHandler.handleErrors);
 
 module.exports = router;
