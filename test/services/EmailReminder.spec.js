@@ -4,7 +4,7 @@ const request = require("request");
 const expect = require("chai").expect;
 const Sinon = require("sinon");
 
-const thesis = require("../mockdata/database").thesis;
+const thesis = require("../mock/database").thesis;
 
 const Reminder = require("../../services/EmailReminder");
 const Sender = require("../../services/EmailSender");

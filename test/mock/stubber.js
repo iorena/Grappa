@@ -6,7 +6,7 @@ const stubbed = {
   ThesisProgres: ThesisProgress,
 };
 
-const mockDB = require("../mockdata/database");
+const mockDB = require("./database");
 
 module.exports.replace = (stubname, functionname, functionself, sandbox) => (
   sandbox.stub(stubbed.stubname, functionname, functionself)
