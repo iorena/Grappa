@@ -18,7 +18,7 @@ const User = require("../models/User");
 
 const errors = require("../config/errors");
 
-module.exports.findAllByUserRole = (req, res) => {
+module.exports.findAllByUserRole = (req, res, next) => {
   Thesis
   .findAllByUserRole(req.user)
   .then(theses => {
@@ -27,7 +27,7 @@ module.exports.findAllByUserRole = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   let parsedForm;
   let savedThesis;
   let foundConnections;
@@ -96,7 +96,7 @@ module.exports.saveOne = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOneAndConnections = (req, res) => {
+module.exports.updateOneAndConnections = (req, res, next) => {
   let update = Promise.reject();
 
   if (req.user.role === "professor" && req.body.graderEval && req.body.graderEval.length > 0) {
@@ -117,7 +117,7 @@ module.exports.updateOneAndConnections = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOneEthesis = (req, res) => {
+module.exports.updateOneEthesis = (req, res, next) => {
   let foundEtoken;
 
   EthesisToken
@@ -140,7 +140,7 @@ module.exports.updateOneEthesis = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.generateThesesToPdf = (req, res) => {
+module.exports.generateThesesToPdf = (req, res, next) => {
   const thesisIDs = req.body;
   let professors;
   let pathToFile;
@@ -171,7 +171,7 @@ module.exports.generateThesesToPdf = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.deleteOne = (req, res) => {
+module.exports.deleteOne = (req, res, next) => {
   Thesis
   .delete({ id: req.params.id })
   .then(deletedRows => {

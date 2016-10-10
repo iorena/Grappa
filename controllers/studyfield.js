@@ -2,7 +2,7 @@
 
 const StudyField = require("../models/StudyField");
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = (req, res, next) => {
   StudyField
   .findAll()
   .then(studyfields => {
@@ -11,7 +11,7 @@ module.exports.findAll = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   StudyField
   .saveOne(req.body)
   .then(studyfield => {
@@ -20,7 +20,7 @@ module.exports.saveOne = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   StudyField
   .update(req.body, { id: req.params.id })
   .then(studyfield => {

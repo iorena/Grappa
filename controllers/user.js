@@ -7,7 +7,7 @@ const User = require("../models/User");
 
 const ValidationError = require("../config/errors").ValidationError;
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = (req, res, next) => {
   User
   .findAll()
   .then(users => {
@@ -16,7 +16,7 @@ module.exports.findAll = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   const user = req.body;
 
   Promise.resolve()
@@ -73,7 +73,7 @@ module.exports.updateOne = (req, res) => {
 };
 
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   const user = req.body;
 
   User.findOne({ email: user.email })
@@ -91,7 +91,7 @@ module.exports.saveOne = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.deleteOne = (req, res) => {
+module.exports.deleteOne = (req, res, next) => {
   User
   .delete({ id: req.params.id })
   .then(deletedRows => {
@@ -104,7 +104,7 @@ module.exports.deleteOne = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.loginUser = (req, res) => {
+module.exports.loginUser = (req, res, next) => {
   User
   .findOne({ email: req.body.email })
   .then(user => {

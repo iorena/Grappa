@@ -2,7 +2,7 @@
 
 const EmailDraft = require("../models/EmailDraft");
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = (req, res, next) => {
   EmailDraft
   .findAll()
   .then(drafts => {
@@ -11,7 +11,7 @@ module.exports.findAll = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   EmailDraft
   .update(req.body, { id: req.params.id })
   .then(rows => {

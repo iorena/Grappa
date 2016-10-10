@@ -4,7 +4,7 @@ const CouncilMeeting = require("../models/CouncilMeeting");
 
 const errors = require("../config/errors");
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = (req, res, next) => {
   CouncilMeeting
   .findAll()
   .then(cmeetings => {
@@ -13,7 +13,7 @@ module.exports.findAll = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   CouncilMeeting
   .checkIfExists(req.body)
   .then(exists => {
@@ -29,7 +29,7 @@ module.exports.saveOne = (req, res) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   CouncilMeeting
   .update(req.body, { id: req.params.id })
   .then(cmeeting => {

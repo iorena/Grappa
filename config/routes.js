@@ -3,8 +3,6 @@
 const express = require("express");
 const router = new express.Router();
 
-const dbMethods = require("../db/methods");
-
 const auth = require("../middleware/authentication");
 const validate = require("../middleware/validateBody");
 const errorHandler = require("../middleware/errorHandler");
@@ -19,13 +17,13 @@ const emailCtrl = require("../controllers/email");
 const studyfieldCtrl = require("../controllers/studyfield");
 const emaildraftCtrl = require("../controllers/emaildraft");
 
-const index = (req, res) => {
+const index = (req, res, next) => {
   res.json({
     message: "This is the default page. Nothing to see here.",
   });
 };
 
-const authTest = (req, res) => {
+const authTest = (req, res, next) => {
   res.json({
     message: "You've successfully authenticated.",
   });
@@ -34,8 +32,12 @@ const authTest = (req, res) => {
 router.get("/", index);
 router.get("/auth", auth.authenticate, authTest);
 
-router.post("/login", validate.validateBody("user", "login"), userCtrl.loginUser);
-router.post("/user", validate.validateBody("user", "save"), userCtrl.saveOne);
+router.post("/login",
+  validate.validateBody("user", "login"),
+  userCtrl.loginUser);
+router.post("/user",
+  validate.validateBody("user", "save"),
+  userCtrl.saveOne);
 
 router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
 
@@ -46,7 +48,6 @@ router.use("", auth.authenticate);
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis", thesisCtrl.saveOne);
-
 
 // if (thesisIDs && thesisIDs.length > 0) {
 router.post("/thesis/pdf",
@@ -69,8 +70,12 @@ router.use("", auth.onlyAdmin);
 
 router.delete("/thesis/:id", thesisCtrl.deleteOne);
 
-router.post("/councilmeeting", councilmeetingCtrl.saveOne);
-router.put("/councilmeeting/:id", councilmeetingCtrl.updateOne);
+router.post("/councilmeeting",
+  validate.validateBody("councilmeeting", "save"),
+  councilmeetingCtrl.saveOne);
+router.put("/councilmeeting/:id", 
+  validate.validateBody("councilmeeting", "update"),
+  councilmeetingCtrl.updateOne);
 
 router.post("/studyfield", studyfieldCtrl.saveOne);
 router.put("/studyfield/:id", studyfieldCtrl.updateOne);
