@@ -32,21 +32,23 @@ module.exports.saveOne = (req, res, next) => {
   let savedThesis;
   let foundConnections;
 
-  FormParser
-  .parseFormData(req)
-  .then(data => {
-    parsedForm = data;
-    parsedForm.json = JSON.parse(parsedForm.json);
-    if (!parsedForm.json) {
-      throw new errors.BadRequestError("No json field inside form.");
-    } else if (!parsedForm.file) {
-      throw new errors.BadRequestError("No file sent.");
-    } else if (parsedForm.fileExt !== "pdf") {
-      throw new errors.BadRequestError("File wasn't a PDF.");
-    } else {
-      return Thesis.checkIfExists(parsedForm.json);
-    }
-  })
+  // FormParser
+  // .parseFormData(req)
+  // .then(data => {
+  //   parsedForm = data;
+  //   parsedForm.json = JSON.parse(parsedForm.json);
+  //   if (!parsedForm.json) {
+  //     throw new errors.BadRequestError("No json field inside form.");
+  //   } else if (!parsedForm.file) {
+  //     throw new errors.BadRequestError("No file sent.");
+  //   } else if (parsedForm.fileExt !== "pdf") {
+  //     throw new errors.BadRequestError("File wasn't a PDF.");
+  //   } else {
+  //     return Thesis.checkIfExists(parsedForm.json);
+  //   }
+  // })
+  parsedForm = req.body;
+  Thesis.checkIfExists(req.body.json)
   .then(exists => {
     if (exists) {
       throw new errors.BadRequestError("Duplicate Thesis found.");

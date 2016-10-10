@@ -51,24 +51,72 @@ const validations = {
     save: {
       type: "object",
       properties: {
-        date: { type: "string", minLength: 1 },
+        date: { type: "date" },
       }
     },
     update: {
       type: "object",
       properties: {
-        id: { type: "number" },
-        date: { type: "string", minLength: 1 },
+        date: { type: "date" },
       }
     }
   },
-  thesis: {
+  grader: {
     save: {
       type: "object",
       properties: {
-        content: { type: "string", minLength: 1 },
+        name: { type: "string", minLength: 1 },
+        title: { type: "string", minLength: 1 },
       }
-    }
+    },
+  },
+  studyfield: {
+    save: {
+      type: "object",
+      properties: {
+        name: { type: "string", minLength: 1 },
+      }
+    },
+  },
+  thesis: {
+    ethesis: {
+      type: "object",
+      properties: {
+        token: { type: "string", minLength: 1 },
+        link: { type: "string", minLength: 1 },
+      }
+    },
+    save: {
+      type: "object",
+      properties: {
+        file: { type: "any", error: "No file sent." },
+        fileExt: {
+          type: "string",
+          minLength: 1,
+          error: "File extension wasn't PDF."
+        },
+        json: {
+          type: "object",
+          properties: {
+            authorFirstname: { type: "string", minLength: 1 },
+            authorLastname: { type: "string", minLength: 1 },
+            authorEmail: { type: "string", minLength: 1 },
+            title: { type: "string", minLength: 1 },
+            urkund: { type: "string", minLength: 1 },
+            grade: { type: "string", minLength: 1 },
+            Graders: { type: "array", minLength: 2 },
+            StudyFieldId: { type: "string", minLength: 1 },
+            CouncilMeetingId: { type: "string", minLength: 1 },
+          }
+        }
+      }
+    },
+    pdf: {
+      type: "array",
+      minLength: 1,
+      properties: {
+      }
+    },
   }
 };
 

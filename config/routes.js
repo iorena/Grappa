@@ -4,6 +4,7 @@ const express = require("express");
 const router = new express.Router();
 
 const auth = require("../middleware/authentication");
+const parseForm = require("../middleware/parseForm");
 const validate = require("../middleware/validateBody");
 const errorHandler = require("../middleware/errorHandler");
 
@@ -39,7 +40,9 @@ router.post("/user",
   validate.validateBody("user", "save"),
   userCtrl.saveOne);
 
-router.post("/thesis/ethesis", thesisCtrl.updateOneEthesis);
+router.post("/thesis/ethesis",
+  validate.validateBody("thesis", "ethesis"),
+  thesisCtrl.updateOneEthesis);
 
 router.use("", auth.authenticate);
 
@@ -47,7 +50,10 @@ router.use("", auth.authenticate);
 
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
-router.post("/thesis", thesisCtrl.saveOne);
+router.post("/thesis",
+  parseForm.parseUpload,
+  validate.validateBody("thesis", "save"),
+  thesisCtrl.saveOne);
 
 // if (thesisIDs && thesisIDs.length > 0) {
 router.post("/thesis/pdf",
@@ -55,7 +61,9 @@ router.post("/thesis/pdf",
   thesisCtrl.generateThesesToPdf);
 
 router.get("/grader", graderCtrl.findAll);
-router.post("/grader", graderCtrl.saveOne);
+router.post("/grader",
+  validate.validateBody("grader", "save"),
+  graderCtrl.saveOne);
 router.put("/grader/:id", graderCtrl.updateOne);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
@@ -73,11 +81,13 @@ router.delete("/thesis/:id", thesisCtrl.deleteOne);
 router.post("/councilmeeting",
   validate.validateBody("councilmeeting", "save"),
   councilmeetingCtrl.saveOne);
-router.put("/councilmeeting/:id", 
+router.put("/councilmeeting/:id",
   validate.validateBody("councilmeeting", "update"),
   councilmeetingCtrl.updateOne);
 
-router.post("/studyfield", studyfieldCtrl.saveOne);
+router.post("/studyfield",
+  validate.validateBody("studyfield", "save"),
+  studyfieldCtrl.saveOne);
 router.put("/studyfield/:id", studyfieldCtrl.updateOne);
 
 router.get("/user", userCtrl.findAll);

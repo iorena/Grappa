@@ -8,8 +8,8 @@ const errors = require("../config/errors");
  */
 module.exports.handleErrors = (err, req, res, next) => {
   if (err) {
-    console.error(err)
-    console.log(err.stack)
+    console.log(JSON.stringify(err, null, 2))
+    // console.log(err.stack)
     const statusCode = err.statusCode !== undefined ? err.statusCode : 500;
 
     // We don't mind seeing error messages on the client
