@@ -1,16 +1,11 @@
 "use strict";
 
 const Reminder = require("../services/EmailReminder");
-const TokenG = require("../services/TokenGenerator");
 
 const Thesis = require("../models/Thesis");
 
 const errors = require("../config/errors");
 
-/**
-* Method for sending an email reminder to the professor, student or (printperson?)
-*@param {Object} req - The build of req.body being {thesis[], "professor/student"}
-*/
 module.exports.sendReminder = (req, res, next) => {
   Thesis
   .findOne(req.body.thesisId)

@@ -1,7 +1,5 @@
 "use strict";
 
-const FormParser = require("../services/FormParser");
-
 module.exports.parseUpload = (req, res, next) => {
   const parsedForm = {};
   const chunks = [];
@@ -30,7 +28,6 @@ module.exports.parseUpload = (req, res, next) => {
       });
     });
     req.busboy.on("finish", () => {
-      // console.log("finish parseFormData")
       resolve(parsedForm);
     });
   })
@@ -38,8 +35,5 @@ module.exports.parseUpload = (req, res, next) => {
     req.body = data;
     next();
   })
-  .catch(err => {
-    console.log("yo", err)
-    next(err);
-  });
+  .catch(err => next(err));
 };

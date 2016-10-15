@@ -5,7 +5,7 @@ const passwordHelper = require("../config/passwordHelper");
 
 const User = require("../models/User");
 
-const ValidationError = require("../config/errors").ValidationError;
+const errors = require("../config/errors");
 
 module.exports.findAll = (req, res, next) => {
   User
@@ -74,14 +74,12 @@ module.exports.updateOne = (req, res, next) => {
 
 
 module.exports.saveOne = (req, res, next) => {
-  const user = req.body;
-
-  User.findOne({ email: user.email })
+  User.findOne({ email: req.body.email })
   .then(foundUser => {
     if (foundUser) {
       throw new errors.BadRequestError("User already exists with the same email.");
     } else {
-      user.passwordHash = passwordHelper.hashPassword(user.password);
+      req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
       return User.saveOne(user);
     }
   })

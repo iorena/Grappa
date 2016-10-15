@@ -4,7 +4,6 @@ const fs = require("fs");
 
 const Reminder = require("../services/EmailReminder");
 const TokenGen = require("../services/TokenGenerator");
-const FormParser = require("../services/FormParser");
 const PdfManipulator = require("../services/PdfManipulator");
 
 const Thesis = require("../models/Thesis");
@@ -28,32 +27,16 @@ module.exports.findAllByUserRole = (req, res, next) => {
 };
 
 module.exports.saveOne = (req, res, next) => {
-  let parsedForm;
   let savedThesis;
   let foundConnections;
 
-  // FormParser
-  // .parseFormData(req)
-  // .then(data => {
-  //   parsedForm = data;
-  //   parsedForm.json = JSON.parse(parsedForm.json);
-  //   if (!parsedForm.json) {
-  //     throw new errors.BadRequestError("No json field inside form.");
-  //   } else if (!parsedForm.file) {
-  //     throw new errors.BadRequestError("No file sent.");
-  //   } else if (parsedForm.fileExt !== "pdf") {
-  //     throw new errors.BadRequestError("File wasn't a PDF.");
-  //   } else {
-  //     return Thesis.checkIfExists(parsedForm.json);
-  //   }
-  // })
-  parsedForm = req.body;
-  Thesis.checkIfExists(req.body.json)
+  Thesis
+  .checkIfExists(req.body.json)
   .then(exists => {
     if (exists) {
       throw new errors.BadRequestError("Duplicate Thesis found.");
     } else {
-      return Thesis.findConnections(parsedForm.json);
+      return Thesis.findConnections(req.body.json);
     }
   })
   .then(connections => {
@@ -67,13 +50,13 @@ module.exports.saveOne = (req, res, next) => {
       throw new errors.BadRequestError("StudyField has no professor.");
     }
     foundConnections = connections;
-    return Thesis.saveOneAndProgress(parsedForm.json, foundConnections[0]);
+    return Thesis.saveOneAndProgress(req.body.json, foundConnections[0]);
   })
   .then(thesis => {
     savedThesis = thesis;
     return Promise.all([
       ThesisReview.saveOne({
-        pdf: parsedForm.file,
+        pdf: req.body.file,
         ThesisId: thesis.id,
         UserId: req.user.id,
       }),
@@ -85,7 +68,7 @@ module.exports.saveOne = (req, res, next) => {
     ]);
   })
   .then(() => {
-    if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, parsedForm.json.Graders)) {
+    if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.json.Graders)) {
       return Reminder.sendProfessorReminder(savedThesis);
     } else {
       return ThesisProgress.setGraderEvalDone(savedThesis.id);
@@ -99,20 +82,16 @@ module.exports.saveOne = (req, res, next) => {
 };
 
 module.exports.updateOneAndConnections = (req, res, next) => {
-  let update = Promise.reject();
+  let updatePromise = Promise.reject();
 
   if (req.user.role === "professor" && req.body.graderEval && req.body.graderEval.length > 0) {
-    update = Thesis
-    .update({ graderEval: req.body.graderEval }, { id: req.body.id })
-    .then(() => {
-      return ThesisProgress.setGraderEvalDone(req.body.id);
-    })
+    updatePromise = Thesis.update({ graderEval: req.body.graderEval }, { id: req.body.id })
+      .then(() => ThesisProgress.setGraderEvalDone(req.body.id))
   } else if (req.user.role === "admin") {
-    update = Thesis
-    .update(req.body, { id: req.body.id })
+    updatePromise = Thesis.update(req.body, { id: req.body.id })
   }
 
-  update
+  updatePromise
   .then(rows => {
     res.sendStatus(200);
   })
@@ -143,7 +122,6 @@ module.exports.updateOneEthesis = (req, res, next) => {
 };
 
 module.exports.generateThesesToPdf = (req, res, next) => {
-  const thesisIDs = req.body;
   let professors;
   let pathToFile;
 
@@ -151,13 +129,15 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .findAllProfessors()
   .then(dudes => {
     professors = dudes;
-    return Thesis.findAllDocuments(thesisIDs);
+    return Thesis.findAllDocuments(req.body);
   })
   .then((theses) => PdfManipulator.generatePdfFromTheses(theses, professors))
   .then((path) => {
     pathToFile = path;
     if (req.user.role === "print-person") {
-      return Promise.all(thesisIDs.map(thesis_id => ThesisProgress.setPrintDone(thesis_id)));
+      return Promise.all(thesisIDs.map(thesis_id =>
+        ThesisProgress.setPrintDone(thesis_id))
+      );
     } else {
       return Promise.resolve();
     }
@@ -180,7 +160,7 @@ module.exports.deleteOne = (req, res, next) => {
     if (deletedRows !== 0) {
       res.sendStatus(200);
     } else {
-      throw new errors.ForbiddenError("No thesis found.");
+      throw new errors.NotFoundError("No thesis found.");
     }
   })
   .catch(err => next(err));

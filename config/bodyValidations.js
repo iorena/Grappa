@@ -51,7 +51,7 @@ const validations = {
     save: {
       type: "object",
       properties: {
-        date: { type: "date" },
+        date: { type: "string", minLength: 1 },
       }
     },
     update: {
