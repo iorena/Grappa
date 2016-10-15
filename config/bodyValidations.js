@@ -57,7 +57,7 @@ const validations = {
     update: {
       type: "object",
       properties: {
-        date: { type: "date" },
+        date: { type: "string", minLength: 1 },
       }
     }
   },

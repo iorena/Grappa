@@ -74,13 +74,14 @@ module.exports.updateOne = (req, res, next) => {
 
 
 module.exports.saveOne = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User
+  .findOne({ email: req.body.email })
   .then(foundUser => {
     if (foundUser) {
       throw new errors.BadRequestError("User already exists with the same email.");
     } else {
       req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
-      return User.saveOne(user);
+      return User.saveOne(req.body);
     }
   })
   .then(savedUser => {
