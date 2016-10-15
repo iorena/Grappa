@@ -1,6 +1,9 @@
 "use strict";
 
-require("dotenv").config();
+if (!process.env.NODE_ENV) {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const busboy = require("connect-busboy");
 const bodyParser = require("body-parser");

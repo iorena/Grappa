@@ -1,6 +1,6 @@
 NODE_ENV=development
 APP_URL=http://localhost:8080
-DB_URL=null
+DB_URL=(production postgres database)
 TOKEN_SECRET=testi_secret
 EMAIL_USER=ohtugrappa
 EMAIL_PASSWORD=grappa123

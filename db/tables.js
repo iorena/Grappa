@@ -34,6 +34,12 @@ const User = seq.define("User", {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,
+      isIn: [[
+        "admin",
+        "professor",
+        "instructor",
+        "print-person",
+      ]],
     },
   },
   isActive: {

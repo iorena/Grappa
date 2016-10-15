@@ -6,6 +6,7 @@ const TokenGen = require("../services/TokenGenerator");
 const User = require("../models/User");
 const Thesis = require("../models/Thesis");
 const ThesisProgress = require("../models/ThesisProgress");
+const ThesisReview = require("../models/ThesisReview");
 const EmailStatus = require("../models/EmailStatus");
 const EmailDraft = require("../models/EmailDraft");
 const EthesisToken = require("../models/EthesisToken");
@@ -19,17 +20,25 @@ class EmailReminder {
    */
   sendEthesisReminder(thesis) {
     let foundDraft;
+    let attachments;
     let savedReminder;
 
     const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
 
-    return EmailDraft
-      .findOne({ type: "EthesisReminder" })
+    return ThesisReview.findOne({ ThesisId: thesis.id})
+      .then(review => {
+        attachments = [{
+          filename: "thesis-review.pdf",
+          content: new Buffer(review.pdf, "base64"),
+          contentType: "application/pdf",
+        }];
+        return EmailDraft.findOne({ type: "EthesisReminder" });
+      })
       .then(reminder => {
         if (reminder) {
           foundDraft = reminder;
           const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
-          return Sender.sendEmail(thesis.authorEmail, reminder.title, body);
+          return Sender.sendEmail(thesis.authorEmail, reminder.title, body, attachments);
         } else {
           throw new PremiseError("EthesisReminder not found from EmailDrafts");
         }

@@ -2,47 +2,29 @@
 
 const StudyField = require("../models/StudyField");
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = (req, res, next) => {
   StudyField
   .findAll()
   .then(studyfields => {
     res.status(200).send(studyfields);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "StudyField findAll .catch other",
-      message: "Getting all StudyFields caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   StudyField
   .saveOne(req.body)
   .then(studyfield => {
     res.status(200).send(studyfield);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "StudyField saveOne .catch other",
-      message: "Saving StudyField caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   StudyField
   .update(req.body, { id: req.params.id })
   .then(studyfield => {
     res.status(200).send(studyfield);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "StudyField updateOne .catch other",
-      message: "Updating StudyField caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };

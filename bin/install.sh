@@ -68,8 +68,8 @@ npm i
 # if webpack doesn't build automatically you can trigger it yourself
 npm run postinstall
 # Configure nginx
-sudo cp /var/www/grappa.cs.helsinki.fi/grappa-backend/bin/grappa.cs.helsinki.fi.conf /etc/nginx/sites-available
-sudo ln -s /etc/nginx/sites-available/grappa.cs.helsinki.fi.conf /etc/nginx/sites-enabled/grappa.cs.helsinki.fi.conf
+sudo cp /var/www/grappa.cs.helsinki.fi/grappa-backend/bin/grappa.cs.helsinki.fi /etc/nginx/sites-available
+sudo ln -s /etc/nginx/sites-available/grappa.cs.helsinki.fi /etc/nginx/sites-enabled/grappa.cs.helsinki.fi
 sudo rm /etc/nginx/sites-enabled/default
 # nginx can only be restarted with sudo permissions.. haa..
 sudo service nginx restart

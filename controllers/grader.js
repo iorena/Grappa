@@ -2,47 +2,29 @@
 
 const Grader = require("../models/Grader");
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = (req, res, next) => {
   Grader
   .findAll()
   .then(graders => {
     res.status(200).send(graders);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "Grader findAll .catch other",
-      message: "Getting all Graders caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   Grader
   .saveOne(req.body)
   .then(grader => {
     res.status(200).send(grader);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "Grader saveOne .catch other",
-      message: "Saving Grader caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   Grader
   .update(req.body, { id: req.params.id })
   .then(grader => {
     res.status(200).send(grader);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "Grader updateOne .catch other",
-      message: "Updating Grader caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };

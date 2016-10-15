@@ -2,32 +2,23 @@
 
 const CouncilMeeting = require("../models/CouncilMeeting");
 
-module.exports.findAll = (req, res) => {
+const errors = require("../config/errors");
+
+module.exports.findAll = (req, res, next) => {
   CouncilMeeting
   .findAll()
   .then(cmeetings => {
     res.status(200).send(cmeetings);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "CouncilMeeting findAll .catch other",
-      message: "Getting all CouncilMeetings caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
-module.exports.saveOne = (req, res) => {
+module.exports.saveOne = (req, res, next) => {
   CouncilMeeting
   .checkIfExists(req.body)
   .then(exists => {
     if (exists) {
-      res.status(400).send({
-        location: "CouncilMeeting saveOne checkIfExists true",
-        message: "There already exists a meeting with the same date.",
-        error: {},
-      });
-      return;
+      throw new errors.BadRequestError("Meeting already exists with the same date.");
     } else {
       return CouncilMeeting.saveOne(req.body);
     }
@@ -35,26 +26,14 @@ module.exports.saveOne = (req, res) => {
   .then(cmeeting => {
     res.status(200).send(cmeeting);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "CouncilMeeting saveOne .catch",
-      message: "Saving CouncilMeeting caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res) => {
+module.exports.updateOne = (req, res, next) => {
   CouncilMeeting
   .update(req.body, { id: req.params.id })
   .then(cmeeting => {
     res.status(200).send(cmeeting);
   })
-  .catch(err => {
-    res.status(500).send({
-      location: "CouncilMeeting updateOne .catch other",
-      message: "Updating CouncilMeeting caused an internal server error.",
-      error: err,
-    });
-  });
+  .catch(err => next(err));
 };
