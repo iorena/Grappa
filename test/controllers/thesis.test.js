@@ -12,6 +12,12 @@ const auth = require("../mock/authentication");
 
 const expectResponseToEqual = require("../mock/responses");
 
+const EmailSender = require("../../services/EmailSender");
+let sandbox = sinon.sandbox.create();
+sandbox.stub(EmailSender, "sendEmail", () =>
+  Promise.resolve()
+)
+
 describe("ThesisController", () => {
   describe("findAllByUserRole, GET /thesis", () => {
     it("should return all three Theses with admin permissions", (done) => {
@@ -54,10 +60,11 @@ describe("ThesisController", () => {
   });
 
   describe("saveOne, POST /thesis", () => {
-    it("should return all three Theses with admin permissions", (done) => {
+    it("should save and return the thesis with admin permissions", function(done) {
+      this.timeout(3000);
       request(app)
       .post("/thesis")
-      .field("json", "some json")
+      .field("json", '{"authorLastname":"b","StudyFieldId":"1","authorFirstname":"a","authorEmail":"teemu.koivisto@helsinki.fi","CouncilMeetingId":"1","grade":"Approbatur","Graders":[{"id":1,"name":"First Grader","title":"Prof"},{"id":2,"name":"Second Grader","title":"AssProf"}],"title":"a","urkund":"https://is.fi"}')
       .attach("file", "./test/mock/grappa-review1.pdf")
       .set("Accept", "multipart/form-data")
       .set("X-Access-Token", auth.createToken("admin"))

@@ -13,6 +13,7 @@ const responses = {
     get: {
       admin: {},
       professor: {},
+      instructor: {},
     }
   }
 };
