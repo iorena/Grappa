@@ -61,7 +61,6 @@ module.exports.saveOne = (req, res, next) => {
         ThesisId: thesis.id,
         UserId: req.user.id,
       }),
-      Reminder.sendEthesisReminder(savedThesis),
       CouncilMeeting.linkThesis(foundConnections[0], savedThesis),
       Grader.linkThesisToGraders(foundConnections[2], savedThesis.id),
       Thesis.linkStudyField(savedThesis, foundConnections[1].id),
@@ -70,9 +69,15 @@ module.exports.saveOne = (req, res, next) => {
   })
   .then(() => {
     if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.json.Graders)) {
-      return Reminder.sendProfessorReminder(savedThesis);
+      return Promise.all([
+        Reminder.sendEthesisReminder(savedThesis),
+        Reminder.sendProfessorReminder(savedThesis)
+      ]);
     } else {
-      return ThesisProgress.setGraderEvalDone(savedThesis.id);
+      return Promise.all([
+        Reminder.sendEthesisReminder(savedThesis),
+        ThesisProgress.setGraderEvalDone(savedThesis.id)
+      ]);
     }
   })
   .then(() => Thesis.findOne({ id: savedThesis.id }))
