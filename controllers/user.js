@@ -23,12 +23,10 @@ module.exports.updateOne = (req, res, next) => {
   .then(() => {
     if (req.user.id.toString() !== req.params.id && req.user.role !== "admin") {
       throw new errors.ForbiddenError("Missing privileges to edit User.");
-    } else if (!user.password && req.user.role !== "admin") {
+    } else if (req.user.id.toString() === req.params.id && !user.password) {
       throw new errors.BadRequestError("No password supplied.");
-    } else if (user.newPassword && !user.newPasswordConf || !user.newPassword && user.newPasswordConf) {
-      throw new errors.BadRequestError("No new password or confirmation.");
-    } else if (user.newPassword && user.newPasswordConf && user.newPassword !== user.newPasswordConf) {
-      throw new errors.BadRequestError("New password didn't match confirmation.");
+    } else if (req.user.id.toString() === req.params.id && user.newPassword && user.newPassword.length < 8) {
+      throw new errors.BadRequestError("New password is under 8 characters.");
     } else {
       return User.findOne({ id: req.params.id });
     }
@@ -46,7 +44,7 @@ module.exports.updateOne = (req, res, next) => {
         lastname: user.lastname,
         email: user.email,
       };
-      if (user.newPassword && user.newPasswordConf) {
+      if (user.newPassword) {
         strippedUser.passwordHash = passwordHelper.hashPassword(user.newPassword);
       }
     } else {
