@@ -7,6 +7,17 @@ class Grader extends BaseModel {
     super("Grader");
   }
 
+  saveOne(values) {
+    return this.getModel().create(values)
+      .then(newGrader => {
+        return {
+          id: newGrader.id,
+          name: newGrader.name,
+          title: newGrader.title
+        }
+      });
+  }
+
   findAll() {
     return this.Models[this.modelname]
     .findAll({
@@ -35,7 +46,14 @@ class Grader extends BaseModel {
           return this.getModel().create({ name: grader.name, title: grader.title });
         }
         return newgrader;
-      });
+      })
+      .then(newGrader => {
+        return {
+          id: newGrader.id,
+          name: newGrader.id,
+          title: newGrader.title
+        }
+      })
   }
 
   linkThesisToGraders(graders, thesis) {

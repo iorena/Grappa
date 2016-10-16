@@ -14,7 +14,7 @@ module.exports.imap = () => (
 
 module.exports.smtp = () => (
   {
-    from: "Grappa Robotti <nimi.sukunimi@cs.helsinki.fi>",
+    from: `Grappa Robotti <${process.env.EMAIL_USER}@${process.env.EMAIL_HOST}>`,
     host: `smtp.${process.env.EMAIL_HOST}`,
     port: 465,
     secure: true, // use SSL
