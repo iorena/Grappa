@@ -160,6 +160,7 @@ class Thesis extends BaseModel {
   }
 
   findAllByUserRole(user) {
+    console.log("user", user)
     if (user === undefined) {
       return Promise.resolve([]);
     } else if (user.role === "admin" || user.role === "print-person") {

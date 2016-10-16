@@ -11,11 +11,12 @@ class EmailSender {
     this.transporter = nodemailer.createTransport(options);
   }
 
-  sendEmail(to, subject, body) {
+  sendEmail(to, subject, body, attachments) {
     const options = Object.assign({
       to,
       subject,
       text: body,
+      attachments: attachments ? attachments : [],
     }, this.mailOptions);
 
     return new Promise((resolve, reject) => {

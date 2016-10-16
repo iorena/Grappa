@@ -12,12 +12,10 @@ class TokenGenerator {
       user: {
         id: user.id,
         role: user.role,
-        StudyFieldId: user.StudyFieldId,
       },
       created: date,
       expires: date.setDate(date.getDate() + 14),
     };
-    // console.log(payload);
     return jwt.encode(payload, this.secret);
   }
   decodeToken(token) {
@@ -33,3 +31,4 @@ class TokenGenerator {
 }
 
 module.exports = new TokenGenerator(process.env.TOKEN_SECRET);
+module.exports.class = TokenGenerator;

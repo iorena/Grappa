@@ -15,7 +15,7 @@ const TokenGenerator = require("../../services/TokenGenerator");
 
 describe("Authentication", () => {
   // before(() => {
-  //   sinon.stub(ThesisController, "findAll", (req, res) => {
+  //   sinon.stub(ThesisController, "findAll", (req, res, next) => {
   //     throw("asdf");
   //     res.status(500).send({e: "asdf"})
   //     // if (req.user === authorizedAdmin.decoded) {
@@ -38,7 +38,7 @@ describe("Authentication", () => {
       .expect(200, done);
     });
     xit("should add the decoded user to the request (req.user = decodedUser)", (done) => {
-      const stubi = sinon.stub(ThesisController, "findAll", (req, res) => {
+      const stubi = sinon.stub(ThesisController, "findAll", (req, res, next) => {
         if (req.user === authorizedAdmin.decoded) {
           res.status(304).send();
         } else {
