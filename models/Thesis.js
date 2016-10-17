@@ -74,7 +74,6 @@ class Thesis extends BaseModel {
   }
 
   saveOne(params, councilmeeting) {
-    console.log(councilmeeting);
     const values = Object.assign({}, params);
     if (councilmeeting !== null) {
       values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
@@ -160,7 +159,6 @@ class Thesis extends BaseModel {
   }
 
   findAllByUserRole(user) {
-    console.log("user", user)
     if (user === undefined) {
       return Promise.resolve([]);
     } else if (user.role === "admin" || user.role === "print-person") {
