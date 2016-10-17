@@ -1,8 +1,9 @@
 "use strict";
 
-if (!process.env.NODE_ENV) {
+// Silly server won't sometimes load up the envinroment variables if this is conditional
+// if (!process.env.NODE_ENV) {
   require("dotenv").config();
-}
+// }
 
 const express = require("express");
 const busboy = require("connect-busboy");
