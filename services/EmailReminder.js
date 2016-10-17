@@ -11,7 +11,8 @@ const EmailStatus = require("../models/EmailStatus");
 const EmailDraft = require("../models/EmailDraft");
 const EthesisToken = require("../models/EthesisToken");
 
-const PremiseError = require("../config/errors").PremiseError;
+const errors = require("../config/errors");
+// const PremiseError = require("../config/errors").PremiseError;
 
 class EmailReminder {
 
@@ -40,7 +41,7 @@ class EmailReminder {
           const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
           return Sender.sendEmail(thesis.authorEmail, reminder.title, body, attachments);
         } else {
-          throw new PremiseError("EthesisReminder not found from EmailDrafts");
+          throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");
         }
       })
       .then(() => EthesisToken.updateOrCreate({
@@ -70,10 +71,14 @@ class EmailReminder {
   sendPrintPersonReminder(thesis) {
     let email;
     let sentReminder;
-    return User.findOne({ role: "print-person" })
+    return User.findOne({ role: "print-person", isActive: true, isRetired: false })
       .then(printPerson => {
-        email = this.composeEmail("toPrintPerson", printPerson.email, thesis, "");
-        return Sender.sendEmail(email.to, email.subject, email.body);
+        if (printPerson) {
+          email = this.composeEmail("toPrintPerson", printPerson.email, thesis, "");
+          return Sender.sendEmail(email.to, email.subject, email.body);
+        } else {
+          throw new errors.PremiseError("No print-person found.");
+        }
       })
       .then(() => EmailStatus.saveOne({
         lastSent: Date.now(),
@@ -98,13 +103,13 @@ class EmailReminder {
     let foundProfessor;
     let savedReminder;
 
-    return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId })
+    return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId, isActive: true, isRetired: false })
       .then(professor => {
         if (professor) {
           foundProfessor = professor;
           return EmailDraft.findOne({ type: "GraderEvalReminder" });
         } else {
-          throw new PremiseError("StudyField had no professor to whom send grader evaluation reminder.");
+          throw new errors.PremiseError("StudyField had no professor to whom send grader evaluation reminder.");
         }
       })
       .then(reminder => {
@@ -113,7 +118,7 @@ class EmailReminder {
           const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
           return Sender.sendEmail(foundProfessor.email, reminder.title, body);
         } else {
-          throw new PremiseError("GraderEvalReminder not found from EmailDrafts");
+          throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
         }
       })
       .then(() => EmailStatus.saveOne({

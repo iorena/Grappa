@@ -17,8 +17,8 @@ module.exports.sendReminder = (req, res, next) => {
         return Reminder.sendEthesisReminder(thesis);
       } else if (req.body.reminderType === "GraderEvalEmail") {
         return Reminder.sendProfessorReminder(thesis);
-      } else if (req.body.reminderType === "PrintEvalEmail") {
-        return Reminder.sendPrintReminder(thesis);
+      } else if (req.body.reminderType === "PrintEmail") {
+        return Reminder.sendPrintPersonReminder(thesis);
       } else {
         throw new errors.BadRequestError("Invalid reminderType.");
       }
