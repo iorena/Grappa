@@ -12,7 +12,6 @@ const EmailDraft = require("../models/EmailDraft");
 const EthesisToken = require("../models/EthesisToken");
 
 const errors = require("../config/errors");
-// const PremiseError = require("../config/errors").PremiseError;
 
 class EmailReminder {
 
@@ -135,6 +134,32 @@ class EmailReminder {
       .then(rows => {
         return savedReminder;
       });
+  }
+
+  sendResetPasswordMail(user) {
+    const token = TokenGen.generatePasswordResetionToken(user);
+
+    return EmailDraft.findOne({ type: "ResetPassword" })
+      .then(reminder => {
+        if (reminder) {
+          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}//${user.id}`);
+          return Sender.sendEmail(user.email, reminder.title, body);
+        } else {
+          throw new errors.PremiseError("ResetPassword not found from EmailDrafts");
+        }
+      })
+  }
+
+  sendNewPasswordMail(user, password) {
+    return EmailDraft.findOne({ type: "NewPassword" })
+      .then(reminder => {
+        if (reminder) {
+          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/reset-password/${token}`);
+          return Sender.sendEmail(user.email, reminder.title, body);
+        } else {
+          throw new errors.PremiseError("NewPassword not found from EmailDrafts");
+        }
+      })
   }
 }
 

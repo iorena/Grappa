@@ -12,18 +12,14 @@ const errors = require("../config/errors");
  */
 module.exports.authenticate = (req, res, next) => {
   if (!req.headers["x-access-token"]) {
-    throw new errors.AuthenticationError("Please make sure your request has X-Access-Token header");
+    throw new errors.AuthenticationError("Please make sure your request has X-Access-Token header.");
   }
-  const token = req.headers["x-access-token"];
-  let decoded;
-  try {
-    decoded = TokenGenerator.decodeToken(token);
+  const decoded = TokenGenerator.decodeToken(req.headers["x-access-token"]);
+  if (!decoded || decoded.name !== "login") {
+    throw new errors.AuthenticationError("Invalid token.");
   }
-  catch (err) {
-    throw new errors.AuthenticationError("Token authentication failed", err);
-  }
-  if (decoded.created > decoded.expires) {
-    throw new errors.AuthenticationError("Token has expired");
+  if (TokenGenerator.isTokenExpired(decoded)) {
+    throw new errors.AuthenticationError("Token has expired.");
   } else {
     req.user = decoded.user;
     next();

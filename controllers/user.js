@@ -1,5 +1,6 @@
 "use strict";
 
+const EmailReminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const passwordHelper = require("../config/passwordHelper");
 
@@ -115,7 +116,7 @@ module.exports.loginUser = (req, res, next) => {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
         throw new errors.AuthenticationError("Incorrect password.");
       } else {
-        const token = TokenGenerator.generateToken(user);
+        const token = TokenGenerator.generateLoginToken(user);
         user.passwordHash = undefined;
         res.status(200).send({
           user,
@@ -123,6 +124,61 @@ module.exports.loginUser = (req, res, next) => {
         });
       }
     }
+  })
+  .catch(err => next(err));
+};
+
+module.exports.requestPasswordResetion = (req, res, next) => {
+  User
+  .findOne({ email: req.body.email })
+  .then(user => {
+    if (!user) {
+      throw new errors.NotFoundError("No user found with given email.");
+    } else if (!user.isActive) {
+      throw new errors.ForbiddenError("Your account is inactive, please contact admin for activation.");
+    } else if (user.isRetired) {
+      throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
+    } else {
+      return EmailReminder.sendResetPasswordMail(user);
+    }
+  })
+  .then(() => {
+    res.sendStatus(200);
+  })
+  .catch(err => next(err));
+}
+
+module.exports.sendNewPassword = (req, res, next) => {
+  let decodedToken;
+  let foundUser;
+  let generatedPassword;
+
+  Promise.resolve(TokenGenerator.decodeToken(req.body.token))
+  .then((decoded) => {
+    if (!decoded || decoded.name !== "password") {
+      throw new errors.BadRequestError("Invalid token.");
+    } else {
+      decodedToken = decoded;
+      return User.findOne({ id: decodedToken.user.id });
+    }
+  })
+  .then(user => {
+    if (!user) {
+      throw new errors.NotFoundError("No user found with given email.");
+    } else if (!user.isActive) {
+      throw new errors.ForbiddenError("Your account is inactive, please contact admin for activation.");
+    } else if (user.isRetired) {
+      throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
+    } else {
+      foundUser = user;
+      generatedPassword = TokenGenerator.generatePassword();
+      const passwordHash = passwordHelper.hashPassword(generatedPassword);
+      return User.update({ passwordHash, }, { id: decodedToken.user.id });
+    }
+  })
+  .then(rows => EmailReminder.sendNewPasswordMail(foundUser, generatedPassword))
+  .then(() => {
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };

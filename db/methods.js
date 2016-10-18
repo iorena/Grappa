@@ -63,6 +63,16 @@ module.exports.addTestData = () => Promise.all([
     title: "REMINDER: Theses are ready to print",
     body: "Hi\n\nThis is an automatic reminder from Grappa, a web application to help in managing the bureaucratic side of the processes related to the final stages of a students Masters degree.\n\nTheses for the next councilmeeting are ready to be printed at https://grappa.cs.helsinki.fi.",
   }),
+  models.EmailDraft.create({
+    type: "ResetPassword",
+    title: "Password resetion",
+    body: "You have requested to reset your password. To do so follow the provided link in the next 24 hours.\n$LINK$",
+  }),
+  models.EmailDraft.create({
+    type: "NewPassword",
+    title: "Your new password",
+    body: "Here is your new password. Please change it as soon as possible.\n$VAR1$",
+  }),
 ]);
 
 module.exports.addLotTestData = () => Promise.all([
@@ -125,6 +135,16 @@ module.exports.addLotTestData = () => Promise.all([
     type: "PrintReminder",
     title: "REMINDER: Theses are ready to print",
     body: "Hi\n\nThis is an automatic reminder from Grappa, a web application to help in managing the bureaucratic side of the processes related to the final stages of a students Masters degree.\n\nTheses for the next councilmeeting are ready to be printed at https://grappa.cs.helsinki.fi.",
+  }),
+  models.EmailDraft.create({
+    type: "ResetPassword",
+    title: "Password resetion",
+    body: "You have requested to reset your password. To do so follow the provided link in the next 24 hours.\n$LINK$",
+  }),
+  models.EmailDraft.create({
+    type: "NewPassword",
+    title: "Your new password",
+    body: "Here is your new password. Please change it as soon as possible.\n$VAR1$",
   }),
 ]);
 
