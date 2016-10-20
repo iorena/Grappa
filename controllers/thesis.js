@@ -3,7 +3,7 @@
 const fs = require("fs");
 
 const Reminder = require("../services/EmailReminder");
-const TokenGen = require("../services/TokenGenerator");
+const TokenGenerator = require("../services/TokenGenerator");
 const PdfManipulator = require("../services/PdfManipulator");
 
 const Thesis = require("../models/Thesis");
@@ -106,14 +106,12 @@ module.exports.updateOneAndConnections = (req, res, next) => {
 
 module.exports.updateOneEthesis = (req, res, next) => {
   let foundEtoken;
+  let decodedToken;
 
   Promise.resolve(TokenGenerator.decodeToken(req.body.token))
   .then((decoded) => {
     if (!decoded || decoded.name !== "ethesis") {
       throw new errors.BadRequestError("Invalid token.");
-    // Rare case that could only happen if the thesis was late by a year ehhh....
-    } else if (TokenGenerator.isTokenExpired(decoded)) {
-      throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
     } else {
       decodedToken = decoded;
       // TODO should only find it by id since we've already decoded it :D silly essi
@@ -123,8 +121,9 @@ module.exports.updateOneEthesis = (req, res, next) => {
   .then(etoken => {
     if (!etoken) {
       throw new errors.NotFoundError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
-    } else if (new Date() > etoken.expires) {
-      throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
+      // } else if (TokenGenerator.isTokenExpired(decoded)) {
+    // } else if (new Date() > etoken.expires) {
+      // throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
     } else {
       foundEtoken = etoken;
       return Promise.all([
