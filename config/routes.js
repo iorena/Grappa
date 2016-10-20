@@ -40,6 +40,13 @@ router.post("/user",
   validate.validateBody("user", "save"),
   userCtrl.saveOne);
 
+router.post("/user/reset-password",
+  validate.validateBody("user", "resetPassword"),
+  userCtrl.requestPasswordResetion);
+router.post("/user/send-new-password",
+  validate.validateBody("user", "sendNewPassword"),
+  userCtrl.sendNewPassword);
+
 router.post("/thesis/ethesis",
   validate.validateBody("thesis", "ethesis"),
   thesisCtrl.updateOneEthesis);

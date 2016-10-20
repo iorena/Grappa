@@ -5,7 +5,7 @@ const Imap = require("imap");
 const inspect = require("util").inspect;
 
 const EmailStatus = require("../models/EmailStatus");
-
+/* CURRENTLY NOT IN USE AND PROBABLY BROKEN **/
 class EmailReader {
   constructor(options) {
     this.imap = new Imap(options);

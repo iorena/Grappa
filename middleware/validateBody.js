@@ -20,6 +20,10 @@ module.exports.validateBody = (name, schema) => (req, res, next) => {
   if (validation) {
     const result = inspector.validate(validation, req.body);
     if (result.error.length !== 0) {
+      /* TODO Maybe generate the message according to the errors e.g.
+        "Request body failed validation for fields:
+        [email: required, password: minlen(8)]"
+      */
       throw new errors.BadRequestError("Request body failed validation check.", result)
     }
   }

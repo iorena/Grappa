@@ -6,34 +6,50 @@ const errors = require("../config/errors");
 /**
  * Authentication middleware that is called before any requests
  *
- * Checks the request for the correct headers and then decodes
+ * Checks the request for the X-Access-Token header and then decodes
  * the token and checks if everything matches out after which
  * it lets the user to access the controller's method.
  */
 module.exports.authenticate = (req, res, next) => {
   if (!req.headers["x-access-token"]) {
-    throw new errors.AuthenticationError("Please make sure your request has X-Access-Token header");
+    throw new errors.AuthenticationError("Please make sure your request has X-Access-Token header.");
   }
-  const token = req.headers["x-access-token"];
-  let decoded;
-  try {
-    decoded = TokenGenerator.decodeToken(token);
+  const decoded = TokenGenerator.decodeToken(req.headers["x-access-token"]);
+  if (!decoded || decoded.name !== "login") {
+    throw new errors.AuthenticationError("Invalid token.");
   }
-  catch (err) {
-    throw new errors.AuthenticationError("Token authentication failed", err);
-  }
-  if (decoded.created > decoded.expires) {
-    throw new errors.AuthenticationError("Token has expired");
+  if (TokenGenerator.isTokenExpired(decoded)) {
+    throw new errors.AuthenticationError("Token has expired.");
   } else {
     req.user = decoded.user;
     next();
   }
 };
 
+module.exports.checkUserAccess = (req, res, next) => {
+  // In theory this is the only way to check if user's account hasn't been disabled
+  // before token's expiration. But doing database query everytime for every request
+  // could be pretty burdensome for the server ¯\_(ツ)_/¯ idk
+  // User
+  // .findOne(decoded.user.id)
+  // .then(user => {
+  //   if (!user) {
+  //     throw new errors.NotFoundError("No user found with provided token.");
+  //   } else if (!user.isActive) {
+  //     throw new errors.ForbiddenError("Your account is inactive, please contact admin for activation.");
+  //   } else if (user.isRetired) {
+  //     throw new errors.ForbiddenError("Your account has been retired, please contact admin for reactivation.");
+  //   } else {
+  //     req.user = user;
+  //     next();
+  //   }
+  // })
+}
+
 module.exports.onlyAdmin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     next();
   } else {
-    throw new errors.ForbiddenError("User admin permission check failed");
+    throw new errors.ForbiddenError("User admin permission check failed.");
   }
 };

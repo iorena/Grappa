@@ -107,20 +107,33 @@ module.exports.updateOneAndConnections = (req, res, next) => {
 module.exports.updateOneEthesis = (req, res, next) => {
   let foundEtoken;
 
-  EthesisToken
-  .findOne({ token: req.body.token })
+  Promise.resolve(TokenGenerator.decodeToken(req.body.token))
+  .then((decoded) => {
+    if (!decoded || decoded.name !== "ethesis") {
+      throw new errors.BadRequestError("Invalid token.");
+    // Rare case that could only happen if the thesis was late by a year ehhh....
+    } else if (TokenGenerator.isTokenExpired(decoded)) {
+      throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
+    } else {
+      decodedToken = decoded;
+      // TODO should only find it by id since we've already decoded it :D silly essi
+      return EthesisToken.findOne({ token: req.body.token });
+    }
+  })
   .then(etoken => {
     if (!etoken) {
       throw new errors.NotFoundError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
-    } else if (etoken.expires && etoken.expires < new Date()) {
+    } else if (new Date() > etoken.expires) {
       throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
     } else {
       foundEtoken = etoken;
-      return Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId });
+      return Promise.all([
+        Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId }),
+        ThesisProgress.setEthesisDone(foundEtoken.ThesisId),
+        EthesisToken.setToExpire(foundEtoken.ThesisId),
+      ]);
     }
   })
-  .then(thesis => ThesisProgress.setEthesisDone(foundEtoken.ThesisId))
-  .then(() => EthesisToken.setToExpire(foundEtoken.ThesisId))
   .then(() => {
     res.sendStatus(200);
   })

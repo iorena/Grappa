@@ -46,6 +46,18 @@ const validations = {
         password: { type: "string", minLength: 8 },
       }
     },
+    resetPassword: {
+      type: "object",
+      properties: {
+        email: { type: "string", pattern: "email" },
+      }
+    },
+    sendNewPassword: {
+      type: "object",
+      properties: {
+        token: { type: "string", minLength: 1 },
+      }
+    }
   },
   councilmeeting: {
     save: {
