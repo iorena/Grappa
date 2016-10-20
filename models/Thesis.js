@@ -163,11 +163,11 @@ class Thesis extends BaseModel {
       return Promise.resolve([]);
     } else if (user.role === "admin" || user.role === "print-person") {
       return this.findAll();
-    } else if (user.role === "professor") {
+    } else if (user.role === "professor" && user.StudyFieldId) {
       return this.findAll({
         StudyFieldId: user.StudyFieldId,
       });
-    } else if (user.role === "instructor") {
+    } else {
       return this.findAll({
         UserId: user.id,
       });
