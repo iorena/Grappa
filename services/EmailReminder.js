@@ -137,12 +137,12 @@ class EmailReminder {
   }
 
   sendResetPasswordMail(user) {
-    const token = TokenGen.generatePasswordResetionToken(user);
+    const token = TokenGen.generateResetPasswordToken(user);
 
     return EmailDraft.findOne({ type: "ResetPassword" })
       .then(reminder => {
         if (reminder) {
-          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}//${user.id}`);
+          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/reset-password/${token}`);
           return Sender.sendEmail(user.email, reminder.title, body);
         } else {
           throw new errors.PremiseError("ResetPassword not found from EmailDrafts");

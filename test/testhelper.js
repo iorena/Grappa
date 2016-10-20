@@ -1,4 +1,5 @@
 require("dotenv").config();
+/* Used to determine the database for db_connection which in this case is the test-db */
 process.env["NODE_ENV"] = "testing";
 
 const app = require("../app");

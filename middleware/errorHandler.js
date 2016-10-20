@@ -12,7 +12,7 @@ module.exports.handleErrors = (err, req, res, next) => {
     // console.log(err.stack)
     const statusCode = err.statusCode !== undefined ? err.statusCode : 500;
 
-    // We don't mind seeing error messages on the client
+    // We don't mind seeing error messages on production the client
     // if (process.env.NODE_ENV === "development") {
       if (err.message !== undefined) {
         res.status(statusCode).send(err);

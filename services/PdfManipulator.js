@@ -36,7 +36,7 @@ class PdfManipulator {
       });
     });
   }
-
+/* TODO Maybe check for file-size before requesting..? */
   downloadEthesisPdf(url, pathToFile) {
     return new Promise((resolve, reject) => {
       request(url)
@@ -182,7 +182,7 @@ class PdfManipulator {
       this.deleteFolder(pathToFolder);
     }, wait);
   }
-
+/* TODO This should be async */
   deleteFolder(pathToFolder) {
     fs
     .readdirSync(pathToFolder)

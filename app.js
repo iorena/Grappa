@@ -1,6 +1,6 @@
 "use strict";
 
-// Silly server won't sometimes load up the envinroment variables if this is conditional
+// Silly ubuntu-server won't sometimes load up the envinroment variables if this is conditional
 // if (!process.env.NODE_ENV) {
   require("dotenv").config();
 // }

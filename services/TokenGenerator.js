@@ -1,5 +1,8 @@
 "use strict";
 
+// TODO Switch to jsonwebtoken
+// or maybe creat pull request to make this return undefined
+// but probably I still want to use the async version
 const jwt = require("jwt-simple");
 
 class TokenGenerator {
@@ -15,7 +18,8 @@ class TokenGenerator {
       },
       name: "login",
       created: new Date(),
-      expires: date.setDate(date.getDate() + 14),
+      // expires: date.setDate(date.getDate() + 14),
+      expires: date.setHours(date.getHours() + 1),
     };
     return jwt.encode(payload, this.secret);
   }
@@ -31,17 +35,17 @@ class TokenGenerator {
   isTokenExpired(decodedToken) {
     return new Date() > decodedToken.expires;
   }
-  generateEthesisToken(authorname, thesisId) {
+  generateEthesisToken(authorname, ThesisId) {
     const payload = {
-      authorname,
-      thesisId,
+      ThesisId,
+      name: "ethesis",
+      created: new Date(),
+      // TODO set to expire in a year?
+      expires: date.setHours(date.getHours() + 1),
     };
     return jwt.encode(payload, this.secret);
   }
-  generatePassword() {
-    return jwt.encode(new Date().toString(), "lulz");
-  }
-  generatePasswordResetionToken(user) {
+  generateResetPasswordToken(user) {
     const date = new Date();
     const payload = {
       user: {

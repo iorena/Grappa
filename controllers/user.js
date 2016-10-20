@@ -3,6 +3,7 @@
 const EmailReminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const passwordHelper = require("../config/passwordHelper");
+const PasswordHelperx = require("../services/PasswordHelper");
 
 const User = require("../models/User");
 
@@ -111,7 +112,7 @@ module.exports.loginUser = (req, res, next) => {
     } else if (!user.isActive) {
       throw new errors.ForbiddenError("Your account is inactive, please contact admin for activation.");
     } else if (user.isRetired) {
-      throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
+      throw new errors.ForbiddenError("Your account has been retired, please contact admin for reactivation.");
     } else {
       if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
         throw new errors.AuthenticationError("Incorrect password.");
@@ -171,7 +172,7 @@ module.exports.sendNewPassword = (req, res, next) => {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
     } else {
       foundUser = user;
-      generatedPassword = TokenGenerator.generatePassword();
+      generatedPassword = PasswordHelperx.generatePassword();
       const passwordHash = passwordHelper.hashPassword(generatedPassword);
       return User.update({ passwordHash, }, { id: decodedToken.user.id });
     }
@@ -180,5 +181,5 @@ module.exports.sendNewPassword = (req, res, next) => {
   .then(() => {
     res.sendStatus(200);
   })
-  .catch(err => next(err));
+  // .catch(err => next(err));
 };
