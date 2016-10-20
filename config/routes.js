@@ -91,6 +91,8 @@ router.post("/councilmeeting",
 router.put("/councilmeeting/:id",
   validate.validateBody("councilmeeting", "update"),
   councilmeetingCtrl.updateOne);
+router.delete("/councilmeeting/:id",
+  councilmeetingCtrl.deleteOne);
 
 router.post("/studyfield",
   validate.validateBody("studyfield", "save"),

@@ -20,9 +20,9 @@ class Grader extends BaseModel {
 
   findAll() {
     return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "name", "title"],
-    });
+      .findAll({
+        attributes: ["id", "name", "title"],
+      });
   }
 
   updateOrCreateAndLinkToThesis(values, thesis) {

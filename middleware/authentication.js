@@ -15,11 +15,11 @@ module.exports.authenticate = (req, res, next) => {
     throw new errors.AuthenticationError("Please make sure your request has X-Access-Token header.");
   }
   const decoded = TokenGenerator.decodeToken(req.headers["x-access-token"]);
-  if (!decoded || decoded.name !== "login") {
+  if (decoded === undefined || decoded.name !== "login") {
     throw new errors.AuthenticationError("Invalid token.");
   }
   if (TokenGenerator.isTokenExpired(decoded)) {
-    throw new errors.AuthenticationError("Token has expired.");
+    throw new errors.AuthenticationError("Your token has expired. Please re-login.");
   } else {
     req.user = decoded.user;
     next();
