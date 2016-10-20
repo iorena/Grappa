@@ -66,6 +66,16 @@ class Grader extends BaseModel {
         .then(grader => grader.addThesis(thesis))
     ));
   }
+
+  findOneWithTheses(grader) {
+    return this.Models.Grader.findOne({
+      where: { id: grader.id },
+      include: [{
+        model: this.Models.Thesis,
+        as: "Theses",
+      }]
+    })
+  }
 }
 
 module.exports = new Grader();

@@ -72,6 +72,7 @@ router.post("/grader",
   validate.validateBody("grader", "save"),
   graderCtrl.saveOne);
 router.put("/grader/:id", graderCtrl.updateOne);
+router.delete("/grader/:id", graderCtrl.deleteOne);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 
