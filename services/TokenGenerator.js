@@ -36,6 +36,7 @@ class TokenGenerator {
     return new Date() > decodedToken.expires;
   }
   generateEthesisToken(authorname, ThesisId) {
+    const date = new Date();
     const payload = {
       ThesisId,
       name: "ethesis",

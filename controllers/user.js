@@ -51,13 +51,11 @@ module.exports.updateOne = (req, res, next) => {
       }
     } else {
       strippedUser = user;
-      if ((strippedUser.role === "professor" || strippedUser.role === "instructor") && !strippedUser.StudyFieldId) {
-        throw new errors.BadRequestError("Professor or instructor must have a studyfield.");
-      } else if (strippedUser.role === "professor") {
+      if (strippedUser.role === "professor") {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
             if (prof && prof.id !== strippedUser.id) {
-              throw new errors.BadRequestError("Studyfield already has professor.");
+              throw new errors.BadRequestError("Studyfield already has a professor in charge.");
             } else {
               return User.update(strippedUser, { id: req.params.id });
             }
