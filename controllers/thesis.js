@@ -5,10 +5,12 @@ const fs = require("fs");
 const Reminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PdfManipulator = require("../services/PdfManipulator");
+const FileManipulator = require("../services/FileManipulator");
 
 const Thesis = require("../models/Thesis");
 const EthesisToken = require("../models/EthesisToken");
 const ThesisReview = require("../models/ThesisReview");
+const ThesisAbstract = require("../models/ThesisAbstract");
 const ThesisProgress = require("../models/ThesisProgress");
 const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
@@ -104,34 +106,37 @@ module.exports.updateOneAndConnections = (req, res, next) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOneEthesis = (req, res, next) => {
-  let foundEtoken;
+module.exports.uploadThesisPDF = (req, res, next) => {
   let decodedToken;
 
-  Promise.resolve(TokenGenerator.decodeToken(req.body.token))
+  Promise.resolve(TokenGenerator.decodeToken(req.params.token))
   .then((decoded) => {
     if (!decoded || decoded.name !== "ethesis") {
       throw new errors.BadRequestError("Invalid token.");
     } else {
       decodedToken = decoded;
-      // TODO should only find it by id since we've already decoded it :D silly essi
-      return EthesisToken.findOne({ token: req.body.token });
+      return ThesisProgress.findOne({ ThesisId: decoded.ThesisId });
     }
   })
-  .then(etoken => {
-    if (!etoken) {
-      throw new errors.NotFoundError("No EthesisToken found with the provided token. Ask admin to manually input the ethesis link.");
+  .then(tprogress => {
+    if (!tprogress) {
+      throw new errors.NotFoundError("No ThesisProgress found for the Thesis. Please inform admin that the database has been corrupted.");
       // } else if (TokenGenerator.isTokenExpired(decoded)) {
-    // } else if (new Date() > etoken.expires) {
-      // throw new errors.BadRequestError("Token has expired. Ask admin to manually input the ethesis link.");
+    } else if (tprogress.ethesisDone) {
+      throw new errors.BadRequestError("Your PDF has already been uploaded to the system.");
     } else {
-      foundEtoken = etoken;
-      return Promise.all([
-        Thesis.update({ ethesis: req.body.link }, { id: etoken.ThesisId }),
-        ThesisProgress.setEthesisDone(foundEtoken.ThesisId),
-        EthesisToken.setToExpire(foundEtoken.ThesisId),
-      ]);
+      return PdfManipulator.parseAbstractFromThesisPDF(req.body.file);
     }
+  })
+  .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
+  .then((buffer) => {
+    return Promise.all([
+      ThesisAbstract.saveOne({
+        pdf: buffer,
+        ThesisId: decodedToken.ThesisId,
+      }),
+      ThesisProgress.setEthesisDone(decodedToken.ThesisId),
+    ]);
   })
   .then(() => {
     res.sendStatus(200);
@@ -161,12 +166,7 @@ module.exports.generateThesesToPdf = (req, res, next) => {
     }
   })
   .then(() => {
-    const file = fs.createReadStream(pathToFile);
-    const stat = fs.statSync(pathToFile);
-    res.setHeader("Content-Length", stat.size);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=theses.pdf");
-    file.pipe(res);
+    FileManipulator.pipeFileToResponse(pathToFile, "pdf", "theses.pdf", res)
   })
   .catch(err => next(err));
 };

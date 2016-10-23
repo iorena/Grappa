@@ -27,7 +27,7 @@ class FileManipulator {
       this.deleteFolder(pathToFolder);
     }, wait);
   }
-
+/* TODO This should be async */
   deleteFolder(pathToFolder) {
     fs
     .readdirSync(pathToFolder)
@@ -36,7 +36,7 @@ class FileManipulator {
     fs
     .rmdirSync(pathToFolder);
   }
-
+  
   cleanTmp() {
     const tmpPath = path.join(__dirname, "../tmp");
 
@@ -51,12 +51,37 @@ class FileManipulator {
 
   writeFile(pathToFile, file) {
     return new Promise((resolve, reject) => {
-      console.log("writing pdf file: " + pathToFile);
-      fs.writeFile(pathToFile, file, (err) => {
-        if (err) reject(err);
-        resolve();
+      fs.writeFile(pathToFile, file, "base64", (err) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(pathToFile);
+        }
       });
-    });
+    })
+  }
+
+  readFileToBuffer(pathToFile) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(pathToFile, (err, data) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    })
+  }
+
+  pipeFileToResponse(pathToFile, fileType, fileName, res) {
+    const file = fs.createReadStream(pathToFile);
+    const stat = fs.statSync(pathToFile);
+    res.setHeader("Content-Length", stat.size);
+    res.setHeader("Content-Type", `application/${fileType}`);
+    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+    file.pipe(res);
   }
 }
 

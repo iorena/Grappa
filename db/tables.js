@@ -173,6 +173,16 @@ const ThesisReview = seq.define("ThesisReview", {
   },
 });
 
+const ThesisAbstract = seq.define("ThesisAbstract", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  pdf: {
+    type: Sequelize.BLOB,
+    validate: {
+      notEmpty: true,
+    },
+  },
+});
+
 const ThesisProgress = seq.define("ThesisProgress", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
@@ -203,6 +213,9 @@ EthesisToken.belongsTo(Thesis);
 ThesisReview.belongsTo(Thesis);
 ThesisReview.belongsTo(User);
 Thesis.hasOne(ThesisReview);
+
+ThesisAbstract.belongsTo(Thesis);
+Thesis.hasOne(ThesisAbstract);
 
 Grader.belongsToMany(Thesis, { through: "GraderThesis" });
 Thesis.belongsToMany(Grader, { through: "GraderThesis" });
@@ -240,6 +253,7 @@ module.exports.Models = {
   CouncilMeeting,
   StudyField,
   ThesisReview,
+  ThesisAbstract,
   ThesisProgress,
   EmailStatus,
   EmailDraft,

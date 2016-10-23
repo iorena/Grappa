@@ -47,9 +47,10 @@ router.post("/user/send-new-password",
   validate.validateBody("user", "sendNewPassword"),
   userCtrl.sendNewPassword);
 
-router.post("/thesis/ethesis",
-  validate.validateBody("thesis", "ethesis"),
-  thesisCtrl.updateOneEthesis);
+router.post("/thesis/abstract/:token",
+  parseForm.parseUpload,
+  validate.validateBody("thesis", "abstract"),
+  thesisCtrl.uploadThesisPDF);
 
 router.use("", auth.authenticate);
 
