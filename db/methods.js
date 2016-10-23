@@ -51,7 +51,7 @@ module.exports.addTestData = () => Promise.all([
   models.EmailDraft.create({
     type: "EthesisReminder",
     title: "REMINDER: Submit your thesis to eThesis",
-    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please copy the eThesis link to your thesis' PDF-file and enter it into the supplied field below.\n$LINK$",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "GraderEvalReminder",
@@ -124,7 +124,7 @@ module.exports.addLotTestData = () => Promise.all([
   models.EmailDraft.create({
     type: "EthesisReminder",
     title: "REMINDER: Submit your thesis to eThesis",
-    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please copy the eThesis link to your thesis' PDF-file and enter it into the supplied field below.\n$LINK$",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "GraderEvalReminder",

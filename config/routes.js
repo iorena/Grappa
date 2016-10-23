@@ -47,9 +47,9 @@ router.post("/user/send-new-password",
   validate.validateBody("user", "sendNewPassword"),
   userCtrl.sendNewPassword);
 
-router.post("/thesis/abstract/:token",
-  parseForm.parseUpload,
-  validate.validateBody("thesis", "abstract"),
+router.post("/thesis/ethesis/:token",
+  parseForm.parseUpload(40),
+  validate.validateBody("thesis", "ethesis"),
   thesisCtrl.uploadThesisPDF);
 
 router.use("", auth.authenticate);
@@ -59,7 +59,7 @@ router.use("", auth.authenticate);
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis",
-  parseForm.parseUpload,
+  parseForm.parseUpload(1),
   validate.validateBody("thesis", "save"),
   thesisCtrl.saveOne);
 

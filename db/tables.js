@@ -118,12 +118,6 @@ const Thesis = seq.define("Thesis", {
   },
 });
 
-const EthesisToken = seq.define("EthesisToken", {
-  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  token: Sequelize.STRING,
-  expires: Sequelize.DATE,
-});
-
 const Grader = seq.define("Grader", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   name: {
@@ -208,8 +202,6 @@ const EmailStatus = seq.define("EmailStatus", {
 
 Thesis.belongsTo(StudyField);
 
-EthesisToken.belongsTo(Thesis);
-
 ThesisReview.belongsTo(Thesis);
 ThesisReview.belongsTo(User);
 Thesis.hasOne(ThesisReview);
@@ -257,5 +249,4 @@ module.exports.Models = {
   ThesisProgress,
   EmailStatus,
   EmailDraft,
-  EthesisToken,
 };

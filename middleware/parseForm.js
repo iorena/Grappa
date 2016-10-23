@@ -1,6 +1,8 @@
 "use strict";
 
-module.exports.parseUpload = (req, res, next) => {
+const errors = require("../config/errors");
+
+module.exports.parseUpload = (maxFileSize) => (req, res, next) => {
   const parsedForm = {};
   const chunks = [];
   let dataSize = 0;
@@ -18,8 +20,8 @@ module.exports.parseUpload = (req, res, next) => {
       file.on("data", (data) => {
         chunks.push(data);
         dataSize += data.length;
-        if (dataSize > 1000000) {
-          reject("MaxFileSize");
+        if (dataSize > maxFileSize * 1000000) {
+          reject(new errors.BadRequestError(`File was over ${maxFileSize} MB.`))
         }
       });
       file.on("end", () => {

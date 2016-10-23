@@ -91,7 +91,7 @@ const validations = {
     },
   },
   thesis: {
-    abstract: {
+    ethesis: {
       type: "object",
       properties: {
         file: { type: "any", error: "No file sent." },

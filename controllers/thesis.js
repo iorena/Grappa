@@ -8,7 +8,6 @@ const PdfManipulator = require("../services/PdfManipulator");
 const FileManipulator = require("../services/FileManipulator");
 
 const Thesis = require("../models/Thesis");
-const EthesisToken = require("../models/EthesisToken");
 const ThesisReview = require("../models/ThesisReview");
 const ThesisAbstract = require("../models/ThesisAbstract");
 const ThesisProgress = require("../models/ThesisProgress");

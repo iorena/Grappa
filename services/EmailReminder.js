@@ -9,7 +9,6 @@ const ThesisProgress = require("../models/ThesisProgress");
 const ThesisReview = require("../models/ThesisReview");
 const EmailStatus = require("../models/EmailStatus");
 const EmailDraft = require("../models/EmailDraft");
-const EthesisToken = require("../models/EthesisToken");
 
 const errors = require("../config/errors");
 
@@ -43,11 +42,6 @@ class EmailReminder {
           throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");
         }
       })
-      .then(() => EthesisToken.updateOrCreate({
-        token,
-        expires: null,
-        ThesisId: thesis.id,
-      }, { ThesisId: thesis.id }))
       .then(() => EmailStatus.saveOne({
         lastSent: Date.now(),
         type: "EthesisReminder",
