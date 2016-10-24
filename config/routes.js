@@ -47,9 +47,10 @@ router.post("/user/send-new-password",
   validate.validateBody("user", "sendNewPassword"),
   userCtrl.sendNewPassword);
 
-router.post("/thesis/ethesis",
+router.post("/thesis/ethesis/:token",
+  parseForm.parseUpload(40),
   validate.validateBody("thesis", "ethesis"),
-  thesisCtrl.updateOneEthesis);
+  thesisCtrl.uploadThesisPDF);
 
 router.use("", auth.authenticate);
 
@@ -58,7 +59,7 @@ router.use("", auth.authenticate);
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
 router.post("/thesis",
-  parseForm.parseUpload,
+  parseForm.parseUpload(1),
   validate.validateBody("thesis", "save"),
   thesisCtrl.saveOne);
 
@@ -72,6 +73,7 @@ router.post("/grader",
   validate.validateBody("grader", "save"),
   graderCtrl.saveOne);
 router.put("/grader/:id", graderCtrl.updateOne);
+router.delete("/grader/:id", graderCtrl.deleteOne);
 
 router.get("/councilmeeting", councilmeetingCtrl.findAll);
 
@@ -91,6 +93,8 @@ router.post("/councilmeeting",
 router.put("/councilmeeting/:id",
   validate.validateBody("councilmeeting", "update"),
   councilmeetingCtrl.updateOne);
+router.delete("/councilmeeting/:id",
+  councilmeetingCtrl.deleteOne);
 
 router.post("/studyfield",
   validate.validateBody("studyfield", "save"),

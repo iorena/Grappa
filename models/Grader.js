@@ -20,9 +20,9 @@ class Grader extends BaseModel {
 
   findAll() {
     return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "name", "title"],
-    });
+      .findAll({
+        attributes: ["id", "name", "title"],
+      });
   }
 
   updateOrCreateAndLinkToThesis(values, thesis) {
@@ -65,6 +65,16 @@ class Grader extends BaseModel {
         .findOne({ where: { id: grader.id } })
         .then(grader => grader.addThesis(thesis))
     ));
+  }
+
+  findOneWithTheses(grader) {
+    return this.Models.Grader.findOne({
+      where: { id: grader.id },
+      include: [{
+        model: this.Models.Thesis,
+        as: "Theses",
+      }]
+    })
   }
 }
 

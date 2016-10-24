@@ -94,8 +94,12 @@ const validations = {
     ethesis: {
       type: "object",
       properties: {
-        token: { type: "string", minLength: 1 },
-        link: { type: "string", minLength: 1 },
+        file: { type: "any", error: "No file sent." },
+        fileExt: {
+          type: "string",
+          minLength: 1,
+          error: "File extension wasn't PDF."
+        },
       }
     },
     save: {

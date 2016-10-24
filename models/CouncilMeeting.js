@@ -9,9 +9,9 @@ class CouncilMeeting extends BaseModel {
 
   findAll() {
     return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "date"],
-    });
+      .findAll({
+        attributes: ["id", "date"],
+      });
   }
 
   checkIfExists(meeting) {
@@ -20,12 +20,12 @@ class CouncilMeeting extends BaseModel {
     start.setHours(0, 0, 0, 0);
     end.setHours(23, 59, 59, 1);
     return this.getModel().findOne({
-      where: {
-        date: {
-          $between: [start, end],
+        where: {
+          date: {
+            $between: [start, end],
+          },
         },
-      },
-    })
+      })
       .then(found => {
         return found !== null;
       });

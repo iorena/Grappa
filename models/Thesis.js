@@ -187,6 +187,8 @@ class Thesis extends BaseModel {
       include: [{
         model: this.Models.ThesisReview,
       }, {
+        model: this.Models.ThesisAbstract,
+      }, {
         model: this.Models.Grader,
       }],
     });

@@ -8,80 +8,53 @@ const PDF = require("pdfkit");
 const request = require("request");
 const exec = require("child_process").exec;
 
+const FileManipulator = require("./FileManipulator");
+const ThesisAbstract = require("../models/ThesisAbstract");
+
 class PdfManipulator {
 
-  createFolder(name) {
-    const pathToFolder = path.join(__dirname, `../tmp/${name}`);
+  parseAbstractFromThesisPDF(thesisPDF) {
+    const docName = Date.now();
+    let pathToFolder;
+    return FileManipulator.createFolder(docName)
+      .then((path) => {
+        pathToFolder = path;
+        return this.saveBase64FileToPath(thesisPDF, `${pathToFolder}/thesis.pdf`);
+      })
+      .then((pathToFile) => {
+        return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
+      })
+      .then((pathToFile) => {
+        // FileManipulator.deleteFolderTimer(10000, pathToFolder);
+        return pathToFile;
+      });
+  }
+/* move to FileManipulator */
+  saveBase64FileToPath(readStream, pathToFile) {
     return new Promise((resolve, reject) => {
-      mkdirp(pathToFolder, (err) => {
+      fs.writeFile(`${pathToFile}`, readStream, "base64", err => {
         if (err) {
           console.error(err);
           reject(err);
         } else {
-          resolve(pathToFolder);
+          resolve(pathToFile);
         }
       });
     });
   }
 
-  generatePdfFromReview(review, pathToFile) {
+  copyPageFromPDF(pageNumber, pathToFile, pathToTargetFile) {
     return new Promise((resolve, reject) => {
-      fs.writeFile(`${pathToFile}.review.pdf`, review, "base64", err => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
-  }
-/* TODO Maybe check for file-size before requesting..? */
-  downloadEthesisPdf(url, pathToFile) {
-    return new Promise((resolve, reject) => {
-      request(url)
-        .pipe(fs.createWriteStream(pathToFile))
-        .on("close", (err) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            resolve();
-          }
-        });
-    });
-  }
-
-  copyAbstractFromEthesis(pageNumber, pathToFile) {
-    return new Promise((resolve, reject) => {
-      const pathToOutput = `${pathToFile}.abstract.pdf`;
-      const cmd = `pdftk ${pathToFile}.ethesis.pdf cat ${pageNumber}-${pageNumber} output ${pathToOutput}`;
+      const cmd = `pdftk ${pathToFile} cat ${pageNumber}-${pageNumber} output ${pathToTargetFile}`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
           reject(err);
         } else {
-          resolve();
+          resolve(pathToTargetFile);
         }
       });
     });
-  }
-
-  generatePdfFromEthesis(url, pathToFile) {
-    return this.downloadEthesisPdf(url, `${pathToFile}.ethesis.pdf`)
-      .then(() => this.copyAbstractFromEthesis(2, pathToFile))
-      .then(() => {
-        return new Promise((resolve, reject) => {
-          fs.unlink(`${pathToFile}.ethesis.pdf`, (err) => {
-            if (err) {
-              console.error(err);
-              reject(err);
-            } else {
-              resolve();
-            }
-          });
-        });
-      });
   }
 
   generatePdfFromGraderEval(thesis, professors, pathToFile) {
@@ -150,16 +123,16 @@ class PdfManipulator {
     const docName = Date.now();
     let pathToFolder;
     let order = 1;
-    return this.createFolder(docName)
+    return FileManipulator.createFolder(docName)
       .then((path) => {
         pathToFolder = path;
         return Promise.all(theses.map(thesis => {
           let pdfs = [];
-          if (thesis.ethesis) {
-            pdfs.push(this.generatePdfFromEthesis(thesis.ethesis, `${pathToFolder}/${order}-1`));
+          if (thesis.ThesisAbstract) {
+            pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-1.abstract.pdf`, thesis.ThesisAbstract.pdf));
           }
           if (thesis.ThesisReview) {
-            pdfs.push(this.generatePdfFromReview(thesis.ThesisReview.pdf, `${pathToFolder}/${order}-2`));
+            pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-2.review.pdf`, thesis.ThesisReview.pdf));
           }
           if (thesis.graderEval) {
             pdfs.push(this.generatePdfFromGraderEval(thesis, professors, `${pathToFolder}/${order}-3`));
@@ -172,24 +145,9 @@ class PdfManipulator {
         return this.joinPdfs(pathToFolder);
       })
       .then((pathToPrintFile) => {
-        this.deleteFolderTimer(10000, pathToFolder);
+        FileManipulator.deleteFolderTimer(10000, pathToFolder);
         return pathToPrintFile;
       });
-  }
-
-  deleteFolderTimer(wait, pathToFolder) {
-    setTimeout(() => {
-      this.deleteFolder(pathToFolder);
-    }, wait);
-  }
-/* TODO This should be async */
-  deleteFolder(pathToFolder) {
-    fs
-    .readdirSync(pathToFolder)
-    .map(file => fs.unlinkSync(pathToFolder + "/" + file));
-
-    fs
-    .rmdirSync(pathToFolder);
   }
 }
 
