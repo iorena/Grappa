@@ -9,16 +9,14 @@ class Thesis extends BaseModel {
 
   checkIfExists(thesis) {
     return this.getModel().findOne({
-      where: {
-        title: thesis.title,
-        authorFirstname: thesis.authorFirstname,
-        authorLastname: thesis.authorLastname,
-        authorEmail: thesis.authorEmail,
-      },
-    })
-      .then(thesis => {
-        return thesis !== null;
-      });
+        where: {
+          title: thesis.title,
+          authorFirstname: thesis.authorFirstname,
+          authorLastname: thesis.authorLastname,
+          authorEmail: thesis.authorEmail,
+        },
+      })
+      .then(thesis => thesis !== null && thesis !== undefined);
   }
 
   findConnections(thesis) {
@@ -108,13 +106,13 @@ class Thesis extends BaseModel {
         model: this.Models.ThesisProgress,
         include: [{
           model: this.Models.EmailStatus,
-          as: "EthesisEmail",
+          as: "EthesisReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "GraderEvalEmail",
+          as: "GraderEvalReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "PrintEmail",
+          as: "PrintReminder",
         }, ],
       }, {
         model: this.Models.StudyField,
@@ -129,8 +127,8 @@ class Thesis extends BaseModel {
 
   findAll(params) {
     return this.getModel().findAll({
-      attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "ethesis", "grade",
-        "deadline", "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
+      attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
+        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
       where: params,
       include: [{
         model: this.Models.Grader,
@@ -139,13 +137,13 @@ class Thesis extends BaseModel {
         model: this.Models.ThesisProgress,
         include: [{
           model: this.Models.EmailStatus,
-          as: "EthesisEmail",
+          as: "EthesisReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "GraderEvalEmail",
+          as: "GraderEvalReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "PrintEmail",
+          as: "PrintReminder",
         }, ],
       }, {
         model: this.Models.StudyField,
@@ -182,7 +180,8 @@ class Thesis extends BaseModel {
 
   findOneDocuments(thesisID) {
     return this.getModel().findOne({
-      attributes: ["id", "title", "ethesis", "graderEval", "StudyFieldId"],
+      attributes: ["id", "title", "authorFirstname", "authorLastname",
+        "grade", "graderEval", "StudyFieldId"],
       where: { id: thesisID },
       include: [{
         model: this.Models.ThesisReview,

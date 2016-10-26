@@ -2,7 +2,7 @@
 
 const errors = require("../config/errors");
 
-module.exports.parseUpload = (maxFileSize) => (req, res, next) => {
+module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
   const parsedForm = {};
   const chunks = [];
   let dataSize = 0;
@@ -13,14 +13,13 @@ module.exports.parseUpload = (maxFileSize) => (req, res, next) => {
       reject(error);
     });
     req.busboy.on("field", (key, value, keyTruncated, valueTruncated) => {
-      // console.log(`${key} : ${value}`);
-      parsedForm[key] = JSON.parse(value);
+      parsedForm[key] = value ? JSON.parse(value) : undefined;
     });
     req.busboy.on("file", (fieldname, file, filename) => {
       file.on("data", (data) => {
         chunks.push(data);
         dataSize += data.length;
-        if (dataSize > maxFileSize * 1000000) {
+        if (dataSize > maxMBFileSize * 1000000) {
           reject(new errors.BadRequestError(`File was over ${maxFileSize} MB.`))
         }
       });

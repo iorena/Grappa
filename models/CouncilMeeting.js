@@ -10,7 +10,7 @@ class CouncilMeeting extends BaseModel {
   findAll() {
     return this.Models[this.modelname]
       .findAll({
-        attributes: ["id", "date"],
+        attributes: ["id", "date", "deadline"],
       });
   }
 
@@ -61,17 +61,28 @@ class CouncilMeeting extends BaseModel {
       });
   }
 
-  saveOne(meeting) {
-    const date = new Date(meeting.date);
-    date.setHours(23, 59, 59, 0);
-    return this.getModel().create({ date: date })
+  saveOne(values) {
+    return this.Models[this.modelname].create(values)
       .then(saved => {
         return {
           id: saved.id,
           date: saved.date,
+          deadline: saved.deadline,
         }
-      });
+      })
   }
+
+  // saveOne(meeting) {
+  //   const date = new Date(meeting.date);
+  //   date.setHours(23, 59, 59, 0);
+  //   return this.getModel().create({ date: date })
+  //     .then(saved => {
+  //       return {
+  //         id: saved.id,
+  //         date: saved.date,
+  //       }
+  //     });
+  // }
 }
 
 module.exports = new CouncilMeeting();

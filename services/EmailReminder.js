@@ -14,15 +14,31 @@ const errors = require("../config/errors");
 
 class EmailReminder {
 
+  sendMail(toEmail, emailDraft, thesis, customBody, attachments) {
+    let savedEmail;
+    return Sender.sendEmail(toEmail, emailDraft.title, customBody, attachments)
+      .then(() => EmailStatus.saveOne({
+        lastSent: Date.now(),
+        type: emailDraft.type,
+        to: toEmail,
+        EmailDraftId: emailDraft.id,
+        ThesisId: thesis.id
+      }))
+      .then(email => {
+        savedEmail = email;
+        const update = {};
+        update[`${emailDraft.type}Id`] = email.id;
+        return ThesisProgress.update(update, { ThesisId: thesis.id });
+      })
+      .then(rows => savedEmail);
+  }
+
   /**
    * Sends an email reminder to student about submitting their thesis to https://helda.helsinki.fi
    */
   sendEthesisReminder(thesis) {
-    let foundDraft;
     let attachments;
-    let savedReminder;
-
-    const token = TokenGen.generateEthesisToken(thesis.author, thesis.id);
+    const token = TokenGen.generateEthesisToken(thesis.id);
 
     return ThesisReview.findOne({ ThesisId: thesis.id})
       .then(review => {
@@ -33,68 +49,47 @@ class EmailReminder {
         }];
         return EmailDraft.findOne({ type: "EthesisReminder" });
       })
-      .then(reminder => {
-        if (reminder) {
-          foundDraft = reminder;
-          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
-          return Sender.sendEmail(thesis.authorEmail, reminder.title, body, attachments);
+      .then(draft => {
+        if (draft) {
+          const body = draft.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
+          return this.sendMail(thesis.authorEmail, draft, thesis, body, attachments);
         } else {
           throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");
         }
       })
-      .then(() => EmailStatus.saveOne({
-        lastSent: Date.now(),
-        type: "EthesisReminder",
-        to: thesis.authorEmail,
-        deadline: thesis.deadline,
-        EmailDraftId: foundDraft.id,
-      }))
-      .then(reminder => {
-        savedReminder = reminder;
-        return ThesisProgress.update({ EthesisEmailId: reminder.id }, { ThesisId: thesis.id });
-      })
-      .then(rows => {
-        return savedReminder;
-      });
   }
 
   /**
    * Sends an email to print-person about thesis being ready to print for the councilmeeting
    */
   sendPrintPersonReminder(thesis) {
-    let email;
-    let sentReminder;
-    return User.findOne({ role: "print-person", isActive: true, isRetired: false })
-      .then(printPerson => {
-        if (printPerson) {
-          email = this.composeEmail("toPrintPerson", printPerson.email, thesis, "");
-          return Sender.sendEmail(email.to, email.subject, email.body);
+    let foundPrintPersons;
+
+    return User.findAll({ role: "print-person", isActive: true, isRetired: false })
+      .then(printPersons => {
+        if (printPersons.length > 0) {
+          foundPrintPersons = printPersons;
+          return EmailDraft.findOne({ type: "PrintReminder" });
         } else {
-          throw new errors.PremiseError("No print-person found.");
+          throw new errors.PremiseError("No print-persons found.");
         }
       })
-      .then(() => EmailStatus.saveOne({
-        lastSent: Date.now(),
-        type: "PrinterReminder",
-        to: email.to,
-        deadline: thesis.deadline,
-      }))
-      .then((reminder) => {
-        sentReminder = reminder;
-        return ThesisProgress.getModel().findOne({ where: { ThesisId: thesis.id } });
+      .then(draft => {
+        if (draft) {
+          return Promise.all(foundPrintPersons.map(printPerson =>
+            this.sendMail(printPerson.email, draft, thesis, draft.body, undefined)
+          ))
+        } else {
+          throw new errors.PremiseError("PrintReminder not found from EmailDrafts");
+        }
       })
-      .then((TProgress) => {
-        return TProgress.setPrintEmail(sentReminder);
-      });
   }
 
   /**
-   * Sends an email reminder to the professor of thesises studyfield for reviewing
+   * Sends an email reminder to the professor about thesis studyfield for reviewing
    */
   sendProfessorReminder(thesis) {
-    let foundDraft;
     let foundProfessor;
-    let savedReminder;
 
     return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId, isActive: true, isRetired: false })
       .then(professor => {
@@ -105,29 +100,37 @@ class EmailReminder {
           throw new errors.PremiseError("StudyField had no professor to whom send grader evaluation reminder.");
         }
       })
-      .then(reminder => {
-        if (reminder) {
-          foundDraft = reminder;
-          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
-          return Sender.sendEmail(foundProfessor.email, reminder.title, body);
+      .then(draft => {
+        if (draft) {
+          const body = draft.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
+          return this.sendMail(thesis.authorEmail, draft, thesis, body, undefined);
         } else {
           throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
         }
       })
-      .then(() => EmailStatus.saveOne({
-        lastSent: Date.now(),
-        type: "GraderEvalReminder",
-        to: foundProfessor.email,
-        deadline: thesis.deadline,
-        EmailDraftId: foundDraft.id,
-      }))
-      .then(reminder => {
-        savedReminder = reminder;
-        return ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id });
-      })
-      .then(rows => {
-        return savedReminder;
-      });
+      // .then(reminder => {
+      //   if (reminder) {
+      //     foundDraft = reminder;
+      //     const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
+      //     return Sender.sendEmail(foundProfessor.email, reminder.title, body);
+      //   } else {
+      //     throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
+      //   }
+      // })
+      // .then(() => EmailStatus.saveOne({
+      //   lastSent: Date.now(),
+      //   type: "GraderEvalReminder",
+      //   to: foundProfessor.email,
+      //   deadline: thesis.deadline,
+      //   EmailDraftId: foundDraft.id,
+      // }))
+      // .then(reminder => {
+      //   savedReminder = reminder;
+      //   return ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id });
+      // })
+      // .then(rows => {
+      //   return savedReminder;
+      // });
   }
 
   sendResetPasswordMail(user) {

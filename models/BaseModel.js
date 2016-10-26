@@ -10,8 +10,8 @@ class BaseModel {
   getModel() {
     return this.Models[this.modelname];
   }
-  saveOne(params) {
-    return this.Models[this.modelname].create(params);
+  saveOne(values) {
+    return this.Models[this.modelname].create(values);
   }
   findAll(params) {
     // if (params) {

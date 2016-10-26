@@ -167,7 +167,7 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .then(() => {
     FileManipulator.pipeFileToResponse(pathToFile, "pdf", "theses.pdf", res)
   })
-  .catch(err => next(err));
+  // .catch(err => next(err));
 };
 
 module.exports.deleteOne = (req, res, next) => {

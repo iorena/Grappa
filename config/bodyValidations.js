@@ -1,31 +1,36 @@
 const sanitizations = {
-  // user: {
-  //   login: {
-  //     type: "object",
-  //     strict: true,
-  //     properties: {
-  //       // firstname: { type: "string", rules: ["trim", "title"] },
-  //       // lastname: { type: "string", rules: ["trim", "title"] },
-  //       // jobs: {
-  //       //   type: "array",
-  //       //   splitWith: ",",
-  //       //   items: { type: "string", rules: ["trim", "title"] }
-  //       // },
-  //       email: { type: "string", rules: ["trim", "lower"] },
-  //       password: { type: "string" }
-  //     }
-  //   },
-  //   save: {
-  //     strict: true,
-  //     type: "object",
-  //     properties: {
-  //       firstname: { type: "string", },
-  //       lastname: { type: "string", },
-  //       email: { type: "string", },
-  //       password: { type: "string", },
-  //     }
-  //   }
-  // },
+  user: {
+    login: {
+      type: "object",
+      properties: {
+        email: { type: "string", rules: ["trim", "lower"] }
+      }
+    },
+    save: {
+      type: "object",
+      properties: {
+        firstname: { type: "string", rules: ["trim", "title"] },
+        lastname: { type: "string", rules: ["trim", "title"] },
+        email: { type: "string", rules: ["trim", "lower"] }
+      }
+    },
+  },
+  councilmeeting: {
+    save: {
+      type: "object",
+      properties: {
+        date: { type: "date" },
+        deadlineDays: { type: "number", def: 10 },
+      }
+    },
+    update: {
+      type: "object",
+      properties: {
+        date: { type: "date" },
+        deadline: { type: "date" },
+      }
+    }
+  },
 };
 
 const validations = {
@@ -63,13 +68,28 @@ const validations = {
     save: {
       type: "object",
       properties: {
-        date: { type: "string", minLength: 1 },
+        date: { type: "date" },
+        deadlineDays: {
+          type: "number",
+          gt: 0,
+          lt: 30,
+          error: "Deadline days must be more than 0 and less than 30."
+        },
       }
     },
     update: {
       type: "object",
-      properties: {
-        date: { type: "string", minLength: 1 },
+      exec: function (schema, post) {
+        if (!post.date instanceof Date) {
+          this.report("Date wasn't a Date.");
+        } else if (!post.deadline instanceof Date) {
+          this.report("Deadline wasn't a Date.");
+        } else if (post.date < post.deadline) {
+          this.report("Deadline was before date.");
+        } else {
+          return post;
+        }
+        return "";
       }
     }
   },
@@ -86,7 +106,7 @@ const validations = {
     save: {
       type: "object",
       properties: {
-        name: { type: "string", minLength: 1 },
+        name: { type: "string", minLength: 2 },
       }
     },
   },
@@ -97,8 +117,8 @@ const validations = {
         file: { type: "any", error: "No file sent." },
         fileExt: {
           type: "string",
-          minLength: 1,
-          error: "File extension wasn't PDF."
+          pattern: /^pdf/,
+          error: "File extension wasn't .pdf"
         },
       }
     },
@@ -108,8 +128,8 @@ const validations = {
         file: { type: "any", error: "No file sent." },
         fileExt: {
           type: "string",
-          minLength: 1,
-          error: "File extension wasn't PDF."
+          pattern: /^pdf/,
+          error: "File extension wasn't .pdf"
         },
         json: {
           type: "object",

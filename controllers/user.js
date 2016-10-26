@@ -111,17 +111,15 @@ module.exports.loginUser = (req, res, next) => {
       throw new errors.ForbiddenError("Your account is inactive, please contact admin for activation.");
     } else if (user.isRetired) {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin for reactivation.");
+    } else if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
+      throw new errors.AuthenticationError("Incorrect password.");
     } else {
-      if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
-        throw new errors.AuthenticationError("Incorrect password.");
-      } else {
-        const token = TokenGenerator.generateLoginToken(user);
-        user.passwordHash = undefined;
-        res.status(200).send({
-          user,
-          token,
-        });
-      }
+      const token = TokenGenerator.generateLoginToken(user);
+      user.passwordHash = undefined;
+      res.status(200).send({
+        user,
+        token,
+      });
     }
   })
   .catch(err => next(err));
