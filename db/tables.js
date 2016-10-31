@@ -134,7 +134,14 @@ const CouncilMeeting = seq.define("CouncilMeeting", {
       notEmpty: true,
     },
   },
-  deadline: {
+  studentDeadline: {
+    type: Sequelize.DATE,
+    validate: {
+      isDate: true,
+      notEmpty: true,
+    },
+  },
+  instructorDeadline: {
     type: Sequelize.DATE,
     validate: {
       isDate: true,

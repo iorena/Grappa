@@ -10,7 +10,7 @@ class CouncilMeeting extends BaseModel {
   findAll() {
     return this.Models[this.modelname]
       .findAll({
-        attributes: ["id", "date", "deadline"],
+        attributes: ["id", "date", "instructorDeadline", "studentDeadline"],
       });
   }
 
@@ -67,7 +67,8 @@ class CouncilMeeting extends BaseModel {
         return {
           id: saved.id,
           date: saved.date,
-          deadline: saved.deadline,
+          studentDeadline: saved.studentDeadline,
+          instructorDeadline: saved.instructorDeadline,
         }
       })
   }

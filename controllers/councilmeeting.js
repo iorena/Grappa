@@ -22,13 +22,17 @@ module.exports.saveOne = (req, res, next) => {
       throw new errors.BadRequestError("Meeting already exists with the same date.");
     } else {
       const date = req.body.date;
-      const deadline = new Date();
+      const instructorDeadline = new Date();
+      const studentDeadline = new Date();
       date.setHours(23, 59, 59, 0);
-      deadline.setDate(date.getDate() - req.body.deadlineDays);
-      deadline.setHours(23, 59, 59, 0);
+      instructorDeadline.setDate(date.getDate() - req.body.instructorDeadlineDays);
+      instructorDeadline.setHours(23, 59, 59, 0);
+      studentDeadline.setDate(date.getDate() - req.body.studentDeadlineDays);
+      studentDeadline.setHours(23, 59, 59, 0);
       return CouncilMeeting.saveOne({
         date,
-        deadline,
+        instructorDeadline,
+        studentDeadline,
       });
     }
   })

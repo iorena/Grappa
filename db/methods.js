@@ -120,7 +120,8 @@ module.exports.addLotTestData = () => Promise.all([
   }),
   models.CouncilMeeting.create({
     date: new Date("11/15/2017"),
-    deadline: new Date("11/05/2017"),
+    instructorDeadline: new Date("11/05/2017"),
+    studentDeadline: new Date("11/10/2017"),
   }),
   models.EmailDraft.create({
     type: "EthesisReminder",

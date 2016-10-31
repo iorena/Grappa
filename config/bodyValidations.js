@@ -69,11 +69,17 @@ const validations = {
       type: "object",
       properties: {
         date: { type: "date" },
-        deadlineDays: {
+        studentDeadlineDays: {
           type: "number",
           gt: 0,
           lt: 30,
-          error: "Deadline days must be more than 0 and less than 30."
+          error: "Student deadline days must be more than 0 and less than 30."
+        },
+        instructorDeadlineDays: {
+          type: "number",
+          gt: 0,
+          lt: 30,
+          error: "Instructor deadline days must be more than 0 and less than 30."
         },
       }
     },
@@ -82,9 +88,9 @@ const validations = {
       exec: function (schema, post) {
         if (!post.date instanceof Date) {
           this.report("Date wasn't a Date.");
-        } else if (!post.deadline instanceof Date) {
+        } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
           this.report("Deadline wasn't a Date.");
-        } else if (post.date < post.deadline) {
+        } else if (post.date < post.instructorDeadline || post.date < post.studentDeadline) {
           this.report("Deadline was before date.");
         } else {
           return post;
