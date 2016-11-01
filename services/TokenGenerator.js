@@ -35,10 +35,13 @@ class TokenGenerator {
     };
     return jwt.encode(payload, this.secret);
   }
-  generateEthesisToken(ThesisId) {
+  generateEthesisToken(thesis) {
     const date = new Date();
     const payload = {
-      ThesisId,
+      thesis: {
+        id: thesis.id,
+        CouncilMeetingId: thesis.CouncilMeetingId,
+      },
       name: "ethesis",
       created: new Date(),
       // TODO set to expire in a year?

@@ -47,9 +47,11 @@ module.exports.saveOne = (req, res, next) => {
     } else if (!connections[1]) {
       throw new errors.NotFoundError("No such StudyField found.");
     } else if (connections[2] < 2) {
-      throw new errors.BadRequestError("Less than 2 valid Graders found.");
+      throw new errors.BadRequestError("Less than 2 Graders found.");
     } else if (!connections[3]) {
       throw new errors.BadRequestError("StudyField has no professor.");
+    } else if (new Date() > connections[0].instructorDeadline) {
+      throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
     }
     foundConnections = connections;
     return Thesis.saveOneAndProgress(req.body.json, foundConnections[0]);
@@ -71,12 +73,12 @@ module.exports.saveOne = (req, res, next) => {
   .then(() => {
     if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.json.Graders)) {
       return Promise.all([
-        Reminder.sendEthesisReminder(savedThesis),
+        Reminder.sendEthesisReminder(savedThesis, foundConnections[0]),
         Reminder.sendProfessorReminder(savedThesis)
       ]);
     } else {
       return Promise.all([
-        Reminder.sendEthesisReminder(savedThesis),
+        Reminder.sendEthesisReminder(savedThesis, foundConnections[0]),
         ThesisProgress.setGraderEvalDone(savedThesis.id)
       ]);
     }
@@ -114,15 +116,21 @@ module.exports.uploadThesisPDF = (req, res, next) => {
       throw new errors.BadRequestError("Invalid token.");
     } else {
       decodedToken = decoded;
-      return ThesisProgress.findOne({ ThesisId: decoded.ThesisId });
+      // return ThesisProgress.findOne({ ThesisId: decoded.thesis.id });
+      return Promise.all([
+        ThesisProgress.findOne({ ThesisId: decoded.thesis.id }),
+        CouncilMeeting.findOne({ id: decoded.thesis.CouncilMeetingId }),
+      ]);
     }
   })
-  .then(tprogress => {
-    if (!tprogress) {
+  .then(resolvedArray => {
+    if (!resolvedArray[0]) {
       throw new errors.NotFoundError("No ThesisProgress found for the Thesis. Please inform admin that the database has been corrupted.");
       // } else if (TokenGenerator.isTokenExpired(decoded)) {
-    } else if (tprogress.ethesisDone) {
+    } else if (resolvedArray[0].ethesisDone) {
       throw new errors.BadRequestError("Your PDF has already been uploaded to the system.");
+    } else if (new Date() > resolvedArray[1].studentDeadline) {
+      throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
     } else {
       return PdfManipulator.parseAbstractFromThesisPDF(req.body.file);
     }
@@ -167,7 +175,7 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .then(() => {
     FileManipulator.pipeFileToResponse(pathToFile, "pdf", "theses.pdf", res)
   })
-  // .catch(err => next(err));
+  .catch(err => next(err));
 };
 
 module.exports.deleteOne = (req, res, next) => {

@@ -1,5 +1,7 @@
 "use strict";
 
+const moment = require("moment");
+
 const Sender = require("./EmailSender");
 const TokenGen = require("../services/TokenGenerator");
 
@@ -36,9 +38,9 @@ class EmailReminder {
   /**
    * Sends an email reminder to student about submitting their thesis to https://helda.helsinki.fi
    */
-  sendEthesisReminder(thesis) {
+  sendEthesisReminder(thesis, councilmeeting) {
     let attachments;
-    const token = TokenGen.generateEthesisToken(thesis.id);
+    const token = TokenGen.generateEthesisToken(thesis);
 
     return ThesisReview.findOne({ ThesisId: thesis.id})
       .then(review => {
@@ -51,7 +53,8 @@ class EmailReminder {
       })
       .then(draft => {
         if (draft) {
-          const body = draft.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
+          let body = draft.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
+          body = body.replace("$VAR1$", moment(councilmeeting.studentDeadline).lang("fi").format("HH:mm DD/MM/YYYY"));
           return this.sendMail(thesis.authorEmail, draft, thesis, body, attachments);
         } else {
           throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");

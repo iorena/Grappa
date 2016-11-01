@@ -2,6 +2,7 @@ node_modules/
 npm-debug.log
 *~
 db/dev-db.sqlite
+db/test-db.sqlite
 coverage/
 .env
 tmp/

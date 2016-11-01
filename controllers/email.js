@@ -14,7 +14,7 @@ module.exports.sendReminder = (req, res, next) => {
       throw new errors.NotFoundError("No Thesis found with the same id.");
     } else {
       if (req.body.reminderType === "EthesisEmail") {
-        return Reminder.sendEthesisReminder(thesis);
+        return Reminder.sendEthesisReminder(thesis, thesis.CouncilMeeting);
       } else if (req.body.reminderType === "GraderEvalEmail") {
         return Reminder.sendProfessorReminder(thesis);
       } else if (req.body.reminderType === "PrintEmail") {

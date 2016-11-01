@@ -75,12 +75,14 @@ describe("ThesisController", () => {
       .expect(200, done);
     });
 
-    xit("shouldn't save Thesis without correct permissions", (done) => {
+    it("shouldn't save Thesis without correct permissions", (done) => {
       request(app)
       .post("/thesis")
-      .set("Accept", "application/json")
+      .field("json", '{"authorLastname":"b","StudyFieldId":"1","authorFirstname":"a","authorEmail":"teemu.koivisto@helsinki.fi","CouncilMeetingId":"1","grade":"Approbatur","Graders":[{"id":1,"name":"First Grader","title":"Prof"},{"id":2,"name":"Second Grader","title":"AssProf"}],"title":"a","urkund":"https://is.fi"}')
+      .attach("file", "./test/mock/grappa-review1.pdf")
+      .set("Accept", "multipart/form-data")
       .expect("Content-Type", /json/)
-      .expect(401, done);
+      .expect(200, done);
     });
   });
 });

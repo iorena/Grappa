@@ -27,7 +27,8 @@ const sanitizations = {
       type: "object",
       properties: {
         date: { type: "date" },
-        deadline: { type: "date" },
+        studentDeadline: { type: "date" },
+        instructorDeadline: { type: "date" },
       }
     }
   },
@@ -86,6 +87,7 @@ const validations = {
     update: {
       type: "object",
       exec: function (schema, post) {
+        console.log(post)
         if (!post.date instanceof Date) {
           this.report("Date wasn't a Date.");
         } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
