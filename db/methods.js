@@ -49,17 +49,17 @@ module.exports.addTestData = () => Promise.all([
     StudyFieldId: null,
   }),
   models.EmailDraft.create({
-    type: "EthesisEmail",
+    type: "EthesisReminder",
     title: "REMINDER: Submit your thesis to eThesis",
-    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below.\n$LINK$",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below. The link expires in $VAR1$ after which you your thesis will be moved to the next councilmeeting.\n$LINK$",
   }),
   models.EmailDraft.create({
-    type: "GraderEvalEmail",
+    type: "GraderEvalReminder",
     title: "REMINDER: Submit your evaluation",
     body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nDue to rules of the process, your evaluation of the instructors is needed for the process to continue. Please submit your evaluation in the provided link.\n$LINK$",
   }),
   models.EmailDraft.create({
-    type: "PrintEmail",
+    type: "PrintReminder",
     title: "REMINDER: Theses are ready to print",
     body: "Hi\n\nThis is an automatic reminder from Grappa, a web application to help in managing the bureaucratic side of the processes related to the final stages of a students Masters degree.\n\nTheses for the next councilmeeting are ready to be printed at https://grappa.cs.helsinki.fi.",
   }),
