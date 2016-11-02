@@ -30,8 +30,8 @@ class TokenGenerator {
       },
       name: "login",
       created: new Date(),
-      // expires: date.setDate(date.getDate() + 1),
-      expires: date.setHours(date.getHours() + 3),
+      expires: date.setDate(date.getDate() + 2),
+      // expires: date.setHours(date.getHours() + 3),
     };
     return jwt.encode(payload, this.secret);
   }

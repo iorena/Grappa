@@ -13,7 +13,7 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
       reject(error);
     });
     req.busboy.on("field", (key, value, keyTruncated, valueTruncated) => {
-      parsedForm[key] = value ? JSON.parse(value) : undefined;
+      parsedForm[key] = value && key === "json" ? JSON.parse(value) : value;
     });
     req.busboy.on("file", (fieldname, file, filename) => {
       file.on("data", (data) => {

@@ -222,7 +222,6 @@ Thesis.belongsToMany(Grader, { through: "GraderThesis" });
 
 CouncilMeeting.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(CouncilMeeting);
-CouncilMeeting.hasMany(EmailStatus, { as: "EmailStatuses" });
 
 User.belongsTo(StudyField);
 

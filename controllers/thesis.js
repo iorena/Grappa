@@ -20,7 +20,7 @@ const errors = require("../config/errors");
 
 module.exports.findAllByUserRole = (req, res, next) => {
   User
-  .findOne(req.user.id)
+  .findOne({ id: req.user.id })
   .then(user => Thesis.findAllByUserRole(user))
   .then(theses => {
     res.status(200).send(theses);

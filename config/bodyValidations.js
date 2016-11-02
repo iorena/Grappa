@@ -142,6 +142,7 @@ const validations = {
         },
         json: {
           type: "object",
+          error: "Json field must be an object.",
           properties: {
             authorFirstname: { type: "string", minLength: 1 },
             authorLastname: { type: "string", minLength: 1 },

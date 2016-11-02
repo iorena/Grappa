@@ -6,5 +6,7 @@ const db = require("./database");
 
 module.exports.createToken = (userRole) => {
   const user = _.get(db, `user.${userRole}`);
-  return TokenGenerator.generateLoginToken(user);
+  const token = TokenGenerator.generateLoginToken(user);
+  // console.log(token)
+  return token;
 }
