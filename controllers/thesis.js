@@ -140,9 +140,9 @@ module.exports.uploadThesisPDF = (req, res, next) => {
     return Promise.all([
       ThesisAbstract.saveOne({
         pdf: buffer,
-        ThesisId: decodedToken.ThesisId,
+        ThesisId: decodedToken.thesis.id,
       }),
-      ThesisProgress.setEthesisDone(decodedToken.ThesisId),
+      ThesisProgress.setEthesisDone(decodedToken.thesis.id),
     ]);
   })
   .then(() => {

@@ -20,7 +20,8 @@ const sanitizations = {
       type: "object",
       properties: {
         date: { type: "date" },
-        deadlineDays: { type: "number", def: 10 },
+        studentDeadlineDays: { type: "number" },
+        instructorDeadlineDays: { type: "number" },
       }
     },
     update: {
@@ -161,6 +162,22 @@ const validations = {
       properties: {
       }
     },
+  },
+  email: {
+    remind: {
+      type: "object",
+      properties: {
+        thesisId: { type: "number", error: "No thesisId in request body." },
+        reminderType: {
+          type: "string",
+          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)/,
+          error: "ReminderType wasn't EthesisReminder or GraderEvalReminder or PrintReminder."
+        },
+      },
+      exec: function (schema, post) {
+        console.log(post)
+      }
+    }
   }
 };
 

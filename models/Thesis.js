@@ -45,11 +45,12 @@ class Thesis extends BaseModel {
     ]);
   }
 
-  setDateDaysBefore(date, days) {
-    const newdate = new Date(date);
-    newdate.setDate(newdate.getDate() - days);
-    return newdate.toISOString();
-  }
+  // moveThesisToCouncilmeeting(ThesisId, CouncilMeetingId) {
+  //   this.Models.Thesis.update({
+  //
+  //   })
+  //    this.Models[this.modelname].update(values, { where: params });
+  // }
 
   linkStudyField(thesis, studyfield_id) {
     return this.Models.StudyField
@@ -71,23 +72,8 @@ class Thesis extends BaseModel {
       .then((user) => thesis.setUser(user));
   }
 
-  saveOne(params, councilmeeting) {
-    const values = Object.assign({}, params);
-    if (councilmeeting !== null) {
-      values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
-    }
-    return this.getModel().create(values)
-      .then(thesis =>
-        this.findOne({ id: thesis.id })
-      );
-  }
-
-  saveOneAndProgress(params, councilmeeting) {
+  saveOneAndProgress(values, councilmeeting) {
     let savedThesis;
-    const values = Object.assign({}, params);
-    if (councilmeeting !== null) {
-      values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
-    }
     return this.getModel().create(values)
       .then(thesis => {
         savedThesis = thesis;

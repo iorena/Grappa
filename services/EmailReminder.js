@@ -54,7 +54,7 @@ class EmailReminder {
       .then(draft => {
         if (draft) {
           let body = draft.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
-          body = body.replace("$VAR1$", moment(councilmeeting.studentDeadline).lang("fi").format("HH:mm DD/MM/YYYY"));
+          body = body.replace("$VAR1$", moment(councilmeeting.studentDeadline).format("HH:mm DD/MM/YYYY"));
           return this.sendMail(thesis.authorEmail, draft, thesis, body, attachments);
         } else {
           throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");
@@ -106,34 +106,11 @@ class EmailReminder {
       .then(draft => {
         if (draft) {
           const body = draft.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
-          return this.sendMail(thesis.authorEmail, draft, thesis, body, undefined);
+          return this.sendMail(foundProfessor.email, draft, thesis, body, undefined);
         } else {
           throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
         }
       })
-      // .then(reminder => {
-      //   if (reminder) {
-      //     foundDraft = reminder;
-      //     const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
-      //     return Sender.sendEmail(foundProfessor.email, reminder.title, body);
-      //   } else {
-      //     throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
-      //   }
-      // })
-      // .then(() => EmailStatus.saveOne({
-      //   lastSent: Date.now(),
-      //   type: "GraderEvalReminder",
-      //   to: foundProfessor.email,
-      //   deadline: thesis.deadline,
-      //   EmailDraftId: foundDraft.id,
-      // }))
-      // .then(reminder => {
-      //   savedReminder = reminder;
-      //   return ThesisProgress.update({ GraderEvalEmailId: reminder.id }, { ThesisId: thesis.id });
-      // })
-      // .then(rows => {
-      //   return savedReminder;
-      // });
   }
 
   sendResetPasswordMail(user) {
