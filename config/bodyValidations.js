@@ -27,9 +27,30 @@ const sanitizations = {
     update: {
       type: "object",
       properties: {
-        date: { type: "date" },
-        studentDeadline: { type: "date" },
-        instructorDeadline: { type: "date" },
+        date: {
+          type: "date",
+          exec: function (schema, post) {
+            post = new Date(post);
+            post.setHours(23, 59, 59, 0);
+            return post;
+          }
+        },
+        studentDeadline: {
+          type: "date",
+          exec: function (schema, post) {
+            post = new Date(post);
+            post.setHours(23, 59, 59, 0);
+            return post;
+          }
+        },
+        instructorDeadline: {
+          type: "date",
+          exec: function (schema, post) {
+            post = new Date(post);
+            post.setHours(23, 59, 59, 0);
+            return post;
+          }
+        },
       }
     }
   },
@@ -88,7 +109,6 @@ const validations = {
     update: {
       type: "object",
       exec: function (schema, post) {
-        console.log(post)
         if (!post.date instanceof Date) {
           this.report("Date wasn't a Date.");
         } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
