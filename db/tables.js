@@ -88,9 +88,6 @@ const Thesis = seq.define("Thesis", {
   urkund: {
     type: Sequelize.STRING,
   },
-  ethesis: {
-    type: Sequelize.STRING,
-  },
   grade: {
     type: Sequelize.STRING,
     validate: {
@@ -104,13 +101,6 @@ const Thesis = seq.define("Thesis", {
         "Eximia Cum Laude Approbatur",
         "Laudatur",
       ]],
-    },
-  },
-  deadline: {
-    type: Sequelize.DATE,
-    validate: {
-      isDate: true,
-      notEmpty: true,
     },
   },
   graderEval: {
@@ -138,6 +128,20 @@ const Grader = seq.define("Grader", {
 const CouncilMeeting = seq.define("CouncilMeeting", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   date: {
+    type: Sequelize.DATE,
+    validate: {
+      isDate: true,
+      notEmpty: true,
+    },
+  },
+  studentDeadline: {
+    type: Sequelize.DATE,
+    validate: {
+      isDate: true,
+      notEmpty: true,
+    },
+  },
+  instructorDeadline: {
     type: Sequelize.DATE,
     validate: {
       isDate: true,
@@ -195,8 +199,12 @@ const EmailStatus = seq.define("EmailStatus", {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   lastSent: Sequelize.DATE,
   type: Sequelize.STRING,
-  to: Sequelize.STRING,
-  deadline: Sequelize.DATE,
+  to: {
+    type: Sequelize.STRING,
+    validate: {
+      isEmail: true,
+    },
+  },
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
@@ -220,9 +228,9 @@ User.belongsTo(StudyField);
 User.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(User);
 
-ThesisProgress.belongsTo(EmailStatus, { as: "EthesisEmail" });
-ThesisProgress.belongsTo(EmailStatus, { as: "GraderEvalEmail" });
-ThesisProgress.belongsTo(EmailStatus, { as: "PrintEmail" });
+ThesisProgress.belongsTo(EmailStatus, { as: "EthesisReminder" });
+ThesisProgress.belongsTo(EmailStatus, { as: "GraderEvalReminder" });
+ThesisProgress.belongsTo(EmailStatus, { as: "PrintReminder" });
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
@@ -230,6 +238,7 @@ ThesisProgress.belongsTo(Thesis);
 Thesis.hasOne(ThesisProgress);
 
 EmailStatus.belongsTo(EmailDraft);
+EmailStatus.belongsTo(Thesis);
 
 module.exports.sync = () => {
   return seq.sync();

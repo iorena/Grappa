@@ -1,0 +1,12 @@
+ALTER TABLE "Theses" DROP COLUMN "deadline";
+ALTER TABLE "Theses" DROP COLUMN "ethesis";
+ALTER TABLE "CouncilMeetings" DROP COLUMN "deadline";
+ALTER TABLE "CouncilMeetings" ADD COLUMN "instructorDeadline" timestamp with time zone;
+ALTER TABLE "CouncilMeetings" ADD COLUMN "studentDeadline" timestamp with time zone;
+UPDATE "CouncilMeetings" SET "instructorDeadline" = timestamp '2016-11-01 23:59:59+02', "studentDeadline" = timestamp '2016-11-01 23:59:59+02';
+ALTER TABLE "CouncilMeetings" ALTER COLUMN "instructorDeadline" SET not null;
+ALTER TABLE "CouncilMeetings" ALTER COLUMN "studentDeadline" SET not null;
+ALTER TABLE "EmailStatuses" ADD COLUMN "ThesisId" integer;
+ALTER TABLE "ThesisProgresses" RENAME "EthesisEmailId" to "EthesisReminderId";
+ALTER TABLE "ThesisProgresses" RENAME "GraderEvalEmailId" to "GraderEvalReminderId";
+ALTER TABLE "ThesisProgresses" RENAME "PrintEmailId" to "PrintReminderId";

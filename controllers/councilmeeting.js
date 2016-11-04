@@ -21,7 +21,19 @@ module.exports.saveOne = (req, res, next) => {
     if (exists) {
       throw new errors.BadRequestError("Meeting already exists with the same date.");
     } else {
-      return CouncilMeeting.saveOne(req.body);
+      const date = req.body.date;
+      const instructorDeadline = new Date();
+      const studentDeadline = new Date();
+      date.setHours(23, 59, 59, 0);
+      instructorDeadline.setDate(date.getDate() - req.body.instructorDeadlineDays);
+      instructorDeadline.setHours(23, 59, 59, 0);
+      studentDeadline.setDate(date.getDate() - req.body.studentDeadlineDays);
+      studentDeadline.setHours(23, 59, 59, 0);
+      return CouncilMeeting.saveOne({
+        date,
+        instructorDeadline,
+        studentDeadline,
+      });
     }
   })
   .then(cmeeting => {

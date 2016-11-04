@@ -9,16 +9,14 @@ class Thesis extends BaseModel {
 
   checkIfExists(thesis) {
     return this.getModel().findOne({
-      where: {
-        title: thesis.title,
-        authorFirstname: thesis.authorFirstname,
-        authorLastname: thesis.authorLastname,
-        authorEmail: thesis.authorEmail,
-      },
-    })
-      .then(thesis => {
-        return thesis !== null;
-      });
+        where: {
+          title: thesis.title,
+          authorFirstname: thesis.authorFirstname,
+          authorLastname: thesis.authorLastname,
+          authorEmail: thesis.authorEmail,
+        },
+      })
+      .then(thesis => thesis !== null && thesis !== undefined);
   }
 
   findConnections(thesis) {
@@ -47,11 +45,12 @@ class Thesis extends BaseModel {
     ]);
   }
 
-  setDateDaysBefore(date, days) {
-    const newdate = new Date(date);
-    newdate.setDate(newdate.getDate() - days);
-    return newdate.toISOString();
-  }
+  // moveThesisToCouncilmeeting(ThesisId, CouncilMeetingId) {
+  //   this.Models.Thesis.update({
+  //
+  //   })
+  //    this.Models[this.modelname].update(values, { where: params });
+  // }
 
   linkStudyField(thesis, studyfield_id) {
     return this.Models.StudyField
@@ -73,23 +72,8 @@ class Thesis extends BaseModel {
       .then((user) => thesis.setUser(user));
   }
 
-  saveOne(params, councilmeeting) {
-    const values = Object.assign({}, params);
-    if (councilmeeting !== null) {
-      values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
-    }
-    return this.getModel().create(values)
-      .then(thesis =>
-        this.findOne({ id: thesis.id })
-      );
-  }
-
-  saveOneAndProgress(params, councilmeeting) {
+  saveOneAndProgress(values, councilmeeting) {
     let savedThesis;
-    const values = Object.assign({}, params);
-    if (councilmeeting !== null) {
-      values.deadline = this.setDateDaysBefore(councilmeeting.date, 10);
-    }
     return this.getModel().create(values)
       .then(thesis => {
         savedThesis = thesis;
@@ -108,13 +92,13 @@ class Thesis extends BaseModel {
         model: this.Models.ThesisProgress,
         include: [{
           model: this.Models.EmailStatus,
-          as: "EthesisEmail",
+          as: "EthesisReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "GraderEvalEmail",
+          as: "GraderEvalReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "PrintEmail",
+          as: "PrintReminder",
         }, ],
       }, {
         model: this.Models.StudyField,
@@ -129,8 +113,8 @@ class Thesis extends BaseModel {
 
   findAll(params) {
     return this.getModel().findAll({
-      attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "ethesis", "grade",
-        "deadline", "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
+      attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
+        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
       where: params,
       include: [{
         model: this.Models.Grader,
@@ -139,13 +123,13 @@ class Thesis extends BaseModel {
         model: this.Models.ThesisProgress,
         include: [{
           model: this.Models.EmailStatus,
-          as: "EthesisEmail",
+          as: "EthesisReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "GraderEvalEmail",
+          as: "GraderEvalReminder",
         }, {
           model: this.Models.EmailStatus,
-          as: "PrintEmail",
+          as: "PrintReminder",
         }, ],
       }, {
         model: this.Models.StudyField,
@@ -182,7 +166,8 @@ class Thesis extends BaseModel {
 
   findOneDocuments(thesisID) {
     return this.getModel().findOne({
-      attributes: ["id", "title", "ethesis", "graderEval", "StudyFieldId"],
+      attributes: ["id", "title", "authorFirstname", "authorLastname",
+        "grade", "graderEval", "StudyFieldId"],
       where: { id: thesisID },
       include: [{
         model: this.Models.ThesisReview,

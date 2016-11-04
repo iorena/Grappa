@@ -1,31 +1,59 @@
 const sanitizations = {
-  // user: {
-  //   login: {
-  //     type: "object",
-  //     strict: true,
-  //     properties: {
-  //       // firstname: { type: "string", rules: ["trim", "title"] },
-  //       // lastname: { type: "string", rules: ["trim", "title"] },
-  //       // jobs: {
-  //       //   type: "array",
-  //       //   splitWith: ",",
-  //       //   items: { type: "string", rules: ["trim", "title"] }
-  //       // },
-  //       email: { type: "string", rules: ["trim", "lower"] },
-  //       password: { type: "string" }
-  //     }
-  //   },
-  //   save: {
-  //     strict: true,
-  //     type: "object",
-  //     properties: {
-  //       firstname: { type: "string", },
-  //       lastname: { type: "string", },
-  //       email: { type: "string", },
-  //       password: { type: "string", },
-  //     }
-  //   }
-  // },
+  user: {
+    login: {
+      type: "object",
+      properties: {
+        email: { type: "string", rules: ["trim", "lower"] }
+      }
+    },
+    save: {
+      type: "object",
+      properties: {
+        firstname: { type: "string", rules: ["trim", "title"] },
+        lastname: { type: "string", rules: ["trim", "title"] },
+        email: { type: "string", rules: ["trim", "lower"] }
+      }
+    },
+  },
+  councilmeeting: {
+    save: {
+      type: "object",
+      properties: {
+        date: { type: "date" },
+        studentDeadlineDays: { type: "number" },
+        instructorDeadlineDays: { type: "number" },
+      }
+    },
+    update: {
+      type: "object",
+      properties: {
+        date: {
+          type: "date",
+          exec: function (schema, post) {
+            post = new Date(post);
+            post.setHours(23, 59, 59, 0);
+            return post;
+          }
+        },
+        studentDeadline: {
+          type: "date",
+          exec: function (schema, post) {
+            post = new Date(post);
+            post.setHours(23, 59, 59, 0);
+            return post;
+          }
+        },
+        instructorDeadline: {
+          type: "date",
+          exec: function (schema, post) {
+            post = new Date(post);
+            post.setHours(23, 59, 59, 0);
+            return post;
+          }
+        },
+      }
+    }
+  },
 };
 
 const validations = {
@@ -63,13 +91,34 @@ const validations = {
     save: {
       type: "object",
       properties: {
-        date: { type: "string", minLength: 1 },
+        date: { type: "date" },
+        studentDeadlineDays: {
+          type: "number",
+          gt: 0,
+          lt: 30,
+          error: "Student deadline days must be more than 0 and less than 30."
+        },
+        instructorDeadlineDays: {
+          type: "number",
+          gt: 0,
+          lt: 30,
+          error: "Instructor deadline days must be more than 0 and less than 30."
+        },
       }
     },
     update: {
       type: "object",
-      properties: {
-        date: { type: "string", minLength: 1 },
+      exec: function (schema, post) {
+        if (!post.date instanceof Date) {
+          this.report("Date wasn't a Date.");
+        } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
+          this.report("Deadline wasn't a Date.");
+        } else if (post.date < post.instructorDeadline || post.date < post.studentDeadline) {
+          this.report("Deadline was before date.");
+        } else {
+          return post;
+        }
+        return "";
       }
     }
   },
@@ -86,7 +135,7 @@ const validations = {
     save: {
       type: "object",
       properties: {
-        name: { type: "string", minLength: 1 },
+        name: { type: "string", minLength: 2 },
       }
     },
   },
@@ -97,8 +146,8 @@ const validations = {
         file: { type: "any", error: "No file sent." },
         fileExt: {
           type: "string",
-          minLength: 1,
-          error: "File extension wasn't PDF."
+          pattern: /^pdf/,
+          error: "File extension wasn't .pdf"
         },
       }
     },
@@ -108,11 +157,12 @@ const validations = {
         file: { type: "any", error: "No file sent." },
         fileExt: {
           type: "string",
-          minLength: 1,
-          error: "File extension wasn't PDF."
+          pattern: /^pdf/,
+          error: "File extension wasn't .pdf"
         },
         json: {
           type: "object",
+          error: "Json field must be an object.",
           properties: {
             authorFirstname: { type: "string", minLength: 1 },
             authorLastname: { type: "string", minLength: 1 },
@@ -133,6 +183,22 @@ const validations = {
       properties: {
       }
     },
+  },
+  email: {
+    remind: {
+      type: "object",
+      properties: {
+        thesisId: { type: "number", error: "No thesisId in request body." },
+        reminderType: {
+          type: "string",
+          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)/,
+          error: "ReminderType wasn't EthesisReminder or GraderEvalReminder or PrintReminder."
+        },
+      },
+      exec: function (schema, post) {
+        console.log(post)
+      }
+    }
   }
 };
 

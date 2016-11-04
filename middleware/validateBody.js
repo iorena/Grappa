@@ -24,7 +24,8 @@ module.exports.validateBody = (name, schema) => (req, res, next) => {
         "Request body failed validation for fields:
         [email: required, password: minlen(8)]"
       */
-      throw new errors.BadRequestError("Request body failed validation check.", result)
+      // throw new errors.BadRequestError("Request body failed validation check.", result)
+      throw new errors.BadRequestError(result.error[0].message);
     }
   }
   next();

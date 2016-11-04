@@ -9,20 +9,6 @@ class TokenGenerator {
   constructor(secret) {
     this.secret = secret;
   }
-  generateLoginToken(user) {
-    const date = new Date();
-    const payload = {
-      user: {
-        id: user.id,
-        role: user.role,
-      },
-      name: "login",
-      created: new Date(),
-      // expires: date.setDate(date.getDate() + 1),
-      expires: date.setHours(date.getHours() + 3),
-    };
-    return jwt.encode(payload, this.secret);
-  }
   decodeToken(token) {
     let decoded;
     try {
@@ -35,10 +21,27 @@ class TokenGenerator {
   isTokenExpired(decodedToken) {
     return new Date() > decodedToken.expires;
   }
-  generateEthesisToken(authorname, ThesisId) {
+  generateLoginToken(user) {
     const date = new Date();
     const payload = {
-      ThesisId,
+      user: {
+        id: user.id,
+        role: user.role,
+      },
+      name: "login",
+      created: new Date(),
+      expires: date.setDate(date.getDate() + 2),
+      // expires: date.setHours(date.getHours() + 3),
+    };
+    return jwt.encode(payload, this.secret);
+  }
+  generateEthesisToken(thesis) {
+    const date = new Date();
+    const payload = {
+      thesis: {
+        id: thesis.id,
+        CouncilMeetingId: thesis.CouncilMeetingId,
+      },
       name: "ethesis",
       created: new Date(),
       // TODO set to expire in a year?
