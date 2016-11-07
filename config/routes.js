@@ -52,6 +52,12 @@ router.post("/thesis/ethesis/:token",
   validate.validateBody("thesis", "ethesis"),
   thesisCtrl.uploadThesisPDF);
 
+router.get("/thesis/:id/review",
+  thesisCtrl.serveThesisReviewPDF);
+
+router.get("/thesis/:id/abstract",
+  thesisCtrl.serveThesisAbstractPDF);
+
 router.use("", auth.authenticate);
 
 // Routes for all users

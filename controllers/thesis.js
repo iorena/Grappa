@@ -178,11 +178,46 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .catch(err => next(err));
 };
 
+module.exports.serveThesisReviewPDF = (req, res, next) => {
+  ThesisReview
+  .findOne({ ThesisId: req.params.id })
+  .then(abstract => {
+    if (abstract) {
+      res.contentType("application/pdf");
+      res.send(abstract.pdf);
+    } else {
+      throw new errors.NotFoundError("No abstract found.");
+    }
+  })
+  // .catch(err => next(err));
+}
+
+module.exports.serveThesisAbstractPDF = (req, res, next) => {
+  ThesisAbstract
+  .findOne({ ThesisId: req.params.id })
+  .then(abstract => {
+    if (abstract) {
+      res.contentType("application/pdf");
+      res.send(abstract.pdf);
+    } else {
+      throw new errors.NotFoundError("No abstract found.");
+    }
+  })
+  // .catch(err => next(err));
+}
+
 module.exports.deleteOne = (req, res, next) => {
   Thesis
   .delete({ id: req.params.id })
   .then(deletedRows => {
     if (deletedRows !== 0) {
+      return Promise.all([
+        ThesisProgress.delete({ ThesisId: req.params.id }),
+        ThesisReview.delete({ ThesisId: req.params.id }),
+        ThesisAbstract.delete({ ThesisId: req.params.id }),
+        EmailStatus.delete({ ThesisId: req.params.id }),
+        // Grader.delete({ ThesisId: req.params.id }),
+      ])
       res.sendStatus(200);
     } else {
       throw new errors.NotFoundError("No thesis found.");

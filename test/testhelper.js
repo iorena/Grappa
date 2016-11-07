@@ -1,7 +1,6 @@
 require("dotenv").config();
 /* Used to determine the database for db_connection which in this case is the test-db */
 process.env["NODE_ENV"] = "testing";
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 const app = require("../app");
 
