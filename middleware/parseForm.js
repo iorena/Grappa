@@ -3,8 +3,12 @@
 const errors = require("../config/errors");
 
 module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
-  const parsedForm = {};
-  const chunks = [];
+  const parsedForm = {
+    files: [],
+    json: {},
+  };
+  let filetypes = [];
+  let chunks = [];
   let dataSize = 0;
 
   new Promise((resolve, reject) => {
@@ -13,9 +17,16 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
       reject(error);
     });
     req.busboy.on("field", (key, value, keyTruncated, valueTruncated) => {
-      parsedForm[key] = value && key === "json" ? JSON.parse(value) : value;
+      // console.log("yo field " + key)
+      if (key === "filetype") {
+        filetypes.push(value);
+      } else {
+        parsedForm[key] = value && key === "json" ? JSON.parse(value) : value;
+      }
     });
     req.busboy.on("file", (fieldname, file, filename) => {
+      chunks = [];
+      // console.log("field: ", fieldname)
       file.on("data", (data) => {
         chunks.push(data);
         dataSize += data.length;
@@ -24,11 +35,16 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
         }
       });
       file.on("end", () => {
-        parsedForm.file = Buffer.concat(chunks);
-        parsedForm.fileExt = filename.substr(filename.lastIndexOf(".") + 1);
+        const file = {
+          file: Buffer.concat(chunks),
+          ext: filename.substr(filename.lastIndexOf(".") + 1),
+          filetype: filetypes.splice(0, 1)[0],
+        }
+        parsedForm.files.push(file);
       });
     });
     req.busboy.on("finish", () => {
+      // console.log("form: ", parsedForm)
       resolve(parsedForm);
     });
   })

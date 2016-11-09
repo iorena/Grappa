@@ -60,7 +60,7 @@ module.exports.saveOne = (req, res, next) => {
     savedThesis = thesis;
     return Promise.all([
       ThesisReview.saveOne({
-        pdf: req.body.file,
+        pdf: req.body.files[0],
         ThesisId: thesis.id,
         UserId: req.user.id,
       }),
@@ -91,16 +91,33 @@ module.exports.saveOne = (req, res, next) => {
 };
 
 module.exports.updateOneAndConnections = (req, res, next) => {
-  let updatePromise = Promise.reject();
+  console.log("wut", req.body.files)
+  let updationPromises = [];
+  const thesis = req.body.json;
 
-  if (req.user.role === "professor" && req.body.graderEval && req.body.graderEval.length > 0) {
-    updatePromise = Thesis.update({ graderEval: req.body.graderEval }, { id: req.body.id })
-      .then(() => ThesisProgress.setGraderEvalDone(req.body.id))
+  if (req.user.role === "professor" && thesis.graderEval && thesis.graderEval.length > 0) {
+    updationPromises.push(
+      Thesis.update({ graderEval: thesis.graderEval }, { id: thesis.id })
+      .then(() => ThesisProgress.setGraderEvalDone(thesis.id))
+    );
   } else if (req.user.role === "admin") {
-    updatePromise = Thesis.update(req.body, { id: req.body.id })
+    updationPromises.push(Thesis.update(thesis, { id: thesis.id }));
+    req.body.files.map(item => {
+      if (item.filetype === "GraderReviewFile") {
+        updationPromises.push(ThesisReview.update({ pdf: item.file }, { ThesisId: thesis.id }));
+      } else if (item.filetype === "AbstractFile") {
+        updationPromises.push(
+          PdfManipulator.parseAbstractFromThesisPDF(item.file)
+          .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
+          .then(buffer => ThesisAbstract.update({ pdf: buffer }, { ThesisId: thesis.id }))
+        );
+      }
+    })
   }
-
-  updatePromise
+  if (updationPromises.length === 0) {
+    updationPromises.push(new errors.ForbiddenError("No permission to edit Thesis."));
+  }
+  Promise.all(updationPromises)
   .then(rows => {
     res.sendStatus(200);
   })
@@ -132,7 +149,7 @@ module.exports.uploadThesisPDF = (req, res, next) => {
     } else if (new Date() > resolvedArray[1].studentDeadline) {
       throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
     } else {
-      return PdfManipulator.parseAbstractFromThesisPDF(req.body.file);
+      return PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0]);
     }
   })
   .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
@@ -178,32 +195,25 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .catch(err => next(err));
 };
 
-module.exports.serveThesisReviewPDF = (req, res, next) => {
-  ThesisReview
-  .findOne({ ThesisId: req.params.id })
-  .then(abstract => {
-    if (abstract) {
-      res.contentType("application/pdf");
-      res.send(abstract.pdf);
-    } else {
-      throw new errors.NotFoundError("No abstract found.");
-    }
-  })
-  // .catch(err => next(err));
-}
+module.exports.serveThesisDocument = (req, res, next) => {
+  let promise;
 
-module.exports.serveThesisAbstractPDF = (req, res, next) => {
-  ThesisAbstract
-  .findOne({ ThesisId: req.params.id })
-  .then(abstract => {
-    if (abstract) {
+  if (req.body.type === "review") {
+    promise = ThesisReview.findOne({ ThesisId: req.body.id });
+  } else if (req.body.type === "abstract") {
+    promise = ThesisAbstract.findOne({ ThesisId: req.body.id });
+  }
+
+  promise
+  .then(doc => {
+    if (doc) {
       res.contentType("application/pdf");
-      res.send(abstract.pdf);
+      res.send(doc.pdf);
     } else {
-      throw new errors.NotFoundError("No abstract found.");
+      throw new errors.NotFoundError("No document found.");
     }
   })
-  // .catch(err => next(err));
+  .catch(err => next(err));
 }
 
 module.exports.deleteOne = (req, res, next) => {

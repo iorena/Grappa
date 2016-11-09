@@ -52,18 +52,16 @@ router.post("/thesis/ethesis/:token",
   validate.validateBody("thesis", "ethesis"),
   thesisCtrl.uploadThesisPDF);
 
-router.get("/thesis/:id/review",
-  thesisCtrl.serveThesisReviewPDF);
-
-router.get("/thesis/:id/abstract",
-  thesisCtrl.serveThesisAbstractPDF);
-
 router.use("", auth.authenticate);
 
 // Routes for all users
 
 router.get("/thesis", thesisCtrl.findAllByUserRole);
-router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
+router.put("/thesis/:id",
+  parseForm.parseUpload(41),
+  validate.validateBody("thesis", "update"),
+  thesisCtrl.updateOneAndConnections
+);
 router.post("/thesis",
   parseForm.parseUpload(1),
   validate.validateBody("thesis", "save"),
@@ -73,6 +71,10 @@ router.post("/thesis",
 router.post("/thesis/pdf",
   validate.validateBody("thesis", "pdf"),
   thesisCtrl.generateThesesToPdf);
+
+router.post("/thesis/doc",
+  validate.validateBody("thesis", "doc"),
+  thesisCtrl.serveThesisDocument);
 
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader",

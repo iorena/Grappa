@@ -54,6 +54,15 @@ const sanitizations = {
       }
     }
   },
+  thesis: {
+    doc: {
+      type: "object",
+      properties: {
+        id: { type: "number" },
+        type: { type: "string" }
+      }
+    },
+  }
 };
 
 const validations = {
@@ -143,22 +152,43 @@ const validations = {
     ethesis: {
       type: "object",
       properties: {
-        file: { type: "any", error: "No file sent." },
-        fileExt: {
-          type: "string",
-          pattern: /^pdf/,
-          error: "File extension wasn't .pdf"
+        files: {
+          type: "array",
+          minLength: 1,
+          error: "No file sent.",
+          items: {
+            type: "object",
+            file: { type: "any", error: "File didn't contain any data." },
+            ext: {
+              type: "string",
+              pattern: /^pdf/,
+              error: "File extension wasn't .pdf"
+            },
+          }
         },
       }
     },
     save: {
       type: "object",
       properties: {
-        file: { type: "any", error: "No file sent." },
-        fileExt: {
-          type: "string",
-          pattern: /^pdf/,
-          error: "File extension wasn't .pdf"
+        files: {
+          type: "array",
+          minLength: 1,
+          error: "No file sent.",
+          items: {
+            type: "object",
+            file: { type: "any", error: "File didn't contain any data." },
+            ext: {
+              type: "string",
+              pattern: /^pdf/,
+              error: "File extension wasn't .pdf"
+            },
+            filetype: {
+              type: "string",
+              pattern: /^(GraderReviewFile|AbstractFile)/,
+              error: "Filetype wasn't GraderReviewFile or AbstractFile."
+            },
+          }
         },
         json: {
           type: "object",
@@ -183,6 +213,41 @@ const validations = {
       properties: {
       }
     },
+    doc: {
+      type: "object",
+      properties: {
+        id: { type: "number" },
+        type: {
+          type: "string",
+          pattern: /^(review|abstract)$/,
+          error: "Type wasn't review or abstract",
+        }
+      }
+    },
+    update: {
+      type: "object",
+      properties: {
+        files: {
+          type: "array",
+          error: "No file sent.",
+          items: {
+            type: "object",
+            properties: {
+              ext: {
+                type: "string",
+                pattern: /^pdf$/,
+                error: "File extension wasn't .pdf"
+              },
+              filetype: {
+                type: "string",
+                pattern: /^(GraderReviewFile|AbstractFile)$/,
+                error: "Filetype wasn't GraderReviewFile or AbstractFile."
+              },
+            }
+          }
+        }
+      }
+    }
   },
   email: {
     remind: {
@@ -191,13 +256,10 @@ const validations = {
         thesisId: { type: "number", error: "No thesisId in request body." },
         reminderType: {
           type: "string",
-          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)/,
+          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)$/,
           error: "ReminderType wasn't EthesisReminder or GraderEvalReminder or PrintReminder."
         },
       },
-      exec: function (schema, post) {
-        console.log(post)
-      }
     }
   }
 };

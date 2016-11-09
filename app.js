@@ -6,6 +6,7 @@
 // }
 
 const express = require("express");
+const compression = require("compression");
 const busboy = require("connect-busboy");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -22,7 +23,12 @@ if (process.env.NODE_ENV !== "production") {
 const FileManipulator = require("./services/FileManipulator");
 FileManipulator.cleanTmp();
 
-app.use(busboy());
+app.use(compression());
+app.use(busboy({
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50 MB
+  }
+}));
 app.use(bodyParser.urlencoded({
   extended: true,
 }));

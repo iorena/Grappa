@@ -11,21 +11,32 @@ const exec = require("child_process").exec;
 const FileManipulator = require("./FileManipulator");
 const ThesisAbstract = require("../models/ThesisAbstract");
 
+const errors = require("../config/errors");
+
 class PdfManipulator {
 
   parseAbstractFromThesisPDF(thesisPDF) {
     const docName = Date.now();
     let pathToFolder;
+    let pathToFile;
     return FileManipulator.createFolder(docName)
       .then((path) => {
         pathToFolder = path;
         return this.saveBase64FileToPath(thesisPDF, `${pathToFolder}/thesis.pdf`);
       })
-      .then((pathToFile) => {
-        return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
+      .then((path) => {
+        pathToFile = path;
+        return this.getPdfDocumentPages(pathToFile);
       })
-      .then((pathToFile) => {
-        // FileManipulator.deleteFolderTimer(10000, pathToFolder);
+      .then(pages => {
+        if (pages > 1) {
+          return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
+        } else {
+          throw new errors.BadRequestError("Thesis had less than 2 pages.");
+        }
+      })
+      .then((path) => {
+        FileManipulator.deleteFolderTimer(30000, pathToFolder);
         return pathToFile;
       });
   }
@@ -38,6 +49,20 @@ class PdfManipulator {
           reject(err);
         } else {
           resolve(pathToFile);
+        }
+      });
+    });
+  }
+
+  getPdfDocumentPages(pathToFile) {
+    return new Promise((resolve, reject) => {
+      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}'`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(stdout);
         }
       });
     });
