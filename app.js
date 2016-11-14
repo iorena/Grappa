@@ -45,6 +45,12 @@ if (!module.parent) {
       console.log(`App is listening on port ${port}`);
     }
   });
+
+// should prevent the server from staying running when the process suddenly crashes
+  process.on("exit", () => {
+    app.close();
+    process.exit();
+  });
 }
 
 module.exports = app;

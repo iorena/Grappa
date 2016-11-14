@@ -123,7 +123,7 @@ const validations = {
         } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
           this.report("Deadline wasn't a Date.");
         } else if (post.date < post.instructorDeadline || post.date < post.studentDeadline) {
-          this.report("Deadline was before date.");
+          this.report("Deadline was after date.");
         } else {
           return post;
         }

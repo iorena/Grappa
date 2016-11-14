@@ -20,24 +20,27 @@ class PdfManipulator {
     let pathToFolder;
     let pathToFile;
     return FileManipulator.createFolder(docName)
-      .then((path) => {
-        pathToFolder = path;
-        return this.saveBase64FileToPath(thesisPDF, `${pathToFolder}/thesis.pdf`);
+      .then((newPath) => {
+        pathToFolder = newPath;
+        return this.saveBase64FileToPath(thesisPDF, path.join(pathToFolder, "/thesis.pdf"));
+        // return this.saveBase64FileToPath(thesisPDF, `${pathToFolder}/thesis.pdf`);
       })
-      .then((path) => {
-        pathToFile = path;
-        return this.getPdfDocumentPages(pathToFile);
+      .then((newPath) => {
+        console.log("path: " + newPath)
+        pathToFile = newPath;
+        return this.copyPageFromPDF(2, pathToFile, path.join(pathToFolder, "/abstract.pdf"));
+        // return this.getPdfDocumentPages(pathToFile);
       })
-      .then(pages => {
-        if (pages > 1) {
-          return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
-        } else {
-          throw new errors.BadRequestError("Thesis had less than 2 pages.");
-        }
-      })
+      // .then(pages => {
+      //   if (pages > 1) {
+      //     return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
+      //   } else {
+      //     throw new errors.BadRequestError("Thesis had less than 2 pages.");
+      //   }
+      // })
       .then((path) => {
-        FileManipulator.deleteFolderTimer(30000, pathToFolder);
-        return pathToFile;
+        // FileManipulator.deleteFolderTimer(30000, pathToFolder);
+        return path;
       });
   }
 /* move to FileManipulator */
@@ -56,12 +59,13 @@ class PdfManipulator {
 
   getPdfDocumentPages(pathToFile) {
     return new Promise((resolve, reject) => {
-      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}'`;
+      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
           reject(err);
         } else {
+          console.log("pages: " + stdout)
           resolve(stdout);
         }
       });
@@ -74,7 +78,9 @@ class PdfManipulator {
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
-          reject(err);
+          console.log("RIP")
+          reject(new errors.BadRequestError("Pdftk library failed to read thesis pdf-document."));
+          // reject(err);
         } else {
           resolve(pathToTargetFile);
         }

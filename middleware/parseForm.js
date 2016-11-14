@@ -7,7 +7,6 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
     files: [],
     json: {},
   };
-  let filetypes = [];
   let chunks = [];
   let dataSize = 0;
 
@@ -18,15 +17,10 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
     });
     req.busboy.on("field", (key, value, keyTruncated, valueTruncated) => {
       // console.log("yo field " + key)
-      if (key === "filetype") {
-        filetypes.push(value);
-      } else {
-        parsedForm[key] = value && key === "json" ? JSON.parse(value) : value;
-      }
+      parsedForm[key] = value && key === "json" ? JSON.parse(value) : value;
     });
     req.busboy.on("file", (fieldname, file, filename) => {
       chunks = [];
-      // console.log("field: ", fieldname)
       file.on("data", (data) => {
         chunks.push(data);
         dataSize += data.length;
@@ -38,8 +32,11 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
         const file = {
           file: Buffer.concat(chunks),
           ext: filename.substr(filename.lastIndexOf(".") + 1),
-          filetype: filetypes.splice(0, 1)[0],
+          filetype: fieldname,
         }
+        console.log("wat is fieldname: " + fieldname)
+        console.log("wat is size: " + file.file.length)
+        file.size = file.file.length;
         parsedForm.files.push(file);
       });
     });
