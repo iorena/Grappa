@@ -7,8 +7,7 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
     files: [],
     json: {},
   };
-  let chunks = [];
-  let dataSize = 0;
+  const files = {};
 
   new Promise((resolve, reject) => {
     req.pipe(req.busboy);
@@ -20,23 +19,27 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
       parsedForm[key] = value && key === "json" ? JSON.parse(value) : value;
     });
     req.busboy.on("file", (fieldname, file, filename) => {
-      chunks = [];
+      // console.log("file is " + fieldname)
+      files[fieldname] = {};
+      files[fieldname].chunks = [];
+      files[fieldname].dataSize = 0;
       file.on("data", (data) => {
-        chunks.push(data);
-        dataSize += data.length;
-        if (dataSize > maxMBFileSize * 1000000) {
+        // console.log("data from " + fieldname)
+        files[fieldname].chunks.push(data);
+        files[fieldname].dataSize += data.length;
+        if (files[fieldname].dataSize > maxMBFileSize * 1000000) {
           reject(new errors.BadRequestError(`File was over ${maxFileSize} MB.`))
         }
       });
       file.on("end", () => {
         const file = {
-          file: Buffer.concat(chunks),
+          buffer: Buffer.concat(files[fieldname].chunks),
           ext: filename.substr(filename.lastIndexOf(".") + 1),
           filetype: fieldname,
         }
-        console.log("wat is fieldname: " + fieldname)
-        console.log("wat is size: " + file.file.length)
-        file.size = file.file.length;
+        // console.log("wat is fieldname: " + fieldname)
+        // console.log("wat is size: " + file.buffer.length)
+        file.size = file.buffer.length;
         parsedForm.files.push(file);
       });
     });

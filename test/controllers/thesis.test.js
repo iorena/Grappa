@@ -56,9 +56,13 @@ describe("ThesisController", () => {
     it("shouldn't return Theses without correct permissions", (done) => {
       request(app)
       .get("/thesis")
-      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      // .expect(res => {
+      //   console.log("response: ", res)
+      // })
       .expect("Content-Type", /json/)
-      .expect(401, done);
+      .expect(401)
+      .end(done)
     });
   });
 

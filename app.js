@@ -48,6 +48,7 @@ if (!module.parent) {
 
 // should prevent the server from staying running when the process suddenly crashes
   process.on("exit", () => {
+    // console.log("PROCESS EXIT !")
     app.close();
     process.exit();
   });

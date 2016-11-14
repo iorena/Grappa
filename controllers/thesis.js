@@ -60,7 +60,7 @@ module.exports.saveOne = (req, res, next) => {
     savedThesis = thesis;
     return Promise.all([
       ThesisReview.saveOne({
-        pdf: req.body.files[0],
+        pdf: req.body.files[0].buffer,
         ThesisId: thesis.id,
         UserId: req.user.id,
       }),
@@ -91,7 +91,7 @@ module.exports.saveOne = (req, res, next) => {
 };
 
 module.exports.updateOneAndConnections = (req, res, next) => {
-  console.log("wut", req.body.files)
+  // console.log("wut", req.body.files)
   let updationPromises = [];
   const thesis = req.body.json;
 
@@ -104,10 +104,10 @@ module.exports.updateOneAndConnections = (req, res, next) => {
     updationPromises.push(Thesis.update(thesis, { id: thesis.id }));
     req.body.files.map(item => {
       if (item.filetype === "GraderReviewFile") {
-        updationPromises.push(ThesisReview.update({ pdf: item.file }, { ThesisId: thesis.id }));
+        updationPromises.push(ThesisReview.update({ pdf: item.buffer }, { ThesisId: thesis.id }));
       } else if (item.filetype === "AbstractFile") {
         updationPromises.push(
-          PdfManipulator.parseAbstractFromThesisPDF(item.file)
+          PdfManipulator.parseAbstractFromThesisPDF(item.buffer)
           .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
           .then(buffer => ThesisAbstract.update({ pdf: buffer }, { ThesisId: thesis.id }))
         );
@@ -149,7 +149,7 @@ module.exports.uploadThesisPDF = (req, res, next) => {
     } else if (new Date() > resolvedArray[1].studentDeadline) {
       throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
     } else {
-      return PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0]);
+      return PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0].buffer);
     }
   })
   .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))

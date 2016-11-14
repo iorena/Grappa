@@ -13,7 +13,7 @@ module.exports.handleErrors = (err, req, res, next) => {
     if (process.env.NODE_ENV === "development") {
       console.log(JSON.stringify(err, null, 2))
       if (err.message !== undefined) {
-        res.status(statusCode).send(err);
+        res.status(statusCode).json(err);
       } else {
         res.status(statusCode).send({
           message: "Something caused an internal server error",
@@ -24,7 +24,7 @@ module.exports.handleErrors = (err, req, res, next) => {
       // Maybe send stack traces to users from production server?
       // makes debugging maybe easier
       const message = err.message ? err.message : "Internal server error.";
-      res.status(statusCode).send(message);
+      res.status(statusCode).send({ message, });
     }
   } else {
     next();

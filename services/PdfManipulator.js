@@ -23,23 +23,22 @@ class PdfManipulator {
       .then((newPath) => {
         pathToFolder = newPath;
         return this.saveBase64FileToPath(thesisPDF, path.join(pathToFolder, "/thesis.pdf"));
-        // return this.saveBase64FileToPath(thesisPDF, `${pathToFolder}/thesis.pdf`);
       })
       .then((newPath) => {
-        console.log("path: " + newPath)
         pathToFile = newPath;
-        return this.copyPageFromPDF(2, pathToFile, path.join(pathToFolder, "/abstract.pdf"));
-        // return this.getPdfDocumentPages(pathToFile);
+        return this.getPdfDocumentPages(pathToFile);
+        // console.log("path: " + newPath)
+        // return this.copyPageFromPDF(2, pathToFile, path.join(pathToFolder, "/abstract.pdf"));
       })
-      // .then(pages => {
-      //   if (pages > 1) {
-      //     return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
-      //   } else {
-      //     throw new errors.BadRequestError("Thesis had less than 2 pages.");
-      //   }
-      // })
+      .then(pages => {
+        if (pages > 1) {
+          return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
+        } else {
+          throw new errors.BadRequestError("Thesis had less than 2 pages.");
+        }
+      })
       .then((path) => {
-        // FileManipulator.deleteFolderTimer(30000, pathToFolder);
+        FileManipulator.deleteFolderTimer(30000, pathToFolder);
         return path;
       });
   }
