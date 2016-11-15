@@ -62,6 +62,12 @@ const sanitizations = {
         type: { type: "string" }
       }
     },
+    move: {
+      type: "object",
+      properties: {
+        CouncilMeetingId: { type: "number" },
+      }
+    },
   }
 };
 
@@ -222,6 +228,13 @@ const validations = {
           pattern: /^(review|abstract)$/,
           error: "Type wasn't review or abstract",
         }
+      }
+    },
+    move: {
+      type: "object",
+      properties: {
+        thesisIds: { type: "array" },
+        CouncilMeetingId: { type: "number" },
       }
     },
     update: {

@@ -5,6 +5,7 @@ const path = require("path");
 
 const mkdirp = require("mkdirp");
 const PDF = require("pdfkit");
+const phantomjs = require("phantomjs-prebuilt");
 const request = require("request");
 const exec = require("child_process").exec;
 
@@ -127,6 +128,23 @@ class PdfManipulator {
           console.error(err);
           reject(err);
         } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  generateThesisDocumentsCover(theses, pathToFolder) {
+    return new Promise((resolve, reject) => {
+      const pathToCmd = path.join(__dirname, "createCover.phantom.js");
+      const cmd = `${phantomjs.path} ${pathToCmd}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
+          // reject(err);
+        } else {
+          console.log("What is life?", stdout)
           resolve();
         }
       });

@@ -50,7 +50,7 @@ router.post("/user/send-new-password",
 router.post("/thesis/ethesis/:token",
   parseForm.parseUpload(40),
   validate.validateBody("thesis", "ethesis"),
-  thesisCtrl.uploadThesisPDF);
+  thesisCtrl.uploadEthesisPDF);
 
 router.use("", auth.authenticate);
 
@@ -92,6 +92,10 @@ router.put("/user/:id", userCtrl.updateOne);
 // Routes accessisable only for admin
 
 router.use("", auth.onlyAdmin);
+
+router.post("/thesis/move",
+  validate.validateBody("thesis", "move"),
+  thesisCtrl.moveThesesToMeeting);
 
 router.delete("/thesis/:id", thesisCtrl.deleteOne);
 

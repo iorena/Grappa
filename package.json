@@ -40,6 +40,8 @@
     "pdfkit": "^0.7.2",
     "pg": "^4.5.2",
     "pg-hstore": "^2.3.2",
+    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.13",
     "request": "^2.69.0",
     "rmdir": "^1.2.0",
     "schema-inspector": "^1.6.5",

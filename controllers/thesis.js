@@ -124,8 +124,28 @@ module.exports.updateOneAndConnections = (req, res, next) => {
   .catch(err => next(err));
 };
 
-module.exports.uploadThesisPDF = (req, res, next) => {
+module.exports.moveThesesToMeeting = (req, res, next) => {
+  CouncilMeeting
+  .findOne({ id: req.body.CouncilMeetingId })
+  .then(meeting => {
+    if (meeting) {
+      return Promise.all(req.body.thesisIds.map(id =>
+        Thesis.update({ CouncilMeetingId: meeting.id }, { id, })
+      ))
+    } else {
+      throw new errors.NotFoundError("No Councilmeeting found.");
+    }
+  })
+  .then(rows => {
+    // TODO client has to update theses X_X
+    res.sendStatus(200);
+  })
+  .catch(err => next(err));
+}
+
+module.exports.uploadEthesisPDF = (req, res, next) => {
   let decodedToken;
+  let thesisMoved = false;
 
   Promise.resolve(TokenGenerator.decodeToken(req.params.token))
   .then((decoded) => {
@@ -148,6 +168,19 @@ module.exports.uploadThesisPDF = (req, res, next) => {
       throw new errors.BadRequestError("Your PDF has already been uploaded to the system.");
     } else if (new Date() > resolvedArray[1].studentDeadline) {
       throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
+      // TODO find the next councilmeeting
+      return CouncilMeeting.find({
+          date: { gt: resolvedArray[1].date }
+        })
+        .then(meeting => {
+          if (meeting) {
+            thesisMoved = true;
+            return Thesis.update({ CouncilMeetingId: meeting.id }, { id: decodedToken.thesis.id })
+              .then(() => PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0].buffer));
+          } else {
+            throw new errors.NotFoundError("No next Councilmeeting found, please contact admin about the schedule or just wait, you know he/she might add new one or maybe not. Either way it's your fault missing your deadline ;(");
+          }
+        })
     } else {
       return PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0].buffer);
     }
@@ -164,6 +197,9 @@ module.exports.uploadThesisPDF = (req, res, next) => {
   })
   .then(() => {
     res.sendStatus(200);
+    // const message = thesisMoved ? `Your thesis has been moved to the next
+    //   Councilmeeting due to you missing your deadline` : "";
+    // res.status(200).send({ message, });
   })
   .catch(err => next(err));
 };

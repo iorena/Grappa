@@ -21,7 +21,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const FileManipulator = require("./services/FileManipulator");
+const PdfManipulator = require("./services/PdfManipulator");
 FileManipulator.cleanTmp();
+// PdfManipulator.generateThesisDocumentsCover();
 
 app.use(compression());
 app.use(busboy({
