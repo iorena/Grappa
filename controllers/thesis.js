@@ -110,6 +110,7 @@ module.exports.updateOneAndConnections = (req, res, next) => {
           PdfManipulator.parseAbstractFromThesisPDF(item.buffer)
           .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
           .then(buffer => ThesisAbstract.update({ pdf: buffer }, { ThesisId: thesis.id }))
+          .then(() => ThesisProgress.setEthesisDone(thesis.id))
         );
       }
     })
@@ -167,9 +168,9 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
     } else if (resolvedArray[0].ethesisDone) {
       throw new errors.BadRequestError("Your PDF has already been uploaded to the system.");
     } else if (new Date() > resolvedArray[1].studentDeadline) {
-      throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
+      // throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
       // TODO find the next councilmeeting
-      return CouncilMeeting.find({
+      return CouncilMeeting.findOne({
           date: { gt: resolvedArray[1].date }
         })
         .then(meeting => {
@@ -196,10 +197,9 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
     ]);
   })
   .then(() => {
-    res.sendStatus(200);
-    // const message = thesisMoved ? `Your thesis has been moved to the next
-    //   Councilmeeting due to you missing your deadline` : "";
-    // res.status(200).send({ message, });
+    const message = thesisMoved ? "Your thesis has been moved to the next " +
+    "Councilmeeting due to you missing your deadline" : "";
+    res.status(200).send({ message, });
   })
   .catch(err => next(err));
 };
