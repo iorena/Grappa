@@ -233,7 +233,11 @@ const validations = {
     move: {
       type: "object",
       properties: {
-        thesisIds: { type: "array" },
+        thesisIds: {
+          type: "array",
+          minLength: 1,
+          error: "No theses received.",
+        },
         CouncilMeetingId: { type: "number" },
       }
     },
