@@ -28,7 +28,7 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
         files[fieldname].chunks.push(data);
         files[fieldname].dataSize += data.length;
         if (files[fieldname].dataSize > maxMBFileSize * 1000000) {
-          reject(new errors.BadRequestError(`File was over ${maxFileSize} MB.`))
+          reject(new errors.BadRequestError(`File was over ${maxMBFileSize} MB.`))
         }
       });
       file.on("end", () => {
