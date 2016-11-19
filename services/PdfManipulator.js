@@ -5,28 +5,42 @@ const path = require("path");
 
 const mkdirp = require("mkdirp");
 const PDF = require("pdfkit");
+const phantomjs = require("phantomjs-prebuilt");
 const request = require("request");
 const exec = require("child_process").exec;
 
 const FileManipulator = require("./FileManipulator");
 const ThesisAbstract = require("../models/ThesisAbstract");
 
+const errors = require("../config/errors");
+
 class PdfManipulator {
 
   parseAbstractFromThesisPDF(thesisPDF) {
     const docName = Date.now();
     let pathToFolder;
+    let pathToFile;
     return FileManipulator.createFolder(docName)
+      .then((newPath) => {
+        pathToFolder = newPath;
+        return this.saveBase64FileToPath(thesisPDF, path.join(pathToFolder, "/thesis.pdf"));
+      })
+      .then((newPath) => {
+        pathToFile = newPath;
+        return this.getPdfDocumentPages(pathToFile);
+        // console.log("path: " + newPath)
+        // return this.copyPageFromPDF(2, pathToFile, path.join(pathToFolder, "/abstract.pdf"));
+      })
+      .then(pages => {
+        if (pages > 1) {
+          return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
+        } else {
+          throw new errors.BadRequestError("Thesis had less than 2 pages.");
+        }
+      })
       .then((path) => {
-        pathToFolder = path;
-        return this.saveBase64FileToPath(thesisPDF, `${pathToFolder}/thesis.pdf`);
-      })
-      .then((pathToFile) => {
-        return this.copyPageFromPDF(2, pathToFile, `${pathToFolder}/abstract.pdf`);
-      })
-      .then((pathToFile) => {
-        // FileManipulator.deleteFolderTimer(10000, pathToFolder);
-        return pathToFile;
+        FileManipulator.deleteFolderTimer(30000, pathToFolder);
+        return path;
       });
   }
 /* move to FileManipulator */
@@ -43,13 +57,30 @@ class PdfManipulator {
     });
   }
 
+  getPdfDocumentPages(pathToFile) {
+    return new Promise((resolve, reject) => {
+      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          console.log("pages: " + stdout)
+          resolve(stdout);
+        }
+      });
+    });
+  }
+
   copyPageFromPDF(pageNumber, pathToFile, pathToTargetFile) {
     return new Promise((resolve, reject) => {
       const cmd = `pdftk ${pathToFile} cat ${pageNumber}-${pageNumber} output ${pathToTargetFile}`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
-          reject(err);
+          console.log("RIP")
+          reject(new errors.BadRequestError("Pdftk library failed to read thesis pdf-document."));
+          // reject(err);
         } else {
           resolve(pathToTargetFile);
         }
@@ -97,6 +128,23 @@ class PdfManipulator {
           console.error(err);
           reject(err);
         } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  generateThesisDocumentsCover(theses, pathToFolder) {
+    return new Promise((resolve, reject) => {
+      const pathToCmd = path.join(__dirname, "createCover.phantom.js");
+      const cmd = `${phantomjs.path} ${pathToCmd}`;
+      const child = exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+          console.error(err);
+          reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
+          // reject(err);
+        } else {
+          console.log("What is life?", stdout)
           resolve();
         }
       });

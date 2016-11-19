@@ -54,6 +54,21 @@ const sanitizations = {
       }
     }
   },
+  thesis: {
+    doc: {
+      type: "object",
+      properties: {
+        id: { type: "number" },
+        type: { type: "string" }
+      }
+    },
+    move: {
+      type: "object",
+      properties: {
+        CouncilMeetingId: { type: "number" },
+      }
+    },
+  }
 };
 
 const validations = {
@@ -114,7 +129,7 @@ const validations = {
         } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
           this.report("Deadline wasn't a Date.");
         } else if (post.date < post.instructorDeadline || post.date < post.studentDeadline) {
-          this.report("Deadline was before date.");
+          this.report("Deadline was after date.");
         } else {
           return post;
         }
@@ -143,22 +158,43 @@ const validations = {
     ethesis: {
       type: "object",
       properties: {
-        file: { type: "any", error: "No file sent." },
-        fileExt: {
-          type: "string",
-          pattern: /^pdf/,
-          error: "File extension wasn't .pdf"
+        files: {
+          type: "array",
+          minLength: 1,
+          error: "No file sent.",
+          items: {
+            type: "object",
+            file: { type: "any", error: "File didn't contain any data." },
+            ext: {
+              type: "string",
+              pattern: /^pdf/,
+              error: "File extension wasn't .pdf"
+            },
+          }
         },
       }
     },
     save: {
       type: "object",
       properties: {
-        file: { type: "any", error: "No file sent." },
-        fileExt: {
-          type: "string",
-          pattern: /^pdf/,
-          error: "File extension wasn't .pdf"
+        files: {
+          type: "array",
+          minLength: 1,
+          error: "No file sent.",
+          items: {
+            type: "object",
+            file: { type: "any", error: "File didn't contain any data." },
+            ext: {
+              type: "string",
+              pattern: /^pdf/,
+              error: "File extension wasn't .pdf"
+            },
+            filetype: {
+              type: "string",
+              pattern: /^(GraderReviewFile|AbstractFile)/,
+              error: "Filetype wasn't GraderReviewFile or AbstractFile."
+            },
+          }
         },
         json: {
           type: "object",
@@ -183,6 +219,52 @@ const validations = {
       properties: {
       }
     },
+    doc: {
+      type: "object",
+      properties: {
+        id: { type: "number" },
+        type: {
+          type: "string",
+          pattern: /^(review|abstract)$/,
+          error: "Type wasn't review or abstract",
+        }
+      }
+    },
+    move: {
+      type: "object",
+      properties: {
+        thesisIds: {
+          type: "array",
+          minLength: 1,
+          error: "No theses received.",
+        },
+        CouncilMeetingId: { type: "number" },
+      }
+    },
+    update: {
+      type: "object",
+      properties: {
+        files: {
+          type: "array",
+          error: "No file sent.",
+          items: {
+            type: "object",
+            properties: {
+              ext: {
+                type: "string",
+                pattern: /^pdf$/,
+                error: "File extension wasn't .pdf"
+              },
+              filetype: {
+                type: "string",
+                pattern: /^(GraderReviewFile|AbstractFile)$/,
+                error: "Filetype wasn't GraderReviewFile or AbstractFile."
+              },
+            }
+          }
+        }
+      }
+    }
   },
   email: {
     remind: {
@@ -191,13 +273,10 @@ const validations = {
         thesisId: { type: "number", error: "No thesisId in request body." },
         reminderType: {
           type: "string",
-          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)/,
+          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)$/,
           error: "ReminderType wasn't EthesisReminder or GraderEvalReminder or PrintReminder."
         },
       },
-      exec: function (schema, post) {
-        console.log(post)
-      }
     }
   }
 };

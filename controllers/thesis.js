@@ -60,7 +60,7 @@ module.exports.saveOne = (req, res, next) => {
     savedThesis = thesis;
     return Promise.all([
       ThesisReview.saveOne({
-        pdf: req.body.file,
+        pdf: req.body.files[0].buffer,
         ThesisId: thesis.id,
         UserId: req.user.id,
       }),
@@ -91,24 +91,62 @@ module.exports.saveOne = (req, res, next) => {
 };
 
 module.exports.updateOneAndConnections = (req, res, next) => {
-  let updatePromise = Promise.reject();
+  // console.log("wut", req.body.files)
+  let updationPromises = [];
+  const thesis = req.body.json;
 
-  if (req.user.role === "professor" && req.body.graderEval && req.body.graderEval.length > 0) {
-    updatePromise = Thesis.update({ graderEval: req.body.graderEval }, { id: req.body.id })
-      .then(() => ThesisProgress.setGraderEvalDone(req.body.id))
+  if (req.user.role === "professor" && thesis.graderEval && thesis.graderEval.length > 0) {
+    updationPromises.push(
+      Thesis.update({ graderEval: thesis.graderEval }, { id: thesis.id })
+      .then(() => ThesisProgress.setGraderEvalDone(thesis.id))
+    );
   } else if (req.user.role === "admin") {
-    updatePromise = Thesis.update(req.body, { id: req.body.id })
+    updationPromises.push(Thesis.update(thesis, { id: thesis.id }));
+    req.body.files.map(item => {
+      if (item.filetype === "GraderReviewFile") {
+        updationPromises.push(ThesisReview.update({ pdf: item.buffer }, { ThesisId: thesis.id }));
+      } else if (item.filetype === "AbstractFile") {
+        updationPromises.push(
+          PdfManipulator.parseAbstractFromThesisPDF(item.buffer)
+          .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
+          .then(buffer => ThesisAbstract.update({ pdf: buffer }, { ThesisId: thesis.id }))
+          .then(() => ThesisProgress.setEthesisDone(thesis.id))
+        );
+      }
+    })
   }
-
-  updatePromise
+  if (updationPromises.length === 0) {
+    updationPromises.push(new errors.ForbiddenError("No permission to edit Thesis."));
+  }
+  Promise.all(updationPromises)
   .then(rows => {
     res.sendStatus(200);
   })
   .catch(err => next(err));
 };
 
-module.exports.uploadThesisPDF = (req, res, next) => {
+module.exports.moveThesesToMeeting = (req, res, next) => {
+  CouncilMeeting
+  .findOne({ id: req.body.CouncilMeetingId })
+  .then(meeting => {
+    if (meeting) {
+      return Promise.all(req.body.thesisIds.map(id =>
+        Thesis.update({ CouncilMeetingId: meeting.id }, { id, })
+      ))
+    } else {
+      throw new errors.NotFoundError("No Councilmeeting found.");
+    }
+  })
+  .then(rows => {
+    // TODO client has to update theses X_X
+    res.sendStatus(200);
+  })
+  .catch(err => next(err));
+}
+
+module.exports.uploadEthesisPDF = (req, res, next) => {
   let decodedToken;
+  let thesisMoved = false;
 
   Promise.resolve(TokenGenerator.decodeToken(req.params.token))
   .then((decoded) => {
@@ -130,9 +168,22 @@ module.exports.uploadThesisPDF = (req, res, next) => {
     } else if (resolvedArray[0].ethesisDone) {
       throw new errors.BadRequestError("Your PDF has already been uploaded to the system.");
     } else if (new Date() > resolvedArray[1].studentDeadline) {
-      throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
+      // throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
+      // TODO find the next councilmeeting
+      return CouncilMeeting.findOne({
+          date: { gt: resolvedArray[1].date }
+        })
+        .then(meeting => {
+          if (meeting) {
+            thesisMoved = true;
+            return Thesis.update({ CouncilMeetingId: meeting.id }, { id: decodedToken.thesis.id })
+              .then(() => PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0].buffer));
+          } else {
+            throw new errors.NotFoundError("No next Councilmeeting found, please contact admin about the schedule or just wait, you know he/she might add new one or maybe not. Either way it's your fault missing your deadline ;(");
+          }
+        })
     } else {
-      return PdfManipulator.parseAbstractFromThesisPDF(req.body.file);
+      return PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0].buffer);
     }
   })
   .then((pathToFile) => FileManipulator.readFileToBuffer(pathToFile))
@@ -146,7 +197,9 @@ module.exports.uploadThesisPDF = (req, res, next) => {
     ]);
   })
   .then(() => {
-    res.sendStatus(200);
+    const message = thesisMoved ? "Your thesis has been moved to the next " +
+    "Councilmeeting due to you missing your deadline" : "";
+    res.status(200).send({ message, });
   })
   .catch(err => next(err));
 };
@@ -178,11 +231,39 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .catch(err => next(err));
 };
 
+module.exports.serveThesisDocument = (req, res, next) => {
+  let promise;
+
+  if (req.body.type === "review") {
+    promise = ThesisReview.findOne({ ThesisId: req.body.id });
+  } else if (req.body.type === "abstract") {
+    promise = ThesisAbstract.findOne({ ThesisId: req.body.id });
+  }
+
+  promise
+  .then(doc => {
+    if (doc) {
+      res.contentType("application/pdf");
+      res.send(doc.pdf);
+    } else {
+      throw new errors.NotFoundError("No document found.");
+    }
+  })
+  .catch(err => next(err));
+}
+
 module.exports.deleteOne = (req, res, next) => {
   Thesis
   .delete({ id: req.params.id })
   .then(deletedRows => {
     if (deletedRows !== 0) {
+      return Promise.all([
+        ThesisProgress.delete({ ThesisId: req.params.id }),
+        ThesisReview.delete({ ThesisId: req.params.id }),
+        ThesisAbstract.delete({ ThesisId: req.params.id }),
+        EmailStatus.delete({ ThesisId: req.params.id }),
+        // Grader.delete({ ThesisId: req.params.id }),
+      ])
       res.sendStatus(200);
     } else {
       throw new errors.NotFoundError("No thesis found.");

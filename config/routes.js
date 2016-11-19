@@ -50,14 +50,18 @@ router.post("/user/send-new-password",
 router.post("/thesis/ethesis/:token",
   parseForm.parseUpload(40),
   validate.validateBody("thesis", "ethesis"),
-  thesisCtrl.uploadThesisPDF);
+  thesisCtrl.uploadEthesisPDF);
 
 router.use("", auth.authenticate);
 
 // Routes for all users
 
 router.get("/thesis", thesisCtrl.findAllByUserRole);
-router.put("/thesis/:id", thesisCtrl.updateOneAndConnections);
+router.put("/thesis/:id",
+  parseForm.parseUpload(41),
+  validate.validateBody("thesis", "update"),
+  thesisCtrl.updateOneAndConnections
+);
 router.post("/thesis",
   parseForm.parseUpload(1),
   validate.validateBody("thesis", "save"),
@@ -67,6 +71,10 @@ router.post("/thesis",
 router.post("/thesis/pdf",
   validate.validateBody("thesis", "pdf"),
   thesisCtrl.generateThesesToPdf);
+
+router.post("/thesis/doc",
+  validate.validateBody("thesis", "doc"),
+  thesisCtrl.serveThesisDocument);
 
 router.get("/grader", graderCtrl.findAll);
 router.post("/grader",
@@ -84,6 +92,10 @@ router.put("/user/:id", userCtrl.updateOne);
 // Routes accessisable only for admin
 
 router.use("", auth.onlyAdmin);
+
+router.post("/thesis/move",
+  validate.validateBody("thesis", "move"),
+  thesisCtrl.moveThesesToMeeting);
 
 router.delete("/thesis/:id", thesisCtrl.deleteOne);
 

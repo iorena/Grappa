@@ -6,6 +6,7 @@
 // }
 
 const express = require("express");
+const compression = require("compression");
 const busboy = require("connect-busboy");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -20,9 +21,16 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const FileManipulator = require("./services/FileManipulator");
+const PdfManipulator = require("./services/PdfManipulator");
 FileManipulator.cleanTmp();
+// PdfManipulator.generateThesisDocumentsCover();
 
-app.use(busboy());
+app.use(compression());
+app.use(busboy({
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50 MB
+  }
+}));
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
@@ -38,6 +46,13 @@ if (!module.parent) {
     } else {
       console.log(`App is listening on port ${port}`);
     }
+  });
+
+// should prevent the server from staying running when the process suddenly crashes
+  process.on("exit", () => {
+    // console.log("PROCESS EXIT !")
+    app.close();
+    process.exit();
   });
 }
 
