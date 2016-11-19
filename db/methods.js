@@ -51,7 +51,7 @@ module.exports.addTestData = () => Promise.all([
   models.EmailDraft.create({
     type: "EthesisReminder",
     title: "REMINDER: Submit your thesis to eThesis",
-    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below. The link expires in $VAR1$ after which you your thesis will be moved to the next councilmeeting.\n$LINK$",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below. Your thesis is set to be accepted in the next councilmeeting of $DATE$. The link to submit your thesis expires in $STUDENTDEADLINE$ after which your thesis will be moved to the next councilmeeting.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "GraderEvalReminder",
@@ -119,14 +119,14 @@ module.exports.addLotTestData = () => Promise.all([
     title: "Doc",
   }),
   models.CouncilMeeting.create({
-    date: new Date("11/30/2016"),
-    instructorDeadline: new Date("11/20/2016"),
-    studentDeadline: new Date("11/25/2016"),
+    date: new Date("23:59 11/30/2016"),
+    instructorDeadline: new Date("23:59 11/20/2016"),
+    studentDeadline: new Date("23:59 11/25/2016"),
   }),
   models.EmailDraft.create({
     type: "EthesisReminder",
     title: "REMINDER: Submit your thesis to eThesis",
-    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below. The link expires in $VAR1$ after which you your thesis will be moved to the next councilmeeting.\n$LINK$",
+    body: "Hi\n\nThis is an automatic reminder from Grappa, https://grappa.cs.helsinki.fi, a web application created to help in managing the final stages of approving student's master's degree.\n\nYour thesis has been reviewed and submitted to the system. In this email's attachments you can find and read your review. If you're not satisfied with your grade, please contact Kjell Lemström.\n\nIf you accept your grade, please submit your thesis into eThesis https://ethesis.helsinki.fi/. And after submitting please re-submit the same PDF-document to Grappa using the supplied field below. Your thesis is set to be accepted in the next councilmeeting of $DATE$. The link to submit your thesis expires in $STUDENTDEADLINE$ after which your thesis will be moved to the next councilmeeting.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "GraderEvalReminder",

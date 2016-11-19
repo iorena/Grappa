@@ -54,7 +54,8 @@ class EmailReminder {
       .then(draft => {
         if (draft) {
           let body = draft.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
-          body = body.replace("$VAR1$", moment(councilmeeting.studentDeadline).format("HH:mm DD/MM/YYYY"));
+          body = body.replace("$DATE$", moment(councilmeeting.date).format("DD/MM/YYYY"));
+          body = body.replace("$STUDENTDEADLINE$", moment(councilmeeting.studentDeadline).format("HH:mm DD/MM/YYYY"));
           return this.sendMail(thesis.authorEmail, draft, thesis, body, attachments);
         } else {
           throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");
