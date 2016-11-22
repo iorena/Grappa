@@ -6,6 +6,7 @@ const path = require("path");
 const mkdirp = require("mkdirp");
 const PDF = require("pdfkit");
 const phantomjs = require("phantomjs-prebuilt");
+const ejs = require("ejs");
 const request = require("request");
 const exec = require("child_process").exec;
 
@@ -23,7 +24,7 @@ class PdfManipulator {
     return FileManipulator.createFolder(docName)
       .then((newPath) => {
         pathToFolder = newPath;
-        return this.saveBase64FileToPath(thesisPDF, path.join(pathToFolder, "/thesis.pdf"));
+        return FileManipulator.writeFile(path.join(pathToFolder, "thesis.pdf"), thesisPDF, "base64");
       })
       .then((newPath) => {
         pathToFile = newPath;
@@ -42,19 +43,6 @@ class PdfManipulator {
         FileManipulator.deleteFolderTimer(30000, pathToFolder);
         return path;
       });
-  }
-/* move to FileManipulator */
-  saveBase64FileToPath(readStream, pathToFile) {
-    return new Promise((resolve, reject) => {
-      fs.writeFile(`${pathToFile}`, readStream, "base64", err => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(pathToFile);
-        }
-      });
-    });
   }
 
   getPdfDocumentPages(pathToFile) {
@@ -136,8 +124,8 @@ class PdfManipulator {
 
   generateThesisDocumentsCover(theses, pathToFolder) {
     return new Promise((resolve, reject) => {
-      const pathToCmd = path.join(__dirname, "createCover.phantom.js");
-      const cmd = `${phantomjs.path} ${pathToCmd}`;
+      const pathToCmd = path.join(__dirname, "../config/phantomjs/createCover.phantom.js");
+      const cmd = `${phantomjs.path} ${pathToCmd} penis`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
@@ -149,6 +137,60 @@ class PdfManipulator {
         }
       });
     });
+  }
+
+  asdf(putToFolder, theses, councilmeeting) {
+    let pathToFolder;
+    let pages;
+    return FileManipulator.createFolder()
+      .then((folderPath) => {
+        console.log("sdf")
+        pathToFolder = folderPath;
+        console.log(folderPath)
+        return FileManipulator.readFileToBuffer(path.join(__dirname, "../config/phantomjs/cover.html"))
+      })
+      .then(buffer => {
+        const html = ejs.render(buffer.toString(),
+        {
+          councilmeeting: {
+            date: "11/7/2016",
+            no: "KK 2/2016"
+          },
+          theses: [
+            {
+              authorFirstname: "masa",
+              authorLastname: "näsä",
+              title: "ei huvita mikään",
+              graders: "matti vanhanen, pekka puupää",
+              grade: "paska"
+            }
+          ],
+          page: 1,
+          maxPages: 2
+        });
+        pages = 1;
+        // console.log(html)
+        return FileManipulator.writeFile(`${pathToFolder}/0.html`, html);
+      })
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          console.log("yo nigga")
+          const pathToCmd = path.join(__dirname, "../config/phantomjs/createCover.phantom.js");
+          const cmd = `${phantomjs.path} ${pathToCmd} ${pathToFolder} ${pages}`;
+          const child = exec(cmd, function (err, stdout, stderr) {
+            if (err) {
+              console.error(err);
+              reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
+            } else {
+              console.log("What is life?", stdout)
+              resolve();
+            }
+          });
+        });
+      })
+      .catch(err => {
+        console.log("woi", err)
+      })
   }
 
   joinPdfs(pathToFolder) {
@@ -177,10 +219,10 @@ class PdfManipulator {
         return Promise.all(theses.map(thesis => {
           let pdfs = [];
           if (thesis.ThesisAbstract) {
-            pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-1.abstract.pdf`, thesis.ThesisAbstract.pdf));
+            pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-1.abstract.pdf`, thesis.ThesisAbstract.pdf, "base64"));
           }
           if (thesis.ThesisReview) {
-            pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-2.review.pdf`, thesis.ThesisReview.pdf));
+            pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-2.review.pdf`, thesis.ThesisReview.pdf, "base64"));
           }
           if (thesis.graderEval) {
             pdfs.push(this.generatePdfFromGraderEval(thesis, professors, `${pathToFolder}/${order}-3`));

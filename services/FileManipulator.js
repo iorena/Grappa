@@ -9,6 +9,7 @@ const path = require("path");
 class FileManipulator {
 
   createFolder(name) {
+    if (!name) name = Date.now();
     const pathToFolder = path.join(__dirname, `../tmp/${name}`);
     return new Promise((resolve, reject) => {
       mkdirp(pathToFolder, (err) => {
@@ -36,7 +37,7 @@ class FileManipulator {
     fs
     .rmdirSync(pathToFolder);
   }
-  
+
   cleanTmp() {
     const tmpPath = path.join(__dirname, "../tmp");
 
@@ -49,9 +50,9 @@ class FileManipulator {
     }
   }
 
-  writeFile(pathToFile, file) {
+  writeFile(pathToFile, file, encoding) {
     return new Promise((resolve, reject) => {
-      fs.writeFile(pathToFile, file, "base64", (err) => {
+      fs.writeFile(pathToFile, file, encoding ? encoding : "utf8", (err) => {
         if (err) {
           console.log(err);
           reject(err);

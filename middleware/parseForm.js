@@ -9,6 +9,11 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
   };
   const files = {};
 
+  // TODO switch to multer or some other library as data other than multipart/form-data will crash this app
+  // if (req.headers["content-type"].indexOf("multipart/form-data") === -1) {
+  //   throw new errors.BadRequestError(`Request wasn't type multipart/form-data`);
+  // }
+
   new Promise((resolve, reject) => {
     req.pipe(req.busboy);
     req.busboy.on("error", (error) => {

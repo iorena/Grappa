@@ -28,7 +28,7 @@ module.exports.updateOne = (req, res, next) => {
     } else if (req.user.id.toString() === req.params.id && !user.password) {
       throw new errors.BadRequestError("No password supplied.");
     } else if (req.user.id.toString() === req.params.id && user.newPassword && user.newPassword.length < 8) {
-      throw new errors.BadRequestError("New password is under 8 characters.");
+      throw new errors.BadRequestError("New password is less than 8 characters.");
     } else {
       return User.findOne({ id: req.params.id });
     }
@@ -36,7 +36,7 @@ module.exports.updateOne = (req, res, next) => {
   .then(foundUser => {
     if (!foundUser) {
       throw new errors.NotFoundError("No User found.");
-    } else if (user.password && !passwordHelper.comparePassword(user.password, foundUser.passwordHash)) {
+    } else if (req.user.id.toString() === req.params.id && user.password && !passwordHelper.comparePassword(user.password, foundUser.passwordHash)) {
       throw new errors.AuthenticationError("Wrong password.");
     }
     let strippedUser = {};
@@ -51,6 +51,9 @@ module.exports.updateOne = (req, res, next) => {
       }
     } else {
       strippedUser = user;
+      if (user.password) {
+        strippedUser.passwordHash = passwordHelper.hashPassword(user.password);
+      }
       if (strippedUser.role === "professor") {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
