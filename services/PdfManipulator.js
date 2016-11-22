@@ -47,7 +47,7 @@ class PdfManipulator {
 
   getPdfDocumentPages(pathToFile) {
     return new Promise((resolve, reject) => {
-      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}`;
+      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}'`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
