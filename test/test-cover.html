@@ -18,10 +18,11 @@
       font-size: 16px; /* default font-size 16px */
     }
     .page-container {
+      position: relative;
       border: 1px solid black;
       height: 1050px;
       width: 816px;
-      overflow: hidden;
+      /*overflow: hidden;*/
     }
     .top-infobox-wrapper {
       padding: 50px;
@@ -37,6 +38,11 @@
     }
     .thesis-item {
       margin: 0 0 25px 0;
+    }
+    .bottom-pagenumber {
+      position: absolute;
+      right: 50px;
+      bottom: 50px;
     }
   </style>
   <body>
@@ -91,6 +97,9 @@
           <p>Tarkastajat: Pekka Pee, Masa Moo</p>
           <p>Arvosanaehdotus: Cum Laude</p>
         </div>
+      </div>
+      <div class="bottom-pagenumber">
+        <p>1/1</p>
       </div>
     </div>
   </body>

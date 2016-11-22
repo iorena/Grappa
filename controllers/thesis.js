@@ -51,7 +51,7 @@ module.exports.saveOne = (req, res, next) => {
     } else if (!connections[3]) {
       throw new errors.BadRequestError("StudyField has no professor.");
     } else if (new Date() > connections[0].instructorDeadline) {
-      throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please contact admin about resubmitting.");
+      throw new errors.ForbiddenError("Deadline for the CouncilMeeting has passed. Please select other meeting or contact admin about resubmitting.");
     }
     foundConnections = connections;
     return Thesis.saveOneAndProgress(req.body.json, foundConnections[0]);
@@ -179,7 +179,7 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
             return Thesis.update({ CouncilMeetingId: meeting.id }, { id: decodedToken.thesis.id })
               .then(() => PdfManipulator.parseAbstractFromThesisPDF(req.body.files[0].buffer));
           } else {
-            throw new errors.NotFoundError("No next Councilmeeting found, please contact admin about the schedule or just wait, you know he/she might add new one or maybe not. Either way it's your fault missing your deadline ;(");
+            throw new errors.NotFoundError("No next Councilmeeting found, please contact admin about the schedule or just wait, you know he/she might be adding a new one when they feel like it. Either way it's your fault missing your deadline ;(");
           }
         })
     } else {

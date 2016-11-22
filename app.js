@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== "production") {
 const FileManipulator = require("./services/FileManipulator");
 const PdfManipulator = require("./services/PdfManipulator");
 // FileManipulator.cleanTmp();
-// PdfManipulator.generateThesisDocumentsCover();
+// PdfManipulator.asdf();
 
 app.use(compression());
 app.use(busboy({
@@ -50,7 +50,7 @@ if (!module.parent) {
 
 // should prevent the server from staying running when the process suddenly crashes
   process.on("exit", () => {
-    // console.log("PROCESS EXIT !")
+    console.log("PROCESS EXIT !")
     app.close();
     process.exit();
   });
