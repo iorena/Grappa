@@ -14,6 +14,7 @@ const ThesisProgress = require("../models/ThesisProgress");
 const CouncilMeeting = require("../models/CouncilMeeting");
 const StudyField = require("../models/StudyField");
 const Grader = require("../models/Grader");
+const EmailStatus = require("../models/EmailStatus");
 const User = require("../models/User");
 
 const errors = require("../config/errors");
@@ -264,10 +265,12 @@ module.exports.deleteOne = (req, res, next) => {
         EmailStatus.delete({ ThesisId: req.params.id }),
         // Grader.delete({ ThesisId: req.params.id }),
       ])
-      res.sendStatus(200);
     } else {
       throw new errors.NotFoundError("No thesis found.");
     }
+  })
+  .then(() => {
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };
