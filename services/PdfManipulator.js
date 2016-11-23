@@ -47,7 +47,7 @@ class PdfManipulator {
 
   getPdfDocumentPages(pathToFile) {
     return new Promise((resolve, reject) => {
-      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}`;
+      const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}'`;
       const child = exec(cmd, function (err, stdout, stderr) {
         if (err) {
           console.error(err);
@@ -139,6 +139,25 @@ class PdfManipulator {
     });
   }
 
+  graders(graders) {
+    return graders.reduce((previousValue, current) => {
+      if (previousValue) {
+        return `${previousValue}`
+      }
+    }, "")
+  }
+
+  generateThesesCover(theses) {
+    theses.map(thesis => {
+      return {
+        authorFirstname: thesis.authorFirstname,
+        authorLastname: thesis.authorLasttname,
+        title: thesis.title,
+        grade: thesis.grade,
+      }
+    })
+  }
+
   asdf(putToFolder, theses, councilmeeting) {
     let pathToFolder;
     let pages;
@@ -162,7 +181,7 @@ class PdfManipulator {
               authorLastname: "näsä",
               title: "ei huvita mikään",
               graders: "matti vanhanen, pekka puupää",
-              grade: "paska"
+              grade: "Abbrobatur"
             }
           ],
           page: 1,
