@@ -77,6 +77,7 @@ class Thesis extends BaseModel {
     return this.getModel().create(values)
       .then(thesis => {
         savedThesis = thesis;
+
         return this.Models.ThesisProgress.create({});
       })
       .then(progress => progress.setThesis(savedThesis))
@@ -85,6 +86,8 @@ class Thesis extends BaseModel {
 
   findOne(params) {
     return this.getModel().findOne({
+      attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
+        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
       where: params === undefined ? {} : params,
       include: [{
         model: this.Models.Grader,
