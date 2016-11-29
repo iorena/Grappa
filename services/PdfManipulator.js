@@ -184,7 +184,7 @@ class PdfManipulator {
               maxPages: prunedTheses.length,
             }
           );
-          return FileManipulator.writeFile(`${pathToFolder}/${pages}.html`, html);
+          return FileManipulator.writeFile(`${pathToFolder}/0-${pages}.cover.html`, html);
         }))
       })
       .then(() => {
@@ -192,7 +192,6 @@ class PdfManipulator {
           console.log("yo executing phantomjs")
           const pathToCmd = path.join(__dirname, "../config/phantomjs/createCover.phantom.js");
           const cmd = `${phantomjs.path} ${pathToCmd} ${pathToFolder} ${pages}`;
-          console.log(cmd)
           const child = exec(cmd, function (err, stdout, stderr) {
             if (err) {
               console.log("jaaa vituix meni")
