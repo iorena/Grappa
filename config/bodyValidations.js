@@ -62,6 +62,13 @@ const sanitizations = {
         type: { type: "string" }
       }
     },
+    pdf: {
+      type: "object",
+      properties: {
+        thesisIds: { type: "array", },
+        CouncilMeetingId: { type: "number" }
+      }
+    },
     move: {
       type: "object",
       properties: {
@@ -214,9 +221,10 @@ const validations = {
       }
     },
     pdf: {
-      type: "array",
-      minLength: 1,
+      type: "object",
       properties: {
+        thesisIds: { type: "array", minLength: 1, error: "You must select at least 1 thesis." },
+        CouncilMeetingId: { type: "number", optional: true } // if no meeting given -> no cover generated
       }
     },
     doc: {

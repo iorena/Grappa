@@ -1,26 +1,36 @@
-var page = require('webpage').create();
+var page = require("webpage").create();
 page.paperSize = {
-  height: '11in',
-  width: '8.5in',
+  height: "11in",
+  width: "8.5in",
 };
 
-var args = require('system').args;
+page.onResourceError = function(resourceError) {
+  console.error(resourceError.url + ": " + resourceError.errorString);
+};
+
+var renderAndWait = function(toFile, toOutput, timeout) {
+  setTimeout(function () {
+    page.open(toFile, function(status) {
+      // console.log("path", toOutput);
+      // console.log("status", status)
+      page.render(toOutput);
+    })
+  }, timeout);
+}
+
+var args = require("system").args;
 
 if (args[1] && args[2]) {
-  const pathToFolder = args[1];
-  const amount = parseInt(args[2]);
-  for(var i = 0; i < amount; i++) {
-    console.log("LOOPING")
-    // console.log(pathToFolder + "/" + i + ".html")
+  var pathToFolder = args[1];
+  var amount = parseInt(args[2]);
+  for(var i = 1; i <= amount; i++) {
+    var pathToFile = "file:///" + pathToFolder + "/0-" + i + ".cover.html";
+    var pathToOutput = pathToFolder + "/0-" + i + ".cover.pdf";
+    renderAndWait(pathToFile, pathToOutput, 100 * (i - 1));
     setTimeout(function () {
-      // page.open(pathToFolder + "/" + i + ".html", function() {
-      page.open('tmp/0.html', function() {
-        console.log("juu")
-        page.render(pathToFolder + "/" + i + ".pdf");
-        if ((i + 1) === amount) {
-          phantom.exit();
-        }
-      });
-    }, 100 * i);
+      phantom.exit();
+    }, (100 * amount));
   }
+} else {
+  phantom.exit();
 }

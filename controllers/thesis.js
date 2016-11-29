@@ -206,20 +206,20 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
 };
 
 module.exports.generateThesesToPdf = (req, res, next) => {
-  let professors;
   let pathToFile;
 
-  User
-  .findAllProfessors()
-  .then(dudes => {
-    professors = dudes;
-    return Thesis.findAllDocuments(req.body);
+  Promise.all([
+    Thesis.findAllDocuments(req.body.thesisIds),
+    User.findAllProfessors(),
+    CouncilMeeting.findMeetingAndSequence(req.body.CouncilMeetingId)
+  ])
+  .then(responses => {
+    return PdfManipulator.generatePdfFromTheses(responses[0], responses[1], responses[2]);
   })
-  .then((theses) => PdfManipulator.generatePdfFromTheses(theses, professors))
   .then((path) => {
     pathToFile = path;
     if (req.user.role === "print-person") {
-      return Promise.all(req.body.map(thesis_id =>
+      return Promise.all(req.body.thesisIds.map(thesis_id =>
         ThesisProgress.setPrintDone(thesis_id))
       );
     } else {
