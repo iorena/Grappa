@@ -16,10 +16,11 @@ class CouncilMeeting extends BaseModel {
 
   findMeetingAndSequence(id) {
     let meeting;
-    return this.Models.CouncilMeeting.findOne({ id, })
+    return this.Models.CouncilMeeting.findOne({ where: { id, }})
       .then(found => {
         meeting = found;
-        // will fail here if no meeting found... which is fine I guess
+        // if no councilmeeting found / provided will just not print the cover
+        if (!found) return undefined;
         const start = new Date(meeting.date.getFullYear(), 0, 1);
         return this.Models.CouncilMeeting.findAll({
             where: {
@@ -30,7 +31,9 @@ class CouncilMeeting extends BaseModel {
           })
       })
       .then(meetings => {
-        meeting.seq = meetings.length;
+        if (meeting) {
+          meeting.seq = meetings.length;
+        }
         return meeting;
       })
   }

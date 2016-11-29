@@ -11,8 +11,8 @@ page.onResourceError = function(resourceError) {
 var renderAndWait = function(toFile, toOutput, timeout) {
   setTimeout(function () {
     page.open(toFile, function(status) {
-      console.log("path", toOutput);
-      console.log("status", status)
+      // console.log("path", toOutput);
+      // console.log("status", status)
       page.render(toOutput);
     })
   }, timeout);
@@ -23,15 +23,10 @@ var args = require("system").args;
 if (args[1] && args[2]) {
   var pathToFolder = args[1];
   var amount = parseInt(args[2]);
-  console.log(amount)
   for(var i = 1; i <= amount; i++) {
-    // console.log("jees")
     var pathToFile = "file:///" + pathToFolder + "/0-" + i + ".cover.html";
     var pathToOutput = pathToFolder + "/0-" + i + ".cover.pdf";
-    console.log("path", pathToOutput);
-
     renderAndWait(pathToFile, pathToOutput, 100 * (i - 1));
-
     setTimeout(function () {
       phantom.exit();
     }, (100 * amount));
@@ -39,20 +34,3 @@ if (args[1] && args[2]) {
 } else {
   phantom.exit();
 }
-// var args = require("system").args;
-//
-// if (args[1] && args[2]) {
-//   var pathToFolder = args[1];
-//   var amount = parseInt(args[2]);
-//   for(var i = 1; i <= amount; i++) {
-//     console.log("LOOPING")
-//     setTimeout(function () {
-//       var pathToFile = "file:///" + pathToFolder + "/" + i + ".html";
-//       var pathToOutput = pathToFolder + "/" + i + ".pdf";
-//       page.open(pathToFile, function() {
-//         page.render(pathToOutput);
-//         if (i === amount) phantom.exit()
-//       });
-//     }, 100 * (i - 1));
-//   }
-// }

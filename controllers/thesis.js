@@ -211,7 +211,7 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   Promise.all([
     Thesis.findAllDocuments(req.body.thesisIds),
     User.findAllProfessors(),
-    CouncilMeeting.findMeetingAndSequence({ id: req.body.CouncilMeetingId })
+    CouncilMeeting.findMeetingAndSequence(req.body.CouncilMeetingId)
   ])
   .then(responses => {
     return PdfManipulator.generatePdfFromTheses(responses[0], responses[1], responses[2]);

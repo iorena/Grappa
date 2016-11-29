@@ -193,16 +193,16 @@ class PdfManipulator {
       })
       .then(() => {
         return new Promise((resolve, reject) => {
-          console.log("yo executing phantomjs")
+          // console.log("yo executing phantomjs")
           const pathToCmd = path.join(__dirname, "../config/phantomjs/createCover.phantom.js");
           const cmd = `${phantomjs.path} ${pathToCmd} ${pathToFolder} ${pages}`;
           const child = exec(cmd, function (err, stdout, stderr) {
             if (err) {
-              console.log("jaaa vituix meni")
+              // console.log("jaaa vituix meni")
               console.error(err);
               reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
             } else {
-              console.log("was success!", stdout)
+              // console.log("was success!", stdout)
               resolve(pages);
             }
           });
@@ -233,8 +233,11 @@ class PdfManipulator {
     return FileManipulator.createFolder(docName)
       .then((newPath) => {
         pathToFolder = newPath;
-        // return Promise.resolve()
-        return this.asdf(pathToFolder, theses, councilmeeting);
+        if (councilmeeting) {
+          return this.asdf(pathToFolder, theses, councilmeeting);
+        } else {
+          return Promise.resolve();
+        }
       })
       .then((coverPages) => {
         return Promise.all(theses.map(thesis => {

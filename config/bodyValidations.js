@@ -223,7 +223,7 @@ const validations = {
     pdf: {
       type: "object",
       properties: {
-        thesisIds: { type: "array", },
+        thesisIds: { type: "array", minLength: 1, error: "You must select at least 1 thesis." },
         CouncilMeetingId: { type: "number", optional: true } // if no meeting given -> no cover generated
       }
     },
