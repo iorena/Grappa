@@ -8,6 +8,16 @@ page.onResourceError = function(resourceError) {
   console.error(resourceError.url + ": " + resourceError.errorString);
 };
 
+var renderAndWait = function(toFile, toOutput, timeout) {
+  setTimeout(function () {
+    page.open(toFile, function(status) {
+      console.log("path", toOutput);
+      console.log("status", status)
+      page.render(toOutput);
+    })
+  }, timeout);
+}
+
 var args = require("system").args;
 
 if (args[1] && args[2]) {
@@ -18,17 +28,13 @@ if (args[1] && args[2]) {
     // console.log("jees")
     var pathToFile = "file:///" + pathToFolder + "/0-" + i + ".cover.html";
     var pathToOutput = pathToFolder + "/0-" + i + ".cover.pdf";
+    console.log("path", pathToOutput);
 
-    setTimeout(function () {
-      page.open(pathToFile, function(status) {
-        // console.log("status", status)
-        page.render(pathToOutput);
-      })
-    }, 100 * (i - 1));
+    renderAndWait(pathToFile, pathToOutput, 100 * (i - 1));
 
     setTimeout(function () {
       phantom.exit();
-    }, 100 * amount);
+    }, (100 * amount));
   }
 } else {
   phantom.exit();

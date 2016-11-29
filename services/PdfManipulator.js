@@ -150,7 +150,10 @@ class PdfManipulator {
     }, "")
   }
 
-  pruneTheses(theses) {
+  /**
+   * Removes unnecessary attributes and returns an array of 8-length arrays of theses
+   */
+  pruneAndSliceTheses(theses) {
     return theses.reduce((accumulated, current, index) => {
       const thesis = {
         authorFirstname: current.authorFirstname,
@@ -159,7 +162,7 @@ class PdfManipulator {
         grade: current.grade,
         graders: this.gradersToString(current.Graders),
       };
-      if (index === 0 || index + 1 % 8 === 0) {
+      if (index === 0 || index % 8 === 0) {
         accumulated.push([]);
       }
       accumulated[accumulated.length - 1].push(thesis);
@@ -171,7 +174,7 @@ class PdfManipulator {
     let pages;
     return FileManipulator.readFileToBuffer(path.join(__dirname, "../config/phantomjs/cover.html"))
       .then(buffer => {
-        const prunedTheses = this.pruneTheses(theses);
+        const prunedTheses = this.pruneAndSliceTheses(theses);
         return Promise.all(prunedTheses.map((thesisArray, index) => {
           pages = index + 1;
           const html = ejs.render(buffer.toString(),
@@ -200,7 +203,7 @@ class PdfManipulator {
               reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
             } else {
               console.log("was success!", stdout)
-              resolve();
+              resolve(pages);
             }
           });
         });
@@ -233,7 +236,7 @@ class PdfManipulator {
         // return Promise.resolve()
         return this.asdf(pathToFolder, theses, councilmeeting);
       })
-      .then(() => {
+      .then((coverPages) => {
         return Promise.all(theses.map(thesis => {
           let pdfs = [];
           if (thesis.ThesisAbstract) {
