@@ -14,6 +14,27 @@ class CouncilMeeting extends BaseModel {
       });
   }
 
+  findMeetingAndSequence(id) {
+    let meeting;
+    return this.Models.CouncilMeeting.findOne({ id, })
+      .then(found => {
+        meeting = found;
+        // will fail here if no meeting found... which is fine I guess
+        const start = new Date(meeting.date.getFullYear(), 0, 1);
+        return this.Models.CouncilMeeting.findAll({
+            where: {
+              date: {
+                $between: [start, meeting.date],
+              }
+            }
+          })
+      })
+      .then(meetings => {
+        meeting.seq = meetings.length;
+        return meeting;
+      })
+  }
+
   checkIfExists(meeting) {
     const start = new Date(meeting.date);
     const end = new Date(meeting.date);
@@ -72,18 +93,6 @@ class CouncilMeeting extends BaseModel {
         }
       })
   }
-
-  // saveOne(meeting) {
-  //   const date = new Date(meeting.date);
-  //   date.setHours(23, 59, 59, 0);
-  //   return this.getModel().create({ date: date })
-  //     .then(saved => {
-  //       return {
-  //         id: saved.id,
-  //         date: saved.date,
-  //       }
-  //     });
-  // }
 }
 
 module.exports = new CouncilMeeting();

@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
+const moment = require("moment");
 const mkdirp = require("mkdirp");
 const PDF = require("pdfkit");
 const phantomjs = require("phantomjs-prebuilt");
@@ -176,8 +177,8 @@ class PdfManipulator {
           const html = ejs.render(buffer.toString(),
             {
               councilmeeting: {
-                date: "11/7/2016",
-                no: "KK 2/2016"
+                date: moment(councilmeeting.date).format("DD/MM/YYYY"),
+                no: `KK ${councilmeeting.seq}/${councilmeeting.date.getFullYear()}`,
               },
               theses: thesisArray,
               page: pages,
@@ -222,7 +223,7 @@ class PdfManipulator {
     });
   }
 
-  generatePdfFromTheses(theses, professors) {
+  generatePdfFromTheses(theses, professors, councilmeeting) {
     const docName = Date.now();
     let pathToFolder;
     let order = 1;
@@ -230,7 +231,7 @@ class PdfManipulator {
       .then((newPath) => {
         pathToFolder = newPath;
         // return Promise.resolve()
-        return this.asdf(pathToFolder, theses);
+        return this.asdf(pathToFolder, theses, councilmeeting);
       })
       .then(() => {
         return Promise.all(theses.map(thesis => {
