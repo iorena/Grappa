@@ -131,6 +131,6 @@ router.post("/email/remind",
 router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
 
-// router.use("", errorHandler.handleErrors);
+router.use("", errorHandler.handleErrors);
 
 module.exports = router;
