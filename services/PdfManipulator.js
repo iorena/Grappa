@@ -170,7 +170,7 @@ class PdfManipulator {
     }, []);
   }
 
-  asdf(pathToFolder, theses, councilmeeting) {
+  generateThesesCover(pathToFolder, theses, councilmeeting) {
     let pages;
     return FileManipulator.readFileToBuffer(path.join(__dirname, "../config/phantomjs/cover.html"))
       .then(buffer => {
@@ -234,7 +234,7 @@ class PdfManipulator {
       .then((newPath) => {
         pathToFolder = newPath;
         if (councilmeeting) {
-          return this.asdf(pathToFolder, theses, councilmeeting);
+          return this.generateThesesCover(pathToFolder, theses, councilmeeting);
         } else {
           return Promise.resolve();
         }

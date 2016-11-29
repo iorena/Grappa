@@ -219,7 +219,7 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .then((path) => {
     pathToFile = path;
     if (req.user.role === "print-person") {
-      return Promise.all(req.body.map(thesis_id =>
+      return Promise.all(req.body.thesisIds.map(thesis_id =>
         ThesisProgress.setPrintDone(thesis_id))
       );
     } else {
