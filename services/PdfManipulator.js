@@ -39,9 +39,9 @@ class PdfManipulator {
           throw new errors.BadRequestError("Thesis had less than 2 pages.");
         }
       })
-      .then((path) => {
+      .then((newPath) => {
         FileManipulator.deleteFolderTimer(30000, pathToFolder);
-        return path;
+        return newPath;
       });
   }
 
@@ -139,76 +139,71 @@ class PdfManipulator {
     });
   }
 
-  graders(graders) {
-    return graders.reduce((previousValue, current) => {
-      if (previousValue) {
-        return `${previousValue}`
+  gradersToString(graders) {
+    return graders.reduce((accumulated, current, index) => {
+      if (accumulated) {
+        return `${accumulated}, ${current.name}`;
+      } else {
+        return `${current.name}`;
       }
     }, "")
   }
 
-  generateThesesCover(theses) {
-    theses.map(thesis => {
-      return {
-        authorFirstname: thesis.authorFirstname,
-        authorLastname: thesis.authorLasttname,
-        title: thesis.title,
-        grade: thesis.grade,
+  pruneTheses(theses) {
+    return theses.reduce((accumulated, current, index) => {
+      const thesis = {
+        authorFirstname: current.authorFirstname,
+        authorLastname: current.authorLastname,
+        title: current.title,
+        grade: current.grade,
+        graders: this.gradersToString(current.Graders),
+      };
+      if (index === 0 || index + 1 % 8 === 0) {
+        accumulated.push([]);
       }
-    })
+      accumulated[accumulated.length - 1].push(thesis);
+      return accumulated;
+    }, []);
   }
 
-  asdf(putToFolder, theses, councilmeeting) {
-    let pathToFolder;
+  asdf(pathToFolder, theses, councilmeeting) {
     let pages;
-    return FileManipulator.createFolder()
-      .then((folderPath) => {
-        console.log("sdf")
-        pathToFolder = folderPath;
-        console.log(folderPath)
-        return FileManipulator.readFileToBuffer(path.join(__dirname, "../config/phantomjs/cover.html"))
-      })
+    return FileManipulator.readFileToBuffer(path.join(__dirname, "../config/phantomjs/cover.html"))
       .then(buffer => {
-        const html = ejs.render(buffer.toString(),
-        {
-          councilmeeting: {
-            date: "11/7/2016",
-            no: "KK 2/2016"
-          },
-          theses: [
+        const prunedTheses = this.pruneTheses(theses);
+        return Promise.all(prunedTheses.map((thesisArray, index) => {
+          pages = index + 1;
+          const html = ejs.render(buffer.toString(),
             {
-              authorFirstname: "masa",
-              authorLastname: "näsä",
-              title: "ei huvita mikään",
-              graders: "matti vanhanen, pekka puupää",
-              grade: "Abbrobatur"
+              councilmeeting: {
+                date: "11/7/2016",
+                no: "KK 2/2016"
+              },
+              theses: thesisArray,
+              page: pages,
+              maxPages: prunedTheses.length,
             }
-          ],
-          page: 1,
-          maxPages: 2
-        });
-        pages = 1;
-        // console.log(html)
-        return FileManipulator.writeFile(`${pathToFolder}/0.html`, html);
+          );
+          return FileManipulator.writeFile(`${pathToFolder}/${pages}.html`, html);
+        }))
       })
       .then(() => {
         return new Promise((resolve, reject) => {
-          console.log("yo nigga")
+          console.log("yo executing phantomjs")
           const pathToCmd = path.join(__dirname, "../config/phantomjs/createCover.phantom.js");
           const cmd = `${phantomjs.path} ${pathToCmd} ${pathToFolder} ${pages}`;
+          console.log(cmd)
           const child = exec(cmd, function (err, stdout, stderr) {
             if (err) {
+              console.log("jaaa vituix meni")
               console.error(err);
               reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
             } else {
-              console.log("What is life?", stdout)
+              console.log("was success!", stdout)
               resolve();
             }
           });
         });
-      })
-      .catch(err => {
-        console.log("woi", err)
       })
   }
 
@@ -233,8 +228,12 @@ class PdfManipulator {
     let pathToFolder;
     let order = 1;
     return FileManipulator.createFolder(docName)
-      .then((path) => {
-        pathToFolder = path;
+      .then((newPath) => {
+        pathToFolder = newPath;
+        // return Promise.resolve()
+        return this.asdf(pathToFolder, theses);
+      })
+      .then(() => {
         return Promise.all(theses.map(thesis => {
           let pdfs = [];
           if (thesis.ThesisAbstract) {
@@ -254,7 +253,7 @@ class PdfManipulator {
         return this.joinPdfs(pathToFolder);
       })
       .then((pathToPrintFile) => {
-        FileManipulator.deleteFolderTimer(10000, pathToFolder);
+        // FileManipulator.deleteFolderTimer(10000, pathToFolder);
         return pathToPrintFile;
       });
   }
