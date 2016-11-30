@@ -174,7 +174,7 @@ const validations = {
             file: { type: "any", error: "File didn't contain any data." },
             ext: {
               type: "string",
-              pattern: /^pdf/,
+              pattern: /^pdf$/,
               error: "File extension wasn't .pdf"
             },
           }
@@ -193,13 +193,13 @@ const validations = {
             file: { type: "any", error: "File didn't contain any data." },
             ext: {
               type: "string",
-              pattern: /^pdf/,
+              pattern: /^pdf$/,
               error: "File extension wasn't .pdf"
             },
             filetype: {
               type: "string",
-              pattern: /^(GraderReviewFile|AbstractFile)/,
-              error: "Filetype wasn't GraderReviewFile or AbstractFile."
+              pattern: /^GraderReviewFile$/,
+              error: "Filetype wasn't GraderReviewFile."
             },
           }
         },

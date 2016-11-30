@@ -1,7 +1,5 @@
 "use strict";
 
-const fs = require("fs");
-
 const Reminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PdfManipulator = require("../services/PdfManipulator");
@@ -164,7 +162,7 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
   })
   .then(resolvedArray => {
     if (!resolvedArray[0]) {
-      throw new errors.NotFoundError("No ThesisProgress found for the Thesis. Please inform admin that the database has been corrupted.");
+      throw new errors.NotFoundError("No ThesisProgress found for the Thesis. Please inform admin that something terrible has happened to the database :(.");
       // } else if (TokenGenerator.isTokenExpired(decoded)) {
     } else if (resolvedArray[0].ethesisDone) {
       throw new errors.BadRequestError("Your PDF has already been uploaded to the system.");

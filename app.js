@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const FileManipulator = require("./services/FileManipulator");
-// FileManipulator.cleanTmp();
+FileManipulator.cleanTmp();
 
 app.use(compression());
 app.use(busboy({
@@ -47,6 +47,9 @@ if (!module.parent) {
   });
 
 // should prevent the server from staying running when the process suddenly crashes
+// which still happens when nodemon has that stupid EPERM error where the files it has been
+// using are deleted BUT at least this one reduces required reboots to 2 (first to kill the old process,
+// second to the start new)
   process.on("exit", () => {
     console.log("PROCESS EXIT !")
     app.close();
