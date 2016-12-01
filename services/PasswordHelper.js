@@ -14,7 +14,7 @@ class PasswordHelper {
   }
 
   generatePassword() {
-    return passwordGenerator.generatePassword();
+    return passwordGenerator(24, false);
   }
 }
 

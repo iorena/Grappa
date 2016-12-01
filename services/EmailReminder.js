@@ -16,7 +16,19 @@ const errors = require("../config/errors");
 
 class EmailReminder {
 
-  sendMail(toEmail, emailDraft, thesis, customBody, attachments) {
+  sendMail(toEmail, emailDraft, customBody, attachments) {
+    let savedEmail;
+    return Sender.sendEmail(toEmail, emailDraft.title, customBody, attachments)
+      .then(() => EmailStatus.saveOne({
+        lastSent: Date.now(),
+        type: emailDraft.type,
+        to: toEmail,
+        EmailDraftId: emailDraft.id,
+        ThesisId: null
+      }))
+  }
+
+  sendReminder(toEmail, emailDraft, thesis, customBody, attachments) {
     let savedEmail;
     return Sender.sendEmail(toEmail, emailDraft.title, customBody, attachments)
       .then(() => EmailStatus.saveOne({
@@ -56,7 +68,7 @@ class EmailReminder {
           let body = draft.body.replace("$LINK$", `${process.env.APP_URL}/ethesis/${token}`);
           body = body.replace("$DATE$", moment(councilmeeting.date).format("DD/MM/YYYY"));
           body = body.replace("$STUDENTDEADLINE$", moment(councilmeeting.studentDeadline).format("HH:mm DD/MM/YYYY"));
-          return this.sendMail(thesis.authorEmail, draft, thesis, body, attachments);
+          return this.sendReminder(thesis.authorEmail, draft, thesis, body, attachments);
         } else {
           throw new errors.PremiseError("EthesisReminder not found from EmailDrafts");
         }
@@ -81,7 +93,7 @@ class EmailReminder {
       .then(draft => {
         if (draft) {
           return Promise.all(foundPrintPersons.map(printPerson =>
-            this.sendMail(printPerson.email, draft, thesis, draft.body, undefined)
+            this.sendReminder(printPerson.email, draft, thesis, draft.body, undefined)
           ))
         } else {
           throw new errors.PremiseError("PrintReminder not found from EmailDrafts");
@@ -107,7 +119,7 @@ class EmailReminder {
       .then(draft => {
         if (draft) {
           const body = draft.body.replace("$LINK$", `${process.env.APP_URL}/thesis/${thesis.id}`);
-          return this.sendMail(foundProfessor.email, draft, thesis, body, undefined);
+          return this.sendReminder(foundProfessor.email, draft, thesis, body, undefined);
         } else {
           throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
         }
@@ -118,10 +130,10 @@ class EmailReminder {
     const token = TokenGen.generateResetPasswordToken(user);
 
     return EmailDraft.findOne({ type: "ResetPassword" })
-      .then(reminder => {
-        if (reminder) {
-          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/reset-password/${token}`);
-          return Sender.sendEmail(user.email, reminder.title, body);
+      .then(draft => {
+        if (draft) {
+          const body = draft.body.replace("$LINK$", `${process.env.APP_URL}/reset-password/${token}`);
+          return this.sendMail(user.email, draft, body, undefined);
         } else {
           throw new errors.PremiseError("ResetPassword not found from EmailDrafts");
         }
@@ -130,10 +142,10 @@ class EmailReminder {
 
   sendNewPasswordMail(user, password) {
     return EmailDraft.findOne({ type: "NewPassword" })
-      .then(reminder => {
-        if (reminder) {
-          const body = reminder.body.replace("$LINK$", `${process.env.APP_URL}/reset-password/${token}`);
-          return Sender.sendEmail(user.email, reminder.title, body);
+      .then(draft => {
+        if (draft) {
+          const body = draft.body.replace("$NEWPASSWORD$", `${password}`);
+          return this.sendMail(user.email, draft, body, undefined);
         } else {
           throw new errors.PremiseError("NewPassword not found from EmailDrafts");
         }

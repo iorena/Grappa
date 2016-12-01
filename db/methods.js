@@ -66,12 +66,12 @@ module.exports.addTestData = () => Promise.all([
   models.EmailDraft.create({
     type: "ResetPassword",
     title: "Password resetion",
-    body: "You have requested to reset your password. To do so follow the provided link in the next 24 hours.\n$LINK$",
+    body: "You have requested to reset your password. To do so follow the provided link in the next hour.\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "NewPassword",
     title: "Your new password",
-    body: "Here is your new password. Please change it as soon as possible.\n$VAR1$",
+    body: "Here is your new password. Please change it as soon as possible.\n$NEWPASSWORD$",
   }),
 ]);
 
@@ -141,12 +141,12 @@ module.exports.addLotTestData = () => Promise.all([
   models.EmailDraft.create({
     type: "ResetPassword",
     title: "Password resetion",
-    body: "You have requested to reset your password. To do so follow the provided link in the next 24 hours.\n$LINK$",
+    body: "You have requested to reset your password. To do so follow the provided link in the next hour.\n\n$LINK$",
   }),
   models.EmailDraft.create({
     type: "NewPassword",
     title: "Your new password",
-    body: "Here is your new password. Please change it as soon as possible.\n$VAR1$",
+    body: "Here is your new password. Please change it as soon as possible.\n\n$NEWPASSWORD$",
   }),
 ]);
 

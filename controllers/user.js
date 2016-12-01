@@ -156,6 +156,8 @@ module.exports.sendNewPassword = (req, res, next) => {
   .then((decoded) => {
     if (!decoded || decoded.name !== "password") {
       throw new errors.BadRequestError("Invalid token.");
+    } else if (TokenGenerator.isTokenExpired(decoded)) {
+      throw new errors.BadRequestError("Token has expired.");
     } else {
       decodedToken = decoded;
       return User.findOne({ id: decodedToken.user.id });
