@@ -38,6 +38,16 @@ function NotFoundError(message, details) {
   this.stack = (new Error()).stack;
 }
 
+LoginTimeoutError.prototype = Object.create(Error.prototype);
+
+function LoginTimeoutError(message, details) {
+  this.name = "LoginTimeoutError";
+  this.message = message || "Something went wrong";
+  this.details = details || {};
+  this.statusCode = 440;
+  this.stack = (new Error()).stack;
+}
+
 // Error caused when requisite data is missing e.g. email drafts from database
 PremiseError.prototype = Object.create(Error.prototype);
 
@@ -56,5 +66,6 @@ module.exports = {
   AuthenticationError,
   ForbiddenError,
   NotFoundError,
+  LoginTimeoutError,
   PremiseError,
 };

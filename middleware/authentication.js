@@ -19,7 +19,7 @@ module.exports.authenticate = (req, res, next) => {
     throw new errors.AuthenticationError("Invalid token.");
   }
   if (TokenGenerator.isTokenExpired(decoded)) {
-    throw new errors.AuthenticationError("Your token has expired. Please re-login.");
+    throw new errors.LoginTimeoutError("Your token has expired. Please re-login.");
   } else {
     req.user = decoded.user;
     next();
