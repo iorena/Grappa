@@ -210,9 +210,13 @@ class PdfManipulator {
       })
   }
 
-  joinPdfs(pathToFolder) {
+  joinPdfs(pathToFolder, fileNames) {
     return new Promise((resolve, reject) => {
-      const pdfs = path.join(pathToFolder, "/*.pdf");
+      // const pdfs = path.join(pathToFolder, "/*.pdf");
+      const pdfs = fileNames.reduce((accumulated, current) => {
+        accumulated += " " + current;
+        return accumulated;
+      }, "")
       const output = path.join(pathToFolder, "/print.pdf");
       const cmd = `pdftk ${pdfs} cat output ${output}`;
       const child = exec(cmd, function (err, stdout, stderr) {
@@ -230,6 +234,7 @@ class PdfManipulator {
     const docName = Date.now();
     let pathToFolder;
     let order = 1;
+    let pdfFileNames = [];
     return FileManipulator.createFolder(docName)
       .then((newPath) => {
         pathToFolder = newPath;
@@ -240,15 +245,21 @@ class PdfManipulator {
         }
       })
       .then((coverPages) => {
+        for (var i = 1; i <= coverPages; i++){
+          pdfFileNames.push(path.join(pathToFolder, `0-${i}.cover.pdf`));
+        }
         return Promise.all(theses.map(thesis => {
           let pdfs = [];
           if (thesis.ThesisAbstract) {
+            pdfFileNames.push(path.join(pathToFolder, `${order}-1.abstract.pdf`));
             pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-1.abstract.pdf`, thesis.ThesisAbstract.pdf, "base64"));
           }
           if (thesis.ThesisReview) {
+            pdfFileNames.push(path.join(pathToFolder, `${order}-2.review.pdf`));
             pdfs.push(FileManipulator.writeFile(`${pathToFolder}/${order}-2.review.pdf`, thesis.ThesisReview.pdf, "base64"));
           }
-          if (thesis.graderEval) {
+          if (thesis.graderEval && thesis.graderEval.length !== 0) {
+            pdfFileNames.push(path.join(pathToFolder, `${order}-3.graderEval.pdf`));
             pdfs.push(this.generatePdfFromGraderEval(thesis, professors, `${pathToFolder}/${order}-3`));
           }
           order++;
@@ -256,7 +267,7 @@ class PdfManipulator {
         }));
       })
       .then(() => {
-        return this.joinPdfs(pathToFolder);
+        return this.joinPdfs(pathToFolder, pdfFileNames);
       })
       .then((pathToPrintFile) => {
         // FileManipulator.deleteFolderTimer(10000, pathToFolder);

@@ -2,8 +2,7 @@
 
 const EmailReminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
-const passwordHelper = require("../config/passwordHelper");
-const PasswordHelperx = require("../services/PasswordHelper");
+const PasswordHelper = require("../services/PasswordHelper");
 
 const User = require("../models/User");
 
@@ -36,7 +35,7 @@ module.exports.updateOne = (req, res, next) => {
   .then(foundUser => {
     if (!foundUser) {
       throw new errors.NotFoundError("No User found.");
-    } else if (req.user.id.toString() === req.params.id && user.password && !passwordHelper.comparePassword(user.password, foundUser.passwordHash)) {
+    } else if (req.user.id.toString() === req.params.id && user.password && !PasswordHelper.comparePassword(user.password, foundUser.passwordHash)) {
       throw new errors.AuthenticationError("Wrong password.");
     }
     let strippedUser = {};
@@ -47,13 +46,10 @@ module.exports.updateOne = (req, res, next) => {
         email: user.email,
       };
       if (user.newPassword) {
-        strippedUser.passwordHash = passwordHelper.hashPassword(user.newPassword);
+        strippedUser.passwordHash = PasswordHelper.hashPassword(user.newPassword);
       }
     } else {
       strippedUser = user;
-      if (user.password) {
-        strippedUser.passwordHash = passwordHelper.hashPassword(user.password);
-      }
       if (strippedUser.role === "professor") {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
@@ -81,7 +77,7 @@ module.exports.saveOne = (req, res, next) => {
     if (foundUser) {
       throw new errors.BadRequestError("User already exists with the same email.");
     } else {
-      req.body.passwordHash = passwordHelper.hashPassword(req.body.password);
+      req.body.passwordHash = PasswordHelper.hashPassword(req.body.password);
       return User.saveOne(req.body);
     }
   })
@@ -114,7 +110,7 @@ module.exports.loginUser = (req, res, next) => {
       throw new errors.ForbiddenError("Your account is inactive, please contact admin for activation.");
     } else if (user.isRetired) {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin for reactivation.");
-    } else if (!passwordHelper.comparePassword(req.body.password, user.passwordHash)) {
+    } else if (!PasswordHelper.comparePassword(req.body.password, user.passwordHash)) {
       throw new errors.AuthenticationError("Incorrect password.");
     } else {
       const token = TokenGenerator.generateLoginToken(user);
@@ -139,6 +135,7 @@ module.exports.requestPasswordResetion = (req, res, next) => {
     } else if (user.isRetired) {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
     } else {
+      // find email status where type reset-password, created at today and length of those max 3 ?
       return EmailReminder.sendResetPasswordMail(user);
     }
   })
@@ -157,6 +154,8 @@ module.exports.sendNewPassword = (req, res, next) => {
   .then((decoded) => {
     if (!decoded || decoded.name !== "password") {
       throw new errors.BadRequestError("Invalid token.");
+    } else if (TokenGenerator.isTokenExpired(decoded)) {
+      throw new errors.BadRequestError("Token has expired.");
     } else {
       decodedToken = decoded;
       return User.findOne({ id: decodedToken.user.id });
@@ -170,9 +169,11 @@ module.exports.sendNewPassword = (req, res, next) => {
     } else if (user.isRetired) {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
     } else {
+      // same as with the above, check for old emails sent and if 3 already (or less?)
+      // then send forbidden error
       foundUser = user;
-      generatedPassword = PasswordHelperx.generatePassword();
-      const passwordHash = passwordHelper.hashPassword(generatedPassword);
+      generatedPassword = PasswordHelper.generatePassword();
+      const passwordHash = PasswordHelper.hashPassword(generatedPassword);
       return User.update({ passwordHash, }, { id: decodedToken.user.id });
     }
   })

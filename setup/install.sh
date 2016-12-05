@@ -57,15 +57,16 @@ git clone https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-backend.git
 git clone https://github.com/ultra-hyper-storm-ohtuprojekti/grappa-front.git
 cd grappa-backend
 # here you should name the variables inside .env
-mv .dev-env .env
+cp .dev-env .env
 # >>> rename .env variables <<<<
 npm i
 npm run db init
 cd ../grappa-front
-mv .dev-env .env
+cp .dev-env .env
 # >>> rename .env variables <<<
 npm i
-# if webpack doesn't build automatically you can trigger it yourself
+# if your forgot to set the NODE_ENV=production then the webpack didn't build the app so
+# you have to trigger it manually by this command
 npm run postinstall
 # Configure nginx
 sudo cp /var/www/grappa.cs.helsinki.fi/grappa-backend/bin/grappa.cs.helsinki.fi /etc/nginx/sites-available
@@ -78,4 +79,4 @@ pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend
 pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front
 # since we are on single core no need to have multiple processess like this
 # pm2 start /var/www/grappa.cs.helsinki.fi/grappa-backend/app.js -n grappa-backend -i 2
-# pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front -i 1
+# pm2 start /var/www/grappa.cs.helsinki.fi/grappa-front/index.js -n grappa-front -i 2
