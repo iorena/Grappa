@@ -50,9 +50,6 @@ module.exports.updateOne = (req, res, next) => {
       }
     } else {
       strippedUser = user;
-      if (user.password) {
-        strippedUser.passwordHash = PasswordHelper.hashPassword(user.password);
-      }
       if (strippedUser.role === "professor") {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
@@ -138,6 +135,7 @@ module.exports.requestPasswordResetion = (req, res, next) => {
     } else if (user.isRetired) {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
     } else {
+      // find email status where type reset-password, created at today and length of those max 3 ?
       return EmailReminder.sendResetPasswordMail(user);
     }
   })
@@ -171,6 +169,8 @@ module.exports.sendNewPassword = (req, res, next) => {
     } else if (user.isRetired) {
       throw new errors.ForbiddenError("Your account has been retired, please contact admin to reactivate.");
     } else {
+      // same as with the above, check for old emails sent and if 3 already (or less?)
+      // then send forbidden error
       foundUser = user;
       generatedPassword = PasswordHelper.generatePassword();
       const passwordHash = PasswordHelper.hashPassword(generatedPassword);
