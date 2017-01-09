@@ -1,9 +1,7 @@
 "use strict";
 
-// TODO Switch to jsonwebtoken
-// or maybe creat pull request to make this return undefined
-// but probably I still want to use the async version
-const jwt = require("jwt-simple");
+// TODO use async decoding?
+const jwt = require("jsonwebtoken");
 
 class TokenGenerator {
   constructor(secret) {
@@ -12,7 +10,7 @@ class TokenGenerator {
   decodeToken(token) {
     let decoded;
     try {
-      decoded = jwt.decode(token, this.secret);
+      decoded = jwt.verify(token, this.secret);
     } catch (e) {
       decoded = undefined;
     }
@@ -29,39 +27,37 @@ class TokenGenerator {
         role: user.role,
       },
       name: "login",
+      // expires: Math.floor(Date.now() / 1000) + 25,
       expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
-      expiresIn: 172800, // seconds
+      // expiresIn: 172800, // seconds
     };
     return payload;
   }
   generateToken(payload) {
-    return jwt.encode(payload, this.secret);
+    return jwt.sign(payload, this.secret);
   }
   generateEthesisToken(thesis) {
-    const date = new Date();
     const payload = {
       thesis: {
         id: thesis.id,
         CouncilMeetingId: thesis.CouncilMeetingId,
       },
       name: "ethesis",
-      created: new Date(),
       // TODO set to expire in a year?
-      expires: date.setHours(date.getHours() + 1),
+      // doesnt really expire as it all depends about the councilmeeting's deadline
+      expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
     };
-    return jwt.encode(payload, this.secret);
+    return jwt.sign(payload, this.secret);
   }
   generateResetPasswordToken(user) {
-    const date = new Date();
     const payload = {
       user: {
         id: user.id,
       },
       name: "password",
-      created: new Date(),
-      expires: date.setHours(date.getHours() + 1),
+      expires: Math.floor(Date.now() / 1000) + 60 * 60,
     }
-    return jwt.encode(payload, this.secret);
+    return jwt.sign(payload, this.secret);
   }
 }
 

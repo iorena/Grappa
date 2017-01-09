@@ -26,9 +26,6 @@ const index = (req, res, next) => {
 
 const authTest = (req, res, next) => {
   res.sendStatus(200);
-  // res.json({
-  //   message: "You've successfully authenticated.",
-  // });
 };
 
 router.get("/", index);
