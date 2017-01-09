@@ -16,7 +16,7 @@ module.exports.smtp = () => (
   {
     from: `Grappa Robot <${process.env.EMAIL_USER}@${process.env.EMAIL_HOST}>`,
     host: `smtp.${process.env.EMAIL_HOST}`,
-    port: 465,
+    port: 465, // TODO switch to 587
     secure: true, // use SSL
     auth: {
       user: process.env.EMAIL_USER,

@@ -113,11 +113,13 @@ module.exports.loginUser = (req, res, next) => {
     } else if (!PasswordHelper.comparePassword(req.body.password, user.passwordHash)) {
       throw new errors.AuthenticationError("Incorrect password.");
     } else {
-      const token = TokenGenerator.generateLoginToken(user);
+      const payload = TokenGenerator.generateLoginPayload(user);
+      const token = TokenGenerator.generateToken(payload);
       user.passwordHash = undefined;
       res.status(200).send({
         user,
         token,
+        expires: payload.expires,
       });
     }
   })

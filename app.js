@@ -37,6 +37,8 @@ app.use(cors());
 
 app.use("", require("./config/routes"));
 
+const WebSocketServer = require("./services/WebSocketServer");
+
 if (!module.parent) {
   app.listen(port, (err) => {
     if (err) {
@@ -45,6 +47,8 @@ if (!module.parent) {
       console.log(`App is listening on port ${port}`);
     }
   });
+
+  WebSocketServer.start();
 
 // should prevent the server from staying running when the process suddenly crashes
 // which still happens when nodemon has that stupid EPERM error where the files it has been

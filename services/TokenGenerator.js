@@ -19,20 +19,22 @@ class TokenGenerator {
     return decoded;
   }
   isTokenExpired(decodedToken) {
-    return new Date() > decodedToken.expires;
+    // return new Date() > decodedToken.expires;
+    return Math.floor(Date.now() / 1000) > decodedToken.expires;
   }
-  generateLoginToken(user) {
-    const date = new Date();
+  generateLoginPayload(user) {
     const payload = {
       user: {
         id: user.id,
         role: user.role,
       },
       name: "login",
-      created: new Date(),
-      expires: date.setDate(date.getDate() + 2),
-      // expires: date.setHours(date.getHours() + 3),
+      expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
+      expiresIn: 172800, // seconds
     };
+    return payload;
+  }
+  generateToken(payload) {
     return jwt.encode(payload, this.secret);
   }
   generateEthesisToken(thesis) {
