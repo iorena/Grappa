@@ -4,6 +4,7 @@ const Reminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PdfManipulator = require("../services/PdfManipulator");
 const FileManipulator = require("../services/FileManipulator");
+const SocketIOServer = require("../services/SocketIOServer");
 
 const Thesis = require("../models/Thesis");
 const ThesisReview = require("../models/ThesisReview");
@@ -113,12 +114,25 @@ module.exports.updateOneAndConnections = (req, res, next) => {
         );
       }
     })
-  }
-  if (updationPromises.length === 0) {
+  } else {
     updationPromises.push(new errors.ForbiddenError("No permission to edit Thesis."));
   }
+  
   Promise.all(updationPromises)
   .then(rows => {
+    Promise.all([
+      Thesis.findOneWithConnections({ id: thesis.id }),
+      ThesisProgress.findOne({ ThesisId: thesis.id })
+    ])
+    .then(found => SocketIOServer.broadcast(
+      ["admin", "print-person", `professor/${found[0].StudyField.id}`, `user/${found[0].User.id}`],
+      {
+        update: {
+          Thesis: [ found[0] ],
+          ThesisProgress: [ found[1] ],
+        },
+      }
+    ))
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -268,6 +282,7 @@ module.exports.deleteOne = (req, res, next) => {
     }
   })
   .then(() => {
+    // SocketIOServer.broadcast(["admin", "print-person", "professor/{thesis-studyfield}", "user/{thesis-user.id}"], "thesis", delete", thesisId);
     res.sendStatus(200);
   })
   .catch(err => next(err));
