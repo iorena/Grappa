@@ -120,18 +120,14 @@ module.exports.updateOneAndConnections = (req, res, next) => {
   
   Promise.all(updationPromises)
   .then(rows => {
-    Promise.all([
-      Thesis.findOneWithConnections({ id: thesis.id }),
-      ThesisProgress.findOne({ ThesisId: thesis.id })
-    ])
+    Thesis
+    .findOne({ id: thesis.id })
     .then(found => SocketIOServer.broadcast(
-      ["admin", "print-person", `professor/${found[0].StudyField.id}`, `user/${found[0].User.id}`],
-      {
-        update: {
-          Thesis: [ found[0] ],
-          ThesisProgress: [ found[1] ],
-        },
-      }
+      ["admin", "print-person", `professor/${found.StudyFieldId}`, `user/${found.UserId}`],
+      [{
+        type: "THESIS_UPDATE_ONE_SUCCESS",
+        payload: found,
+      }]
     ))
     res.sendStatus(200);
   })

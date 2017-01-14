@@ -25,9 +25,10 @@ class TokenGenerator {
       user: {
         id: user.id,
         role: user.role,
+        StudyFieldId: user.StudyFieldId,
       },
       name: "login",
-      // expires: Math.floor(Date.now() / 1000) + 25,
+      // expires: Math.floor(Date.now() / 1000) + 15,
       expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
       // expiresIn: 172800, // seconds
     };

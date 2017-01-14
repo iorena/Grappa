@@ -6,7 +6,7 @@ module.exports.updateOne = (req, res, next) => {
   ThesisProgress
   .update(req.body, { id: req.params.id })
   .then(rows => {
-    res.status(200).send(rows);
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };

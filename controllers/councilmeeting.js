@@ -1,5 +1,7 @@
 "use strict";
 
+const SocketIOServer = require("../services/SocketIOServer");
+
 const CouncilMeeting = require("../models/CouncilMeeting");
 const Thesis = require("../models/Thesis");
 
@@ -37,6 +39,13 @@ module.exports.saveOne = (req, res, next) => {
     }
   })
   .then(cmeeting => {
+    SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "COUNCILMEETING_SAVE_ONE_SUCCESS",
+        payload: cmeeting,
+      }]
+    )
     res.status(200).send(cmeeting);
   })
   .catch(err => next(err));
@@ -45,8 +54,17 @@ module.exports.saveOne = (req, res, next) => {
 module.exports.updateOne = (req, res, next) => {
   CouncilMeeting
   .update(req.body, { id: req.params.id })
-  .then(cmeeting => {
-    res.status(200).send(cmeeting);
+  .then(rows => {
+    CouncilMeeting
+    .findOne({ id: req.params.id })
+    .then(found => SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "COUNCILMEETING_UPDATE_ONE_SUCCESS",
+        payload: found,
+      }]
+    ))
+    res.sendStatus(200);        
   })
   .catch(err => next(err));
 };
@@ -62,11 +80,14 @@ module.exports.deleteOne = (req, res, next) => {
     }
   })
   .then(deletedRows => {
-    if (deletedRows !== 0) {
-      res.sendStatus(200);
-    } else {
-      throw new errors.NotFoundError("No councilmeeting found.");
-    }
+    SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "COUNCILMEETING_DELETE_ONE_SUCCESS",
+        payload: { id: parseInt(req.params.id) },
+      }]
+    )
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };

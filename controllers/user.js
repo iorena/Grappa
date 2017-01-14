@@ -3,6 +3,7 @@
 const EmailReminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PasswordHelper = require("../services/PasswordHelper");
+const SocketIOServer = require("../services/SocketIOServer");
 
 const User = require("../models/User");
 
@@ -64,6 +65,18 @@ module.exports.updateOne = (req, res, next) => {
     return User.update(strippedUser, { id: req.params.id });
   })
   .then(rows => {
+    User
+    .findOne({ id: req.params.id })
+    .then(user => {
+      user.passwordHash = undefined;
+      SocketIOServer.broadcast(
+        ["admin"],
+        [{
+          type: "USER_UPDATE_ONE_SUCCESS",
+          payload: user,
+        }]
+      )
+    })
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -82,6 +95,14 @@ module.exports.saveOne = (req, res, next) => {
     }
   })
   .then(savedUser => {
+    savedUser.passwordHash = undefined;
+    SocketIOServer.broadcast(
+      ["admin"],
+      [{
+        type: "USER_SAVE_ONE_SUCCESS",
+        payload: savedUser,
+      }]
+    )
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -91,11 +112,14 @@ module.exports.deleteOne = (req, res, next) => {
   User
   .delete({ id: req.params.id })
   .then(deletedRows => {
-    if (deletedRows !== 0) {
-      res.sendStatus(200);
-    } else {
-      throw new errors.NotFoundError("No user found.");
-    }
+    SocketIOServer.broadcast(
+      ["admin"],
+      [{
+        type: "USER_DELETE_ONE_SUCCESS",
+        payload: { id: parseInt(req.params.id) },
+      }]
+    )
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };

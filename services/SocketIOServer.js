@@ -4,9 +4,7 @@ const express = require("express");
 const app = express();
 const server = app.listen(8008);
 
-const ws = require("ws")
 const io = require("socket.io");
-
 const ioJwt = require("socketio-jwt");
 
 const TokenGenerator = require("./TokenGenerator");
@@ -19,94 +17,48 @@ class WebSocketServer {
   }
 
   start() {
-//     var ws = new WebSocketServer({
-//     verifyClient: function (info, cb) {
-//         var token = info.req.headers.token
-//         if (!token)
-//             cb(false, 401, 'Unauthorized')
-//         else {
-//             jwt.verify(token, 'secret-key', function (err, decoded) {
-//                 if (err) {
-//                     cb(false, 401, 'Unauthorized')
-//                 } else {
-//                     info.req.user = decoded //[1]
-//                     cb(true)
-//                 }
-//             })
-
-//         }
-//     }
-// })
-
-
-  this.server = io(server);
-  const self = this;
-  this.server.sockets
-    .on('connection', ioJwt.authorize({
-      // check if correct audience?? 
-      secret: process.env.TOKEN_SECRET,
-      timeout: 15000 // 15 seconds to send the authentication message
-    })).on('authenticated', function(socket) {
-      //this socket is authenticated, we are good to handle more events from it.
-      console.log('hello! ' + socket.decoded_token.name);
-      const role = socket.decoded_token.user.role;
-      if (role === "admin" || role === "print-person") {
-        socket.join(role)
-        self.rooms.push(role);
-      } else if (role === "professor") {
-        socket.join(`professor/studyfield`);
-        // this.rooms.push();
-      } else if (role === "instructor") {
-        socket.join(`instructor/${socket.decoded_token.user.id}`);
-        // this.rooms.push();
-      }
-    });
-
-  this.server.on('connection', function(socket){ 
+    this.server = io(server);
     const self = this;
-    setTimeout(() => {
-      console.log("timeout fired!")
-      self.server.emit('an event', { some: 'data' });
-    }, 2000)
-    console.log('Connection to client established');
+    this.server.sockets
+      .on('connection', ioJwt.authorize({
+        // check if correct audience?? 
+        secret: process.env.TOKEN_SECRET,
+        timeout: 15000 // 15 seconds to send the authentication message
+      })).on('authenticated', function(socket) {
+        //this socket is authenticated, we are good to handle more events from it.
+        console.log('hello! ' + socket.decoded_token.name);
+        const user = socket.decoded_token.user;
+        if (user.role === "admin" || user.role === "print-person") {
+          console.log("hei admin")
+          socket.join(user.role)
+          self.rooms.push(user.role);
+        } else if (user.role === "professor" && user.StudyFieldId) {
+          socket.join(`professor/${user.StudyFieldId}`);
+          this.rooms.push(`professor/${user.StudyFieldId}`);
+        } else {
+          socket.join(`instructor/${user.id}`);
+          this.rooms.push(`instructor/${user.id}`);
+        }
+      });
 
-    // Success!  Now listen to messages to be received
-    socket.on('message',function(event){ 
+    this.server.on('connection', function(socket){
+      const self = this;
+      setTimeout(() => {
+        console.log("timeout fired!")
+        console.log(self.rooms)
+        self.server.emit('an event', { some: 'data' });
+      }, 5000)
+      console.log('Connection to client established');
+
+      // Success!  Now listen to messages to be received
+      socket.on('message',function(event){ 
         console.log('Received message from client!',event);
-    });
+      });
 
-    socket.on('disconnect',function(){
+      socket.on('disconnect',function(){
         console.log('Client has disconnected');
+      });
     });
-  });
-
-    // this.server = new ws.Server({
-    //   port: 8008,
-    //   verifyClient: (info, cb) => {
-    //     const hasQueryParams = info.req.url.substring(0, 10) === "/ws?token=";
-    //     // if (!hasQueryParams) cb(false, 401, "Unauthorized")
-    //     const token = info.req.url.substring(10, info.req.url.length);
-    //     // if (TokenGenerator.verify(token)) {
-
-    //     // }
-    //     console.log(token) 
-    //     if (token) {
-    //       console.log("jee token");
-    //       cb(true)
-    //     } else {
-    //       console.log("wää no token");
-    //       cb(false);
-    //     }
-    //   }
-    // });
-
-    // this.server.on('connection', function connection(ws) {
-    //   ws.on('message', function incoming(message) {
-    //     console.log('received: %s', message);
-    //   });
-
-    //   ws.send('something');
-    // });
   }
 
   stop() {
@@ -129,17 +81,22 @@ class WebSocketServer {
    *   }
    * }
    * @param {Array} namespaces - list of namespaces to be notified of changes
-   * @param {Object} updates - object of types of updates with the required data
+   * @param {Array} actions - list of actions for the redux-store
    */
-  broadcast(notifiedRooms, updates) {
+  broadcast(notifiedRooms, actions) {
     console.log("yo broadcasting")
+    console.log(this.server.sockets.adapter.rooms)
+    this.server.emit("server-update", actions);
     if (notifiedRooms.indexOf("all") !== -1) {
-      this.server.emit(updates);
+      this.server.emit("event", actions);
     } else {
       notifiedRooms.map(room => {
-        if (this.state.rooms.indexOf(room) !== -1) {
-          this.server.in(room).emit(updates);
+        if (this.server.sockets.adapter.rooms[room]) {
+          console.log("emitting updates!")
+          this.server.in(room).emit(actions);
         }
+        // if (this.state.rooms.indexOf(room) !== -1) {
+        // }
       })
     }
   }
