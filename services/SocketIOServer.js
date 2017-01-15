@@ -42,12 +42,6 @@ class WebSocketServer {
       });
 
     this.server.on('connection', function(socket){
-      const self = this;
-      setTimeout(() => {
-        console.log("timeout fired!")
-        console.log(self.rooms)
-        self.server.emit('an event', { some: 'data' });
-      }, 5000)
       console.log('Connection to client established');
 
       // Success!  Now listen to messages to be received

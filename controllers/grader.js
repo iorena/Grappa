@@ -27,7 +27,7 @@ module.exports.saveOne = (req, res, next) => {
         payload: grader,
       }]
     )
-    res.status(200).send(grader);
+    res.status(200).send(grader);    
   })
   .catch(err => next(err));
 };
@@ -35,18 +35,15 @@ module.exports.saveOne = (req, res, next) => {
 module.exports.updateOne = (req, res, next) => {
   Grader
   .update(req.body, { id: req.params.id })
-  .then(rows => {
-    Grader
-    .findOne({ id: req.params.id })
-    .then(grader => {
-      SocketIOServer.broadcast(
-        ["all"],
-        [{
-          type: "GRADER_UPDATE_ONE_SUCCESS",
-          payload: grader,
-        }]
-      )
-    })
+  .then(rows => Grader.findOne({ id: req.params.id }))
+  .then(grader => {
+    SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "GRADER_UPDATE_ONE_SUCCESS",
+        payload: grader,
+      }]
+    )
     res.sendStatus(200);
   })
   .catch(err => next(err));

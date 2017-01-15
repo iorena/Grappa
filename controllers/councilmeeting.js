@@ -54,17 +54,16 @@ module.exports.saveOne = (req, res, next) => {
 module.exports.updateOne = (req, res, next) => {
   CouncilMeeting
   .update(req.body, { id: req.params.id })
-  .then(rows => {
-    CouncilMeeting
-    .findOne({ id: req.params.id })
-    .then(found => SocketIOServer.broadcast(
-      ["all"],
-      [{
-        type: "COUNCILMEETING_UPDATE_ONE_SUCCESS",
-        payload: found,
-      }]
-    ))
-    res.sendStatus(200);        
+  .then(rows => CouncilMeeting.findOne({ id: req.params.id }))
+  .then(meeting => SocketIOServer.broadcast(
+    ["all"],
+    [{
+      type: "COUNCILMEETING_UPDATE_ONE_SUCCESS",
+      payload: meeting,
+    }]
+  ))
+  .then(() => {
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };
@@ -80,13 +79,15 @@ module.exports.deleteOne = (req, res, next) => {
     }
   })
   .then(deletedRows => {
-    SocketIOServer.broadcast(
+    return SocketIOServer.broadcast(
       ["all"],
       [{
         type: "COUNCILMEETING_DELETE_ONE_SUCCESS",
         payload: { id: parseInt(req.params.id) },
       }]
     )
+  })
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));

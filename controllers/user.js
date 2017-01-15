@@ -64,19 +64,16 @@ module.exports.updateOne = (req, res, next) => {
     }
     return User.update(strippedUser, { id: req.params.id });
   })
-  .then(rows => {
-    User
-    .findOne({ id: req.params.id })
-    .then(user => {
-      user.passwordHash = undefined;
-      SocketIOServer.broadcast(
-        ["admin"],
-        [{
-          type: "USER_UPDATE_ONE_SUCCESS",
-          payload: user,
-        }]
-      )
-    })
+  .then(rows => User.findOne({ id: req.params.id }))
+  .then(foundUser => {
+    foundUser.passwordHash = undefined;
+    SocketIOServer.broadcast(
+      ["admin"],
+      [{
+        type: "USER_UPDATE_ONE_SUCCESS",
+        payload: foundUser,
+      }]
+    )
     res.sendStatus(200);
   })
   .catch(err => next(err));

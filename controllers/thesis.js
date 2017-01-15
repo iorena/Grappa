@@ -86,6 +86,14 @@ module.exports.saveOne = (req, res, next) => {
   .then(() => Thesis.findOne({ id: savedThesis.id }))
   .then((thesisWithConnections) => {
     res.status(200).send(thesisWithConnections);
+
+    return SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "THESIS_SAVE_ONE_SUCCESS",
+        payload: thesisWithConnections,
+      }]
+    )
   })
   .catch(err => next(err));
 };
@@ -120,24 +128,26 @@ module.exports.updateOneAndConnections = (req, res, next) => {
   
   Promise.all(updationPromises)
   .then(rows => {
-    Thesis
-    .findOne({ id: thesis.id })
-    .then(found => SocketIOServer.broadcast(
-      ["admin", "print-person", `professor/${found.StudyFieldId}`, `user/${found.UserId}`],
-      [{
-        type: "THESIS_UPDATE_ONE_SUCCESS",
-        payload: found,
-      }]
-    ))
     res.sendStatus(200);
+
+    return Thesis.findOne({ id: thesis.id })
+      .then(found => SocketIOServer.broadcast(
+        ["admin", "print-person", `professor/${found.StudyFieldId}`, `user/${found.UserId}`],
+        [{
+          type: "THESIS_UPDATE_ONE_SUCCESS",
+          payload: found,
+        }]
+      ))
   })
   .catch(err => next(err));
 };
 
 module.exports.moveThesesToMeeting = (req, res, next) => {
+  let foundMeeting;
   CouncilMeeting
   .findOne({ id: req.body.CouncilMeetingId })
   .then(meeting => {
+    foundMeeting = meeting;
     if (meeting) {
       return Promise.all(req.body.thesisIds.map(id =>
         Thesis.update({ CouncilMeetingId: meeting.id }, { id, })
@@ -147,8 +157,20 @@ module.exports.moveThesesToMeeting = (req, res, next) => {
     }
   })
   .then(rows => {
-    // TODO client has to update theses X_X
-    res.sendStatus(200);
+    const forClient = {
+      CouncilMeetingId: req.body.CouncilMeetingId,
+      CouncilMeeting: foundMeeting,
+      thesisIds: req.body.thesisIds,
+    }
+    SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "THESIS_MOVE_SUCCESS",
+        payload: forClient,
+      }]
+    )
+
+    res.status(200).send(forClient);
   })
   .catch(err => next(err));
 }
@@ -207,7 +229,7 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
   })
   .then(() => {
     const message = thesisMoved ? "Your thesis has been moved to the next " +
-    "Councilmeeting due to you missing your deadline" : "";
+      "Councilmeeting due to you missing your deadline" : "";
     res.status(200).send({ message, });
   })
   .catch(err => next(err));
@@ -265,20 +287,23 @@ module.exports.deleteOne = (req, res, next) => {
   Thesis
   .delete({ id: req.params.id })
   .then(deletedRows => {
-    if (deletedRows !== 0) {
-      return Promise.all([
-        ThesisProgress.delete({ ThesisId: req.params.id }),
-        ThesisReview.delete({ ThesisId: req.params.id }),
-        ThesisAbstract.delete({ ThesisId: req.params.id }),
-        EmailStatus.delete({ ThesisId: req.params.id }),
-        // Grader.delete({ ThesisId: req.params.id }),
-      ])
-    } else {
-      throw new errors.NotFoundError("No thesis found.");
-    }
+    return Promise.all([
+      ThesisProgress.delete({ ThesisId: req.params.id }),
+      ThesisReview.delete({ ThesisId: req.params.id }),
+      ThesisAbstract.delete({ ThesisId: req.params.id }),
+      EmailStatus.delete({ ThesisId: req.params.id }),
+      // Grader.delete({ ThesisId: req.params.id }),
+    ])
   })
   .then(() => {
-    // SocketIOServer.broadcast(["admin", "print-person", "professor/{thesis-studyfield}", "user/{thesis-user.id}"], "thesis", delete", thesisId);
+    SocketIOServer.broadcast(
+      ["all"],
+      [{
+        type: "THESIS_DELETE_ONE_SUCCESS",
+        payload: { id: parseInt(req.params.id) },
+      }]
+    )
+
     res.sendStatus(200);
   })
   .catch(err => next(err));
