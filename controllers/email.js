@@ -8,6 +8,8 @@ const Thesis = require("../models/Thesis");
 const errors = require("../config/errors");
 
 module.exports.sendReminder = (req, res, next) => {
+  let savedEmail;
+
   Thesis
   .findOne(req.body.thesisId)
   .then(thesis => {
@@ -27,14 +29,15 @@ module.exports.sendReminder = (req, res, next) => {
     }
   })
   .then(emailStatus => {
-    SocketIOServer.broadcast(
-      ["admin"],
-      [{
-        type: "SEND_REMINDER_SUCCESS",
-        payload: emailStatus,
-      }]
-    )
-    res.status(200).send(emailStatus);
+    savedEmail = emailStatus;
+    return SocketIOServer.broadcast(["admin"], [{
+      type: "SEND_REMINDER_SUCCESS",
+      payload: emailStatus,
+      notification: `Admin ${req.user.fullname} sent a Reminder`,
+    }], req.user)
+  })
+  .then(() => {
+    res.status(200).send(savedEmail);
   })
   .catch(err => next(err));
 };

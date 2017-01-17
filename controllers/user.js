@@ -67,13 +67,13 @@ module.exports.updateOne = (req, res, next) => {
   .then(rows => User.findOne({ id: req.params.id }))
   .then(foundUser => {
     foundUser.passwordHash = undefined;
-    SocketIOServer.broadcast(
-      ["admin"],
-      [{
-        type: "USER_UPDATE_ONE_SUCCESS",
-        payload: foundUser,
-      }]
-    )
+    return SocketIOServer.broadcast(["admin"], [{
+      type: "USER_UPDATE_ONE_SUCCESS",
+      payload: foundUser,
+      notification: `User ${req.user.fullname} updated an User`,
+    }], req.user)
+  })
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -93,13 +93,13 @@ module.exports.saveOne = (req, res, next) => {
   })
   .then(savedUser => {
     savedUser.passwordHash = undefined;
-    SocketIOServer.broadcast(
-      ["admin"],
-      [{
-        type: "USER_SAVE_ONE_SUCCESS",
-        payload: savedUser,
-      }]
-    )
+    return SocketIOServer.broadcast(["admin"], [{
+      type: "USER_SAVE_ONE_SUCCESS",
+      payload: savedUser,
+      notification: `User ${savedUser.firstname} ${savedUser.lastname} has registered`,
+    }], savedUser)
+  })
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -108,14 +108,12 @@ module.exports.saveOne = (req, res, next) => {
 module.exports.deleteOne = (req, res, next) => {
   User
   .delete({ id: req.params.id })
-  .then(deletedRows => {
-    SocketIOServer.broadcast(
-      ["admin"],
-      [{
-        type: "USER_DELETE_ONE_SUCCESS",
-        payload: { id: parseInt(req.params.id) },
-      }]
-    )
+  .then(deletedRows => SocketIOServer.broadcast(["admin"], [{
+    type: "USER_DELETE_ONE_SUCCESS",
+    payload: { id: parseInt(req.params.id) },
+    notification: `Admin ${req.user.fullname} deleted an User`,
+  }], req.user))
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));

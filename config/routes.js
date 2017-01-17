@@ -29,6 +29,8 @@ const authTest = (req, res, next) => {
   res.sendStatus(200);
 };
 
+// Routes that do not require authentication
+
 router.get("/", index);
 router.get("/auth", auth.authenticate, authTest);
 
@@ -53,7 +55,7 @@ router.post("/thesis/ethesis/:token",
 
 router.use("", auth.authenticate);
 
-// Routes for all users
+// Routes for all logged in users
 
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id",
@@ -88,7 +90,7 @@ router.get("/studyfield", studyfieldCtrl.findAll);
 
 router.put("/user/:id", userCtrl.updateOne);
 
-// Routes accessisable only for admin
+// Routes accessible only for admins
 
 router.use("", auth.onlyAdmin);
 
