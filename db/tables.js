@@ -208,6 +208,23 @@ const EmailStatus = seq.define("EmailStatus", {
   wasError: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
+const Notification = seq.define("Notification", {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  type: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  content: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  hasBeenRead: { type: Sequelize.BOOLEAN, defaultValue: false },
+});
+
 Thesis.belongsTo(StudyField);
 
 ThesisReview.belongsTo(Thesis);
@@ -240,6 +257,9 @@ Thesis.hasOne(ThesisProgress);
 EmailStatus.belongsTo(EmailDraft);
 EmailStatus.belongsTo(Thesis);
 
+Notification.belongsTo(User, { as: "Recipient" });
+Notification.belongsTo(User, { as: "CreatedBy" });
+
 module.exports.sync = () => {
   return seq.sync();
 };
@@ -258,4 +278,5 @@ module.exports.Models = {
   ThesisProgress,
   EmailStatus,
   EmailDraft,
+  Notification,
 };

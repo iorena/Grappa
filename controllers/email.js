@@ -1,6 +1,7 @@
 "use strict";
 
-const Reminder = require("../services/EmailReminder");
+const EmailReminder = require("../services/EmailReminder");
+const SocketIOServer = require("../services/SocketIOServer");
 
 const Thesis = require("../models/Thesis");
 
@@ -14,19 +15,26 @@ module.exports.sendReminder = (req, res, next) => {
       throw new errors.NotFoundError("No Thesis found with the provided thesisId.");
     } else {
       if (req.body.reminderType === "EthesisReminder") {
-        return Reminder.sendEthesisReminder(thesis, thesis.CouncilMeeting);
+        return EmailReminder.sendEthesisReminder(thesis, thesis.CouncilMeeting);
       } else if (req.body.reminderType === "GraderEvalReminder") {
-        return Reminder.sendProfessorReminder(thesis);
+        return EmailReminder.sendProfessorReminder(thesis);
       } else if (req.body.reminderType === "PrintReminder") {
-        return Reminder.sendPrintPersonReminder(thesis);
+        return EmailReminder.sendPrintPersonReminder(thesis);
       } else {
         // should never end up here as bodyValidations forbid that
         throw new errors.BadRequestError("Invalid reminderType.");
       }
     }
   })
-  .then(result => {
-    res.status(200).send(result);
+  .then(emailStatus => {
+    SocketIOServer.broadcast(
+      ["admin"],
+      [{
+        type: "SEND_REMINDER_SUCCESS",
+        payload: emailStatus,
+      }]
+    )
+    res.status(200).send(emailStatus);
   })
   .catch(err => next(err));
 };

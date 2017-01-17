@@ -31,6 +31,7 @@ module.exports.findAllByUserRole = (req, res, next) => {
 module.exports.saveOne = (req, res, next) => {
   let savedThesis;
   let foundConnections;
+  let thesisForClient;
 
   Thesis
   .checkIfExists(req.body.json)
@@ -85,15 +86,17 @@ module.exports.saveOne = (req, res, next) => {
   })
   .then(() => Thesis.findOne({ id: savedThesis.id }))
   .then((thesisWithConnections) => {
-    res.status(200).send(thesisWithConnections);
-
-    return SocketIOServer.broadcast(
-      ["all"],
+    thesisForClient = thesisWithConnections;
+    return SocketIOServer.broadcast(["admin", "print-person",
+        `professor/${thesisWithConnections.StudyFieldId}`, `user/${thesisWithConnections.UserId}`],
       [{
         type: "THESIS_SAVE_ONE_SUCCESS",
         payload: thesisWithConnections,
-      }]
-    )
+        notification: `User ${req.user.fullname} saved a Thesis`,
+      }], req.user)
+  })
+  .then(() => {
+    res.status(200).send(thesisForClient);
   })
   .catch(err => next(err));
 };
@@ -228,6 +231,7 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
     ]);
   })
   .then(() => {
+    // TODO socket broadcast
     const message = thesisMoved ? "Your thesis has been moved to the next " +
       "Councilmeeting due to you missing your deadline" : "";
     res.status(200).send({ message, });

@@ -2,10 +2,10 @@
 
 const SocketIOServer = require("../services/SocketIOServer");
 
-const EmailDraft = require("../models/EmailDraft");
+const Notification = require("../models/Notification");
 
 module.exports.findAll = (req, res, next) => {
-  EmailDraft
+  Notification
   .findAll()
   .then(drafts => {
     res.status(200).send(drafts);
@@ -13,15 +13,15 @@ module.exports.findAll = (req, res, next) => {
   .catch(err => next(err));
 };
 
-module.exports.updateOne = (req, res, next) => {
-  EmailDraft
+module.exports.setRead = (req, res, next) => {
+  Notification
   .update(req.body, { id: req.params.id })
-  .then(rows => EmailDraft.findOne({ id: req.params.id }))
+  .then(rows => Notification.findOne({ id: req.params.id }))
   .then(draft => {
     SocketIOServer.broadcast(
       ["admin"],
       [{
-        type: "EMAILDRAFT_UPDATE_ONE_SUCCESS",
+        type: "Notification_UPDATE_ONE_SUCCESS",
         payload: draft,
       }]
     )

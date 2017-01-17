@@ -17,6 +17,8 @@ module.exports.findAll = (req, res, next) => {
 };
 
 module.exports.saveOne = (req, res, next) => {
+  let foundMeeting;
+
   CouncilMeeting
   .checkIfExists(req.body)
   .then(exists => {
@@ -38,15 +40,16 @@ module.exports.saveOne = (req, res, next) => {
       });
     }
   })
-  .then(cmeeting => {
-    SocketIOServer.broadcast(
-      ["all"],
-      [{
-        type: "COUNCILMEETING_SAVE_ONE_SUCCESS",
-        payload: cmeeting,
-      }]
-    )
-    res.status(200).send(cmeeting);
+  .then(meeting => {
+    foundMeeting = meeting;
+    return SocketIOServer.broadcast(["all"], [{
+      type: "COUNCILMEETING_SAVE_ONE_SUCCESS",
+      payload: meeting,
+      notification: `User ${req.user.fullname} created a CouncilMeeting`,
+    }], req.user)
+  })
+  .then(() => {
+    res.status(200).send(foundMeeting);
   })
   .catch(err => next(err));
 };
@@ -55,13 +58,11 @@ module.exports.updateOne = (req, res, next) => {
   CouncilMeeting
   .update(req.body, { id: req.params.id })
   .then(rows => CouncilMeeting.findOne({ id: req.params.id }))
-  .then(meeting => SocketIOServer.broadcast(
-    ["all"],
-    [{
-      type: "COUNCILMEETING_UPDATE_ONE_SUCCESS",
-      payload: meeting,
-    }]
-  ))
+  .then(meeting => SocketIOServer.broadcast(["all"], [{
+    type: "COUNCILMEETING_UPDATE_ONE_SUCCESS",
+    payload: meeting,
+    notification: `User ${req.user.fullname} updated a CouncilMeeting`,
+  }], req.user))
   .then(() => {
     res.sendStatus(200);
   })
@@ -78,15 +79,11 @@ module.exports.deleteOne = (req, res, next) => {
       return CouncilMeeting.delete({ id: req.params.id });
     }
   })
-  .then(deletedRows => {
-    return SocketIOServer.broadcast(
-      ["all"],
-      [{
-        type: "COUNCILMEETING_DELETE_ONE_SUCCESS",
-        payload: { id: parseInt(req.params.id) },
-      }]
-    )
-  })
+  .then(deletedRows => SocketIOServer.broadcast(["all"], [{
+    type: "COUNCILMEETING_DELETE_ONE_SUCCESS",
+    payload: { id: parseInt(req.params.id) },
+    notification: `User ${req.user.fullname} deleted a CouncilMeeting`,
+  }], req.user))
   .then(() => {
     res.sendStatus(200);
   })

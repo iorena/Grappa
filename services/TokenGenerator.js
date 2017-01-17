@@ -24,6 +24,7 @@ class TokenGenerator {
     const payload = {
       user: {
         id: user.id,
+        fullname: `${user.firstname} ${user.lastname}`,
         role: user.role,
         StudyFieldId: user.StudyFieldId,
       },

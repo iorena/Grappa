@@ -14,17 +14,18 @@ class User extends BaseModel {
     });
   }
 
-  findAll() {
+  findAll(params) {
     return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "email", "firstname", "lastname", "role", "isActive", "isRetired", "StudyFieldId"],
-      include: [{
-        model: this.Models.Thesis,
-        as: "Theses",
-      }, {
-        model: this.Models.StudyField,
-      }],
-    });
+      .findAll({
+        where: params || {},
+        attributes: ["id", "email", "firstname", "lastname", "role", "isActive", "isRetired", "StudyFieldId"],
+        include: [{
+          model: this.Models.Thesis,
+          as: "Theses",
+        }, {
+          model: this.Models.StudyField,
+        }],
+      });
   }
 
   findAllNotActive() {

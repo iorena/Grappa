@@ -17,6 +17,7 @@ const emailCtrl = require("../controllers/email");
 // const emailstatusCtrl = require("./email_status");
 const studyfieldCtrl = require("../controllers/studyfield");
 const emaildraftCtrl = require("../controllers/emaildraft");
+const notificationCtrl = require("../controllers/notification");
 
 const index = (req, res, next) => {
   res.json({
@@ -128,6 +129,9 @@ router.post("/email/remind",
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
+
+router.get("/notification", notificationCtrl.findAll);
+router.post("/notification/read", notificationCtrl.setRead);
 
 router.use("", errorHandler.handleErrors);
 
