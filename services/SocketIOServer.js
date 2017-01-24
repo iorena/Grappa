@@ -1,8 +1,6 @@
 "use strict";
 
 const express = require("express");
-const app = express();
-const server = app.listen(8008);
 
 const io = require("socket.io");
 const ioJwt = require("socketio-jwt");
@@ -35,40 +33,33 @@ class WebSocketServer {
 
   start() {
     this.fetchDataFromDB();
+    const app = express();
+    const server = app.listen(process.env.WEBSOCKET_PORT || 8008);
     this.server = io(server);
-    const self = this;
     this.server.sockets
-      .on('connection', ioJwt.authorize({
+      .on("connection", ioJwt.authorize({
         // check if correct audience?? 
         secret: process.env.TOKEN_SECRET,
         timeout: 15000 // 15 seconds to send the authentication message
-      })).on('authenticated', function(socket) {
+      }))
+      .on("authenticated", function(socket) {
         //this socket is authenticated, we are good to handle more events from it.
-        console.log('hello! ' + socket.decoded_token.name);
+        console.log("hello! " + socket.decoded_token.user.fullname);
         const user = socket.decoded_token.user;
-        // if (user.role === "admin" || user.role === "print-person") {
-        //   console.log("hei admin")
-        //   socket.join(user.role)
-        //   self.rooms.push(user.role);
-        // } else if (user.role === "professor" && user.StudyFieldId) {
-        //   socket.join(`professor/${user.StudyFieldId}`);
-        //   this.rooms.push(`professor/${user.StudyFieldId}`);
-        // } else {
-        //   socket.join(`instructor/${user.id}`);
-        //   this.rooms.push(`instructor/${user.id}`);
-        // }
+        if (user.role === "admin" || user.role === "print-person") {
+          socket.join(user.role)
+        } else if (user.role === "professor" && user.StudyFieldId) {
+          socket.join(`professor/${user.StudyFieldId}`);
+        } else {
+          socket.join(`instructor/${user.id}`);
+        }
       });
 
-    this.server.on('connection', function(socket){
-      console.log('Connection to client established');
+    this.server.on("connection", function(socket){
+      console.log("Connection to client established");
 
-      // Success!  Now listen to messages to be received
-      socket.on('message',function(event){ 
-        console.log('Received message from client!',event);
-      });
-
-      socket.on('disconnect',function(){
-        console.log('Client has disconnected');
+      socket.on("disconnect",function(){
+        console.log("Client has disconnected");
       });
     });
   }
@@ -116,9 +107,6 @@ class WebSocketServer {
    * @param {Array} actions - list of actions for the redux-store
    */
   broadcast(notifiedRooms, actions, user) {
-    console.log("yo broadcasting")
-    // console.log(this.server.sockets.adapter.rooms)
-    // 
     return this.createNotifications(actions, user)
       .then(notifications => {
         // console.log(notifications)
@@ -137,25 +125,20 @@ class WebSocketServer {
           }
         })
 
-        this.server.emit("server-update", [...prunedActions, ...notificationActions]);
+        // this.server.emit("server:push", [...prunedActions, ...notificationActions]);
+        // console.log(this.server.sockets.adapter.rooms["admin"])
+        // console.log(this.server.sockets.adapter.rooms["professor/1"])
+        if (notifiedRooms.indexOf("all") !== -1) {
+          this.server.emit("server:push", [...prunedActions, ...notificationActions]);
+        } else {
+          notifiedRooms.map(room => {
+            if (this.server.sockets.adapter.rooms[room]) {
+              console.log("emitting to ", room)
+              this.server.in(room).emit("server:push", [...prunedActions, ...notificationActions]);
+            }
+          })
+        }
       })
-
-    // if (notifiedRooms.indexOf("all") !== -1) {
-    //   this.server.emit("event", actions);
-    // } else {
-    //   notifiedRooms.map(room => {
-    //     if (this.server.sockets.adapter.rooms[room]) {
-    //       console.log("emitting updates!")
-    //       this.server.in(room).emit(actions);
-    //     }
-    //     // if (this.state.rooms.indexOf(room) !== -1) {
-    //     // }
-    //   })
-    // }
-
-    // return Promise.resolve();
-    // should emit actions in a then after saving notifications for emitting the notification actions
-    // in the message
   }
 }
 

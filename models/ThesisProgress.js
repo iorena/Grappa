@@ -45,13 +45,13 @@ class ThesisProgress extends BaseModel {
     let doctor = false;
     graders.map((grader) => {
       var title = grader.title;
-      if (title === "Prof") {
+      if (title === "Prof.") {
         if (professor) {
           doctor = true;
         } else {
           professor = true;
         }
-      } else if (title === "AssProf" || title === "Doc" || title === "AdjProf") {
+      } else if (title === "Ass. Prof." || title === "Dr." || title === "Adj. Prof.") {
         doctor = true;
       }
     });

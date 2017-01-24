@@ -120,7 +120,6 @@ const Grader = seq.define("Grader", {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,
-      isIn: [["Prof", "AssProf", "AdjProf", "Doc", "Other"]],
     },
   },
 });

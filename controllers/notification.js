@@ -14,18 +14,17 @@ module.exports.findAll = (req, res, next) => {
 };
 
 module.exports.setRead = (req, res, next) => {
+  const ids = req.body;
   Notification
-  .update(req.body, { id: req.params.id })
-  .then(rows => Notification.findOne({ id: req.params.id }))
-  .then(draft => {
-    SocketIOServer.broadcast(
-      ["admin"],
-      [{
-        type: "Notification_UPDATE_ONE_SUCCESS",
-        payload: draft,
-      }]
-    )
-    res.sendStatus(200);
+  .setRead(ids)
+  .then(rows => SocketIOServer.broadcast(
+    ["admin"],
+    [{
+      type: "NOTIFICATION_SET_READ_SUCCESS",
+      payload: ids,
+    }], req.user))
+  .then(() => {
+    res.status(200).send(req.body);
   })
   .catch(err => next(err));
 };

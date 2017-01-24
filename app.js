@@ -55,9 +55,9 @@ if (!module.parent) {
 // using are deleted BUT at least this one reduces required reboots to 2 (first to kill the old process,
 // second to the start new)
   process.on("exit", () => {
-    console.log("PROCESS EXIT !")
     app.close();
     process.exit();
+    SocketIOServer.stop();
   });
 }
 
