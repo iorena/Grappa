@@ -9,6 +9,7 @@ For Windows:
 
 3. Open the shell, and type ```nvm install latest``` which updates nvm to the latest version and installs npm.
 
+4. You need ```pdftk``` to process the pdf-files so you have to install it to PATH from their website [pdflabs](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
 
 For Linux:
 
@@ -21,6 +22,7 @@ For Linux:
 
 3. You can try ```nvm install latest``` but if it doesn't work look up the latest [Node.js](https://nodejs.org/en/) version and enter ```nvm install x.x.x``` and ```nvm use x.x.x``` where x.x.x is the desired Node version.
 
+4. You need ```pdftk``` to process the pdf-files so you have to install it to PATH with ```sudo apt-get install -y pdftk```
 
 Same for both OSes:
 

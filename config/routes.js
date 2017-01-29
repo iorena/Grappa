@@ -135,6 +135,6 @@ router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
 router.get("/notification", notificationCtrl.findAll);
 router.post("/notification/read", notificationCtrl.setRead);
 
-// router.use("", errorHandler.handleErrors);
+router.use("", errorHandler.handleErrors);
 
 module.exports = router;

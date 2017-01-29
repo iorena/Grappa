@@ -34,8 +34,10 @@ class WebSocketServer {
   start() {
     this.fetchDataFromDB();
     const app = express();
-    const server = app.listen(process.env.WEBSOCKET_PORT || 8008);
+    const port = process.env.WEBSOCKET_PORT || 8008;
+    const server = app.listen(port);
     this.server = io(server);
+    console.log("SocketIO server started at " + port)
     this.server.sockets
       .on("connection", ioJwt.authorize({
         // check if correct audience?? 
