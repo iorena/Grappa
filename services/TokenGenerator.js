@@ -10,15 +10,6 @@ class TokenGenerator {
   verifyToken(token, options) {
     return jwt.verify(token, this.secret, options);
   }
-  decodeToken(token) {
-    let decoded;
-    try {
-      decoded = jwt.verify(token, this.secret);
-    } catch (e) {
-      decoded = undefined;
-    }
-    return decoded;
-  }
   isTokenExpired(decodedToken) {
     // return new Date() > decodedToken.expires;
     return Math.floor(Date.now() / 1000) > decodedToken.expires;

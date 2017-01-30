@@ -172,11 +172,9 @@ module.exports.sendNewPassword = (req, res, next) => {
   let foundUser;
   let generatedPassword;
 
-  Promise.resolve(TokenGenerator.decodeToken(req.body.token))
+  Promise.resolve(TokenGenerator.verifyToken(req.body.token, { audience: "password" }))
   .then((decoded) => {
-    if (!decoded || decoded.name !== "password") {
-      throw new errors.BadRequestError("Invalid token.");
-    } else if (TokenGenerator.isTokenExpired(decoded)) {
+    if (TokenGenerator.isTokenExpired(decoded)) {
       throw new errors.BadRequestError("Token has expired.");
     } else {
       decodedToken = decoded;

@@ -185,18 +185,14 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
   let thesisMoved = false;
   let forClient;
 
-  Promise.resolve(TokenGenerator.decodeToken(req.params.token))
+  Promise.resolve(TokenGenerator.verifyToken(req.params.token, { audience: "ethesis" }))
   .then((decoded) => {
-    if (!decoded || decoded.name !== "ethesis") {
-      throw new errors.BadRequestError("Invalid token.");
-    } else {
-      decodedToken = decoded;
-      // return ThesisProgress.findOne({ ThesisId: decoded.thesis.id });
-      return Promise.all([
-        ThesisProgress.findOne({ ThesisId: decoded.thesis.id }),
-        CouncilMeeting.findOne({ id: decoded.thesis.CouncilMeetingId }),
-      ]);
-    }
+    decodedToken = decoded;
+    // return ThesisProgress.findOne({ ThesisId: decoded.thesis.id });
+    return Promise.all([
+      ThesisProgress.findOne({ ThesisId: decoded.thesis.id }),
+      CouncilMeeting.findOne({ id: decoded.thesis.CouncilMeetingId }),
+    ]);
   })
   .then(resolvedArray => {
     if (!resolvedArray[0]) {
