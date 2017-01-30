@@ -1,5 +1,7 @@
 "use strict";
 
+const SocketIOServer = require("../services/SocketIOServer");
+
 const EmailDraft = require("../models/EmailDraft");
 
 module.exports.findAll = (req, res, next) => {
@@ -14,8 +16,14 @@ module.exports.findAll = (req, res, next) => {
 module.exports.updateOne = (req, res, next) => {
   EmailDraft
   .update(req.body, { id: req.params.id })
-  .then(rows => {
-    res.status(200).send(rows);
+  .then(rows => EmailDraft.findOne({ id: req.params.id }))
+  .then(draft => SocketIOServer.broadcast(["admin"], [{
+    type: "EMAILDRAFT_UPDATE_ONE_SUCCESS",
+    payload: draft,
+    notification: `Admin ${req.user.fullname} updated an EmailDraft`,
+  }], req.user))
+  .then(() => {
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };

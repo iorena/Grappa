@@ -1,65 +1,59 @@
 "use strict";
 
-// TODO Switch to jsonwebtoken
-// or maybe creat pull request to make this return undefined
-// but probably I still want to use the async version
-const jwt = require("jwt-simple");
+// TODO use async decoding?
+const jwt = require("jsonwebtoken");
 
 class TokenGenerator {
   constructor(secret) {
     this.secret = secret;
   }
-  decodeToken(token) {
-    let decoded;
-    try {
-      decoded = jwt.decode(token, this.secret);
-    } catch (e) {
-      decoded = undefined;
-    }
-    return decoded;
+  verifyToken(token, options) {
+    return jwt.verify(token, this.secret, options);
   }
   isTokenExpired(decodedToken) {
-    return new Date() > decodedToken.expires;
+    // return new Date() > decodedToken.expires;
+    return Math.floor(Date.now() / 1000) > decodedToken.expires;
   }
-  generateLoginToken(user) {
-    const date = new Date();
+  generateLoginPayload(user) {
     const payload = {
       user: {
         id: user.id,
+        fullname: `${user.firstname} ${user.lastname}`,
         role: user.role,
+        StudyFieldId: user.StudyFieldId,
       },
-      name: "login",
-      created: new Date(),
-      expires: date.setDate(date.getDate() + 2),
-      // expires: date.setHours(date.getHours() + 3),
+      audience: "login",
+      // expires: Math.floor(Date.now() / 1000) + 15,
+      expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
+      // expiresIn: 172800, // seconds
     };
-    return jwt.encode(payload, this.secret);
+    return payload;
+  }
+  generateToken(payload) {
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
   generateEthesisToken(thesis) {
-    const date = new Date();
     const payload = {
       thesis: {
         id: thesis.id,
         CouncilMeetingId: thesis.CouncilMeetingId,
       },
-      name: "ethesis",
-      created: new Date(),
+      audience: "ethesis",
       // TODO set to expire in a year?
-      expires: date.setHours(date.getHours() + 1),
+      // doesnt really expire as it all depends about the councilmeeting's deadline
+      expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
     };
-    return jwt.encode(payload, this.secret);
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
   generateResetPasswordToken(user) {
-    const date = new Date();
     const payload = {
       user: {
         id: user.id,
       },
-      name: "password",
-      created: new Date(),
-      expires: date.setHours(date.getHours() + 1),
+      audience: "password",
+      expires: Math.floor(Date.now() / 1000) + 60 * 60,
     }
-    return jwt.encode(payload, this.secret);
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
 }
 

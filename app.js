@@ -37,6 +37,8 @@ app.use(cors());
 
 app.use("", require("./config/routes"));
 
+const SocketIOServer = require("./services/SocketIOServer");
+
 if (!module.parent) {
   app.listen(port, (err) => {
     if (err) {
@@ -46,14 +48,16 @@ if (!module.parent) {
     }
   });
 
+  SocketIOServer.start();
+
 // should prevent the server from staying running when the process suddenly crashes
 // which still happens when nodemon has that stupid EPERM error where the files it has been
 // using are deleted BUT at least this one reduces required reboots to 2 (first to kill the old process,
 // second to the start new)
   process.on("exit", () => {
-    console.log("PROCESS EXIT !")
     app.close();
     process.exit();
+    SocketIOServer.stop();
   });
 }
 

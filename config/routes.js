@@ -17,6 +17,7 @@ const emailCtrl = require("../controllers/email");
 // const emailstatusCtrl = require("./email_status");
 const studyfieldCtrl = require("../controllers/studyfield");
 const emaildraftCtrl = require("../controllers/emaildraft");
+const notificationCtrl = require("../controllers/notification");
 
 const index = (req, res, next) => {
   res.json({
@@ -25,10 +26,10 @@ const index = (req, res, next) => {
 };
 
 const authTest = (req, res, next) => {
-  res.json({
-    message: "You've successfully authenticated.",
-  });
+  res.sendStatus(200);
 };
+
+// Routes that do not require authentication
 
 router.get("/", index);
 router.get("/auth", auth.authenticate, authTest);
@@ -54,7 +55,7 @@ router.post("/thesis/ethesis/:token",
 
 router.use("", auth.authenticate);
 
-// Routes for all users
+// Routes for all logged in users
 
 router.get("/thesis", thesisCtrl.findAllByUserRole);
 router.put("/thesis/:id",
@@ -89,7 +90,7 @@ router.get("/studyfield", studyfieldCtrl.findAll);
 
 router.put("/user/:id", userCtrl.updateOne);
 
-// Routes accessisable only for admin
+// Routes accessible only for admins
 
 router.use("", auth.onlyAdmin);
 
@@ -130,6 +131,9 @@ router.post("/email/remind",
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id", emaildraftCtrl.updateOne);
+
+router.get("/notification", notificationCtrl.findAll);
+router.post("/notification/read", notificationCtrl.setRead);
 
 router.use("", errorHandler.handleErrors);
 

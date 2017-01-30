@@ -7,6 +7,21 @@ class StudyField extends BaseModel {
     super("StudyField");
   }
 
+  findOne(params) {
+    return this.Models[this.modelname]
+      .findOne({
+        attributes: ["id", "name", "isActive"],
+        where: params,
+      });
+  }
+
+  findAll() {
+    return this.Models[this.modelname]
+      .findAll({
+        attributes: ["id", "name", "isActive"],
+      });
+  }
+
   saveOne(values) {
     return this.getModel().create(values)
       .then(newField => {
@@ -16,13 +31,6 @@ class StudyField extends BaseModel {
           isActive: newField.isActive
         }
       });
-  }
-
-  findAll() {
-    return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "name", "isActive"],
-    });
   }
 }
 

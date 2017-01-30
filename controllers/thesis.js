@@ -4,6 +4,7 @@ const Reminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PdfManipulator = require("../services/PdfManipulator");
 const FileManipulator = require("../services/FileManipulator");
+const SocketIOServer = require("../services/SocketIOServer");
 
 const Thesis = require("../models/Thesis");
 const ThesisReview = require("../models/ThesisReview");
@@ -30,6 +31,7 @@ module.exports.findAllByUserRole = (req, res, next) => {
 module.exports.saveOne = (req, res, next) => {
   let savedThesis;
   let foundConnections;
+  let thesisForClient;
 
   Thesis
   .checkIfExists(req.body.json)
@@ -84,7 +86,17 @@ module.exports.saveOne = (req, res, next) => {
   })
   .then(() => Thesis.findOne({ id: savedThesis.id }))
   .then((thesisWithConnections) => {
-    res.status(200).send(thesisWithConnections);
+    thesisForClient = thesisWithConnections;
+    return SocketIOServer.broadcast(["admin", "print-person",
+        `professor/${thesisWithConnections.StudyFieldId}`, `user/${thesisWithConnections.UserId}`],
+      [{
+        type: "THESIS_SAVE_ONE_SUCCESS",
+        payload: thesisWithConnections,
+        notification: `User ${req.user.fullname} saved a Thesis`,
+      }], req.user)
+  })
+  .then(() => {
+    res.status(200).send(thesisForClient);
   })
   .catch(err => next(err));
 };
@@ -94,7 +106,8 @@ module.exports.updateOneAndConnections = (req, res, next) => {
   let updationPromises = [];
   const thesis = req.body.json;
 
-  if (req.user.role === "professor" && thesis.graderEval && thesis.graderEval.length > 0) {
+  if (req.user.role === "professor" && req.user.StudyFieldId && req.user.StudyFieldId === thesis.StudyFieldId
+    && thesis.graderEval && thesis.graderEval.length > 0) {
     updationPromises.push(
       Thesis.update({ graderEval: thesis.graderEval }, { id: thesis.id })
       .then(() => ThesisProgress.setGraderEvalDone(thesis.id))
@@ -113,21 +126,33 @@ module.exports.updateOneAndConnections = (req, res, next) => {
         );
       }
     })
+  } else {
+    updationPromises.push(Promise.reject(new errors.ForbiddenError("No permission to edit Thesis.")));
   }
-  if (updationPromises.length === 0) {
-    updationPromises.push(new errors.ForbiddenError("No permission to edit Thesis."));
-  }
+  
   Promise.all(updationPromises)
-  .then(rows => {
+  .then(rows => Thesis.findOne({ id: thesis.id }))
+  .then(updatedThesis => SocketIOServer.broadcast(["admin", "print-person",
+      `professor/${updatedThesis.StudyFieldId}`, `user/${updatedThesis.UserId}`],
+    [{
+      type: "THESIS_UPDATE_ONE_SUCCESS",
+      payload: updatedThesis,
+      notification: `User ${req.user.fullname} updated a Thesis`,
+    }], req.user))
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));
 };
 
 module.exports.moveThesesToMeeting = (req, res, next) => {
+  let foundMeeting;
+  let dataForClient;
+
   CouncilMeeting
   .findOne({ id: req.body.CouncilMeetingId })
   .then(meeting => {
+    foundMeeting = meeting;
     if (meeting) {
       return Promise.all(req.body.thesisIds.map(id =>
         Thesis.update({ CouncilMeetingId: meeting.id }, { id, })
@@ -136,9 +161,21 @@ module.exports.moveThesesToMeeting = (req, res, next) => {
       throw new errors.NotFoundError("No Councilmeeting found.");
     }
   })
-  .then(rows => {
-    // TODO client has to update theses X_X
-    res.sendStatus(200);
+  .then((rows) => {
+    dataForClient = {
+      CouncilMeetingId: req.body.CouncilMeetingId,
+      CouncilMeeting: foundMeeting,
+      thesisIds: req.body.thesisIds,
+    }
+    return SocketIOServer.broadcast(["all"],
+      [{
+        type: "THESIS_MOVE_SUCCESS",
+        payload: dataForClient,
+        notification: `Admin ${req.user.fullname} moved Theses to another meeting`,
+      }], req.user)
+  })
+  .then(() => {
+    res.status(200).send(dataForClient);
   })
   .catch(err => next(err));
 }
@@ -146,19 +183,16 @@ module.exports.moveThesesToMeeting = (req, res, next) => {
 module.exports.uploadEthesisPDF = (req, res, next) => {
   let decodedToken;
   let thesisMoved = false;
+  let forClient;
 
-  Promise.resolve(TokenGenerator.decodeToken(req.params.token))
+  Promise.resolve(TokenGenerator.verifyToken(req.params.token, { audience: "ethesis" }))
   .then((decoded) => {
-    if (!decoded || decoded.name !== "ethesis") {
-      throw new errors.BadRequestError("Invalid token.");
-    } else {
-      decodedToken = decoded;
-      // return ThesisProgress.findOne({ ThesisId: decoded.thesis.id });
-      return Promise.all([
-        ThesisProgress.findOne({ ThesisId: decoded.thesis.id }),
-        CouncilMeeting.findOne({ id: decoded.thesis.CouncilMeetingId }),
-      ]);
-    }
+    decodedToken = decoded;
+    // return ThesisProgress.findOne({ ThesisId: decoded.thesis.id });
+    return Promise.all([
+      ThesisProgress.findOne({ ThesisId: decoded.thesis.id }),
+      CouncilMeeting.findOne({ id: decoded.thesis.CouncilMeetingId }),
+    ]);
   })
   .then(resolvedArray => {
     if (!resolvedArray[0]) {
@@ -196,9 +230,21 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
     ]);
   })
   .then(() => {
-    const message = thesisMoved ? "Your thesis has been moved to the next " +
-    "Councilmeeting due to you missing your deadline" : "";
-    res.status(200).send({ message, });
+    forClient = {
+      message: thesisMoved ? "Your thesis has been moved to the next " +
+        "Councilmeeting due to you missing your deadline" : ""
+    };
+    // TODO should be an update for ThesisProgress that Thesis reducer
+    // will update to the correct Thesis
+    return SocketIOServer.broadcast(["all"],
+      [{
+        type: "THESIS_UPLOAD_ETHESIS_PDF_SUCCESS",
+        payload: forClient,
+        notification: `Student uploaded their abstract`,
+    }], { id: null })
+  })
+  .then(() => {
+    res.status(200).send(forClient);
   })
   .catch(err => next(err));
 };
@@ -255,18 +301,20 @@ module.exports.deleteOne = (req, res, next) => {
   Thesis
   .delete({ id: req.params.id })
   .then(deletedRows => {
-    if (deletedRows !== 0) {
-      return Promise.all([
-        ThesisProgress.delete({ ThesisId: req.params.id }),
-        ThesisReview.delete({ ThesisId: req.params.id }),
-        ThesisAbstract.delete({ ThesisId: req.params.id }),
-        EmailStatus.delete({ ThesisId: req.params.id }),
-        // Grader.delete({ ThesisId: req.params.id }),
-      ])
-    } else {
-      throw new errors.NotFoundError("No thesis found.");
-    }
+    return Promise.all([
+      ThesisProgress.delete({ ThesisId: req.params.id }),
+      ThesisReview.delete({ ThesisId: req.params.id }),
+      ThesisAbstract.delete({ ThesisId: req.params.id }),
+      EmailStatus.delete({ ThesisId: req.params.id }),
+      // Grader.delete({ ThesisId: req.params.id }),
+    ])
   })
+  .then(deletedRows => SocketIOServer.broadcast(["all"],
+    [{
+      type: "THESIS_DELETE_ONE_SUCCESS",
+      payload: { id: parseInt(req.params.id) },
+      notification: `Admin ${req.user.fullname} deleted a Thesis`,
+    }], req.user))
   .then(() => {
     res.sendStatus(200);
   })

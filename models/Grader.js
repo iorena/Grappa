@@ -18,6 +18,14 @@ class Grader extends BaseModel {
       });
   }
 
+  findOne(params) {
+    return this.Models[this.modelname]
+      .findOne({
+        attributes: ["id", "name", "title"],
+        where: params,
+      });
+  }
+
   findAll() {
     return this.Models[this.modelname]
       .findAll({

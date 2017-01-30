@@ -5,8 +5,11 @@
     <title>Cover</title>
   </head>
   <style>
+    /* FIX stupid bug in linux where page is rendered too big */
+    /* FIX FIX use older version of phantomjs 2.1.0 > 1.9.8 */
+    /* https://github.com/ariya/phantomjs/issues/12685 */
     html {
-      zoom: 0.75 /* FIX stupid bug in linux where page is rendered too big */
+      /*zoom: 0.75*/ 
     }
     body {
       font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;

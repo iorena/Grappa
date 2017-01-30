@@ -3,6 +3,7 @@
 const EmailReminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PasswordHelper = require("../services/PasswordHelper");
+const SocketIOServer = require("../services/SocketIOServer");
 
 const User = require("../models/User");
 
@@ -35,7 +36,8 @@ module.exports.updateOne = (req, res, next) => {
   .then(foundUser => {
     if (!foundUser) {
       throw new errors.NotFoundError("No User found.");
-    } else if (req.user.id.toString() === req.params.id && user.password && !PasswordHelper.comparePassword(user.password, foundUser.passwordHash)) {
+    } else if (req.user.id.toString() === req.params.id && user.password &&
+      !PasswordHelper.comparePassword(user.password, foundUser.passwordHash)) {
       throw new errors.AuthenticationError("Wrong password.");
     }
     let strippedUser = {};
@@ -50,7 +52,7 @@ module.exports.updateOne = (req, res, next) => {
       }
     } else {
       strippedUser = user;
-      if (strippedUser.role === "professor") {
+      if (strippedUser.role === "professor" && strippedUser.StudyFieldId) {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
             if (prof && prof.id !== strippedUser.id) {
@@ -63,7 +65,16 @@ module.exports.updateOne = (req, res, next) => {
     }
     return User.update(strippedUser, { id: req.params.id });
   })
-  .then(rows => {
+  .then(rows => User.findOne({ id: req.params.id }))
+  .then(foundUser => {
+    foundUser.passwordHash = undefined;
+    return SocketIOServer.broadcast(["admin"], [{
+      type: "USER_UPDATE_ONE_SUCCESS",
+      payload: foundUser,
+      notification: `User ${req.user.fullname} updated an User`,
+    }], req.user)
+  })
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -82,6 +93,14 @@ module.exports.saveOne = (req, res, next) => {
     }
   })
   .then(savedUser => {
+    savedUser.passwordHash = undefined;
+    return SocketIOServer.broadcast(["admin"], [{
+      type: "USER_SAVE_ONE_SUCCESS",
+      payload: savedUser,
+      notification: `User ${savedUser.firstname} ${savedUser.lastname} has registered`,
+    }], savedUser)
+  })
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));
@@ -90,12 +109,13 @@ module.exports.saveOne = (req, res, next) => {
 module.exports.deleteOne = (req, res, next) => {
   User
   .delete({ id: req.params.id })
-  .then(deletedRows => {
-    if (deletedRows !== 0) {
-      res.sendStatus(200);
-    } else {
-      throw new errors.NotFoundError("No user found.");
-    }
+  .then(deletedRows => SocketIOServer.broadcast(["admin"], [{
+    type: "USER_DELETE_ONE_SUCCESS",
+    payload: { id: parseInt(req.params.id) },
+    notification: `Admin ${req.user.fullname} deleted an User`,
+  }], req.user))
+  .then(() => {
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };
@@ -113,11 +133,13 @@ module.exports.loginUser = (req, res, next) => {
     } else if (!PasswordHelper.comparePassword(req.body.password, user.passwordHash)) {
       throw new errors.AuthenticationError("Incorrect password.");
     } else {
-      const token = TokenGenerator.generateLoginToken(user);
+      const payload = TokenGenerator.generateLoginPayload(user);
+      const token = TokenGenerator.generateToken(payload);
       user.passwordHash = undefined;
       res.status(200).send({
         user,
         token,
+        expires: payload.expires,
       });
     }
   })
@@ -150,11 +172,9 @@ module.exports.sendNewPassword = (req, res, next) => {
   let foundUser;
   let generatedPassword;
 
-  Promise.resolve(TokenGenerator.decodeToken(req.body.token))
+  Promise.resolve(TokenGenerator.verifyToken(req.body.token, { audience: "password" }))
   .then((decoded) => {
-    if (!decoded || decoded.name !== "password") {
-      throw new errors.BadRequestError("Invalid token.");
-    } else if (TokenGenerator.isTokenExpired(decoded)) {
+    if (TokenGenerator.isTokenExpired(decoded)) {
       throw new errors.BadRequestError("Token has expired.");
     } else {
       decodedToken = decoded;

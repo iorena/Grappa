@@ -1,5 +1,7 @@
 "use strict";
 
+const SocketIOServer = require("../services/SocketIOServer");
+
 const Grader = require("../models/Grader");
 const Thesis = require("../models/Thesis");
 
@@ -15,10 +17,20 @@ module.exports.findAll = (req, res, next) => {
 };
 
 module.exports.saveOne = (req, res, next) => {
+  let savedGrader;
+
   Grader
   .saveOne(req.body)
   .then(grader => {
-    res.status(200).send(grader);
+    savedGrader = grader;
+    return SocketIOServer.broadcast(["all"], [{
+      type: "GRADER_SAVE_ONE_SUCCESS",
+      payload: grader,
+      notification: `User ${req.user.fullname} saved a Grader`,
+    }], req.user)
+  })
+  .then(() => {
+    res.status(200).send(savedGrader);
   })
   .catch(err => next(err));
 };
@@ -26,8 +38,14 @@ module.exports.saveOne = (req, res, next) => {
 module.exports.updateOne = (req, res, next) => {
   Grader
   .update(req.body, { id: req.params.id })
-  .then(grader => {
-    res.status(200).send(grader);
+  .then(rows => Grader.findOne({ id: req.params.id }))
+  .then(grader => SocketIOServer.broadcast(["all"], [{
+    type: "GRADER_UPDATE_ONE_SUCCESS",
+    payload: grader,
+    notification: `User ${req.user.fullname} updated a Grader`,
+  }], req.user))
+  .then(() => {
+    res.sendStatus(200);
   })
   .catch(err => next(err));
 };
@@ -44,7 +62,12 @@ module.exports.deleteOne = (req, res, next) => {
       return Grader.delete({ id: req.params.id });
     }
   })
-  .then(deletedRows => {
+  .then(deletedRows => SocketIOServer.broadcast(["all"], [{
+    type: "GRADER_DELETE_ONE_SUCCESS",
+    payload: { id: parseInt(req.params.id) },
+    notification: `User ${req.user.fullname} deleted a Grader`,
+  }], req.user))
+  .then(() => {
     res.sendStatus(200);
   })
   .catch(err => next(err));

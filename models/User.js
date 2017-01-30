@@ -14,27 +14,20 @@ class User extends BaseModel {
     });
   }
 
-  findAll() {
-    return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "email", "firstname", "lastname", "role", "isActive", "isRetired", "StudyFieldId"],
-      include: [{
-        model: this.Models.Thesis,
-        as: "Theses",
-      }, {
-        model: this.Models.StudyField,
-      }],
-    });
+  findAll(params) {
+    return this.Models[this.modelname].findAll({
+        where: params || {},
+        attributes: ["id", "email", "firstname", "lastname", "role", "isActive", "isRetired", "StudyFieldId"],
+      });
   }
 
   findAllNotActive() {
-    return this.Models[this.modelname]
-    .findAll({
-      attributes: ["id", "email", "firstname", "lastname", "role", "isActive"],
-      where: {
-        isActive: false,
-      },
-    });
+    return this.Models[this.modelname].findAll({
+        attributes: ["id", "email", "firstname", "lastname", "role", "isActive"],
+        where: {
+          isActive: false,
+        },
+      });
   }
 
   findStudyfieldsProfessor(StudyFieldId) {
@@ -48,16 +41,16 @@ class User extends BaseModel {
   }
 
   findAllProfessors() {
-    return this.Models.StudyField.findAll()
-      .then(fields => {
-        return Promise.all(fields.map(field => {
-          return this.Models.User.findOne({
-            where: {
-              role: "professor",
-              StudyFieldId: field.id,
-            },
-          });
-        }));
+    return this.Models[this.modelname].findAll({
+        attributes: ["id", "email", "firstname", "lastname", "role"],
+        where: {
+          isActive: true,
+          isRetired: false,
+          role: "professor",
+          StudyFieldId: {
+            $ne: null
+          }
+        },
       });
   }
 

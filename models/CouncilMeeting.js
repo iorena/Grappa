@@ -7,6 +7,14 @@ class CouncilMeeting extends BaseModel {
     super("CouncilMeeting");
   }
 
+  findOne(params) {
+    return this.Models[this.modelname]
+      .findOne({
+        attributes: ["id", "date", "instructorDeadline", "studentDeadline"],
+        where: params,
+      });
+  }
+
   findAll() {
     return this.Models[this.modelname]
       .findAll({

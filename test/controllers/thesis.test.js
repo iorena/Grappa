@@ -13,10 +13,15 @@ const auth = require("../mock/authentication");
 const expectResponseToEqual = require("../mock/responses");
 
 const EmailSender = require("../../services/EmailSender");
+const SocketIOServer = require("../../services/SocketIOServer");
+
 let sandbox = sinon.sandbox.create();
 sandbox.stub(EmailSender, "sendEmail", () =>
   Promise.resolve()
 )
+sandbox.stub(SocketIOServer, "broadcast", () => {
+  Promise.resolve()
+})
 
 describe("ThesisController", () => {
   describe("findAllByUserRole, GET /thesis", () => {
@@ -76,9 +81,9 @@ describe("ThesisController", () => {
       .set("Content-Type", "multipart/form-data")
       .set("X-Access-Token", auth.createToken("admin"))
       .expect("Content-Type", /json/)
-      // .expect(res => {
-      //   console.log("response: ", res.body)
-      // })
+      .expect(res => {
+        console.log("response: ", res.body)
+      })
       .expect(200, done);
     });
 

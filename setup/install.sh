@@ -28,17 +28,17 @@ cd ..
 
 # installation of software
 # install NVM
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
 # reload it into current terminal session, no need to restart it
 . ~/.bashrc
-# install Node 5.9.1
-nvm install 5.9.1
+# install Node 6.9.4
+nvm install 6.9.4
 # install pm2 for running the servers
 npm install pm2 -g
 # install nginx to be run as web-proxy and better performance
 sudo apt-get install -y nginx
 # install PostgreSQL
-sudo apt-get install -y postgresql-9.3 postgresql-contrib
+sudo apt-get install -y postgresql postgresql-contrib
 # install pdftk for manipulation of PDFs
 sudo apt-get install -y pdftk
 
@@ -64,10 +64,8 @@ npm run db init
 cd ../grappa-front
 cp .dev-env .env
 # >>> rename .env variables <<<
+# NOTE: remember to set the NODE_ENV=production, otherwise webpack won't build the app with npm i
 npm i
-# if your forgot to set the NODE_ENV=production then the webpack didn't build the app so
-# you have to trigger it manually by this command
-npm run postinstall
 # Configure nginx
 sudo cp /var/www/grappa.cs.helsinki.fi/grappa-backend/bin/grappa.cs.helsinki.fi /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/grappa.cs.helsinki.fi /etc/nginx/sites-enabled/grappa.cs.helsinki.fi

@@ -12,8 +12,8 @@ module.exports.destroyTables = () => {
 };
 
 module.exports.createTables = () => {
-  return tables.syncForce();
-  // return tables.sync();
+  // return tables.syncForce();
+  return tables.sync();
 };
 
 module.exports.dropTables = () => {
@@ -112,11 +112,11 @@ module.exports.addLotTestData = () => Promise.all([
   }),
   models.Grader.create({
     name: "Arto Wikla",
-    title: "Prof",
+    title: "Prof.",
   }),
   models.Grader.create({
     name: "Arto Vihavainen",
-    title: "Doc",
+    title: "Dr.",
   }),
   models.CouncilMeeting.create({
     date: new Date("23:59 11/30/2016"),

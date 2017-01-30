@@ -14,12 +14,13 @@ module.exports.authenticate = (req, res, next) => {
   if (!req.headers["x-access-token"]) {
     throw new errors.AuthenticationError("Please make sure your request has X-Access-Token header.");
   }
-  const decoded = TokenGenerator.decodeToken(req.headers["x-access-token"]);
-  if (decoded === undefined || decoded.name !== "login") {
-    throw new errors.AuthenticationError("Invalid token.");
-  }
+  const decoded = TokenGenerator.verifyToken(req.headers["x-access-token"], { audience: "login" });
+  // const decoded = TokenGenerator.decodeToken(req.headers["x-access-token"]);
+  // if (decoded === undefined || decoded.name !== "login") {
+  //   throw new errors.AuthenticationError("Invalid token.");
+  // }
   if (TokenGenerator.isTokenExpired(decoded)) {
-    throw new errors.AuthenticationError("Your token has expired. Please re-login.");
+    throw new errors.LoginTimeoutError("Your token has expired. Please re-login.");
   } else {
     req.user = decoded.user;
     next();

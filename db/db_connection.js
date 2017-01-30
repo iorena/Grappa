@@ -1,7 +1,6 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const fs = require("fs");
 
 let seq;
 if (process.env.NODE_ENV === "production") {
