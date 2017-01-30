@@ -7,6 +7,9 @@ class TokenGenerator {
   constructor(secret) {
     this.secret = secret;
   }
+  verifyToken(token, options) {
+    return jwt.verify(token, this.secret, options);
+  }
   decodeToken(token) {
     let decoded;
     try {
@@ -28,7 +31,7 @@ class TokenGenerator {
         role: user.role,
         StudyFieldId: user.StudyFieldId,
       },
-      name: "login",
+      audience: "login",
       // expires: Math.floor(Date.now() / 1000) + 15,
       expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
       // expiresIn: 172800, // seconds
@@ -36,7 +39,7 @@ class TokenGenerator {
     return payload;
   }
   generateToken(payload) {
-    return jwt.sign(payload, this.secret);
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
   generateEthesisToken(thesis) {
     const payload = {
@@ -44,22 +47,22 @@ class TokenGenerator {
         id: thesis.id,
         CouncilMeetingId: thesis.CouncilMeetingId,
       },
-      name: "ethesis",
+      audience: "ethesis",
       // TODO set to expire in a year?
       // doesnt really expire as it all depends about the councilmeeting's deadline
       expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
     };
-    return jwt.sign(payload, this.secret);
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
   generateResetPasswordToken(user) {
     const payload = {
       user: {
         id: user.id,
       },
-      name: "password",
+      audience: "password",
       expires: Math.floor(Date.now() / 1000) + 60 * 60,
     }
-    return jwt.sign(payload, this.secret);
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
 }
 

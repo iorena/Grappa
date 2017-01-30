@@ -8,31 +8,31 @@ const ioJwt = require("socketio-jwt");
 const TokenGenerator = require("./TokenGenerator");
 
 const User = require("../models/User")
-const StudyField = require("../models/StudyField")
+// const StudyField = require("../models/StudyField")
 const Notification = require("../models/Notification")
 
 class WebSocketServer {
 
   constructor() {
     this.server = undefined;
-    this.rooms = [];
-    this.admins = [];
-    this.studyfields = [];
+    // this.rooms = [];
+    // this.admins = [];
+    // this.studyfields = [];
   }
 
-  fetchDataFromDB() {
-    User.findAll({
-      role: "admin",
-      isActive: true,
-      isRetired: false,
-    })
-    .then(admins => {
-      this.admins = admins;
-    })
-  }
+  // fetchDataFromDB() {
+  //   User.findAll({
+  //     role: "admin",
+  //     isActive: true,
+  //     isRetired: false,
+  //   })
+  //   .then(admins => {
+  //     this.admins = admins;
+  //   })
+  // }
 
   start() {
-    this.fetchDataFromDB();
+    // this.fetchDataFromDB();
     const app = express();
     const port = process.env.WEBSOCKET_PORT || 8008;
     const server = app.listen(port);
@@ -41,8 +41,8 @@ class WebSocketServer {
 
     this.server.sockets
       .on("connection", ioJwt.authorize({
-        // check if correct audience?? 
         secret: process.env.TOKEN_SECRET,
+        audience: "login",
         timeout: 15000 // 15 seconds to send the authentication message
       }))
       .on("authenticated", function(socket) {
@@ -62,7 +62,7 @@ class WebSocketServer {
     this.server.on("connection", function(socket){
       console.log("Connection to client established");
 
-      socket.on("disconnect",function(){
+      socket.on("disconnect", function() {
         console.log("Client has disconnected");
       });
     });
@@ -70,7 +70,7 @@ class WebSocketServer {
 
   stop() {
     this.server.close(() => {
-      console.log("websocket server closed")
+      console.log("SocketIO server closed")
     });
   }
 
