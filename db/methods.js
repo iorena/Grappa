@@ -12,8 +12,8 @@ module.exports.destroyTables = () => {
 };
 
 module.exports.createTables = () => {
-  return tables.syncForce();
-  // return tables.sync();
+  // return tables.syncForce();
+  return tables.sync();
 };
 
 module.exports.dropTables = () => {

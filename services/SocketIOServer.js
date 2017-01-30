@@ -38,6 +38,7 @@ class WebSocketServer {
     const server = app.listen(port);
     this.server = io(server);
     console.log("SocketIO server started at " + port)
+
     this.server.sockets
       .on("connection", ioJwt.authorize({
         // check if correct audience?? 
@@ -47,6 +48,7 @@ class WebSocketServer {
       .on("authenticated", function(socket) {
         //this socket is authenticated, we are good to handle more events from it.
         console.log("hello! " + socket.decoded_token.user.fullname);
+        // console.log(socket)
         const user = socket.decoded_token.user;
         if (user.role === "admin" || user.role === "print-person") {
           socket.join(user.role)
@@ -76,20 +78,27 @@ class WebSocketServer {
    * Mindfuck double reduce loop
    */
   createNotifications(actions, user) {
-    return Promise.all(actions.reduce((accumulated, action) => {
-      let forEachAdmin = this.admins.reduce((acc, admin) => {
-        if (admin.id !== user.id) {
-          return [...acc, Notification.saveOne({
-            type: action.type,
-            content: action.notification,
-            RecipientId: admin.id,
-            CreatedById: user.id,
-          })]
-        }
-        return acc;
-      }, []);
-      return [...accumulated, ...forEachAdmin];
-    }, []))
+    return User.findAll({
+        role: "admin",
+        isActive: true,
+        isRetired: false,
+      })
+      .then(admins => {
+        return Promise.all(actions.reduce((accumulated, action) => {
+          let forEachAdmin = admins.reduce((acc, admin) => {
+            if (admin.id !== user.id) {
+              return [...acc, Notification.saveOne({
+                type: action.type,
+                content: action.notification,
+                RecipientId: admin.id,
+                CreatedById: user.id,
+              })]
+            }
+            return acc;
+          }, []);
+          return [...accumulated, ...forEachAdmin];
+        }, []))
+      })
   }
 
   /**
@@ -111,8 +120,7 @@ class WebSocketServer {
   broadcast(notifiedRooms, actions, user) {
     return this.createNotifications(actions, user)
       .then(notifications => {
-        // console.log(notifications)
-        // actions without notifications
+        
         const prunedActions = actions.map(action => {
           return {
             type: action.type,
@@ -120,26 +128,31 @@ class WebSocketServer {
           }
         })
 
-        const notificationActions = notifications.map(notification => {
-          return {
-            type: "NOTIFICATION_ADD_ONE",
-            payload: notification,
+        notifiedRooms.map(room => {
+          if (notifiedRooms.indexOf("all") !== -1 || this.server.sockets.adapter.rooms[room]) {
+            // const client = this.server.sockets.adapter.rooms[room].sockets
+            // console.log(this.server.sockets)
+            // console.log(this.server.sockets.adapter.rooms[room])
+            // console.log(this.server.connected)
+            console.log("emitting to ", room)
+            Object.keys(this.server.sockets.adapter.rooms[room].sockets).map(clientId => {
+              // console.log(clientId)
+              const socket = this.server.sockets.connected[clientId];
+              // console.log(socket.decoded_token)
+              // create notifications only for those admins that are marked as recipients
+              const notificationActions = notifications.reduce((accumulated, notification) => {
+                if (socket.decoded_token.user.id === notification.RecipientId) {
+                  accumulated.push({
+                    type: "NOTIFICATION_ADD_ONE",
+                    payload: notification,
+                  })
+                }
+                return accumulated;
+              }, [])
+              this.server.in(clientId).emit("server:push", [...prunedActions, ...notificationActions]);
+            })
           }
         })
-
-        // this.server.emit("server:push", [...prunedActions, ...notificationActions]);
-        // console.log(this.server.sockets.adapter.rooms["admin"])
-        // console.log(this.server.sockets.adapter.rooms["professor/1"])
-        if (notifiedRooms.indexOf("all") !== -1) {
-          this.server.emit("server:push", [...prunedActions, ...notificationActions]);
-        } else {
-          notifiedRooms.map(room => {
-            if (this.server.sockets.adapter.rooms[room]) {
-              console.log("emitting to ", room)
-              this.server.in(room).emit("server:push", [...prunedActions, ...notificationActions]);
-            }
-          })
-        }
       })
   }
 }

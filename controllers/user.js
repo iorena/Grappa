@@ -36,7 +36,8 @@ module.exports.updateOne = (req, res, next) => {
   .then(foundUser => {
     if (!foundUser) {
       throw new errors.NotFoundError("No User found.");
-    } else if (req.user.id.toString() === req.params.id && user.password && !PasswordHelper.comparePassword(user.password, foundUser.passwordHash)) {
+    } else if (req.user.id.toString() === req.params.id && user.password &&
+      !PasswordHelper.comparePassword(user.password, foundUser.passwordHash)) {
       throw new errors.AuthenticationError("Wrong password.");
     }
     let strippedUser = {};
@@ -51,7 +52,7 @@ module.exports.updateOne = (req, res, next) => {
       }
     } else {
       strippedUser = user;
-      if (strippedUser.role === "professor") {
+      if (strippedUser.role === "professor" && strippedUser.StudyFieldId) {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {
             if (prof && prof.id !== strippedUser.id) {

@@ -106,7 +106,8 @@ module.exports.updateOneAndConnections = (req, res, next) => {
   let updationPromises = [];
   const thesis = req.body.json;
 
-  if (req.user.role === "professor" && thesis.graderEval && thesis.graderEval.length > 0) {
+  if (req.user.role === "professor" && req.user.StudyFieldId && req.user.StudyFieldId === thesis.StudyFieldId
+    && thesis.graderEval && thesis.graderEval.length > 0) {
     updationPromises.push(
       Thesis.update({ graderEval: thesis.graderEval }, { id: thesis.id })
       .then(() => ThesisProgress.setGraderEvalDone(thesis.id))
@@ -126,7 +127,7 @@ module.exports.updateOneAndConnections = (req, res, next) => {
       }
     })
   } else {
-    updationPromises.push(new errors.ForbiddenError("No permission to edit Thesis."));
+    updationPromises.push(Promise.reject(new errors.ForbiddenError("No permission to edit Thesis.")));
   }
   
   Promise.all(updationPromises)
