@@ -57,6 +57,7 @@ class WebSocketServer {
         } else {
           socket.join(`instructor/${user.id}`);
         }
+        socket.join("all");
       });
 
     this.server.on("connection", function(socket){
@@ -127,9 +128,8 @@ class WebSocketServer {
             payload: action.payload,
           }
         })
-
         notifiedRooms.map(room => {
-          if (notifiedRooms.indexOf("all") !== -1 || this.server.sockets.adapter.rooms[room]) {
+          if (this.server.sockets.adapter.rooms[room]) {
             // const client = this.server.sockets.adapter.rooms[room].sockets
             // console.log(this.server.sockets)
             // console.log(this.server.sockets.adapter.rooms[room])
