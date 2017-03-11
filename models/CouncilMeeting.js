@@ -69,30 +69,6 @@ class CouncilMeeting extends BaseModel {
       .then((CM) => CM.addTheses(thesis));
   }
 
-  // unused
-  getNextMeetingWithTheses() {
-    return this.getModel()
-      .findOne({
-        where: {
-          createdAt: {
-            $lt: new Date(),
-          },
-        },
-        include: [{
-          model: this.Models.Thesis,
-          include: [{
-            model: this.Models.Grader,
-          }, {
-            model: this.Models.ThesisProgress,
-          }, {
-            model: this.Models.StudyField,
-          }, {
-            model: this.Models.User,
-          }],
-        }],
-      });
-  }
-
   saveOne(values) {
     return this.Models[this.modelname].create(values)
       .then(saved => {
