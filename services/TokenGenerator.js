@@ -14,6 +14,9 @@ class TokenGenerator {
     // return new Date() > decodedToken.expires;
     return Math.floor(Date.now() / 1000) > decodedToken.expires;
   }
+  generateToken(payload) {
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
+  }
   generateLoginPayload(user) {
     const payload = {
       user: {
@@ -28,9 +31,6 @@ class TokenGenerator {
       // expiresIn: 172800, // seconds
     };
     return payload;
-  }
-  generateToken(payload) {
-    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
   generateEthesisToken(thesis) {
     const payload = {

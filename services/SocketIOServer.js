@@ -8,31 +8,15 @@ const ioJwt = require("socketio-jwt");
 const TokenGenerator = require("./TokenGenerator");
 
 const User = require("../models/User")
-// const StudyField = require("../models/StudyField")
 const Notification = require("../models/Notification")
 
 class WebSocketServer {
 
   constructor() {
     this.server = undefined;
-    // this.rooms = [];
-    // this.admins = [];
-    // this.studyfields = [];
   }
 
-  // fetchDataFromDB() {
-  //   User.findAll({
-  //     role: "admin",
-  //     isActive: true,
-  //     isRetired: false,
-  //   })
-  //   .then(admins => {
-  //     this.admins = admins;
-  //   })
-  // }
-
   start() {
-    // this.fetchDataFromDB();
     const app = express();
     const port = process.env.WEBSOCKET_PORT || 8008;
     const server = app.listen(port);
@@ -77,6 +61,9 @@ class WebSocketServer {
 
   /**
    * Mindfuck double reduce loop
+   * @param {Array} actions - List of actions and notifications
+   * @param {Object} user - Object of user
+   * @return {Promise} - List of saved notifications as Promises
    */
   createNotifications(actions, user) {
     return User.findAll({
@@ -103,20 +90,21 @@ class WebSocketServer {
   }
 
   /**
-   * Broadcasts recent changes to all users involved in the namespaces
-   * namespaces can be one of the following: ["all", "admin", "print-person", "professor", "user"]
-   * update is structured as such:
-   * {
-   *   add: {
-   *    Thesis: [ array of thesis objects ]
-   *    ThesisProgress: [ array of thesisProgress objects ]
-   *   },
-   *   update: {
-   *     CouncilMeeting: [ array of CouncilMeeting objects ]
-   *   }
-   * }
-   * @param {Array} namespaces - list of namespaces to be notified of changes
-   * @param {Array} actions - list of actions for the redux-store
+   * Broadcasts actions to all users involved in the namespaces.
+   * 
+   * Namespaces can be one of the following: ["all", "admin", "print-person", "professor/<StudyFieldId>", 
+   * "instructor/<id>"]
+   * Actions consist of regular action-type and payload alongside of the notification for admins:
+   * [{
+   *   type: "COUNCILMEETING_DELETE_ONE_SUCCESS",
+   *   payload: { id: parseInt(req.params.id) },
+   *   notification: `User ${req.user.fullname} deleted a CouncilMeeting`,
+   * }]
+   * Loops through all the clients connected to a namespace and uses the client's Socket.io-id
+   * to directly broadcast the action and the possible notification.
+   * @param {Array} namespaces - List of namespaces to be notified of changes
+   * @param {Array} actions - List of actions to be sent for clients' Redux stores and notifications
+   * @param {Object} user - Either fetched from DB or decoded user's token
    */
   broadcast(notifiedRooms, actions, user) {
     return this.createNotifications(actions, user)
