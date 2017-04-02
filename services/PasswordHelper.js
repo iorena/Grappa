@@ -3,20 +3,34 @@
 const bcrypt = require("bcrypt-nodejs");
 const passwordGenerator = require("password-generator");
 
-class PasswordHelper {
-
-  hashPassword(password) {
+const PasswordHelper = {
+  hashPassword: (password) => {
     return bcrypt.hashSync(password);
-  }
-
-  comparePassword(password, hash) {
+  },
+  comparePassword: (password, hash) => {
     return bcrypt.compareSync(password, hash);
-  }
-
-  generatePassword() {
+  },
+  generatePassword: () => {
     return passwordGenerator(24, false);
   }
 }
 
-module.exports = new PasswordHelper();
-module.exports.class = PasswordHelper;
+module.exports = Object.freeze(PasswordHelper);
+
+// class PasswordHelper {
+
+//   hashPassword(password) {
+//     return bcrypt.hashSync(password);
+//   }
+
+//   comparePassword(password, hash) {
+//     return bcrypt.compareSync(password, hash);
+//   }
+
+//   generatePassword() {
+//     return passwordGenerator(24, false);
+//   }
+// }
+
+// module.exports = new PasswordHelper();
+// module.exports.class = PasswordHelper;

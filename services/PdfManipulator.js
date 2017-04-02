@@ -182,7 +182,8 @@ class PdfManipulator {
             {
               councilmeeting: {
                 date: moment(councilmeeting.date).format("DD/MM/YYYY"),
-                no: `KK ${councilmeeting.seq}/${councilmeeting.date.getFullYear()}`,
+                // no meeting number displayed since sometimes it is incorrect due to changes to meetings
+                // no: `KK ${councilmeeting.seq}/${councilmeeting.date.getFullYear()}`,
               },
               theses: thesisArray,
               page: pages,
