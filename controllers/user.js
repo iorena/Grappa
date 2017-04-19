@@ -52,6 +52,7 @@ module.exports.updateOne = (req, res, next) => {
       }
     } else {
       strippedUser = user;
+      console.log(strippedUser)
       if (strippedUser.role === "professor" && strippedUser.StudyFieldId) {
         return User.findStudyfieldsProfessor(strippedUser.StudyFieldId)
           .then(prof => {

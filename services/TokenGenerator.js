@@ -1,8 +1,10 @@
 "use strict";
 
-// TODO use async decoding?
 const jwt = require("jsonwebtoken");
 
+/**
+ * Service for generation and verification of JWT-tokens.
+ */
 class TokenGenerator {
   constructor(secret) {
     this.secret = secret;
@@ -24,6 +26,7 @@ class TokenGenerator {
         fullname: `${user.firstname} ${user.lastname}`,
         role: user.role,
         StudyFieldId: user.StudyFieldId,
+        isSpectator: user.isSpectator,
       },
       audience: "login",
       // expires: Math.floor(Date.now() / 1000) + 15,

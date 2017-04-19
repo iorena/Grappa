@@ -2,13 +2,20 @@
 
 const Models = require("../db/tables").Models;
 
+/**
+ * Defines a base model for the other models to inherit.
+ * 
+ * I know, I know functional programming is all the rage nowadays BUT you can't say 
+ * that this isn't handy here? This defines neatly the basic methods for all the models 
+ * in a single file and sets the database schemas for all the models to use (as this.Models).
+ * 
+ * Yeah okay most of the models overwrite these methods or don't need them but they are still 
+ * useful IMO and this structure is super simple to understand.
+ */
 class BaseModel {
   constructor(modelname) {
     this.modelname = modelname;
     this.Models = Models;
-  }
-  getModel() {
-    return this.Models[this.modelname];
   }
   saveOne(values) {
     return this.Models[this.modelname].create(values);

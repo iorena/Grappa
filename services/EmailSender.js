@@ -3,6 +3,12 @@
 const config = require("../config/email");
 const nodemailer = require("nodemailer");
 
+/**
+ * Service for sending email with nodemailer using gmail.
+ * 
+ * Really only a wrapper around the nodemailer but important nonetheless for insulating 
+ * the actual call (since things could change and nodemailer might be switched etc).
+ */
 class EmailSender {
   constructor(options) {
     this.mailOptions = {

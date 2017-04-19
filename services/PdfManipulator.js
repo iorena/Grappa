@@ -17,6 +17,13 @@ const ThesisAbstract = require("../models/ThesisAbstract");
 
 const errors = require("../config/errors");
 
+/**
+ * Service that manipulates and creates PDF files.
+ * 
+ * Used by thesisController to do stuff with the pdfs.
+ * Has some nasty methods that maybe should be splitted for the sake of my burning eyes!
+ * But naah... not today.
+ */
 class PdfManipulator {
 
   parseAbstractFromThesisPDF(thesisPDF) {

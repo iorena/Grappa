@@ -249,6 +249,12 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
   .catch(err => next(err));
 };
 
+/**
+ * Generates requested Theses to PDFs and sends them back to client
+ * 
+ * Also if the user has the role 'print-person' sets Theses printDone
+ * to true to their ThesisProgress.
+ */
 module.exports.generateThesesToPdf = (req, res, next) => {
   let pathToFile;
   let setDone;

@@ -6,6 +6,12 @@ const rmdir = require("rmdir");
 const fs = require("fs");
 const path = require("path");
 
+/**
+ * Service for wrapping used I/O methods inside a single file.
+ * Maybe it should be a stateless object to really force the statelesness.
+ * But oh well.
+ */
+
 class FileManipulator {
 
   createFolder(name) {

@@ -1,5 +1,13 @@
 "use strict";
 
+/**
+ * Custom errors thrown by controllers or occasionally services.
+ * 
+ * Determines the correct type of error by standard HTTP errors.
+ * @param {String} message - Contains the error message shown by the client.
+ * @param {Object} details - Additional details such as stack trace.
+ */
+
 function BadRequestError(message, details) {
   this.name = "BadRequestError";
   this.message = message || "Something went wrong";

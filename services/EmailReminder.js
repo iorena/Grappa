@@ -14,6 +14,14 @@ const EmailDraft = require("../models/EmailDraft");
 
 const errors = require("../config/errors");
 
+/**
+ * Service used for composing emails from predefined drafts with some hard-coded properties.
+ * 
+ * Every sent email is somewhat unique and this service has a method for them all after which 
+ * it uses either sendMail or sendReminder to actually send the email. Saves all emails to 
+ * EmailStatus table for admins to admire.
+ * Maybe reminder is a bad name for it since it does also emails for lost passwords.
+ */
 class EmailReminder {
 
   sendMail(toEmail, emailDraft, customBody, attachments) {

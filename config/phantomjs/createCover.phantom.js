@@ -1,3 +1,15 @@
+
+/**
+ * Configuration file for rendering the thesis cover from HTML to PDF with PhantomJS.
+ * 
+ * Kinda weird how it works and PhantomJS is no more in active development due to 
+ * headless mode having been introduced to Chrome. Uses the standard A4 size for the PDF which 
+ * the HTML page is being fitted.
+ * 
+ * Requires two arguments inside the command xxx which are the path to the folder and 
+ * the amount of HTML files being transformed.
+ */
+
 var page = require("webpage").create();
 page.paperSize = {
   height: "11in",

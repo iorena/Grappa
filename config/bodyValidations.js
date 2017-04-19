@@ -1,3 +1,12 @@
+
+/**
+ * Sanitizations and validations defined as JSON-schemas.
+ * 
+ * Used by the validateBody.js middleware to transform and validte the requests'
+ * JSON-bodies. Extremely useful to define here than inside controllers (brr).
+ * Uses the schemas for schema-inspector https://www.npmjs.com/package/schema-inspector
+ */
+
 const sanitizations = {
   user: {
     login: {
