@@ -1,9 +1,6 @@
-"use strict";
-
 const SocketIOServer = require("../services/SocketIOServer");
 
 const Grader = require("../models/Grader");
-const Thesis = require("../models/Thesis");
 
 const errors = require("../config/errors");
 

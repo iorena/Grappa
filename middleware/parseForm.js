@@ -2,6 +2,11 @@
 
 const errors = require("../config/errors");
 
+/**
+ * Middleware for parsing requests that are 'multipart/form-data'.
+ *
+ * Currently used solely for the uploading of thesis pdf-documents.
+ */
 module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
   const parsedForm = {
     files: [],

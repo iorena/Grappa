@@ -8,6 +8,7 @@ const EmailStatus = require("../models/EmailStatus");
 
 /**
  * Unused service that was planned to be used for checking emails for errors.
+ *
  * Due to other, more important priorities, was obsoleted and abandoned.
  * Why is it still here? Well I spent a couple whole days coding it so...
  * I have still some sentimentality left for it ;D.

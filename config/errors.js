@@ -1,9 +1,7 @@
-"use strict";
-
 /**
  * Custom errors thrown by controllers or occasionally services.
- * 
- * Determines the correct type of error by standard HTTP errors.
+ *
+ * Determines the correct type of error a standard HTTP error -type.
  * @param {String} message - Contains the error message shown by the client.
  * @param {Object} details - Additional details such as stack trace.
  */
@@ -46,8 +44,6 @@ function NotFoundError(message, details) {
   this.stack = (new Error()).stack;
 }
 
-LoginTimeoutError.prototype = Object.create(Error.prototype);
-
 function LoginTimeoutError(message, details) {
   this.name = "LoginTimeoutError";
   this.message = message || "Something went wrong";
@@ -56,9 +52,9 @@ function LoginTimeoutError(message, details) {
   this.stack = (new Error()).stack;
 }
 
-// Error caused when requisite data is missing e.g. email drafts from database
-PremiseError.prototype = Object.create(Error.prototype);
+LoginTimeoutError.prototype = Object.create(Error.prototype);
 
+// Error caused when prerequisite data is missing e.g. email drafts from database
 function PremiseError(message, details) {
   this.name = "PremiseError";
   this.message = message || "Something went wrong";

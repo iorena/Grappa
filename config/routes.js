@@ -1,5 +1,3 @@
-"use strict";
-
 const express = require("express");
 const router = new express.Router();
 
@@ -49,18 +47,18 @@ router.post("/user/send-new-password",
   userCtrl.sendNewPassword);
 
 /**
- * Setting maximum MB limit here is redundant as nginx is what takes care of it :D
- * This 40MB limit works here although maximum request limit configured by ngninx is 51MB
+ * Setting maximum MB limit here is redundant as nginx is what takes care of it. :D
+ * This 40MB limit works here although maximum request limit configured by ngninx is 51MB.
  */
 router.post("/thesis/ethesis/:token",
   parseForm.parseUpload(40),
   validate.validateBody("thesis", "ethesis"),
   thesisCtrl.uploadEthesisPDF);
 
-/** 
+/**
  * Routes for all logged in users
- * 
- * If route has "auth.restrictSpectators" that means users that have 'isSpectator' field 
+ *
+ * If route uses "auth.restrictSpectators" that means users that have 'isSpectator'-field
  * set true are not allowed to access the route.
  * Spectators were made to help Kjell showcase Grappa to other university departments' employees.
  */
@@ -99,7 +97,7 @@ router.post("/grader",
 router.put("/grader/:id", 
   auth.restrictSpectators,
   graderCtrl.updateOne);
-router.delete("/grader/:id", 
+router.delete("/grader/:id",
   auth.restrictSpectators,
   graderCtrl.deleteOne);
 
@@ -118,7 +116,7 @@ router.post("/thesis/move",
   validate.validateBody("thesis", "move"),
   thesisCtrl.moveThesesToMeeting);
 
-router.delete("/thesis/:id", 
+router.delete("/thesis/:id",
   auth.restrictSpectators,
   thesisCtrl.deleteOne);
 
@@ -138,16 +136,16 @@ router.post("/studyfield",
   auth.restrictSpectators,
   validate.validateBody("studyfield", "save"),
   studyfieldCtrl.saveOne);
-router.put("/studyfield/:id", 
+router.put("/studyfield/:id",
   auth.restrictSpectators,
   studyfieldCtrl.updateOne);
 
 router.get("/user", userCtrl.findAll);
-router.delete("/user/:id", 
+router.delete("/user/:id",
   auth.restrictSpectators,
   userCtrl.deleteOne);
 
-router.put("/thesisprogress/:id", 
+router.put("/thesisprogress/:id",
   auth.restrictSpectators,
   thesisprogressCtrl.updateOne);
 
@@ -163,12 +161,12 @@ router.post("/email/remind",
   emailCtrl.sendReminder);
 
 router.get("/emaildraft", emaildraftCtrl.findAll);
-router.put("/emaildraft/:id", 
+router.put("/emaildraft/:id",
   auth.restrictSpectators,
   emaildraftCtrl.updateOne);
 
 router.get("/notification", notificationCtrl.findAll);
-router.post("/notification/read", 
+router.post("/notification/read",
   auth.restrictSpectators,
   notificationCtrl.setRead);
 

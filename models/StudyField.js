@@ -23,7 +23,7 @@ class StudyField extends BaseModel {
   }
 
   saveOne(values) {
-    return this.getModel().create(values)
+    return this.Models.StudyField.create(values)
       .then(newField => {
         return {
           id: newField.id,

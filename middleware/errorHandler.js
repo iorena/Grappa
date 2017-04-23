@@ -3,13 +3,14 @@
 const errors = require("../config/errors");
 
 /**
- * Middleware for handling all the errors thrown by other middlewares and controllers
- * and generating proper responses.
+ * Middleware for handling all the errors thrown by other middlewares or controllers
+ * from which it generates proper responses.
  */
 module.exports.handleErrors = (err, req, res, next) => {
   if (err) {
     const statusCode = err.statusCode !== undefined ? err.statusCode : 500;
-
+    // Log the error to the console in development environment and send
+    // stack traces to the user.
     if (process.env.NODE_ENV === "development") {
       console.log(JSON.stringify(err, null, 2))
       if (err.message !== undefined) {

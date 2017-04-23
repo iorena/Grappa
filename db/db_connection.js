@@ -1,7 +1,8 @@
-"use strict";
-
 const Sequelize = require("sequelize");
 
+/**
+ * Creates a new Sequelize database object depending of the current NODE_ENV.
+ */
 let seq;
 if (process.env.NODE_ENV === "production") {
   seq = new Sequelize(process.env.DB_URL, {

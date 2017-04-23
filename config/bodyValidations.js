@@ -1,9 +1,9 @@
 
 /**
  * Sanitizations and validations defined as JSON-schemas.
- * 
+ *
  * Used by the validateBody.js middleware to transform and validte the requests'
- * JSON-bodies. Extremely useful to define here than inside controllers (brr).
+ * JSON-bodies. Extremely useful to define here than validate manually inside controllers (brr...).
  * Uses the schemas for schema-inspector https://www.npmjs.com/package/schema-inspector
  */
 
@@ -38,7 +38,7 @@ const sanitizations = {
       properties: {
         date: {
           type: "date",
-          exec: function (schema, post) {
+          exec(schema, post) {
             post = new Date(post);
             post.setHours(23, 59, 59, 0);
             return post;
@@ -46,7 +46,7 @@ const sanitizations = {
         },
         studentDeadline: {
           type: "date",
-          exec: function (schema, post) {
+          exec(schema, post) {
             post = new Date(post);
             post.setHours(23, 59, 59, 0);
             return post;
@@ -54,7 +54,7 @@ const sanitizations = {
         },
         instructorDeadline: {
           type: "date",
-          exec: function (schema, post) {
+          exec(schema, post) {
             post = new Date(post);
             post.setHours(23, 59, 59, 0);
             return post;
@@ -139,10 +139,10 @@ const validations = {
     },
     update: {
       type: "object",
-      exec: function (schema, post) {
-        if (!post.date instanceof Date) {
+      exec(schema, post) {
+        if (!(post.date instanceof Date)) {
           this.report("Date wasn't a Date.");
-        } else if (!post.instructorDeadline instanceof Date || !post.studentDeadline instanceof Date) {
+        } else if (!(post.instructorDeadline instanceof Date) || !(post.studentDeadline instanceof Date)) {
           this.report("Deadline wasn't a Date.");
         } else if (post.date < post.instructorDeadline || post.date < post.studentDeadline) {
           this.report("Deadline was after date.");

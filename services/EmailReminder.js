@@ -16,14 +16,22 @@ const errors = require("../config/errors");
 
 /**
  * Service used for composing emails from predefined drafts with some hard-coded properties.
- * 
- * Every sent email is somewhat unique and this service has a method for them all after which 
- * it uses either sendMail or sendReminder to actually send the email. Saves all emails to 
+ *
+ * Every sent email is somewhat unique and this service has a method for them all after which
+ * it uses either sendMail or sendReminder to actually send the email. Saves all emails to
  * EmailStatus table for admins to admire.
  * Maybe reminder is a bad name for it since it does also emails for lost passwords.
  */
 class EmailReminder {
 
+  /**
+   * Sends an email using EmailSender service and stores it to EmailStatus-table.
+   * @param {String} toEmail - Recipient's email address.
+   * @param {Object} emailDraft - EmailDraft object fetched from the DB.
+   * @param {Object} customBody - Contains the title, body and xx of the email.
+   * @param {Array<Stuff>} attachments - List of stufff. TODO
+   * @return {Promise<Object>} Promise of the saved EmailStatus.
+   */
   sendMail(toEmail, emailDraft, customBody, attachments) {
     let savedEmail;
     return Sender.sendEmail(toEmail, emailDraft.title, customBody, attachments)
@@ -36,6 +44,15 @@ class EmailReminder {
       }))
   }
 
+  /**
+   * Sends an email using EmailSender service and updates it to ThesisProgress.
+   * @param {String} toEmail - Recipient's email address.
+   * @param {Object} emailDraft - EmailDraft object fetched from DB.
+   * @param {Object} thesis - Thesis object fetched from DB. ???
+   * @param {Object} customBody - TODO
+   * @param {Array<Object>} attachments - TODO
+   * @return {Promise<Object>} Promise of the saved EmailStatus.
+   */
   sendReminder(toEmail, emailDraft, thesis, customBody, attachments) {
     let savedEmail;
     return Sender.sendEmail(toEmail, emailDraft.title, customBody, attachments)

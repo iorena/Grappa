@@ -9,7 +9,7 @@ class ThesisProgress extends BaseModel {
 
 // deprecated
   linkEthesisEmail(ThesisId, emailId) {
-    return this.getModel().update({
+    return this.Models.ThesisProgress.update({
       EthesisEmailId: emailId,
     }, {
       where: { ThesisId },
@@ -17,7 +17,7 @@ class ThesisProgress extends BaseModel {
   }
 
   setEthesisDone(ThesisId) {
-    return this.getModel().update({
+    return this.Models.ThesisProgress.update({
       ethesisDone: true,
     }, {
       where: { ThesisId },
@@ -25,7 +25,7 @@ class ThesisProgress extends BaseModel {
   }
 
   setGraderEvalDone(ThesisId) {
-    return this.getModel().update({
+    return this.Models.ThesisProgress.update({
       graderEvalDone: true,
     }, {
       where: { ThesisId },
@@ -33,7 +33,7 @@ class ThesisProgress extends BaseModel {
   }
 
   setPrintDone(ThesisId) {
-    return this.getModel().update({
+    return this.Models.ThesisProgress.update({
       printDone: true,
     }, {
       where: { ThesisId },

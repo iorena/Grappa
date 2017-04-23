@@ -51,7 +51,7 @@ class CouncilMeeting extends BaseModel {
     const end = new Date(meeting.date);
     start.setHours(0, 0, 0, 0);
     end.setHours(23, 59, 59, 1);
-    return this.getModel().findOne({
+    return this.Models.CouncilMeeting.findOne({
         where: {
           date: {
             $between: [start, end],
@@ -64,7 +64,7 @@ class CouncilMeeting extends BaseModel {
   }
 
   linkThesis(meeting, thesis) {
-    return this.getModel()
+    return this.Models.CouncilMeeting
       .findOne({ where: { id: meeting.id } })
       .then((CM) => CM.addTheses(thesis));
   }
