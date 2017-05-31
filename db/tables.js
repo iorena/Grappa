@@ -1,5 +1,3 @@
-"use strict";
-
 const Sequelize = require("sequelize");
 const seq = require("../db/db_connection").sequelize;
 
@@ -42,11 +40,19 @@ const User = seq.define("User", {
       ]],
     },
   },
+  hasBeenShownStartInfo: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
   isActive: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
   isRetired: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
+  isSpectator: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },

@@ -1,15 +1,20 @@
-"use strict";
-
-const moment = require("moment");
 const mkdirp = require("mkdirp");
 const rmdir = require("rmdir");
 const fs = require("fs");
 const path = require("path");
 
-class FileManipulator {
+/**
+ * Service for wrapping used I/O methods inside a single file.
+ *
+ * Maybe it should be a stateless object to really force the statelesness.
+ * But oh well.
+ */
 
-  createFolder(name) {
-    if (!name) name = Date.now();
+const FileManipulator = {
+  /**
+   * Creates a folder with either given name or unix timestamp as default parameter.
+   */
+  createFolder: (name = Date.now()) => {
     const pathToFolder = path.join(__dirname, `../tmp/${name}`);
     return new Promise((resolve, reject) => {
       mkdirp(pathToFolder, (err) => {
@@ -21,38 +26,37 @@ class FileManipulator {
         }
       });
     });
-  }
+  },
 
-  deleteFolderTimer(wait, pathToFolder) {
+  deleteFolderTimer: (wait, pathToFolder) => {
     setTimeout(() => {
       this.deleteFolder(pathToFolder);
     }, wait);
-  }
-/* TODO This should be async */
+  },
+  /* TODO This should be async */
   deleteFolder(pathToFolder) {
     fs
     .readdirSync(pathToFolder)
-    .map(file => fs.unlinkSync(pathToFolder + "/" + file));
+    .map(file => fs.unlinkSync(`${pathToFolder}/${file}`));
 
     fs
     .rmdirSync(pathToFolder);
-  }
+  },
 
-  cleanTmp() {
+  cleanTmp: () => {
     const tmpPath = path.join(__dirname, "../tmp");
 
     try {
       rmdir(tmpPath);
-    }
-    catch (err) {
+    } catch (err) {
       console.log("Clean tmp ERROR");
       console.error(err);
     }
-  }
+  },
 
-  writeFile(pathToFile, file, encoding) {
+  writeFile: (pathToFile, file, encoding) => {
     return new Promise((resolve, reject) => {
-      fs.writeFile(pathToFile, file, encoding ? encoding : "utf8", (err) => {
+      fs.writeFile(pathToFile, file, encoding || "utf8", (err) => {
         if (err) {
           console.log(err);
           reject(err);
@@ -61,9 +65,9 @@ class FileManipulator {
         }
       });
     })
-  }
+  },
 
-  readFileToBuffer(pathToFile) {
+  readFileToBuffer: (pathToFile) => {
     return new Promise((resolve, reject) => {
       fs.readFile(pathToFile, (err, data) => {
         if (err) {
@@ -73,17 +77,17 @@ class FileManipulator {
           resolve(data);
         }
       });
-    })
-  }
+    });
+  },
 
-  pipeFileToResponse(pathToFile, fileType, fileName, res) {
+  pipeFileToResponse: (pathToFile, fileType, fileName, res) => {
     const file = fs.createReadStream(pathToFile);
     const stat = fs.statSync(pathToFile);
     res.setHeader("Content-Length", stat.size);
     res.setHeader("Content-Type", `application/${fileType}`);
     res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
     file.pipe(res);
-  }
-}
+  },
+};
 
-module.exports = new FileManipulator();
+module.exports = FileManipulator;

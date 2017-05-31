@@ -1,5 +1,3 @@
-"use strict";
-
 const Reminder = require("../services/EmailReminder");
 const TokenGenerator = require("../services/TokenGenerator");
 const PdfManipulator = require("../services/PdfManipulator");
@@ -249,8 +247,15 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
   .catch(err => next(err));
 };
 
+/**
+ * Generates requested Theses to PDFs and sends them back to client
+ * 
+ * Also if the user has the role 'print-person' sets Theses printDone
+ * to true to their ThesisProgress.
+ */
 module.exports.generateThesesToPdf = (req, res, next) => {
   let pathToFile;
+  let setDone;
 
   Promise.all([
     Thesis.findAllDocuments(req.body.thesisIds),
@@ -263,6 +268,7 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   .then((path) => {
     pathToFile = path;
     if (req.user.role === "print-person") {
+      setDone = true;
       return Promise.all(req.body.thesisIds.map(thesis_id =>
         ThesisProgress.setPrintDone(thesis_id))
       );
@@ -272,6 +278,17 @@ module.exports.generateThesesToPdf = (req, res, next) => {
   })
   .then(() => {
     FileManipulator.pipeFileToResponse(pathToFile, "pdf", "theses.pdf", res)
+    if (setDone) {
+      return SocketIOServer.broadcast(["all"],
+        [{
+          type: "THESISPROGRESS_UPDATE_STATUS",
+          payload: {
+            status: "printDone",
+            thesisIds: req.body.thesisIds,
+          },
+          notification: `Print-person ${req.user.fullname} downloaded theses`,
+        }], req.user)
+    }
   })
   .catch(err => next(err));
 };

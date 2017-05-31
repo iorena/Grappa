@@ -1,8 +1,12 @@
-"use strict";
-
 const tables = require("./tables");
 const models = tables.Models;
 
+/**
+ * Database methods used by the scripts/db.js file for quick manipulation of the db.
+ * 
+ * Handy for resetting and dropping the tables from the sqlite database.
+ * Should NOT be used in production.
+ */
 module.exports.destroyTables = () => {
   return Promise.all(Object.keys(models).map(key => {
     if ({}.hasOwnProperty.call(models, key)) {

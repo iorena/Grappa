@@ -1,5 +1,3 @@
-"use strict";
-
 const fs = require("fs");
 const path = require("path");
 
@@ -17,8 +15,21 @@ const ThesisAbstract = require("../models/ThesisAbstract");
 
 const errors = require("../config/errors");
 
+/**
+ * Service that manipulates and creates PDF files.
+ *
+ * Used by thesisController to do stuff with the pdfs.
+ * Has some nasty methods that maybe should be splitted for the sake of my burning eyes!
+ * But naah... not today.
+ */
 class PdfManipulator {
-
+  /**
+   * Writes the PDF-stream to disk, copies 2nd page from it and sets the folder for deletion.
+   *
+   * Kinda cool huh.
+   * @param {Buffer} thesisPDF - Thesis as Buffer-stream in PDF-format.
+   * @return {Promise<String>} - Promise of the absolute path to the file.
+   */
   parseAbstractFromThesisPDF(thesisPDF) {
     const docName = Date.now();
     let pathToFolder;
@@ -47,6 +58,11 @@ class PdfManipulator {
       });
   }
 
+  /**
+   * Counts the number of pages of a PDF document.
+   * @param {String} pathToFile - Absolute path to the file.
+   * @return {Promise<String>} - Promise of the nummber of files as a string.
+   */
   getPdfDocumentPages(pathToFile) {
     return new Promise((resolve, reject) => {
       const cmd = `pdftk ${pathToFile} dump_data | grep NumberOfPages | awk '{print $2}'`;
@@ -62,6 +78,13 @@ class PdfManipulator {
     });
   }
 
+  /**
+   * Copies a given page from a given file.
+   * @param {Number} pageNumber - Number of the page.
+   * @param {String} pathToFile - Absolute path to the file.
+   * @param {String} pathToTargetFile - Absolute path to the to-be-created file.
+   * @return {Promise<String>} - Promise of the absolute path to the created file.
+   */
   copyPageFromPDF(pageNumber, pathToFile, pathToTargetFile) {
     return new Promise((resolve, reject) => {
       const cmd = `pdftk ${pathToFile} cat ${pageNumber}-${pageNumber} output ${pathToTargetFile}`;
@@ -78,6 +101,13 @@ class PdfManipulator {
     });
   }
 
+  /**
+   * Creates a PDF file consisting of professor's grader evaluation.
+   * @param {Object} thesis - Thesis object from database.
+   * @param {Array} professors - Current active and non-retired professors.
+   * @param {String} pathToFile - Absolute path to the file.
+   * @return {Promise<Void>} - Promise that resolves when the file is created.
+   */
   generatePdfFromGraderEval(thesis, professors, pathToFile) {
     return new Promise((resolve, reject) => {
       const doc = new PDF();
@@ -124,23 +154,6 @@ class PdfManipulator {
     });
   }
 
-  generateThesisDocumentsCover(theses, pathToFolder) {
-    return new Promise((resolve, reject) => {
-      const pathToCmd = path.join(__dirname, "../config/phantomjs/createCover.phantom.js");
-      const cmd = `${phantomjs.path} ${pathToCmd} penis`;
-      const child = exec(cmd, function (err, stdout, stderr) {
-        if (err) {
-          console.error(err);
-          reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
-          // reject(err);
-        } else {
-          console.log("What is life?", stdout)
-          resolve();
-        }
-      });
-    });
-  }
-
   gradersToString(graders) {
     return graders.reduce((accumulated, current, index) => {
       if (accumulated) {
@@ -171,6 +184,16 @@ class PdfManipulator {
     }, []);
   }
 
+  /**
+   * Creates a cover for the councilmeeting's documents as required by Pirjo.
+   *
+   * Consists of a list of the thesis processed in the meeting with author's name,
+   * instructor's name and thesis' grade.
+   * @param {String} pathToFolder - Absolute path to the folder where files will be created.
+   * @param {Array<Object>} theses - Array of thesis objects.
+   * @param {Object} councilmeeting - CouncilMeeting object fetched from the DB.
+   * @return {Promise<Array>} Array of something??? TODO
+   */
   generateThesesCover(pathToFolder, theses, councilmeeting) {
     let pages;
     return FileManipulator.readFileToBuffer(path.join(__dirname, "../config/phantomjs/cover.html"))
@@ -182,7 +205,8 @@ class PdfManipulator {
             {
               councilmeeting: {
                 date: moment(councilmeeting.date).format("DD/MM/YYYY"),
-                no: `KK ${councilmeeting.seq}/${councilmeeting.date.getFullYear()}`,
+                // no meeting number displayed since sometimes it is incorrect due to changes to meetings
+                // no: `KK ${councilmeeting.seq}/${councilmeeting.date.getFullYear()}`,
               },
               theses: thesisArray,
               page: pages,
@@ -211,6 +235,12 @@ class PdfManipulator {
       })
   }
 
+  /**
+   * Joins the PDF-files into a single file
+   * @param {String} pathToFolder - Absolute path to the file.
+   * @param {Array<String>} fileNames - Array of files to be joined.
+   * @return {Promise<String>} Promise of the absolute path to the created file.
+   */
   joinPdfs(pathToFolder, fileNames) {
     return new Promise((resolve, reject) => {
       // const pdfs = path.join(pathToFolder, "/*.pdf");
@@ -231,11 +261,20 @@ class PdfManipulator {
     });
   }
 
+  /**
+   * Generates PDF-files from each thesis' abstract, review and grader evalution.
+   *
+   * Cool stuff.
+   * @param {Array<Object>} theses - Array of theses fetched from DB.
+   * @param {Array<Object>} professors - Array of users fetched from DB.
+   * @param {Object} councilmeeting - CouncilMeeting object fetched from DB.
+   * @return {Promise<String>} - Promise of the absolute path to the created PDF-file.
+   */
   generatePdfFromTheses(theses, professors, councilmeeting) {
     const docName = Date.now();
     let pathToFolder;
     let order = 1;
-    let pdfFileNames = [];
+    const pdfFileNames = [];
     return FileManipulator.createFolder(docName)
       .then((newPath) => {
         pathToFolder = newPath;
@@ -246,7 +285,7 @@ class PdfManipulator {
         }
       })
       .then((coverPages) => {
-        for (var i = 1; i <= coverPages; i++){
+        for (let i = 1; i <= coverPages; i++){
           pdfFileNames.push(path.join(pathToFolder, `0-${i}.cover.pdf`));
         }
         return Promise.all(theses.map(thesis => {

@@ -5,7 +5,16 @@ const Imap = require("imap");
 const inspect = require("util").inspect;
 
 const EmailStatus = require("../models/EmailStatus");
-/* CURRENTLY NOT IN USE AND PROBABLY BROKEN **/
+
+/**
+ * Unused service that was planned to be used for checking emails for errors.
+ *
+ * Due to other, more important priorities, was obsoleted and abandoned.
+ * Why is it still here? Well I spent a couple whole days coding it so...
+ * I have still some sentimentality left for it ;D.
+ * And it could still be useful in the far future.
+ */
+
 class EmailReader {
   constructor(options) {
     this.imap = new Imap(options);

@@ -4,6 +4,12 @@ const SocketIOServer = require("../services/SocketIOServer");
 
 const ThesisProgress = require("../models/ThesisProgress");
 
+/**
+ * Updates the status of Thesis to ThesisProgress
+ * 
+ * Used to overwrite ethesisDone, graderEvalDone or printDone
+ * to true by admin.
+ */
 module.exports.updateOne = (req, res, next) => {
   ThesisProgress
   .update(req.body, { id: req.params.id })
