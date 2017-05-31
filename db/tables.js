@@ -40,10 +40,11 @@ const User = seq.define("User", {
       ]],
     },
   },
-  hasBeenShownStartInfo: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-  },
+  // TODO requested features by kjell
+  // hasBeenShownStartInfo: {
+  //   type: Sequelize.BOOLEAN,
+  //   defaultValue: false,
+  // },
   isActive: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
@@ -52,10 +53,11 @@ const User = seq.define("User", {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
-  isSpectator: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-  },
+  // TODO requested features by kjell
+  // isSpectator: {
+  //   type: Sequelize.BOOLEAN,
+  //   defaultValue: false,
+  // },
 });
 
 const Thesis = seq.define("Thesis", {
