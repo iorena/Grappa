@@ -5,6 +5,11 @@
 if (!process.env.NODE_ENV) {
   require("dotenv").config();
 }
+// This is here just incase someone is tempted to run this in production.
+if (process.env.NODE_ENV === "production") {
+  process.exit(1);
+}
+
 const db_methods = require("../db/methods");
 
 /**

@@ -6,6 +6,9 @@
 if (!process.env.NODE_ENV) {
   require("dotenv").config();
 }
+/**
+ * If environment is not production throw an error.
+ */
 if (process.env.NODE_ENV !== "production") {
   process.exit(1);
 }
