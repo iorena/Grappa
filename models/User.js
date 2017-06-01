@@ -42,7 +42,7 @@ class User extends BaseModel {
 
   findAllProfessors() {
     return this.Models[this.modelname].findAll({
-        attributes: ["id", "email", "firstname", "lastname", "role"],
+        attributes: ["id", "email", "firstname", "lastname", "role", "StudyFieldId"],
         where: {
           isActive: true,
           isRetired: false,

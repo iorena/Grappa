@@ -28,9 +28,9 @@ class EmailSender {
    * @return {Promise<Object>} Promise of the succesful delivery -object created by node-mailer.
    */
   sendEmail(to, subject, body, attachments) {
-    // if you don't to spam people/yourself use this
+    // if you don't want to spam people/yourself use this
     if (process.env.NODE_ENV !== "production") {
-      // return Promise.resolve();
+      return Promise.resolve();
     }
 
     const options = Object.assign({
