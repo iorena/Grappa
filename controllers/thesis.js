@@ -239,7 +239,7 @@ module.exports.uploadEthesisPDF = (req, res, next) => {
         type: "THESIS_UPLOAD_ETHESIS_PDF_SUCCESS",
         payload: forClient,
         notification: `Student uploaded their abstract`,
-    }], { id: null })
+      }], { id: null })
   })
   .then(() => {
     res.status(200).send(forClient);
@@ -329,7 +329,7 @@ module.exports.deleteOne = (req, res, next) => {
   .then(deletedRows => SocketIOServer.broadcast(["all"],
     [{
       type: "THESIS_DELETE_ONE_SUCCESS",
-      payload: { id: parseInt(req.params.id) },
+      payload: { id: parseInt(req.params.id, 10) },
       notification: `Admin ${req.user.fullname} deleted a Thesis`,
     }], req.user))
   .then(() => {

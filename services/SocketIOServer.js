@@ -14,7 +14,7 @@ const Notification = require("../models/Notification")
  * Silly service used for spinning SocketIO server (which uses WebSocket).
  * 
  * It's just so adorable. Look at it! That ridiculous broadcast shit and those silly rooms.
- * It creates notifications to all admins for request (except if it was admin's own) so they
+ * It creates notifications to all admins from requests (except if it was admin's own) so they
  * can view them in real-time! Wee! And it's not ugly, it's just... Like a kid with down-syndrome.
  * Special, yes that's it! It's very special.
  */

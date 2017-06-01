@@ -20,13 +20,11 @@ const errors = require("../config/errors");
  *
  * Used by thesisController to do stuff with the pdfs.
  * Has some nasty methods that maybe should be splitted for the sake of my burning eyes!
- * But naah... not today.
  */
 class PdfManipulator {
   /**
    * Writes the PDF-stream to disk, copies 2nd page from it and sets the folder for deletion.
    *
-   * Kinda cool huh.
    * @param {Buffer} thesisPDF - Thesis as Buffer-stream in PDF-format.
    * @return {Promise<String>} - Promise of the absolute path to the file.
    */
@@ -165,7 +163,8 @@ class PdfManipulator {
   }
 
   /**
-   * Removes unnecessary attributes and returns an array of 8-length arrays of theses
+   * Removes unnecessary attributes and returns an array of 8-length arrays of theses.
+   * 8 length because that's all the theses that can fit the cover page.
    */
   pruneAndSliceTheses(theses) {
     return theses.reduce((accumulated, current, index) => {
@@ -310,7 +309,7 @@ class PdfManipulator {
         return this.joinPdfs(pathToFolder, pdfFileNames);
       })
       .then((pathToPrintFile) => {
-        // FileManipulator.deleteFolderTimer(10000, pathToFolder);
+        FileManipulator.deleteFolderTimer(10000, pathToFolder);
         return pathToPrintFile;
       });
   }
