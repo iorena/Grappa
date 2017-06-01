@@ -1,6 +1,6 @@
 require("dotenv").config();
 /* Used to determine the database for db_connection which in this case is the test-db */
-process.env["NODE_ENV"] = "testing";
+process.env.NODE_ENV = "testing";
 
 const app = require("../app");
 
@@ -22,6 +22,9 @@ module.exports = {
   generateTestDB,
 };
 
+/**
+ * This ensures that the database is created before running any other tests.
+ */
 describe("TestHelper", function() {
   it("should generate test DB", (done) => {
     generateTestDB()

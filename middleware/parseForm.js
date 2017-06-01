@@ -1,7 +1,10 @@
-"use strict";
-
 const errors = require("../config/errors");
 
+/**
+ * Middleware for parsing requests that are 'multipart/form-data'.
+ *
+ * Currently used solely for the uploading of thesis pdf-documents.
+ */
 module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
   const parsedForm = {
     files: [],
@@ -9,7 +12,8 @@ module.exports.parseUpload = (maxMBFileSize) => (req, res, next) => {
   };
   const files = {};
 
-  // TODO switch to multer or some other library as data other than multipart/form-data will crash this app
+  // TODO switch to multer or some other library as if the request has content-type multipart/form-data
+  // but something else in the body eg. JSON it will crash this app.
   // if (req.headers["content-type"].indexOf("multipart/form-data") === -1) {
   //   throw new errors.BadRequestError(`Request wasn't type multipart/form-data`);
   // }

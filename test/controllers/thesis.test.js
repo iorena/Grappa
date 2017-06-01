@@ -1,5 +1,3 @@
-"use strict";
-
 const request = require("supertest");
 
 const expect = require("chai").expect;
@@ -15,13 +13,9 @@ const expectResponseToEqual = require("../mock/responses");
 const EmailSender = require("../../services/EmailSender");
 const SocketIOServer = require("../../services/SocketIOServer");
 
-let sandbox = sinon.sandbox.create();
-sandbox.stub(EmailSender, "sendEmail", () =>
-  Promise.resolve()
-)
-sandbox.stub(SocketIOServer, "broadcast", () => {
-  Promise.resolve()
-})
+const sandbox = sinon.sandbox.create();
+sandbox.stub(EmailSender, "sendEmail", () => Promise.resolve());
+sandbox.stub(SocketIOServer, "broadcast", () => Promise.resolve());
 
 describe("ThesisController", () => {
   describe("findAllByUserRole, GET /thesis", () => {

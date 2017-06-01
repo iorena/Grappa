@@ -32,4 +32,4 @@ Same for both OSes:
 
 3. Then enter ```npm start``` to run the server
 
-4. Since the database is created only after running the server for the first time you must hit ```ctrl+c``` to cancel the process and then create the database tables with ```npm run db init```
+4. Since the database is created only after running the server for the first time you must hit ```ctrl+c``` to cancel the process and then create the database tables with ```npm run db init``` and create some test data with `npm run db reset:lot`

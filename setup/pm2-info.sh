@@ -1,7 +1,9 @@
 # start up a single server
-pm2 start app.js -n appname
+pm2 start app.js -n grappa-backend
 # start up a cluster of four
 pm2 start app.js -n appname -i 4
+# start up a cluster of max instances by cpu cores
+pm2 start app.js -n grappa-backend -i max
 # start server with name and npm start
 pm2 start -n grappa-backend npm -- start
 # scale the cluster size

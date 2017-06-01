@@ -8,7 +8,7 @@ class Grader extends BaseModel {
   }
 
   saveOne(values) {
-    return this.getModel().create(values)
+    return this.Models.Grader.create(values)
       .then(newGrader => {
         return {
           id: newGrader.id,
@@ -34,24 +34,24 @@ class Grader extends BaseModel {
   }
 
   updateOrCreateAndLinkToThesis(values, thesis) {
-    return this.getModel()
+    return this.Models.Grader
       .findOne({ where: { id: values.id } })
       .then(foundGrader => {
         if (foundGrader === null) {
-          return this.getModel().create(values);
+          return this.Models.Grader.create(values);
         } else {
-          return this.getModel().update(values, { where: { id: values.id } });
+          return this.Models.Grader.update(values, { where: { id: values.id } });
         }
       })
       .then(updatedGrader => updatedGrader.addThesis(thesis));
   }
 
   findOrCreate(grader) {
-    return this.getModel()
+    return this.Models.Grader
       .findOne({ where: { name: grader.name, title: grader.title } })
       .then((newgrader) => {
         if (newgrader === null) {
-          return this.getModel().create({ name: grader.name, title: grader.title });
+          return this.Models.Grader.create({ name: grader.name, title: grader.title });
         }
         return newgrader;
       })
@@ -69,7 +69,7 @@ class Grader extends BaseModel {
       return Promise.resolve();
     }
     return Promise.all(graders.map(grader =>
-      this.getModel()
+      this.Models.Grader
         .findOne({ where: { id: grader.id } })
         .then(grader => grader.addThesis(thesis))
     ));

@@ -1,4 +1,3 @@
-"use strict";
 
 const SocketIOServer = require("../services/SocketIOServer");
 
@@ -26,13 +25,11 @@ module.exports.saveOne = (req, res, next) => {
       throw new errors.BadRequestError("Meeting already exists with the same date.");
     } else {
       const date = req.body.date;
-      const instructorDeadline = new Date();
-      const studentDeadline = new Date();
       date.setHours(23, 59, 59, 0);
+      const instructorDeadline = new Date(date);
+      const studentDeadline = new Date(date);
       instructorDeadline.setDate(date.getDate() - req.body.instructorDeadlineDays);
-      instructorDeadline.setHours(23, 59, 59, 0);
       studentDeadline.setDate(date.getDate() - req.body.studentDeadlineDays);
-      studentDeadline.setHours(23, 59, 59, 0);
       return CouncilMeeting.saveOne({
         date,
         instructorDeadline,

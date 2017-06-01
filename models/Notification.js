@@ -13,6 +13,7 @@ class Notification extends BaseModel {
     ))
   }
 
+// TODO actually I think keeping the log data might be useful for statistics or something
   saveOne(values) {
     // remove all 30 days old notifications first
     const today = new Date();

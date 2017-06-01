@@ -1,5 +1,3 @@
-"use strict";
-
 const BaseModel = require("./BaseModel");
 
 class Thesis extends BaseModel {
@@ -8,7 +6,7 @@ class Thesis extends BaseModel {
   }
 
   checkIfExists(thesis) {
-    return this.getModel().findOne({
+    return this.Models.Thesis.findOne({
         where: {
           title: thesis.title,
           authorFirstname: thesis.authorFirstname,
@@ -74,7 +72,7 @@ class Thesis extends BaseModel {
 
   saveOneAndProgress(values, councilmeeting) {
     let savedThesis;
-    return this.getModel().create(values)
+    return this.Models.Thesis.create(values)
       .then(thesis => {
         savedThesis = thesis;
 
@@ -85,7 +83,7 @@ class Thesis extends BaseModel {
   }
 
   findOne(params) {
-    return this.getModel().findOne({
+    return this.Models.Thesis.findOne({
       attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
         "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
       where: params === undefined ? {} : params,
@@ -115,7 +113,7 @@ class Thesis extends BaseModel {
   }
 
   findAll(params) {
-    return this.getModel().findAll({
+    return this.Models.Thesis.findAll({
       attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
         "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
       where: params,
@@ -168,7 +166,7 @@ class Thesis extends BaseModel {
   }
 
   findOneDocuments(thesisID) {
-    return this.getModel().findOne({
+    return this.Models.Thesis.findOne({
       attributes: ["id", "title", "authorFirstname", "authorLastname",
         "grade", "graderEval", "StudyFieldId"],
       where: { id: thesisID },

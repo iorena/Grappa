@@ -1,5 +1,3 @@
-"use strict";
-
 const Sequelize = require("sequelize");
 const seq = require("../db/db_connection").sequelize;
 
@@ -42,6 +40,11 @@ const User = seq.define("User", {
       ]],
     },
   },
+  // TODO requested features by kjell
+  // hasBeenShownStartInfo: {
+  //   type: Sequelize.BOOLEAN,
+  //   defaultValue: false,
+  // },
   isActive: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
@@ -50,6 +53,11 @@ const User = seq.define("User", {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
+  // TODO requested features by kjell
+  // isSpectator: {
+  //   type: Sequelize.BOOLEAN,
+  //   defaultValue: false,
+  // },
 });
 
 const Thesis = seq.define("Thesis", {
