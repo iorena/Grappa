@@ -28,7 +28,7 @@ const FileManipulator = {
     });
   },
 
-  deleteFolderTimer: (wait, pathToFolder) => {
+  deleteFolderTimer(pathToFolder, wait) {
     setTimeout(() => {
       this.deleteFolder(pathToFolder);
     }, wait);

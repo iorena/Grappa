@@ -309,7 +309,7 @@ class PdfManipulator {
         return this.joinPdfs(pathToFolder, pdfFileNames);
       })
       .then((pathToPrintFile) => {
-        FileManipulator.deleteFolderTimer(10000, pathToFolder);
+        FileManipulator.deleteFolderTimer(pathToFolder, 10000);
         return pathToPrintFile;
       });
   }
