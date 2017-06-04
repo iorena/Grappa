@@ -51,7 +51,7 @@ class PdfManipulator {
         }
       })
       .then((newPath) => {
-        FileManipulator.deleteFolderTimer(30000, pathToFolder);
+        FileManipulator.deleteFolderTimer(pathToFolder, 30000);
         return newPath;
       });
   }
