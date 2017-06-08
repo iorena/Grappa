@@ -85,7 +85,7 @@ class Thesis extends BaseModel {
   findOne(params) {
     return this.Models.Thesis.findOne({
       attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
-        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
+        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId", "regreq"],
       where: params === undefined ? {} : params,
       include: [{
         model: this.Models.Grader,
@@ -115,7 +115,7 @@ class Thesis extends BaseModel {
   findAll(params) {
     return this.Models.Thesis.findAll({
       attributes: ["id", "authorFirstname", "authorLastname", "authorEmail", "title", "urkund", "grade",
-        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId"],
+        "graderEval", "CouncilMeetingId", "StudyFieldId", "UserId", "regreq"],
       where: params,
       include: [{
         model: this.Models.Grader,
@@ -168,7 +168,7 @@ class Thesis extends BaseModel {
   findOneDocuments(thesisID) {
     return this.Models.Thesis.findOne({
       attributes: ["id", "title", "authorFirstname", "authorLastname",
-        "grade", "graderEval", "StudyFieldId"],
+        "grade", "graderEval", "StudyFieldId", "regreq"],
       where: { id: thesisID },
       include: [{
         model: this.Models.ThesisReview,

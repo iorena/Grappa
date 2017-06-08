@@ -114,6 +114,9 @@ const Thesis = seq.define("Thesis", {
   graderEval: {
     type: Sequelize.TEXT,
   },
+  regreq: {
+    type: Sequelize.BOOLEAN,
+  }
 });
 
 const Grader = seq.define("Grader", {
