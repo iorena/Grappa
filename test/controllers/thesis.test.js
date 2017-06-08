@@ -76,6 +76,7 @@ describe("ThesisController", () => {
       .set("X-Access-Token", auth.createToken("admin"))
       .expect("Content-Type", /json/)
       .expect(res => {
+        console.log("Wat");
         console.log("response: ", res.body)
       })
       .expect(200, done);
