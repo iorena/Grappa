@@ -100,7 +100,6 @@ module.exports.saveOne = (req, res, next) => {
 };
 
 module.exports.updateOneAndConnections = (req, res, next) => {
-  // console.log("wut", req.body.files)
   let updationPromises = [];
   const thesis = req.body.json;
 

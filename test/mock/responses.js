@@ -31,6 +31,7 @@ responses.thesis.get.admin = [
         "CouncilMeetingId": 1,
         "StudyFieldId": 1,
         "UserId": 2,
+        "regreq": null,
         "Graders": [
             {
                 "id": 1,
@@ -116,6 +117,7 @@ responses.thesis.get.admin = [
         "CouncilMeetingId": 1,
         "StudyFieldId": 1,
         "UserId": 4,
+        "regreq": null,
         "Graders": [
             {
                 "id": 1,
@@ -212,6 +214,7 @@ responses.thesis.get.admin = [
         "CouncilMeetingId": 1,
         "StudyFieldId": 4,
         "UserId": 5,
+        "regreq": null,
         "Graders": [
             {
                 "id": 2,
@@ -307,6 +310,7 @@ responses.thesis.get.admin = [
         "CouncilMeetingId": 2,
         "StudyFieldId": 1,
         "UserId": 6,
+        "regreq": null,
         "Graders": [
             {
                 "id": 1,
@@ -406,6 +410,7 @@ responses.thesis.get.professor = [
         "CouncilMeetingId": 1,
         "StudyFieldId": 1,
         "UserId": 2,
+        "regreq": null,
         "Graders": [
             {
                 "id": 1,
@@ -491,6 +496,7 @@ responses.thesis.get.professor = [
         "CouncilMeetingId": 1,
         "StudyFieldId": 1,
         "UserId": 4,
+        "regreq": null,
         "Graders": [
             {
                 "id": 1,
@@ -587,6 +593,7 @@ responses.thesis.get.professor = [
         "CouncilMeetingId": 2,
         "StudyFieldId": 1,
         "UserId": 6,
+        "regreq": null,
         "Graders": [
             {
                 "id": 1,
@@ -686,6 +693,7 @@ responses.thesis.get.instructor = [
         "CouncilMeetingId": 1,
         "StudyFieldId": 4,
         "UserId": 5,
+        "regreq": null,
         "Graders": [
             {
                 "id": 2,

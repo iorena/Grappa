@@ -5,7 +5,6 @@ script:
   - npm --silent run lint
   - npm --silent test
   - npm run db init
-  - cat ./coverage/lcov.info | coveralls
 deploy:
   provider: heroku
   strategy: git
