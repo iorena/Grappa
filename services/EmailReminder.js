@@ -18,7 +18,8 @@ const errors = require("../config/errors");
  * Every sent email is somewhat unique and this service has a method for them all after which
  * it uses either sendMail or sendReminder to actually send the email. Saves all emails to
  * EmailStatus table for admins to admire.
- * Maybe reminder is a bad name for it since it does also emails for lost passwords.
+ * Reminder is a bad name for it since it does also emails for lost passwords
+ * and sends all email.
  */
 class EmailReminder {
 
@@ -147,6 +148,11 @@ class EmailReminder {
           throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
         }
       })
+  }
+
+  sendStudentNotification(thesis) {
+    console.log("in emailReminder");
+    throw new errors.PremiseError("Not yet implemented");
   }
 
   sendResetPasswordMail(user) {
