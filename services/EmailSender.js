@@ -30,6 +30,12 @@ class EmailSender {
   sendEmail(to, subject, body, attachments) {
     // if you don't want to spam people/yourself use this
     if (process.env.NODE_ENV !== "production") {
+      console.log("----------------");
+      console.log(to);
+      console.log(subject);
+      console.log(body);
+      console.log(attachments);
+      console.log("----------------");
       return Promise.resolve();
     }
 

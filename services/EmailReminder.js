@@ -155,6 +155,7 @@ class EmailReminder {
     return EmailDraft.findOne({ type: "StudentRegistrationNotification" })
     .then(draft => {
       if (draft) {
+        ThesisProgress.setStudentNotificationDone(thesis.id);
         return this.sendReminder(thesis.authorEmail, draft, thesis, draft.body, undefined);
       } else {
         //This is simply a way to update the database without doing it manually

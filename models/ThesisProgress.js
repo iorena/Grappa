@@ -40,6 +40,14 @@ class ThesisProgress extends BaseModel {
     });
   }
 
+  setStudentNotificationDone(ThesisId) {
+    return this.Models.ThesisProgress.update({
+      studentNotificationSent: true,
+    }, {
+      where: { ThesisId },
+    });
+  }
+
   isGraderEvaluationNeeded(thesisId, graders) {
     let professor = false;
     let doctor = false;
