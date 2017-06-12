@@ -151,8 +151,17 @@ class EmailReminder {
   }
 
   sendStudentNotification(thesis) {
-    console.log("in emailReminder");
-    throw new errors.PremiseError("Not yet implemented");
+    //Since we already have the email
+    return EmailDraft.findOne({ type: "StudentRegistrationNotification" })
+    .then(draft => {
+      if (draft) {
+        return this.sendReminder(thesis.authorEmail, draft, thesis, draft.body, undefined);
+      } else {
+        //This is simply a way to update the database without doing it manually
+        EmailDraft.saveOne({id: 28, type: "StudentRegistrationNotification", title: "title", body: "body" });
+        throw new errors.PremiseError("StudentRegistrationNotification not found from EmailDrafts");
+      }
+    })
   }
 
   sendResetPasswordMail(user) {
