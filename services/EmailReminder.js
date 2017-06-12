@@ -18,7 +18,8 @@ const errors = require("../config/errors");
  * Every sent email is somewhat unique and this service has a method for them all after which
  * it uses either sendMail or sendReminder to actually send the email. Saves all emails to
  * EmailStatus table for admins to admire.
- * Maybe reminder is a bad name for it since it does also emails for lost passwords.
+ * Reminder is a bad name for it since it does also emails for lost passwords
+ * and sends all email.
  */
 class EmailReminder {
 
@@ -147,6 +148,21 @@ class EmailReminder {
           throw new errors.PremiseError("GraderEvalReminder not found from EmailDrafts");
         }
       })
+  }
+
+  sendStudentNotification(thesis) {
+    //Since we already have the email
+    return EmailDraft.findOne({ type: "StudentRegistrationNotification" })
+    .then(draft => {
+      if (draft) {
+        ThesisProgress.setStudentNotificationDone(thesis.id);
+        return this.sendReminder(thesis.authorEmail, draft, thesis, draft.body, undefined);
+      } else {
+        //This is simply a way to update the database without doing it manually
+        EmailDraft.saveOne({id: 28, type: "StudentRegistrationNotification", title: "title", body: "body" });
+        throw new errors.PremiseError("StudentRegistrationNotification not found from EmailDrafts");
+      }
+    })
   }
 
   sendResetPasswordMail(user) {

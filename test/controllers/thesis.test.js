@@ -25,9 +25,9 @@ describe("ThesisController", () => {
       .set("Accept", "application/json")
       .set("X-Access-Token", auth.createToken("admin"))
       .expect("Content-Type", /json/)
-      // .expect(res => {
-      //   console.log("response: ", res)
-      // })
+       .expect(res => {
+         console.log("response: ", res.body)
+       })
       .expect(expectResponseToEqual("thesis", "get", "admin"))
       .expect(200, done);
     });
@@ -75,10 +75,10 @@ describe("ThesisController", () => {
       .set("Content-Type", "multipart/form-data")
       .set("X-Access-Token", auth.createToken("admin"))
       .expect("Content-Type", /json/)
-      .expect(res => {
-        console.log("Wat");
-        console.log("response: ", res.body)
-      })
+      //.expect(res => {
+      //  console.log("Wat");
+      //  console.log("response: ", res.body)
+      //})
       .expect(200, done);
     });
 

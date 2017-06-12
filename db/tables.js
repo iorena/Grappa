@@ -196,6 +196,7 @@ const ThesisProgress = seq.define("ThesisProgress", {
   ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   graderEvalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   printDone: { type: Sequelize.BOOLEAN, defaultValue: false },
+  studentNotificationSent: { type: Sequelize.BOOLEAN, defaultValue: false},
 });
 
 const EmailDraft = seq.define("EmailDraft", {

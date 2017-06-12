@@ -16,15 +16,22 @@ module.exports.sendReminder = (req, res, next) => {
     if (!thesis) {
       throw new errors.NotFoundError("No Thesis found with the provided thesisId.");
     } else {
-      if (req.body.reminderType === "EthesisReminder") {
-        return EmailReminder.sendEthesisReminder(thesis, thesis.CouncilMeeting);
-      } else if (req.body.reminderType === "GraderEvalReminder") {
-        return EmailReminder.sendProfessorReminder(thesis);
-      } else if (req.body.reminderType === "PrintReminder") {
-        return EmailReminder.sendPrintPersonReminder(thesis);
-      } else {
-        // should never end up here as bodyValidations forbid that
-        throw new errors.BadRequestError("Invalid reminderType.");
+      switch (req.body.reminderType) {
+        case "EthesisReminder":  
+          return EmailReminder.sendEthesisReminder(thesis, thesis.CouncilMeeting);
+        case "GraderEvalReminder":
+          return EmailReminder.sendProfessorReminder(thesis);
+        case "PrintReminder":
+          return EmailReminder.sendPrintPersonReminder(thesis);
+        case "studentRegistrationNotification":
+          if (req.user.role === "admin") {
+            return EmailReminder.sendStudentNotification(thesis);
+          } else {
+            throw new errors.AuthenticationError("Student notifications only by admins.");
+          }
+        default:
+          // should never end up here as bodyValidations forbid that
+          throw new errors.BadRequestError("Invalid reminderType.");
       }
     }
   })

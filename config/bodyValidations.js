@@ -288,8 +288,8 @@ const validations = {
         thesisId: { type: "number", error: "No thesisId in request body." },
         reminderType: {
           type: "string",
-          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder)$/,
-          error: "ReminderType wasn't EthesisReminder or GraderEvalReminder or PrintReminder."
+          pattern: /^(EthesisReminder|GraderEvalReminder|PrintReminder|studentRegistrationNotification)$/,
+          error: "ReminderType wasn't EthesisReminder, GraderEvalReminder, PrintReminder or studentRegistrationNotification."
         },
       },
     }
