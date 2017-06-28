@@ -10,6 +10,8 @@ RUN apt-get update
 
 RUN npm install
 
+RUN npm install pm2 -g
+
 RUN apt-get install -y nginx
 RUN apt-get install -y pdftk
 
@@ -17,4 +19,4 @@ RUN apt-get install -y pdftk
 
 EXPOSE 8008 8000
 
-CMD ["npm", "start"]
+CMD ["pm2-docker", "app.js"]

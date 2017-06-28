@@ -7,6 +7,7 @@
     "lint": "eslint ./**/*.js || true",
     "lint:fix": "eslint ./**/*.js --fix",
     "start": "node ./scripts/is_prod.js && node app.js || nodemon app.js",
+    "start:dev": "nodemon app.js",
     "pm2:start": "pm2 start -n grappa-backend app.js",
     "db": "node ./scripts/db.js",
     "test": "istanbul cover node_modules/mocha/bin/_mocha --require test/testhelper.js test/**/*.js",
