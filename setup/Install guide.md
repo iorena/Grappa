@@ -6,8 +6,6 @@ as a root:
 create user to run the service on `sudo adduser grappauser`
 `sudo adduser grappauser sudo`
 
-if you for some reason want to use group named grappauser: `sudo chgrp -R grappauser /var/www/grappa.cs.helsinki.fi`
-
 digital ocean wants this `sudo chmod -R g+rwx /var/www/grappa.cs.helsinki.fi`
 other digital ocean settings:
 `locale-gen "fi_FI.UTF-8"`
