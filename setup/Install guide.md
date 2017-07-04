@@ -1,4 +1,4 @@
-Guide to install grappa
+# Guide to install grappa
 
 as a root:
 - `apt-get update`
@@ -21,7 +21,7 @@ change user `sudo su grappauser`
 
 you can't download stuff while in root folder `cd ..`
 
-# installation of software
+# Installation of software
 Nginx
 `sudo apt-get install -y nginx`
 
