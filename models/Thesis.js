@@ -170,6 +170,10 @@ class Thesis extends BaseModel {
       attributes: ["grade"],
       include: [{
         model: this.Models.StudyField,
+        attributes: ["name"],
+      }, {
+        model: this.Models.CouncilMeeting,
+        attributes: ["date"],
       }],
     });
   }
