@@ -165,6 +165,19 @@ class Thesis extends BaseModel {
     });
   }
 
+  findAllGrades() {
+    return this.Models.Thesis.findAll({
+      attributes: ["grade"],
+      include: [{
+        model: this.Models.StudyField,
+        attributes: ["name"],
+      }, {
+        model: this.Models.CouncilMeeting,
+        attributes: ["date"],
+      }],
+    });
+  }
+
   findOneDocuments(thesisID) {
     return this.Models.Thesis.findOne({
       attributes: ["id", "title", "authorFirstname", "authorLastname",

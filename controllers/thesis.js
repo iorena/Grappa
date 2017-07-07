@@ -26,6 +26,14 @@ module.exports.findAllByUserRole = (req, res, next) => {
   .catch(err => next(err));
 };
 
+module.exports.findAllGrades = (req, res, next) => {
+  Thesis.findAllGrades()
+  .then(theses => {
+    res.status(200).send(theses);
+  })
+  .catch(err => next(err));
+}
+
 module.exports.saveOne = (req, res, next) => {
   let savedThesis;
   let foundConnections;

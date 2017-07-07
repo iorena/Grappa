@@ -38,6 +38,8 @@ router.post("/login",
 router.post("/user",
   validate.validateBody("user", "save"),
   userCtrl.saveOne);
+router.get("/thesis/grades", thesisCtrl.findAllGrades);
+
 
 router.post("/user/reset-password",
   validate.validateBody("user", "resetPassword"),
