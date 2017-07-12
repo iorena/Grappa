@@ -40,10 +40,32 @@ module.exports.saveOne = (req, res, next) => {
     })
     .then(draft => {
       SocketIOServer.broadcast(["admin"], [{
-      type: "EMAILDRAFT_SAVE_ONE_SUCCESS",
-      payload: draft,
-      notification: `Admin ${req.user.fullname} created an EmailDraft`,
-    }], req.user)})
+        type: "EMAILDRAFT_SAVE_ONE_SUCCESS",
+        payload: draft,
+        notification: `Admin ${req.user.fullname} created an EmailDraft`,
+      }], req.user)
+    })
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(err => next(err));
+}
+
+module.exports.deleteOne = (req, res, next) => {
+  EmailDraft
+    .findOne({ id: req.params.id })
+    .then(draft => {
+      if (draft) {
+        return EmailDraft.delete({ id: req.params.id });
+      } else {
+        throw new errors.BadRequestError("No draft with id " + req.params.id + " found to delete.");
+      }
+    })
+    .then(deletedRows => SocketIOServer.broadcast(["admin"], [{
+      type: "EMAILDRAFT_DELETE_ONE_SUCCESS",
+      payload: { id: req.params.id },
+      notification: `User ${req.user.fullname} deleted a Draft`,
+    }], req.user))
     .then(() => {
       res.sendStatus(200);
     })
