@@ -166,6 +166,9 @@ router.get("/emaildraft", emaildraftCtrl.findAll);
 router.put("/emaildraft/:id",
   auth.restrictSpectators,
   emaildraftCtrl.updateOne);
+router.post("/emaildraft/:id",
+  auth.restrictSpectators,
+  emaildraftCtrl.saveOne);
 
 router.get("/notification", notificationCtrl.findAll);
 router.post("/notification/read",
