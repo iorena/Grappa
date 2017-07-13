@@ -78,7 +78,7 @@ class EmailReminder {
     let attachments;
     const token = TokenGen.generateEthesisToken(thesis);
 
-    return ThesisReview.findOne({ ThesisId: thesis.id})
+    return ThesisReview.findOne({ ThesisId: thesis.id })
       .then(review => {
         attachments = [{
           filename: "thesis-review.pdf",
@@ -150,19 +150,44 @@ class EmailReminder {
       })
   }
 
+  /**
+   * Sends an email notification to the student about the approval of their thesis
+   */
   sendStudentNotification(thesis) {
     //Since we already have the email
     return EmailDraft.findOne({ type: "StudentRegistrationNotification" })
-    .then(draft => {
-      if (draft) {
-        ThesisProgress.setStudentNotificationDone(thesis.id);
-        return this.sendReminder(thesis.authorEmail, draft, thesis, draft.body, undefined);
-      } else {
-        //This is simply a way to update the database without doing it manually
-        EmailDraft.saveOne({id: 28, type: "StudentRegistrationNotification", title: "title", body: "body" });
-        throw new errors.PremiseError("StudentRegistrationNotification not found from EmailDrafts");
-      }
-    })
+      .then(draft => {
+        if (draft) {
+          ThesisProgress.setStudentNotificationDone(thesis.id);
+          return this.sendReminder(thesis.authorEmail, draft, thesis, draft.body, undefined);
+        } else {
+          throw new errors.PremiseError("StudentRegistrationNotification not found from EmailDrafts");
+        }
+      })
+  }
+
+  /**
+   * Sends an email to supervising professor that a thesis was added
+   */
+  sendSupervisingProfessorNotification(thesis) {
+    let foundProfessor;
+
+    return User.findOne({ role: "professor", StudyFieldId: thesis.StudyFieldId, isActive: true, isRetired: false })
+      .then(professor => {
+        if (professor) {
+          foundProfessor = professor;
+          return EmailDraft.findOne({ type: "SupervisingProfessorNotification" });
+        } else {
+          throw new errors.PremiseError("StudyField had no professor to whom send grader evaluation reminder.");
+        }
+      })
+      .then(draft => {
+        if (draft) {
+          return this.sendReminder(foundProfessor.email, draft, thesis, draft.body, undefined);
+        } else {
+          throw new errors.PremiseError("SupervisingProfessorNotification not found from EmailDrafts");
+        }
+      })
   }
 
   sendResetPasswordMail(user) {

@@ -38,13 +38,11 @@ module.exports.saveOne = (req, res, next) => {
         return EmailDraft.saveOne(req.body);
       }
     })
-    .then(draft => {
-      SocketIOServer.broadcast(["admin"], [{
+    .then(draft => SocketIOServer.broadcast(["admin"], [{
         type: "EMAILDRAFT_SAVE_ONE_SUCCESS",
         payload: draft,
         notification: `Admin ${req.user.fullname} created an EmailDraft`,
-      }], req.user)
-    })
+      }], req.user))
     .then(() => {
       res.sendStatus(200);
     })
