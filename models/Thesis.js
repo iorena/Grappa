@@ -100,7 +100,10 @@ class Thesis extends BaseModel {
         }, {
           model: this.Models.EmailStatus,
           as: "PrintReminder",
-        }, ],
+        }, {
+          model: this.Models.EmailStatus,
+          as: "StudentRegistrationNotification",
+        }],
       }, {
         model: this.Models.StudyField,
       }, {
@@ -131,7 +134,10 @@ class Thesis extends BaseModel {
         }, {
           model: this.Models.EmailStatus,
           as: "PrintReminder",
-        }, ],
+        }, {
+          model: this.Models.EmailStatus,
+          as: "StudentRegistrationNotification",
+        }],
       }, {
         model: this.Models.StudyField,
       }, {
