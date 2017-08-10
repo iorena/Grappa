@@ -31,6 +31,7 @@ class EmailSender {
     // if you don't want to spam people/yourself use this
     if (process.env.NODE_ENV !== "production") {
       console.log("----------------");
+      console.log(this.mailOptions);
       console.log(to);
       console.log(subject);
       console.log(body);

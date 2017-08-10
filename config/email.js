@@ -12,15 +12,24 @@ module.exports.imap = () => (
   }
 );
 
+
+module.exports.smtp = () => ({
+    from: `Grappa Robot <noreply@${process.env.EMAIL_HOST}>`,
+    host: `smtp.${process.env.EMAIL_HOST}`,
+    port: 587, 
+    secure: false, // false -> TLS, true -> SSL
+  });
+/*
 module.exports.smtp = () => (
   {
-    from: `Grappa Robot <${process.env.EMAIL_USER}@${process.env.EMAIL_HOST}>`,
-    host: `smtp.${process.env.EMAIL_HOST}`,
-    port: 465, // TODO switch to 587
-    secure: true, // use SSL
+    from: `Grappa Robot <'address'>`,
+    host: `smtp.office365.com`,
+    port: 587,
+    secure: false, // false -> TLS, true -> SSL
     auth: {
-      user: process.env.EMAIL_USER,
+      user: "'address'",
       pass: process.env.EMAIL_PASSWORD,
     },
   }
 );
+*/
