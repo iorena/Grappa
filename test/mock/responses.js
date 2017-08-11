@@ -3,19 +3,19 @@ const _ = require("lodash");
 const expect = require("chai").expect;
 
 module.exports = (route, method, role) => (res) => {
-  // console.log(JSON.stringify(res.body));
-  const response = _.get(responses, `${route}.${method}.${role}`);
-  expect(_.isEqual(res.body, response)).to.be.true;
+    //console.log(JSON.stringify(res.body));
+    const response = _.get(responses, `${route}.${method}.${role}`);
+    expect(_.isEqual(res.body, response)).to.be.true;
 }
 
 const responses = {
-  thesis: {
-    get: {
-      admin: {},
-      professor: {},
-      instructor: {},
+    thesis: {
+        get: {
+            admin: {},
+            professor: {},
+            instructor: {},
+        }
     }
-  }
 };
 
 responses.thesis.get.admin = [
@@ -67,6 +67,8 @@ responses.thesis.get.admin = [
             "EthesisReminderId": 1,
             "GraderEvalReminderId": null,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 1,
             "EthesisReminder": {
                 "id": 1,
@@ -80,7 +82,9 @@ responses.thesis.get.admin = [
                 "ThesisId": 1
             },
             "GraderEvalReminder": null,
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 1,
@@ -165,6 +169,8 @@ responses.thesis.get.admin = [
             "EthesisReminderId": 2,
             "GraderEvalReminderId": null,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 2,
             "EthesisReminder": {
                 "id": 2,
@@ -178,7 +184,9 @@ responses.thesis.get.admin = [
                 "ThesisId": 2
             },
             "GraderEvalReminder": null,
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 1,
@@ -252,6 +260,8 @@ responses.thesis.get.admin = [
             "EthesisReminderId": 3,
             "GraderEvalReminderId": 4,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 3,
             "EthesisReminder": {
                 "id": 3,
@@ -275,7 +285,9 @@ responses.thesis.get.admin = [
                 "EmailDraftId": 7,
                 "ThesisId": 3
             },
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 4,
@@ -360,6 +372,8 @@ responses.thesis.get.admin = [
             "EthesisReminderId": 5,
             "GraderEvalReminderId": null,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 4,
             "EthesisReminder": {
                 "id": 5,
@@ -373,7 +387,9 @@ responses.thesis.get.admin = [
                 "ThesisId": 4
             },
             "GraderEvalReminder": null,
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 1,
@@ -450,6 +466,8 @@ responses.thesis.get.professor = [
             "EthesisReminderId": 1,
             "GraderEvalReminderId": null,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 1,
             "EthesisReminder": {
                 "id": 1,
@@ -463,7 +481,9 @@ responses.thesis.get.professor = [
                 "ThesisId": 1
             },
             "GraderEvalReminder": null,
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 1,
@@ -548,6 +568,8 @@ responses.thesis.get.professor = [
             "EthesisReminderId": 2,
             "GraderEvalReminderId": null,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 2,
             "EthesisReminder": {
                 "id": 2,
@@ -561,7 +583,9 @@ responses.thesis.get.professor = [
                 "ThesisId": 2
             },
             "GraderEvalReminder": null,
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 1,
@@ -646,6 +670,8 @@ responses.thesis.get.professor = [
             "EthesisReminderId": 5,
             "GraderEvalReminderId": null,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 4,
             "EthesisReminder": {
                 "id": 5,
@@ -659,7 +685,9 @@ responses.thesis.get.professor = [
                 "ThesisId": 4
             },
             "GraderEvalReminder": null,
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 1,
@@ -736,6 +764,8 @@ responses.thesis.get.instructor = [
             "EthesisReminderId": 3,
             "GraderEvalReminderId": 4,
             "PrintReminderId": null,
+            "StudentRegistrationNotificationId": null,
+            "SupervisingProfessorNotificationId": null,
             "ThesisId": 3,
             "EthesisReminder": {
                 "id": 3,
@@ -759,7 +789,9 @@ responses.thesis.get.instructor = [
                 "EmailDraftId": 7,
                 "ThesisId": 3
             },
-            "PrintReminder": null
+            "PrintReminder": null,
+            "StudentRegistrationNotification": null,
+            "SupervisingProfessorNotification": null
         },
         "StudyField": {
             "id": 4,

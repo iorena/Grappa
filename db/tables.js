@@ -259,6 +259,8 @@ Thesis.belongsTo(User);
 ThesisProgress.belongsTo(EmailStatus, { as: "EthesisReminder" });
 ThesisProgress.belongsTo(EmailStatus, { as: "GraderEvalReminder" });
 ThesisProgress.belongsTo(EmailStatus, { as: "PrintReminder" });
+ThesisProgress.belongsTo(EmailStatus, { as: "StudentRegistrationNotification" });
+ThesisProgress.belongsTo(EmailStatus, { as: "SupervisingProfessorNotification"});
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);

@@ -7,6 +7,18 @@ class EmailDraft extends BaseModel {
     super("EmailDraft");
   }
 
+  saveOne(values) {
+    return this.Models.EmailDraft.create(values)
+      .then(newDraft => {
+        return {
+          id: newDraft.id,
+          type: newDraft.type,
+          title: newDraft.title,
+          body: newDraft.body,
+        }
+      });
+  }
+
   findOne(params) {
     return this.Models[this.modelname]
       .findOne({

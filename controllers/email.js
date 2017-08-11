@@ -23,12 +23,14 @@ module.exports.sendReminder = (req, res, next) => {
           return EmailReminder.sendProfessorReminder(thesis);
         case "PrintReminder":
           return EmailReminder.sendPrintPersonReminder(thesis);
-        case "studentRegistrationNotification":
+        case "StudentRegistrationNotification":
           if (req.user.role === "admin") {
             return EmailReminder.sendStudentNotification(thesis);
           } else {
             throw new errors.AuthenticationError("Student notifications only by admins.");
           }
+        case "SupervisingProfessorNotification":
+          return EmailReminder.sendSupervisingProfessorNotification(thesis);
         default:
           // should never end up here as bodyValidations forbid that
           throw new errors.BadRequestError("Invalid reminderType.");

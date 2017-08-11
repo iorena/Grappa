@@ -81,11 +81,13 @@ module.exports.saveOne = (req, res, next) => {
     if (ThesisProgress.isGraderEvaluationNeeded(savedThesis.id, req.body.json.Graders)) {
       return Promise.all([
         Reminder.sendEthesisReminder(savedThesis, foundConnections[0]),
-        Reminder.sendProfessorReminder(savedThesis)
+        Reminder.sendProfessorReminder(savedThesis),
+        Reminder.sendSupervisingProfessorNotification(savedThesis)
       ]);
     } else {
       return Promise.all([
         Reminder.sendEthesisReminder(savedThesis, foundConnections[0]),
+        Reminder.sendSupervisingProfessorNotification(savedThesis),
         ThesisProgress.setGraderEvalDone(savedThesis.id)
       ]);
     }

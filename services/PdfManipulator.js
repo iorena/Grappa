@@ -222,7 +222,6 @@ class PdfManipulator {
           const cmd = `${phantomjs.path} ${pathToCmd} ${pathToFolder} ${pages}`;
           const child = exec(cmd, function (err, stdout, stderr) {
             if (err) {
-              // console.log("jaaa vituix meni")
               console.error(err);
               reject(new errors.BadRequestError("Phantomjs library failed to create pdf-document."));
             } else {
@@ -263,7 +262,6 @@ class PdfManipulator {
   /**
    * Generates PDF-files from each thesis' abstract, review and grader evalution.
    *
-   * Cool stuff.
    * @param {Array<Object>} theses - Array of theses fetched from DB.
    * @param {Array<Object>} professors - Array of users fetched from DB.
    * @param {Object} councilmeeting - CouncilMeeting object fetched from DB.
