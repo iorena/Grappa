@@ -121,6 +121,7 @@ module.exports.updateOneAndConnections = (req, res, next) => {
     );
   } else if (req.user.role === "admin") {
     updationPromises.push(Thesis.update(thesis, { id: thesis.id }));
+    updationPromises.push(Grader.linkThesisToGraders(thesis.Graders, thesis.id));
     req.body.files.map(item => {
       if (item.filetype === "GraderReviewFile") {
         updationPromises.push(ThesisReview.update({ pdf: item.buffer }, { ThesisId: thesis.id }));
