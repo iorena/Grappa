@@ -59,6 +59,7 @@ class ThesisProgress extends BaseModel {
         } else {
           professor = true;
         }
+        //TODO: Move Ass. Prof later to row 56
       } else if (title === "Ass. Prof." || title === "Dr." || title === "Adj. Prof.") {
         doctor = true;
       }
