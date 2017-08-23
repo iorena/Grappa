@@ -64,15 +64,35 @@ class Grader extends BaseModel {
       })
   }
 
-  linkThesisToGraders(graders, thesis) {
+  linkThesisToGraders(graders, thesisId) {
+    if (graders === undefined) {
+      return Promise.resolve();
+    }
+    return Promise.all(graders.map(grader =>
+      this.Models.Grader
+        .findOne({ 
+          where: { id: grader.id },
+          include: [{
+            model: this.Models.Thesis,
+            as: "Theses",
+          }]  
+        })
+        .then(grader => {
+          if (grader.Theses.findIndex(thesis => thesis.id === thesisId) === -1) {
+            return grader.addThesis(thesisId);
+          }
+        })));
+  }
+
+  removeThesisFromGraders(graders, thesis) {
     if (graders === undefined) {
       return Promise.resolve();
     }
     return Promise.all(graders.map(grader =>
       this.Models.Grader
         .findOne({ where: { id: grader.id } })
-        .then(grader => grader.addThesis(thesis))
-    ));
+        .then(grader => console.log(grader)
+      )));
   }
 
   findOneWithTheses(grader) {
