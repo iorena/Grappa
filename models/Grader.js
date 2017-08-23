@@ -70,12 +70,12 @@ class Grader extends BaseModel {
     }
     return Promise.all(graders.map(grader =>
       this.Models.Grader
-        .findOne({ 
+        .findOne({
           where: { id: grader.id },
           include: [{
             model: this.Models.Thesis,
             as: "Theses",
-          }]  
+          }]
         })
         .then(grader => {
           if (grader.Theses.findIndex(thesis => thesis.id === thesisId) === -1) {
@@ -84,15 +84,16 @@ class Grader extends BaseModel {
         })));
   }
 
-  removeThesisFromGraders(graders, thesis) {
-    if (graders === undefined) {
-      return Promise.resolve();
-    }
-    return Promise.all(graders.map(grader =>
-      this.Models.Grader
-        .findOne({ where: { id: grader.id } })
-        .then(grader => console.log(grader)
-      )));
+  removeThesisFromOtherGraders(graders, thesisId) {
+    return this.Models.GraderThesis.findAll({
+      where: { ThesisId: thesisId }
+    })
+      .then(gradertheses => {
+        const removeGraders = gradertheses.filter(table =>
+          graders.findIndex(gra => table.GraderId === gra.id) === -1
+        );
+        return Promise.all(removeGraders.map(row => this.Models.GraderThesis.destroy({ where: { GraderId: row.GraderId, ThesisId: row.ThesisId } })));
+      });
   }
 
   findOneWithTheses(grader) {
