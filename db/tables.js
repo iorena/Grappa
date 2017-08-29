@@ -196,7 +196,7 @@ const ThesisProgress = seq.define("ThesisProgress", {
   ethesisDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   graderEvalDone: { type: Sequelize.BOOLEAN, defaultValue: false },
   printDone: { type: Sequelize.BOOLEAN, defaultValue: false },
-  studentNotificationSent: { type: Sequelize.BOOLEAN, defaultValue: false},
+  studentNotificationSent: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
 const EmailDraft = seq.define("EmailDraft", {
@@ -236,6 +236,8 @@ const Notification = seq.define("Notification", {
   hasBeenRead: { type: Sequelize.BOOLEAN, defaultValue: false },
 });
 
+const GraderThesis = seq.define("GraderThesis", {}, { freezeTableName: true });
+
 Thesis.belongsTo(StudyField);
 
 ThesisReview.belongsTo(Thesis);
@@ -245,8 +247,8 @@ Thesis.hasOne(ThesisReview);
 ThesisAbstract.belongsTo(Thesis);
 Thesis.hasOne(ThesisAbstract);
 
-Grader.belongsToMany(Thesis, { through: "GraderThesis" });
-Thesis.belongsToMany(Grader, { through: "GraderThesis" });
+Grader.belongsToMany(Thesis, { through: GraderThesis });
+Thesis.belongsToMany(Grader, { through: GraderThesis });
 
 CouncilMeeting.hasMany(Thesis, { as: "Theses" });
 Thesis.belongsTo(CouncilMeeting);
@@ -260,7 +262,7 @@ ThesisProgress.belongsTo(EmailStatus, { as: "EthesisReminder" });
 ThesisProgress.belongsTo(EmailStatus, { as: "GraderEvalReminder" });
 ThesisProgress.belongsTo(EmailStatus, { as: "PrintReminder" });
 ThesisProgress.belongsTo(EmailStatus, { as: "StudentRegistrationNotification" });
-ThesisProgress.belongsTo(EmailStatus, { as: "SupervisingProfessorNotification"});
+ThesisProgress.belongsTo(EmailStatus, { as: "SupervisingProfessorNotification" });
 
 StudyField.hasMany(Thesis);
 StudyField.hasMany(User);
@@ -284,6 +286,7 @@ module.exports.Models = {
   User,
   Thesis,
   Grader,
+  GraderThesis,
   CouncilMeeting,
   StudyField,
   ThesisReview,
