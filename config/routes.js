@@ -96,7 +96,7 @@ router.post("/grader",
   auth.restrictSpectators,
   validate.validateBody("grader", "save"),
   graderCtrl.saveOne);
-router.put("/grader/:id", 
+router.put("/grader/:id",
   auth.restrictSpectators,
   graderCtrl.updateOne);
 router.delete("/grader/:id",
@@ -141,6 +141,9 @@ router.post("/studyfield",
 router.put("/studyfield/:id",
   auth.restrictSpectators,
   studyfieldCtrl.updateOne);
+router.delete("/studyfield/:id",
+  auth.restrictSpectators,
+  studyfieldCtrl.deleteOne);
 
 router.get("/user", userCtrl.findAll);
 router.delete("/user/:id",
