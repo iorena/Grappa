@@ -50,8 +50,6 @@ module.exports.updateOne = (req, res, next) => {
 };
 
 module.exports.deleteOne = (req, res, next) => {
-  console.log("Controller");
-
   Thesis.findOne({ StudyFieldId: req.params.id })
     .then(thesis => {
       if (thesis !== null) {
