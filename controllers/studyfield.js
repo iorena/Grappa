@@ -53,13 +53,13 @@ module.exports.deleteOne = (req, res, next) => {
   Thesis.findOne({ StudyFieldId: req.params.id })
     .then(thesis => {
       if (thesis !== null) {
-        return Promise.reject("Thesis with studyfield found");
+        return Promise.reject({ statusCode: 403, message: "Thesis with studyfield found" });
       }
       return User.findOne({ StudyFieldId: req.params.id })
     })
     .then(user => {
       if (user !== null) {
-        return Promise.reject("User with studyfieldId found");
+        return Promise.reject({ statusCode: 403, message: "Studyfield has a professor" });
       }
       return StudyField.findOne({ id: req.params.id });
     })
@@ -67,10 +67,12 @@ module.exports.deleteOne = (req, res, next) => {
       if (studyfield !== null) {
         return StudyField.delete(studyfield.dataValues);
       }
-      return Promise.reject("No studyfield with id found");
+      return Promise.reject({ statusCode: 403, message: "No studyfield with id found" });
     })
     .then(() => {
       res.sendStatus(200);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      next(err);
+    });
 }
