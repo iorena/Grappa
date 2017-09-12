@@ -33,6 +33,26 @@ class Grader extends BaseModel {
       });
   }
 
+  updateGraderFromUser(user, title) {
+    let name = user.firstname + " " + user.lastname;
+    console.log(title);
+    return this.Models.Grader
+      .findOne({ where: { name } })
+      .then(foundGrader => {
+        if (!foundGrader && !title) {
+          console.log("ADMIN NEEDS TO ADD " + name);
+          //Someone doesn't have grader ready. Admin needs to add.
+          return Promise.resolve();
+        } else if (!foundGrader) {
+          console.log("Created new! " + title + " " + name);
+          return this.saveOne({ name, title });
+        } else {
+          console.log("Updated! " + name);
+          return this.update({ name }, { id: foundGrader.id });
+        } 
+      })
+  }
+
   updateOrCreateAndLinkToThesis(values, thesis) {
     return this.Models.Grader
       .findOne({ where: { id: values.id } })
