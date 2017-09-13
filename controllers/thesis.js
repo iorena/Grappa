@@ -157,6 +157,9 @@ module.exports.updateOneAndConnections = (req, res, next) => {
 module.exports.moveThesesToMeeting = (req, res, next) => {
   let foundMeeting;
   let dataForClient;
+  let thesisIdPrintPairs = req.body.thesisIds.map(id => {
+    return { id, printDone: undefined }
+  });
   CouncilMeeting.findOne({ id: req.body.CouncilMeetingId })
     .then(meeting => {
       foundMeeting = meeting;
@@ -170,17 +173,24 @@ module.exports.moveThesesToMeeting = (req, res, next) => {
       const now = new Date();
       const councilMeetingDate = new Date(foundMeeting.date);
       if (councilMeetingDate > now) {
-        return Promise.all(req.body.thesisIds.map(id => {
+        thesisIdPrintPairs = thesisIdPrintPairs.map(thesis => {
+          if (req.body.thesisIds.includes(thesis.id)) {
+            return { id: thesis.id, printDone: false }
+          }
+          return thesis;
+        })
+        return Promise.all(req.body.thesisIds.map(id =>
           ThesisProgress.setPrintNotDone(id)
-        }))
+        ))
       }
       return Promise.resolve();
     }).then(() => {
-      dataForClient = {
-        CouncilMeetingId: req.body.CouncilMeetingId,
-        CouncilMeeting: foundMeeting,
-        thesisIds: req.body.thesisIds,
-      }
+      let theses =
+        dataForClient = {
+          CouncilMeetingId: req.body.CouncilMeetingId,
+          CouncilMeeting: foundMeeting,
+          theses: thesisIdPrintPairs,
+        }
       return SocketIOServer.broadcast(["all"],
         [{
           type: "THESIS_MOVE_SUCCESS",
