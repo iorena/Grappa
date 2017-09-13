@@ -40,6 +40,14 @@ class ThesisProgress extends BaseModel {
     });
   }
 
+  setPrintNotDone(ThesisId) {
+    return this.Models.ThesisProgress.update({
+      printDone: false,
+    }, {
+      where: { ThesisId },
+    });
+  }
+
   setStudentNotificationDone(ThesisId) {
     return this.Models.ThesisProgress.update({
       studentNotificationSent: true,

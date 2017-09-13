@@ -157,20 +157,25 @@ module.exports.updateOneAndConnections = (req, res, next) => {
 module.exports.moveThesesToMeeting = (req, res, next) => {
   let foundMeeting;
   let dataForClient;
-
-  CouncilMeeting
-    .findOne({ id: req.body.CouncilMeetingId })
+  CouncilMeeting.findOne({ id: req.body.CouncilMeetingId })
     .then(meeting => {
       foundMeeting = meeting;
-      if (meeting) {
-        return Promise.all(req.body.thesisIds.map(id =>
-          Thesis.update({ CouncilMeetingId: meeting.id }, { id, })
-        ))
-      } else {
+      if (!foundMeeting) {
         throw new errors.NotFoundError("No Councilmeeting found.");
       }
-    })
-    .then((rows) => {
+      return Promise.all(req.body.thesisIds.map(id =>
+        Thesis.update({ CouncilMeetingId: foundMeeting.id }, { id })
+      ))
+    }).then(() => {
+      const now = new Date();
+      const councilMeetingDate = new Date(foundMeeting.date);
+      if (councilMeetingDate > now) {
+        return Promise.all(req.body.thesisIds.map(id => {
+          ThesisProgress.setPrintNotDone(id)
+        }))
+      }
+      return Promise.resolve();
+    }).then(() => {
       dataForClient = {
         CouncilMeetingId: req.body.CouncilMeetingId,
         CouncilMeeting: foundMeeting,
