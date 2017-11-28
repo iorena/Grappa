@@ -1,3 +1,11 @@
+const moment = require("moment-timezone");
+
+getOffset = () => {
+  let now = moment();
+  let another = now.clone();
+  another.tz('Europe/Helsinki');
+  return now.utcOffset() - another.utcOffset();
+}
 /**
  * Sanitizations and validations defined as JSON-schemas.
  *
@@ -38,7 +46,8 @@ const sanitizations = {
           type: "date",
           exec(schema, post) {
             post = new Date(post);
-            post.setHours(23, 59, 59, 0);
+            const hours = 23 + (getOffset()/60)
+            post.setHours(hours, 59, 59, 0);
             return post;
           }
         },
@@ -46,7 +55,8 @@ const sanitizations = {
           type: "date",
           exec(schema, post) {
             post = new Date(post);
-            post.setHours(23, 59, 59, 0);
+            const hours = 23 + (getOffset()/60)
+            post.setHours(hours, 59, 59, 0);
             return post;
           }
         },
@@ -54,7 +64,8 @@ const sanitizations = {
           type: "date",
           exec(schema, post) {
             post = new Date(post);
-            post.setHours(23, 59, 59, 0);
+            const hours = 23 + (getOffset()/60)
+            post.setHours(hours, 59, 59, 0);            
             return post;
           }
         },

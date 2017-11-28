@@ -5,6 +5,7 @@ const CouncilMeeting = require("../models/CouncilMeeting");
 const Thesis = require("../models/Thesis");
 
 const errors = require("../config/errors");
+const moment = require("moment-timezone");
 
 module.exports.findAll = (req, res, next) => {
   CouncilMeeting
@@ -15,6 +16,13 @@ module.exports.findAll = (req, res, next) => {
   .catch(err => next(err));
 };
 
+getOffset = () => {
+  let now = moment();
+  let another = now.clone();
+  another.tz('Europe/Helsinki');
+  return now.utcOffset() - another.utcOffset();
+}
+
 module.exports.saveOne = (req, res, next) => {
   let foundMeeting;
 
@@ -24,10 +32,11 @@ module.exports.saveOne = (req, res, next) => {
     if (exists) {
       throw new errors.BadRequestError("Meeting already exists with the same date.");
     } else {
-      const date = req.body.date;
-      date.setHours(23, 59, 59, 0);
-      const instructorDeadline = new Date(date);
-      const studentDeadline = new Date(date);
+      let date = req.body.date
+      const hours = 23 + (getOffset()/60)
+      date.setHours(hours, 59, 59, 0);
+      let instructorDeadline = new Date(date);
+      let studentDeadline = new Date(date);
       instructorDeadline.setDate(date.getDate() - req.body.instructorDeadlineDays);
       studentDeadline.setDate(date.getDate() - req.body.studentDeadlineDays);
       return CouncilMeeting.saveOne({
